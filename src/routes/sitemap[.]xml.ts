@@ -1,35 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { SITEMAP_ENTRIES } from "../data/nav";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
-
-interface SitemapEntry {
-  path: string;
-  changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  priority?: string;
-}
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/urunler", changefreq: "weekly", priority: "0.9" },
-          { path: "/urunler/elektrikli-el-aletleri", changefreq: "weekly", priority: "0.9" },
-          { path: "/markalar", changefreq: "monthly", priority: "0.7" },
-          { path: "/kataloglar", changefreq: "monthly", priority: "0.6" },
-          { path: "/hizmetler", changefreq: "monthly", priority: "0.7" },
-          { path: "/sektorel", changefreq: "monthly", priority: "0.7" },
-          { path: "/kurumsal", changefreq: "yearly", priority: "0.5" },
-          { path: "/teklif", changefreq: "monthly", priority: "0.8" },
-          { path: "/iletisim", changefreq: "yearly", priority: "0.6" },
-          { path: "/teknik-destek", changefreq: "monthly", priority: "0.6" },
-          { path: "/kvkk", changefreq: "yearly", priority: "0.3" },
-        ];
-
-        const urls = entries.map((e) =>
+        const urls = SITEMAP_ENTRIES.map((e) =>
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
