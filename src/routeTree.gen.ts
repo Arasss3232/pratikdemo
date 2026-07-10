@@ -9,8 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TeknikDestekRouteImport } from './routes/teknik-destek'
+import { Route as TeklifRouteImport } from './routes/teklif'
+import { Route as SektorelRouteImport } from './routes/sektorel'
+import { Route as MarkalarRouteImport } from './routes/markalar'
+import { Route as KvkkRouteImport } from './routes/kvkk'
+import { Route as KurumsalRouteImport } from './routes/kurumsal'
+import { Route as KataloglarRouteImport } from './routes/kataloglar'
+import { Route as IletisimRouteImport } from './routes/iletisim'
+import { Route as HizmetlerRouteImport } from './routes/hizmetler'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TeknikDestekRoute = TeknikDestekRouteImport.update({
+  id: '/teknik-destek',
+  path: '/teknik-destek',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeklifRoute = TeklifRouteImport.update({
+  id: '/teklif',
+  path: '/teklif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SektorelRoute = SektorelRouteImport.update({
+  id: '/sektorel',
+  path: '/sektorel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarkalarRoute = MarkalarRouteImport.update({
+  id: '/markalar',
+  path: '/markalar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KvkkRoute = KvkkRouteImport.update({
+  id: '/kvkk',
+  path: '/kvkk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KurumsalRoute = KurumsalRouteImport.update({
+  id: '/kurumsal',
+  path: '/kurumsal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KataloglarRoute = KataloglarRouteImport.update({
+  id: '/kataloglar',
+  path: '/kataloglar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IletisimRoute = IletisimRouteImport.update({
+  id: '/iletisim',
+  path: '/iletisim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HizmetlerRoute = HizmetlerRouteImport.update({
+  id: '/hizmetler',
+  path: '/hizmetler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +73,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/hizmetler': typeof HizmetlerRoute
+  '/iletisim': typeof IletisimRoute
+  '/kataloglar': typeof KataloglarRoute
+  '/kurumsal': typeof KurumsalRoute
+  '/kvkk': typeof KvkkRoute
+  '/markalar': typeof MarkalarRoute
+  '/sektorel': typeof SektorelRoute
+  '/teklif': typeof TeklifRoute
+  '/teknik-destek': typeof TeknikDestekRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/hizmetler': typeof HizmetlerRoute
+  '/iletisim': typeof IletisimRoute
+  '/kataloglar': typeof KataloglarRoute
+  '/kurumsal': typeof KurumsalRoute
+  '/kvkk': typeof KvkkRoute
+  '/markalar': typeof MarkalarRoute
+  '/sektorel': typeof SektorelRoute
+  '/teklif': typeof TeklifRoute
+  '/teknik-destek': typeof TeknikDestekRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/hizmetler': typeof HizmetlerRoute
+  '/iletisim': typeof IletisimRoute
+  '/kataloglar': typeof KataloglarRoute
+  '/kurumsal': typeof KurumsalRoute
+  '/kvkk': typeof KvkkRoute
+  '/markalar': typeof MarkalarRoute
+  '/sektorel': typeof SektorelRoute
+  '/teklif': typeof TeklifRoute
+  '/teknik-destek': typeof TeknikDestekRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/hizmetler'
+    | '/iletisim'
+    | '/kataloglar'
+    | '/kurumsal'
+    | '/kvkk'
+    | '/markalar'
+    | '/sektorel'
+    | '/teklif'
+    | '/teknik-destek'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/hizmetler'
+    | '/iletisim'
+    | '/kataloglar'
+    | '/kurumsal'
+    | '/kvkk'
+    | '/markalar'
+    | '/sektorel'
+    | '/teklif'
+    | '/teknik-destek'
+  id:
+    | '__root__'
+    | '/'
+    | '/hizmetler'
+    | '/iletisim'
+    | '/kataloglar'
+    | '/kurumsal'
+    | '/kvkk'
+    | '/markalar'
+    | '/sektorel'
+    | '/teklif'
+    | '/teknik-destek'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HizmetlerRoute: typeof HizmetlerRoute
+  IletisimRoute: typeof IletisimRoute
+  KataloglarRoute: typeof KataloglarRoute
+  KurumsalRoute: typeof KurumsalRoute
+  KvkkRoute: typeof KvkkRoute
+  MarkalarRoute: typeof MarkalarRoute
+  SektorelRoute: typeof SektorelRoute
+  TeklifRoute: typeof TeklifRoute
+  TeknikDestekRoute: typeof TeknikDestekRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/teknik-destek': {
+      id: '/teknik-destek'
+      path: '/teknik-destek'
+      fullPath: '/teknik-destek'
+      preLoaderRoute: typeof TeknikDestekRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teklif': {
+      id: '/teklif'
+      path: '/teklif'
+      fullPath: '/teklif'
+      preLoaderRoute: typeof TeklifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sektorel': {
+      id: '/sektorel'
+      path: '/sektorel'
+      fullPath: '/sektorel'
+      preLoaderRoute: typeof SektorelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markalar': {
+      id: '/markalar'
+      path: '/markalar'
+      fullPath: '/markalar'
+      preLoaderRoute: typeof MarkalarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kvkk': {
+      id: '/kvkk'
+      path: '/kvkk'
+      fullPath: '/kvkk'
+      preLoaderRoute: typeof KvkkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kurumsal': {
+      id: '/kurumsal'
+      path: '/kurumsal'
+      fullPath: '/kurumsal'
+      preLoaderRoute: typeof KurumsalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kataloglar': {
+      id: '/kataloglar'
+      path: '/kataloglar'
+      fullPath: '/kataloglar'
+      preLoaderRoute: typeof KataloglarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/iletisim': {
+      id: '/iletisim'
+      path: '/iletisim'
+      fullPath: '/iletisim'
+      preLoaderRoute: typeof IletisimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hizmetler': {
+      id: '/hizmetler'
+      path: '/hizmetler'
+      fullPath: '/hizmetler'
+      preLoaderRoute: typeof HizmetlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +237,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HizmetlerRoute: HizmetlerRoute,
+  IletisimRoute: IletisimRoute,
+  KataloglarRoute: KataloglarRoute,
+  KurumsalRoute: KurumsalRoute,
+  KvkkRoute: KvkkRoute,
+  MarkalarRoute: MarkalarRoute,
+  SektorelRoute: SektorelRoute,
+  TeklifRoute: TeklifRoute,
+  TeknikDestekRoute: TeknikDestekRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

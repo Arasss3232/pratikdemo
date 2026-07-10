@@ -1,14 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { Icon, SiteShell } from "../components/site-shell";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
-const FOOTER_LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCbDq0vERbuBQdplgYRumJoOnWe12cbW670-pZusxuQqXz1j9tHKlNvmmHcVVfe8TxuQkBrM_JttsIA93nURyWU1tcjTXK46gR995CqStTHtI05nSFCf_S96HD-i23PLyvtlZ0oTmUM9cVVtpto7QuQYvG2qIqO6rsfC0cQ7aepU3OHS2mE7OmRPv1kRhFxEyT18aU1d5i9mJNoQdxRJ1QQR21qBi2jv1ZyDHqEztehLIuHqW3X2viIRAUMJcLszA6kBw";
 const HERO_BG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuA1UnrlnRzHzPhRckFPpOfhIBO0rU9xcHzsXXl0N9sbB-O65L2akdTyMEQbvnx_OnkBQnzHCN0hg1HjR3JyNp9ZdgBAiP1LebeBZsx6OwrzFSyoLggCIvbJxdOmqC9gJ2s7JN6IrwwVOmFtExsFrF70vF02uE-9hP_lN1GqQHYzDSlqETPiHGdiIEOu5niuU7dSXiiWvOe4E8He_ZiFXTPVPAjOiw-GyiQlISaJ5CnWmiCFj1Ogb3hC";
 const CTA_IMG =
@@ -118,83 +115,10 @@ const SUBCATEGORIES = [
 const BRANDS = ["Bosch Professional", "Makita", "DeWalt", "Hilti", "Milwaukee"];
 const APPLICATIONS = ["Ahşap", "Metal", "Beton", "Montaj"];
 
-function Icon({ name, className = "" }: { name: string; className?: string }) {
-  return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
-}
-
 function Index() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <div className="bg-surface font-body-md text-on-background antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
-      {/* TopAppBar */}
-      <header
-        className={`bg-primary border-b-2 border-secondary sticky top-0 z-50 w-full transition-shadow duration-300 ${
-          scrolled ? "shadow-md" : ""
-        }`}
-      >
-        <div className="flex flex-col w-full max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-4 gap-4">
-          <div className="flex items-center justify-between gap-4">
-            <a
-              className="font-headline-md text-headline-md font-black text-on-primary flex-shrink-0 flex items-center gap-2"
-              href="#"
-            >
-              <img alt="Pratik Logo" className="h-12 object-contain" src={LOGO_URL} />
-            </a>
-            <nav className="hidden lg:flex items-center gap-gutter">
-              <a
-                className="text-on-primary font-bold border-b-2 border-on-primary pb-1 flex items-center gap-1 font-label-bold text-label-bold hover:text-secondary-fixed-dim transition-colors duration-200"
-                href="#"
-              >
-                Ürünler
-              </a>
-              {["Markalar", "Kataloglar", "Hizmetler", "Sektörel", "Kurumsal"].map((l) => (
-                <a
-                  key={l}
-                  className="text-on-primary opacity-80 hover:text-secondary-fixed-dim transition-colors duration-200 px-2 py-1 rounded font-label-bold text-label-bold"
-                  href="#"
-                >
-                  {l}
-                </a>
-              ))}
-            </nav>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex relative">
-                <Icon
-                  name="search"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
-                />
-                <input
-                  className="pl-10 pr-4 py-2 bg-surface-container-lowest text-on-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all w-64 text-body-sm font-body-sm"
-                  placeholder="Ara..."
-                  type="text"
-                />
-              </div>
-              <div className="flex items-center gap-2 text-on-primary">
-                <button className="hover:text-secondary-fixed-dim transition-colors">
-                  <Icon name="account_circle" />
-                </button>
-                <button className="hover:text-secondary-fixed-dim transition-colors">
-                  <Icon name="shopping_cart" />
-                </button>
-              </div>
-              <button className="hidden sm:inline-block bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all">
-                Teklif Al
-              </button>
-              <button className="lg:hidden text-on-primary p-2 hover:bg-primary-container rounded transition-colors">
-                <Icon name="menu" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-grow">
+    <SiteShell>
+      <>
         {/* Breadcrumb & Header Banner */}
         <div className="relative bg-inverse-surface text-inverse-on-surface pt-4 pb-20">
           <div
@@ -209,17 +133,17 @@ function Index() {
             >
               <ol className="inline-flex items-center gap-2">
                 <li className="inline-flex items-center">
-                  <a className="hover:text-inverse-on-surface transition-colors" href="#">
+                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
                     Ana Sayfa
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Icon name="chevron_right" className="text-[16px]" />
                 </li>
                 <li>
-                  <a className="hover:text-inverse-on-surface transition-colors" href="#">
+                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
                     Ürünler
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Icon name="chevron_right" className="text-[16px]" />
@@ -529,13 +453,13 @@ function Index() {
                 şartname desteği sağlamak için hazırdır.
               </p>
               <div className="flex flex-col sm:flex-row gap-2">
-                <a
-                  href="#"
+                <Link
+                  to="/teklif"
                   className="bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
                   Toplu Teklif Formu
                   <Icon name="arrow_forward" />
-                </a>
+                </Link>
                 <a
                   href="tel:+905550000000"
                   className="bg-transparent border-2 border-on-primary/30 text-on-primary px-8 py-3 rounded font-label-bold text-label-bold hover:border-on-primary transition-all flex items-center justify-center gap-2"
@@ -554,68 +478,7 @@ function Index() {
             </div>
           </div>
         </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-tertiary border-t-4 border-secondary w-full">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
-          <div className="col-span-1 md:col-span-4 mb-8">
-            <a
-              className="text-headline-md font-headline-md text-on-tertiary flex items-center gap-2"
-              href="#"
-            >
-              <img alt="Pratik Logo" className="h-12 object-contain" src={FOOTER_LOGO_URL} />
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Ürün Grupları
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Teknik Destek
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Sektörel Çözümler
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Kurumsal Bilgiler
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              KVKK ve Gizlilik
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Bize Ulaşın
-            </a>
-          </div>
-          <div className="col-span-1 md:col-span-4 mt-8 pt-8 border-t border-outline/30 text-center">
-            <p className="font-body-sm text-body-sm text-on-tertiary opacity-70">
-              © 2024 Pratik Professional Industrial Hardware Solutions. Tüm Hakları Saklıdır.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </>
+    </SiteShell>
   );
 }
