@@ -5,7 +5,7 @@ import { Icon } from "../site-shell";
 export function FilterSidebar() {
   return (
     <aside className="w-full lg:w-64 flex-shrink-0">
-      <details className="group bg-surface-container-lowest border border-outline-variant rounded-lg lg:sticky lg:top-[140px] lg:open:!block" open>
+      <details className="filter-panel group bg-surface-container-lowest border border-outline-variant rounded-lg lg:sticky lg:top-[140px]" open>
         <summary className="flex items-center justify-between gap-3 p-4 cursor-pointer list-none lg:cursor-default select-none border-b border-outline-variant [&::-webkit-details-marker]:hidden">
           <h2 className="font-headline-md text-headline-md font-semibold text-on-background inline-flex items-center gap-2">
             <Icon name="grid_view" className="text-[20px] text-primary lg:hidden" aria-hidden="true" />
