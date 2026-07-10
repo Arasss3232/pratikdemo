@@ -109,7 +109,7 @@ function Home() {
             aria-hidden
           />
           <div
-            className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface via-inverse-surface/90 to-inverse-surface/60 md:to-inverse-surface/30"
+            className="absolute inset-0 z-0 bg-inverse-surface/85 md:bg-gradient-to-r md:from-inverse-surface md:via-inverse-surface/85 md:to-inverse-surface/30"
             aria-hidden
           />
           <div className="relative z-10 max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-24 md:py-32">
