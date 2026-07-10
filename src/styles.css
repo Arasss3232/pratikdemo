@@ -16,14 +16,14 @@
   --color-on-primary-fixed-variant: #234584;
   --color-inverse-primary: #afc6ff;
 
-  --color-secondary: #bb0015;
-  --color-on-secondary: #ffffff;
-  --color-secondary-container: #e32027;
-  --color-on-secondary-container: #fffbff;
-  --color-secondary-fixed: #ffdad6;
-  --color-secondary-fixed-dim: #ffb4ac;
-  --color-on-secondary-fixed: #410003;
-  --color-on-secondary-fixed-variant: #93000e;
+  --color-secondary: #d69a1c;
+  --color-on-secondary: #1a1200;
+  --color-secondary-container: #b7801a;
+  --color-on-secondary-container: #ffffff;
+  --color-secondary-fixed: #ffe6b5;
+  --color-secondary-fixed-dim: #f2cf7a;
+  --color-on-secondary-fixed: #2a1c00;
+  --color-on-secondary-fixed-variant: #7a5610;
 
   --color-tertiary: #28384d;
   --color-on-tertiary: #ffffff;
