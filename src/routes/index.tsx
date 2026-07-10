@@ -104,36 +104,40 @@ function Home() {
         {/* Hero */}
         <section className="relative bg-inverse-surface text-inverse-on-surface">
           <div
-            className="absolute inset-0 z-0 opacity-30 mix-blend-overlay bg-cover bg-center"
+            className="absolute inset-0 z-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${HERO_IMG})` }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface/95 via-inverse-surface/80 to-inverse-surface/40"
             aria-hidden
           />
           <div className="relative z-10 max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-24 md:py-32">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-3 py-1 rounded font-label-bold text-label-bold mb-6 uppercase tracking-wider">
-                <Icon name="factory" className="text-[16px]" />
+                <Icon name="factory" className="text-[16px]" aria-hidden="true" />
                 Endüstriyel Tedarik
               </div>
               <h1 className="font-headline-xl text-headline-xl text-inverse-on-surface mb-6 leading-tight">
                 Sanayinin ve şantiyenin güvenilir donanım ortağı
               </h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-2xl">
+              <p className="font-body-lg text-body-lg text-inverse-on-surface/90 mb-8 max-w-2xl">
                 Bosch, Makita, DeWalt, Hilti ve daha fazlası. Elektrikli el aletlerinden bağlantı
                 elemanlarına kadar 20.000+ profesyonel ürün, tek tedarikçiden.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/urunler"
-                  className="bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 transition-all inline-flex items-center justify-center gap-2"
+                  className="min-h-11 bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-primary transition-all inline-flex items-center justify-center gap-2"
                 >
                   Ürünleri Keşfet
-                  <Icon name="arrow_forward" />
+                  <Icon name="arrow_forward" aria-hidden="true" />
                 </Link>
                 <Link
                   to="/teklif"
-                  className="bg-transparent border-2 border-on-primary/40 text-inverse-on-surface px-8 py-3 rounded font-label-bold text-label-bold hover:border-inverse-on-surface transition-all inline-flex items-center justify-center gap-2"
+                  className="min-h-11 bg-transparent border-2 border-inverse-on-surface/60 text-inverse-on-surface px-8 py-3 rounded font-label-bold text-label-bold hover:border-inverse-on-surface hover:bg-inverse-on-surface/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverse-on-surface transition-all inline-flex items-center justify-center gap-2"
                 >
-                  <Icon name="request_quote" />
+                  <Icon name="request_quote" aria-hidden="true" />
                   Toplu Teklif Al
                 </Link>
               </div>
@@ -165,10 +169,10 @@ function Home() {
               <Link
                 key={c.title}
                 to={c.to}
-                className="group bg-surface-container-lowest border border-outline-variant p-6 hover:border-primary transition-colors flex flex-col gap-3"
+                className="group bg-surface-container-lowest border border-outline-variant rounded-lg p-6 hover:border-primary hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all flex flex-col gap-3"
               >
                 <div className="w-12 h-12 bg-primary-container text-on-primary-container flex items-center justify-center rounded">
-                  <Icon name={c.icon} className="text-[24px]" />
+                  <Icon name={c.icon} className="text-[24px]" aria-hidden="true" />
                 </div>
                 <h3 className="font-headline-md text-headline-md font-bold text-on-background group-hover:text-primary transition-colors">
                   {c.title}
@@ -176,7 +180,7 @@ function Home() {
                 <p className="font-body-sm text-body-sm text-on-surface-variant">{c.desc}</p>
                 <div className="mt-auto pt-2 text-primary font-label-bold text-label-bold inline-flex items-center gap-1">
                   Ürünleri Görüntüle
-                  <Icon name="arrow_forward" className="text-[16px]" />
+                  <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                 </div>
               </Link>
             ))}
