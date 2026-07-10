@@ -20,7 +20,7 @@ export function CategoryHero({
         aria-hidden
       />
       <div
-        className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface/95 via-inverse-surface/85 to-inverse-surface/50"
+        className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface via-inverse-surface/90 to-inverse-surface/60 md:to-inverse-surface/30"
         aria-hidden
       />
       <div className="relative z-10 max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop pt-4">
@@ -54,7 +54,7 @@ export function CategoryHero({
           <h1 className="font-headline-xl text-headline-xl text-inverse-on-surface mb-4">
             {title}
           </h1>
-          <p className="font-body-lg text-body-lg text-inverse-on-surface/90">{description}</p>
+          <p className="font-body-lg text-body-lg text-inverse-on-surface">{description}</p>
         </div>
       </div>
     </div>
