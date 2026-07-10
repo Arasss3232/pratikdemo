@@ -109,7 +109,7 @@ function Home() {
             aria-hidden
           />
           <div
-            className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface/95 via-inverse-surface/80 to-inverse-surface/40"
+            className="absolute inset-0 z-0 bg-gradient-to-r from-inverse-surface via-inverse-surface/90 to-inverse-surface/60 md:to-inverse-surface/30"
             aria-hidden
           />
           <div className="relative z-10 max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-24 md:py-32">
@@ -121,7 +121,7 @@ function Home() {
               <h1 className="font-headline-xl text-headline-xl text-inverse-on-surface mb-6 leading-tight">
                 Sanayinin ve şantiyenin güvenilir donanım ortağı
               </h1>
-              <p className="font-body-lg text-body-lg text-inverse-on-surface/90 mb-8 max-w-2xl">
+              <p className="font-body-lg text-body-lg text-inverse-on-surface mb-8 max-w-2xl">
                 Bosch, Makita, DeWalt, Hilti ve daha fazlası. Elektrikli el aletlerinden bağlantı
                 elemanlarına kadar 20.000+ profesyonel ürün, tek tedarikçiden.
               </p>
