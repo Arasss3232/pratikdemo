@@ -39,11 +39,11 @@ export function SiteHeader() {
               <Link
                 key={l.to}
                 to={l.to}
-                className="text-on-primary opacity-80 hover:text-secondary-fixed-dim transition-colors duration-200 px-2 py-1 rounded font-label-bold text-label-bold"
+                className="text-on-primary opacity-80 hover:text-secondary-fixed-dim transition-colors duration-200 px-2 py-1 rounded font-label-bold text-label-bold whitespace-nowrap"
                 activeOptions={{ exact: true }}
                 activeProps={{
                   className:
-                    "text-on-primary font-bold border-b-2 border-on-primary pb-1 opacity-100 px-2 py-1 rounded font-label-bold text-label-bold",
+                    "text-on-primary font-bold border-b-2 border-on-primary pb-1 opacity-100 px-2 py-1 rounded font-label-bold text-label-bold whitespace-nowrap",
                 }}
               >
                 {l.label}
@@ -55,29 +55,46 @@ export function SiteHeader() {
               <Icon
                 name="search"
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+                aria-hidden="true"
               />
+              <label htmlFor="site-search" className="sr-only">
+                Ürün ara
+              </label>
               <input
+                id="site-search"
                 className="pl-10 pr-4 py-2 bg-surface-container-lowest text-on-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all w-64 text-body-sm font-body-sm"
                 placeholder="Ara..."
-                type="text"
+                type="search"
               />
             </div>
             <div className="flex items-center gap-2 text-on-primary">
-              <button className="hover:text-secondary-fixed-dim transition-colors" aria-label="Hesap">
-                <Icon name="account_circle" />
+              <button
+                type="button"
+                className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                aria-label="Hesabım"
+              >
+                <Icon name="account_circle" aria-hidden="true" />
               </button>
-              <button className="hover:text-secondary-fixed-dim transition-colors" aria-label="Sepet">
-                <Icon name="shopping_cart" />
+              <button
+                type="button"
+                className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                aria-label="Sepet"
+              >
+                <Icon name="shopping_cart" aria-hidden="true" />
               </button>
             </div>
             <Link
               to="/teklif"
-              className="hidden sm:inline-block bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all"
+              className="hidden sm:inline-flex items-center whitespace-nowrap bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-primary transition-all"
             >
               Teklif Al
             </Link>
-            <button className="lg:hidden text-on-primary p-2 hover:bg-primary-container rounded transition-colors" aria-label="Menü">
-              <Icon name="menu" />
+            <button
+              type="button"
+              className="lg:hidden text-on-primary min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary transition-colors"
+              aria-label="Menüyü aç"
+            >
+              <Icon name="menu" aria-hidden="true" />
             </button>
           </div>
         </div>
