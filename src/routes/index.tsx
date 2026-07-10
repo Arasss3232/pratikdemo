@@ -478,68 +478,7 @@ function Index() {
             </div>
           </div>
         </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-tertiary border-t-4 border-secondary w-full">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
-          <div className="col-span-1 md:col-span-4 mb-8">
-            <a
-              className="text-headline-md font-headline-md text-on-tertiary flex items-center gap-2"
-              href="#"
-            >
-              <img alt="Pratik Logo" className="h-12 object-contain" src={FOOTER_LOGO_URL} />
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Ürün Grupları
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Teknik Destek
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Sektörel Çözümler
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Kurumsal Bilgiler
-            </a>
-          </div>
-          <div className="col-span-1 flex flex-col gap-4">
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              KVKK ve Gizlilik
-            </a>
-            <a
-              className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-              href="#"
-            >
-              Bize Ulaşın
-            </a>
-          </div>
-          <div className="col-span-1 md:col-span-4 mt-8 pt-8 border-t border-outline/30 text-center">
-            <p className="font-body-sm text-body-sm text-on-tertiary opacity-70">
-              © 2024 Pratik Professional Industrial Hardware Solutions. Tüm Hakları Saklıdır.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </>
+    </SiteShell>
   );
 }
