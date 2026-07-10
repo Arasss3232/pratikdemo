@@ -1,24 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { memo, useEffect, useState, type ReactNode } from "react";
+import { NAV_LINKS } from "../data/nav";
 
 const LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
 const FOOTER_LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCbDq0vERbuBQdplgYRumJoOnWe12cbW670-pZusxuQqXz1j9tHKlNvmmHcVVfe8TxuQkBrM_JttsIA93nURyWU1tcjTXK46gR995CqStTHtI05nSFCf_S96HD-i23PLyvtlZ0oTmUM9cVVtpto7QuQYvG2qIqO6rsfC0cQ7aepU3OHS2mE7OmRPv1kRhFxEyT18aU1d5i9mJNoQdxRJ1QQR21qBi2jv1ZyDHqEztehLIuHqW3X2viIRAUMJcLszA6kBw";
 
-export function Icon({ name, className = "" }: { name: string; className?: string }) {
+function IconBase({ name, className = "" }: { name: string; className?: string }) {
   return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
 }
-
-const NAV_LINKS: { label: string; to: string }[] = [
-  { label: "Ana Sayfa", to: "/" },
-  { label: "Ürünler", to: "/urunler" },
-  { label: "Markalar", to: "/markalar" },
-  { label: "Kataloglar", to: "/kataloglar" },
-  { label: "Hizmetler", to: "/hizmetler" },
-  { label: "Sektörel", to: "/sektorel" },
-  { label: "Kurumsal", to: "/kurumsal" },
-];
+export const Icon = memo(IconBase);
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
