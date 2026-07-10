@@ -18,6 +18,7 @@ import { Route as KurumsalRouteImport } from './routes/kurumsal'
 import { Route as KataloglarRouteImport } from './routes/kataloglar'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HizmetlerRouteImport } from './routes/hizmetler'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
 
 const TeknikDestekRoute = TeknikDestekRouteImport.update({
@@ -65,6 +66,11 @@ const HizmetlerRoute = HizmetlerRouteImport.update({
   path: '/hizmetler',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UrunlerElektrikliElAletleriRoute =
   UrunlerElektrikliElAletleriRouteImport.update({
     id: '/urunler/elektrikli-el-aletleri',
@@ -73,6 +79,7 @@ const UrunlerElektrikliElAletleriRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -98,6 +106,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -112,6 +121,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/urunler/elektrikli-el-aletleri'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
     | '/urunler/elektrikli-el-aletleri'
   id:
     | '__root__'
+    | '/'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -149,6 +161,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   HizmetlerRoute: typeof HizmetlerRoute
   IletisimRoute: typeof IletisimRoute
   KataloglarRoute: typeof KataloglarRoute
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HizmetlerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/urunler/elektrikli-el-aletleri': {
       id: '/urunler/elektrikli-el-aletleri'
       path: '/urunler/elektrikli-el-aletleri'
@@ -237,6 +257,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   HizmetlerRoute: HizmetlerRoute,
   IletisimRoute: IletisimRoute,
   KataloglarRoute: KataloglarRoute,
