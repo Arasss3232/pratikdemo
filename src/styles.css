@@ -265,3 +265,14 @@
     color: var(--color-foreground);
   }
 }
+
+/* Filter panel: force-open on desktop, collapsible on mobile via <details> */
+@media (min-width: 1024px) {
+  details.filter-panel > summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  details.filter-panel > *:not(summary) {
+    display: block !important;
+  }
+}
