@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { Icon, SiteShell } from "../components/site-shell";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
   component: Index,
 });
 
