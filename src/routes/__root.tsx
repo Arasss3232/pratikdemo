@@ -77,12 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Elektrikli El Aletleri — Pratik Endüstriyel Donanım Çözümleri" },
-      { name: "description", content: "Zorlu endüstriyel koşullara dayanıklı, profesyonel elektrikli el aletleri: matkaplar, taşlama makineleri, kırıcı deliciler ve daha fazlası. Bosch, Makita, DeWalt, Hilti, Milwaukee." },
       { name: "author", content: "Pratik" },
-      { property: "og:title", content: "Elektrikli El Aletleri — Pratik" },
-      { property: "og:description", content: "Profesyonel elektrikli el aletleri ve endüstriyel donanım çözümleri." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Pratik Endüstriyel" },
+      { property: "og:locale", content: "tr_TR" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -102,6 +100,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "/#organization",
+              name: "Pratik Endüstriyel",
+              url: "/",
+              logo: "/favicon.ico",
+              description:
+                "Profesyonel endüstriyel donanım tedariki: elektrikli el aletleri, bağlantı elemanları, iş güvenliği ve daha fazlası.",
+            },
+            {
+              "@type": "WebSite",
+              "@id": "/#website",
+              url: "/",
+              name: "Pratik Endüstriyel",
+              inLanguage: "tr-TR",
+              publisher: { "@id": "/#organization" },
+            },
+          ],
+        }),
       },
     ],
   }),

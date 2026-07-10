@@ -4,9 +4,14 @@ import { SiteShell, PagePlaceholder } from "../components/site-shell";
 export const Route = createFileRoute("/kataloglar")({
   head: () => ({
     meta: [
-      { title: "Kataloglar — Pratik" },
-      { name: "description", content: "Ürün katalogları ve teknik dokümantasyon." },
+      { title: "Ürün Katalogları ve Teknik Dokümanlar — Pratik" },
+      { name: "description", content: "Marka bazlı güncel ürün kataloglarını ve teknik dokümanları indirin. Bosch, Makita, DeWalt, Hilti kataloglarına tek noktadan ulaşın." },
+      { property: "og:title", content: "Ürün Katalogları ve Teknik Dokümanlar — Pratik" },
+      { property: "og:description", content: "Marka bazlı güncel ürün katalogları ve teknik dokümanlar tek noktada." },
+      { property: "og:url", content: "/kataloglar" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "/kataloglar" }],
   }),
   component: KataloglarPage,
 });

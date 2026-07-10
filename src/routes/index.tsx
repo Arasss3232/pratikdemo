@@ -4,20 +4,23 @@ import { Icon, SiteShell } from "../components/site-shell";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pratik — Profesyonel Endüstriyel Donanım Çözümleri" },
+      { title: "Endüstriyel Donanım Tedariki — Pratik" },
       {
         name: "description",
         content:
           "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri.",
       },
-      { property: "og:title", content: "Pratik — Profesyonel Endüstriyel Donanım Çözümleri" },
+      { property: "og:title", content: "Endüstriyel Donanım Tedariki — Pratik" },
       {
         property: "og:description",
         content:
           "Bosch, Makita, DeWalt, Hilti ve daha fazlası. Türkiye genelinde endüstriyel tedarik, teknik danışmanlık ve toplu teklif.",
       },
+      { property: "og:url", content: "/" },
+      { property: "og:type", content: "website" },
     ],
     links: [
+      { rel: "canonical", href: "/" },
       {
         rel: "preload",
         as: "image",
