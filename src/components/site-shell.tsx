@@ -11,7 +11,8 @@ export function Icon({ name, className = "" }: { name: string; className?: strin
 }
 
 const NAV_LINKS: { label: string; to: string }[] = [
-  { label: "Ürünler", to: "/" },
+  { label: "Ana Sayfa", to: "/" },
+  { label: "Ürünler", to: "/urunler" },
   { label: "Markalar", to: "/markalar" },
   { label: "Kataloglar", to: "/kataloglar" },
   { label: "Hizmetler", to: "/hizmetler" },
