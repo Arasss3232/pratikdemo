@@ -5,15 +5,28 @@ import { Icon } from "../site-shell";
 export function FilterSidebar() {
   return (
     <aside className="w-full lg:w-64 flex-shrink-0">
-      <div className="bg-surface-container-lowest border border-outline-variant p-4 lg:sticky lg:top-[140px]">
-        <div className="flex items-center justify-between mb-4 border-b border-outline-variant pb-2">
-          <h2 className="font-headline-md text-headline-md font-semibold text-on-background">
+      <details className="group bg-surface-container-lowest border border-outline-variant rounded-lg lg:sticky lg:top-[140px] lg:open:!block" open>
+        <summary className="flex items-center justify-between gap-3 p-4 cursor-pointer list-none lg:cursor-default select-none border-b border-outline-variant [&::-webkit-details-marker]:hidden">
+          <h2 className="font-headline-md text-headline-md font-semibold text-on-background inline-flex items-center gap-2">
+            <Icon name="grid_view" className="text-[20px] text-primary lg:hidden" aria-hidden="true" />
             Filtreler
           </h2>
-          <button className="text-primary text-label-bold font-label-bold hover:underline">
-            Temizle
-          </button>
-        </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="text-primary text-label-bold font-label-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded"
+              onClick={(e) => e.preventDefault()}
+            >
+              Temizle
+            </button>
+            <Icon
+              name="chevron_right"
+              className="text-[20px] text-on-surface-variant transition-transform group-open:rotate-90 lg:hidden"
+              aria-hidden="true"
+            />
+          </div>
+        </summary>
+        <div className="p-4">
 
         <FilterGroup title="Alt Kategoriler">
           <ul className="space-y-2">
@@ -30,11 +43,16 @@ export function FilterSidebar() {
             <Icon
               name="search"
               className="absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant text-[16px]"
+              aria-hidden="true"
             />
+            <label htmlFor="brand-search" className="sr-only">
+              Marka ara
+            </label>
             <input
+              id="brand-search"
               className="w-full pl-8 pr-2 py-1.5 bg-surface-container-low border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm font-body-sm h-8"
               placeholder="Marka ara..."
-              type="text"
+              type="search"
             />
           </div>
           <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
@@ -56,10 +74,12 @@ export function FilterSidebar() {
               return (
                 <button
                   key={a}
+                  type="button"
+                  aria-pressed={active}
                   className={
                     active
-                      ? "px-3 py-1 border border-primary bg-primary-container text-on-primary-container rounded text-body-sm font-body-sm transition-colors"
-                      : "px-3 py-1 border border-outline-variant rounded text-body-sm font-body-sm hover:border-primary hover:text-primary transition-colors bg-surface"
+                      ? "min-h-9 px-3 py-1 border border-primary bg-primary-container text-on-primary-container rounded text-body-sm font-body-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      : "min-h-9 px-3 py-1 border border-outline-variant rounded text-body-sm font-body-sm hover:border-primary hover:text-primary transition-colors bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   }
                 >
                   {a}
@@ -68,7 +88,8 @@ export function FilterSidebar() {
             })}
           </div>
         </div>
-      </div>
+        </div>
+      </details>
     </aside>
   );
 }
