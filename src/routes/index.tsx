@@ -1,14 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { Icon, SiteShell } from "../components/site-shell";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
-const FOOTER_LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCbDq0vERbuBQdplgYRumJoOnWe12cbW670-pZusxuQqXz1j9tHKlNvmmHcVVfe8TxuQkBrM_JttsIA93nURyWU1tcjTXK46gR995CqStTHtI05nSFCf_S96HD-i23PLyvtlZ0oTmUM9cVVtpto7QuQYvG2qIqO6rsfC0cQ7aepU3OHS2mE7OmRPv1kRhFxEyT18aU1d5i9mJNoQdxRJ1QQR21qBi2jv1ZyDHqEztehLIuHqW3X2viIRAUMJcLszA6kBw";
 const HERO_BG =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuA1UnrlnRzHzPhRckFPpOfhIBO0rU9xcHzsXXl0N9sbB-O65L2akdTyMEQbvnx_OnkBQnzHCN0hg1HjR3JyNp9ZdgBAiP1LebeBZsx6OwrzFSyoLggCIvbJxdOmqC9gJ2s7JN6IrwwVOmFtExsFrF70vF02uE-9hP_lN1GqQHYzDSlqETPiHGdiIEOu5niuU7dSXiiWvOe4E8He_ZiFXTPVPAjOiw-GyiQlISaJ5CnWmiCFj1Ogb3hC";
 const CTA_IMG =
