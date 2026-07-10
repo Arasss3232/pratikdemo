@@ -115,83 +115,10 @@ const SUBCATEGORIES = [
 const BRANDS = ["Bosch Professional", "Makita", "DeWalt", "Hilti", "Milwaukee"];
 const APPLICATIONS = ["Ahşap", "Metal", "Beton", "Montaj"];
 
-function Icon({ name, className = "" }: { name: string; className?: string }) {
-  return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
-}
-
 function Index() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <div className="bg-surface font-body-md text-on-background antialiased selection:bg-primary selection:text-white flex flex-col min-h-screen">
-      {/* TopAppBar */}
-      <header
-        className={`bg-primary border-b-2 border-secondary sticky top-0 z-50 w-full transition-shadow duration-300 ${
-          scrolled ? "shadow-md" : ""
-        }`}
-      >
-        <div className="flex flex-col w-full max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-4 gap-4">
-          <div className="flex items-center justify-between gap-4">
-            <a
-              className="font-headline-md text-headline-md font-black text-on-primary flex-shrink-0 flex items-center gap-2"
-              href="#"
-            >
-              <img alt="Pratik Logo" className="h-12 object-contain" src={LOGO_URL} />
-            </a>
-            <nav className="hidden lg:flex items-center gap-gutter">
-              <a
-                className="text-on-primary font-bold border-b-2 border-on-primary pb-1 flex items-center gap-1 font-label-bold text-label-bold hover:text-secondary-fixed-dim transition-colors duration-200"
-                href="#"
-              >
-                Ürünler
-              </a>
-              {["Markalar", "Kataloglar", "Hizmetler", "Sektörel", "Kurumsal"].map((l) => (
-                <a
-                  key={l}
-                  className="text-on-primary opacity-80 hover:text-secondary-fixed-dim transition-colors duration-200 px-2 py-1 rounded font-label-bold text-label-bold"
-                  href="#"
-                >
-                  {l}
-                </a>
-              ))}
-            </nav>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex relative">
-                <Icon
-                  name="search"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
-                />
-                <input
-                  className="pl-10 pr-4 py-2 bg-surface-container-lowest text-on-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all w-64 text-body-sm font-body-sm"
-                  placeholder="Ara..."
-                  type="text"
-                />
-              </div>
-              <div className="flex items-center gap-2 text-on-primary">
-                <button className="hover:text-secondary-fixed-dim transition-colors">
-                  <Icon name="account_circle" />
-                </button>
-                <button className="hover:text-secondary-fixed-dim transition-colors">
-                  <Icon name="shopping_cart" />
-                </button>
-              </div>
-              <button className="hidden sm:inline-block bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all">
-                Teklif Al
-              </button>
-              <button className="lg:hidden text-on-primary p-2 hover:bg-primary-container rounded transition-colors">
-                <Icon name="menu" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-grow">
+    <SiteShell>
+      <>
         {/* Breadcrumb & Header Banner */}
         <div className="relative bg-inverse-surface text-inverse-on-surface pt-4 pb-20">
           <div
