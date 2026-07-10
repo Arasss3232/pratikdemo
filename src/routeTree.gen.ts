@@ -21,7 +21,6 @@ import { Route as KataloglarRouteImport } from './routes/kataloglar'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HizmetlerRouteImport } from './routes/hizmetler'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
 
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
@@ -83,12 +82,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UrunlerElektrikliElAletleriRoute =
-  UrunlerElektrikliElAletleriRouteImport.update({
-    id: '/elektrikli-el-aletleri',
-    path: '/elektrikli-el-aletleri',
-    getParentRoute: () => UrunlerRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,8 +95,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
-  '/urunler': typeof UrunlerRouteWithChildren
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler': typeof UrunlerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -117,8 +109,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
-  '/urunler': typeof UrunlerRouteWithChildren
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler': typeof UrunlerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -133,8 +124,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
-  '/urunler': typeof UrunlerRouteWithChildren
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler': typeof UrunlerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,7 +141,6 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/teknik-destek'
     | '/urunler'
-    | '/urunler/elektrikli-el-aletleri'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,7 +155,6 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/teknik-destek'
     | '/urunler'
-    | '/urunler/elektrikli-el-aletleri'
   id:
     | '__root__'
     | '/'
@@ -181,7 +169,6 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/teknik-destek'
     | '/urunler'
-    | '/urunler/elektrikli-el-aletleri'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -196,7 +183,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
   TeknikDestekRoute: typeof TeknikDestekRoute
-  UrunlerRoute: typeof UrunlerRouteWithChildren
+  UrunlerRoute: typeof UrunlerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -285,26 +272,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/urunler/elektrikli-el-aletleri': {
-      id: '/urunler/elektrikli-el-aletleri'
-      path: '/elektrikli-el-aletleri'
-      fullPath: '/urunler/elektrikli-el-aletleri'
-      preLoaderRoute: typeof UrunlerElektrikliElAletleriRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
   }
 }
-
-interface UrunlerRouteChildren {
-  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRoute
-}
-
-const UrunlerRouteChildren: UrunlerRouteChildren = {
-  UrunlerElektrikliElAletleriRoute: UrunlerElektrikliElAletleriRoute,
-}
-
-const UrunlerRouteWithChildren =
-  UrunlerRoute._addFileChildren(UrunlerRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -318,7 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
   TeknikDestekRoute: TeknikDestekRoute,
-  UrunlerRoute: UrunlerRouteWithChildren,
+  UrunlerRoute: UrunlerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
