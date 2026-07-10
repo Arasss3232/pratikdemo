@@ -17,6 +17,14 @@ export const Route = createFileRoute("/")({
           "Bosch, Makita, DeWalt, Hilti ve daha fazlası. Türkiye genelinde endüstriyel tedarik, teknik danışmanlık ve toplu teklif.",
       },
     ],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: HERO_IMG,
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: Home,
 });

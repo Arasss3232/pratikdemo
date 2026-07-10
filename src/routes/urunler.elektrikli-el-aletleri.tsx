@@ -3,6 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { Icon, SiteShell } from "../components/site-shell";
 
 export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: HERO_BG, fetchpriority: "high" },
+    ],
+  }),
   component: Index,
 });
 
@@ -335,6 +340,8 @@ function Index() {
                         alt={p.brandAlt}
                         className="h-4 object-contain"
                         src={BRAND_LOGOS[p.brand]}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="h-48 bg-surface-container-low flex items-center justify-center p-4 relative">
@@ -342,6 +349,8 @@ function Index() {
                         alt={p.productAlt}
                         className="max-h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                         src={p.productImg}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="p-4 flex flex-col flex-grow border-t border-outline-variant">
@@ -422,6 +431,8 @@ function Index() {
                     i === 4 ? "hidden lg:block" : ""
                   }`}
                   src={src}
+                  loading="lazy"
+                  decoding="async"
                 />
               ))}
             </div>
@@ -474,6 +485,8 @@ function Index() {
                 alt="Procurement officer reviewing tablet in warehouse"
                 className="w-full h-full object-cover mix-blend-luminosity opacity-80"
                 src={CTA_IMG}
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
