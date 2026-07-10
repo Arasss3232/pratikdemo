@@ -3,6 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { Icon, SiteShell } from "../components/site-shell";
 
 export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: HERO_BG, fetchpriority: "high" },
+    ],
+  }),
   component: Index,
 });
 
