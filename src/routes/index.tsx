@@ -133,17 +133,17 @@ function Index() {
             >
               <ol className="inline-flex items-center gap-2">
                 <li className="inline-flex items-center">
-                  <a className="hover:text-inverse-on-surface transition-colors" href="#">
+                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
                     Ana Sayfa
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Icon name="chevron_right" className="text-[16px]" />
                 </li>
                 <li>
-                  <a className="hover:text-inverse-on-surface transition-colors" href="#">
+                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
                     Ürünler
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Icon name="chevron_right" className="text-[16px]" />
