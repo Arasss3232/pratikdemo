@@ -141,7 +141,7 @@ function Index() {
                   <Icon name="chevron_right" className="text-[16px]" />
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
+                  <Link to="/urunler" className="hover:text-inverse-on-surface transition-colors">
                     Ürünler
                   </Link>
                 </li>
