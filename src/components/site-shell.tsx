@@ -40,7 +40,7 @@ export function SiteHeader() {
             to="/"
             className="font-headline-md text-headline-md font-black text-on-primary flex-shrink-0 flex items-center gap-2"
           >
-            <img alt="Pratik Logo" className="h-12 object-contain" src={LOGO_URL} />
+            <img alt="Pratik Logo" className="h-12 object-contain" src={LOGO_URL} width={140} height={48} decoding="async" />
           </Link>
           <nav className="hidden lg:flex items-center gap-gutter">
             {NAV_LINKS.map((l) => (
@@ -103,7 +103,7 @@ export function SiteFooter() {
             to="/"
             className="text-headline-md font-headline-md text-on-tertiary flex items-center gap-2"
           >
-            <img alt="Pratik Logo" className="h-12 object-contain" src={FOOTER_LOGO_URL} />
+            <img alt="Pratik Logo" className="h-12 object-contain" src={FOOTER_LOGO_URL} width={140} height={48} loading="lazy" decoding="async" />
           </Link>
         </div>
         <div className="col-span-1 flex flex-col gap-4">
