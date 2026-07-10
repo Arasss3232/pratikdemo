@@ -4,17 +4,33 @@ import { Icon, SiteShell } from "../components/site-shell";
 export const Route = createFileRoute("/urunler")({
   head: () => ({
     meta: [
-      { title: "Ürünler — Pratik Endüstriyel Donanım" },
+      { title: "Endüstriyel Ürün Kategorileri — Pratik" },
       {
         name: "description",
         content:
           "Elektrikli el aletleri, bağlantı elemanları, KKD, sarf malzemeleri ve daha fazlası. Tüm endüstriyel ürün kategorilerimizi keşfedin.",
       },
-      { property: "og:title", content: "Ürünler — Pratik Endüstriyel Donanım" },
+      { property: "og:title", content: "Endüstriyel Ürün Kategorileri — Pratik" },
       {
         property: "og:description",
         content:
           "20.000+ profesyonel ürün, tek tedarikçiden. Tüm endüstriyel ürün kategorilerimizi keşfedin.",
+      },
+      { property: "og:url", content: "/urunler" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "/urunler" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "/" },
+            { "@type": "ListItem", position: 2, name: "Ürünler", item: "/urunler" },
+          ],
+        }),
       },
     ],
   }),
