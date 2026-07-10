@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UrunlerRouteImport } from './routes/urunler'
 import { Route as TeknikDestekRouteImport } from './routes/teknik-destek'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SektorelRouteImport } from './routes/sektorel'
@@ -21,6 +22,11 @@ import { Route as HizmetlerRouteImport } from './routes/hizmetler'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
 
+const UrunlerRoute = UrunlerRouteImport.update({
+  id: '/urunler',
+  path: '/urunler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeknikDestekRoute = TeknikDestekRouteImport.update({
   id: '/teknik-destek',
   path: '/teknik-destek',
@@ -73,9 +79,9 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const UrunlerElektrikliElAletleriRoute =
   UrunlerElektrikliElAletleriRouteImport.update({
-    id: '/urunler/elektrikli-el-aletleri',
-    path: '/urunler/elektrikli-el-aletleri',
-    getParentRoute: () => rootRouteImport,
+    id: '/elektrikli-el-aletleri',
+    path: '/elektrikli-el-aletleri',
+    getParentRoute: () => UrunlerRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/sektorel': typeof SektorelRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
+  '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
 }
 export interface FileRoutesByTo {
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/sektorel': typeof SektorelRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
+  '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
 }
 export interface FileRoutesById {
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/sektorel': typeof SektorelRoute
   '/teklif': typeof TeklifRoute
   '/teknik-destek': typeof TeknikDestekRoute
+  '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
 }
 export interface FileRouteTypes {
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/teklif'
     | '/teknik-destek'
+    | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/teklif'
     | '/teknik-destek'
+    | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
   id:
     | '__root__'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/teklif'
     | '/teknik-destek'
+    | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
   fileRoutesById: FileRoutesById
 }
@@ -171,11 +183,18 @@ export interface RootRouteChildren {
   SektorelRoute: typeof SektorelRoute
   TeklifRoute: typeof TeklifRoute
   TeknikDestekRoute: typeof TeknikDestekRoute
-  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRoute
+  UrunlerRoute: typeof UrunlerRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/urunler': {
+      id: '/urunler'
+      path: '/urunler'
+      fullPath: '/urunler'
+      preLoaderRoute: typeof UrunlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/teknik-destek': {
       id: '/teknik-destek'
       path: '/teknik-destek'
@@ -248,13 +267,24 @@ declare module '@tanstack/react-router' {
     }
     '/urunler/elektrikli-el-aletleri': {
       id: '/urunler/elektrikli-el-aletleri'
-      path: '/urunler/elektrikli-el-aletleri'
+      path: '/elektrikli-el-aletleri'
       fullPath: '/urunler/elektrikli-el-aletleri'
       preLoaderRoute: typeof UrunlerElektrikliElAletleriRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UrunlerRoute
     }
   }
 }
+
+interface UrunlerRouteChildren {
+  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRoute
+}
+
+const UrunlerRouteChildren: UrunlerRouteChildren = {
+  UrunlerElektrikliElAletleriRoute: UrunlerElektrikliElAletleriRoute,
+}
+
+const UrunlerRouteWithChildren =
+  UrunlerRoute._addFileChildren(UrunlerRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -267,7 +297,7 @@ const rootRouteChildren: RootRouteChildren = {
   SektorelRoute: SektorelRoute,
   TeklifRoute: TeklifRoute,
   TeknikDestekRoute: TeknikDestekRoute,
-  UrunlerElektrikliElAletleriRoute: UrunlerElektrikliElAletleriRoute,
+  UrunlerRoute: UrunlerRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
