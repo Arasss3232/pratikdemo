@@ -416,10 +416,10 @@ export function SiteHeader() {
 export function SiteFooter() {
   const settings = useSiteSettings();
   const currentYear = new Date().getFullYear();
-  const address = settings.data?.address;
-  const phone = settings.data?.phone;
-  const email = settings.data?.email;
-  const hours = settings.data?.working_hours || "Pzt – Cmt · 08:30 – 18:00";
+  const address = settings.address;
+  const phone = settings.phone;
+  const email = settings.email;
+  const hours = settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
 
   const productCols = PRODUCT_GROUPS;
   const corporateLinks = [
