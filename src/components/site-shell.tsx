@@ -301,16 +301,6 @@ export function SiteHeader() {
 
           {/* Right actions */}
           <div className="flex items-center gap-1 md:gap-2 justify-end">
-            {/* Mobile-only quick call */}
-            {telHref && (
-              <a
-                href={telHref}
-                className="lg:hidden min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm text-white/85 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
-                aria-label={`${phone} numarasını ara`}
-              >
-                <Icon name="call" aria-hidden="true" />
-              </a>
-            )}
             {isAdmin && (
               <Link
                 to="/admin"
@@ -330,14 +320,14 @@ export function SiteHeader() {
             </Link>
             <Link
               to="/teklif-sepeti"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
+              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
               aria-label="Teklif sepeti"
             >
               <Icon name="shopping_cart" aria-hidden="true" />
             </Link>
             <Link
               to="/teklif"
-              className="pub-btn pub-btn-primary pub-btn-sm hidden sm:inline-flex ml-2"
+              className="pub-btn pub-btn-primary pub-btn-sm hidden lg:inline-flex ml-2"
             >
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
