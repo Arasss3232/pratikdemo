@@ -398,6 +398,23 @@ function AdminPage() {
 
 /* ================= Products ================= */
 
+function askAiAction(actionType: string) {
+  return {
+    key: `ask-ai-${actionType}`,
+    label: "AI'ya Sor",
+    icon: "auto_awesome",
+    tone: "primary" as const,
+    onRun: (row: any) => {
+      const params = new URLSearchParams({
+        tab: "aiAssistant",
+        aiAction: actionType,
+        aiTarget: String(row.id),
+      });
+      window.location.assign(`/admin?${params.toString()}`);
+    },
+  };
+}
+
 function BrochuresTab() {
   return (
     <GenericCrud
