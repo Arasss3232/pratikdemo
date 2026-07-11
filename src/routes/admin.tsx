@@ -389,10 +389,20 @@ function QuotesTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Bu teklif talebini silmek istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu teklif talebini silmek istediğinize emin misiniz?",
+      confirmLabel: "Evet, sil",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("quote_requests").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Silinemedi", { description: error.message });
+    } else {
+      toast.success("Teklif talebi silindi");
+      refresh();
+    }
   }
 
   return (
@@ -475,10 +485,20 @@ function UsersTab({ currentUserId }: { currentUserId: string }) {
     else refresh();
   }
   async function removeRole(id: string) {
-    if (!confirm("Bu yetkiyi kaldırmak istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu yetkiyi kaldırmak istediğinize emin misiniz?",
+      confirmLabel: "Kaldır",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("user_roles").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Kaldırılamadı", { description: error.message });
+    } else {
+      toast.success("Yetki kaldırıldı");
+      refresh();
+    }
   }
 
   const grouped = new Map<string, UserRoleRow[]>();
