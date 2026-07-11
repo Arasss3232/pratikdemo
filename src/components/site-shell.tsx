@@ -280,8 +280,9 @@ export function SiteHeader() {
           </div>
         )}
       </div>
+    </header>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer — rendered outside <header> so backdrop-blur ancestor doesn't break fixed positioning */}
       {menuOpen && (
         <div
           id="mobile-nav"
@@ -408,7 +409,7 @@ export function SiteHeader() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
 
