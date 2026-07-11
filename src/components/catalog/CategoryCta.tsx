@@ -18,7 +18,16 @@ export function CategoryCta() {
           aria-hidden
         />
         <div className="p-8 md:p-20 flex-1 relative z-10 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 bg-on-primary/20 text-on-primary w-max px-3 py-1 rounded font-label-bold text-label-bold mb-4 uppercase tracking-wider">
+          <div
+            className="inline-flex items-center gap-2 bg-on-primary/20 text-on-primary w-max px-3 py-1 rounded mb-4"
+            style={{
+              fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
+              fontWeight: 700,
+              fontSize: 13,
+              letterSpacing: "0.04em",
+              lineHeight: 1.4,
+            }}
+          >
             <Icon name="business_center" className="text-[16px]" /> Kurumsal Çözümler
           </div>
           <h2 className="font-headline-xl text-headline-xl text-on-primary mb-2 leading-tight">
