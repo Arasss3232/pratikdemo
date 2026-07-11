@@ -226,6 +226,239 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          account_code: string | null
+          account_status: Database["public"]["Enums"]["company_account_status"]
+          approval_status: Database["public"]["Enums"]["company_approval_status"]
+          approved_at: string | null
+          approved_by: string | null
+          available_limit: number
+          company_type: Database["public"]["Enums"]["company_type"]
+          created_at: string
+          created_by: string | null
+          credit_limit: number
+          currency: string
+          customer_group_id: string | null
+          dealer_level_id: string | null
+          id: string
+          internal_notes: string | null
+          legal_name: string
+          payment_term_days: number
+          primary_contact_email: string | null
+          primary_contact_name: string | null
+          primary_contact_phone: string | null
+          risk_status: Database["public"]["Enums"]["risk_status"]
+          sales_representative_id: string | null
+          sector: string | null
+          tax_number: string | null
+          tax_office: string | null
+          trade_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_code?: string | null
+          account_status?: Database["public"]["Enums"]["company_account_status"]
+          approval_status?: Database["public"]["Enums"]["company_approval_status"]
+          approved_at?: string | null
+          approved_by?: string | null
+          available_limit?: number
+          company_type?: Database["public"]["Enums"]["company_type"]
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number
+          currency?: string
+          customer_group_id?: string | null
+          dealer_level_id?: string | null
+          id?: string
+          internal_notes?: string | null
+          legal_name: string
+          payment_term_days?: number
+          primary_contact_email?: string | null
+          primary_contact_name?: string | null
+          primary_contact_phone?: string | null
+          risk_status?: Database["public"]["Enums"]["risk_status"]
+          sales_representative_id?: string | null
+          sector?: string | null
+          tax_number?: string | null
+          tax_office?: string | null
+          trade_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_code?: string | null
+          account_status?: Database["public"]["Enums"]["company_account_status"]
+          approval_status?: Database["public"]["Enums"]["company_approval_status"]
+          approved_at?: string | null
+          approved_by?: string | null
+          available_limit?: number
+          company_type?: Database["public"]["Enums"]["company_type"]
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number
+          currency?: string
+          customer_group_id?: string | null
+          dealer_level_id?: string | null
+          id?: string
+          internal_notes?: string | null
+          legal_name?: string
+          payment_term_days?: number
+          primary_contact_email?: string | null
+          primary_contact_name?: string | null
+          primary_contact_phone?: string | null
+          risk_status?: Database["public"]["Enums"]["risk_status"]
+          sales_representative_id?: string | null
+          sector?: string | null
+          tax_number?: string | null
+          tax_office?: string | null
+          trade_name?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "companies_customer_group_id_fkey"
+            columns: ["customer_group_id"]
+            isOneToOne: false
+            referencedRelation: "customer_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "companies_dealer_level_id_fkey"
+            columns: ["dealer_level_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "companies_sales_representative_id_fkey"
+            columns: ["sales_representative_id"]
+            isOneToOne: false
+            referencedRelation: "sales_representatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_addresses: {
+        Row: {
+          address_type: Database["public"]["Enums"]["address_type"]
+          city: string
+          company_id: string
+          contact_name: string | null
+          contact_phone: string | null
+          country: string
+          created_at: string
+          district: string | null
+          id: string
+          is_default: boolean
+          label: string | null
+          line1: string
+          line2: string | null
+          notes: string | null
+          postal_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          address_type: Database["public"]["Enums"]["address_type"]
+          city: string
+          company_id: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          is_default?: boolean
+          label?: string | null
+          line1: string
+          line2?: string | null
+          notes?: string | null
+          postal_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address_type?: Database["public"]["Enums"]["address_type"]
+          city?: string
+          company_id?: string
+          contact_name?: string | null
+          contact_phone?: string | null
+          country?: string
+          created_at?: string
+          district?: string | null
+          id?: string
+          is_default?: boolean
+          label?: string | null
+          line1?: string
+          line2?: string | null
+          notes?: string | null
+          postal_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_addresses_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_users: {
+        Row: {
+          accepted_at: string | null
+          company_id: string
+          created_at: string
+          id: string
+          invited_at: string | null
+          invited_by: string | null
+          is_active: boolean
+          is_primary: boolean
+          permissions: Json
+          role: Database["public"]["Enums"]["company_role"]
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          is_active?: boolean
+          is_primary?: boolean
+          permissions?: Json
+          role?: Database["public"]["Enums"]["company_role"]
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          is_active?: boolean
+          is_primary?: boolean
+          permissions?: Json
+          role?: Database["public"]["Enums"]["company_role"]
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_users_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           admin_notes: string | null
@@ -267,6 +500,81 @@ export type Database = {
           phone?: string | null
           status?: string
           subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_groups: {
+        Row: {
+          code: string
+          created_at: string
+          default_discount_pct: number
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          default_discount_pct?: number
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          default_discount_pct?: number
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      dealer_levels: {
+        Row: {
+          code: string
+          color_hex: string | null
+          created_at: string
+          discount_pct: number
+          id: string
+          is_active: boolean
+          min_annual_volume: number | null
+          name: string
+          tier: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          color_hex?: string | null
+          created_at?: string
+          discount_pct?: number
+          id?: string
+          is_active?: boolean
+          min_annual_volume?: number | null
+          name: string
+          tier?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          color_hex?: string | null
+          created_at?: string
+          discount_pct?: number
+          id?: string
+          is_active?: boolean
+          min_annual_volume?: number | null
+          name?: string
+          tier?: number
           updated_at?: string
         }
         Relationships: []
@@ -608,6 +916,45 @@ export type Database = {
           },
         ]
       }
+      sales_representatives: {
+        Row: {
+          code: string
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          phone: string | null
+          region: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          phone?: string | null
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          phone?: string | null
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       service_images: {
         Row: {
           alt: string | null
@@ -921,6 +1268,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_company_ids: { Args: { _user_id: string }; Returns: string[] }
+      has_company_role: {
+        Args: {
+          _company_id: string
+          _role: Database["public"]["Enums"]["company_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -928,6 +1284,12 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_company_member: {
+        Args: { _company_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_internal_staff: { Args: { _user_id: string }; Returns: boolean }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       address_type: "billing" | "shipping"
