@@ -12,11 +12,28 @@ import { PageHeader } from "../components/admin/PageHeader";
 import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
+import { ComingSoon } from "../components/admin/ComingSoon";
 
 const TAB_KEYS: AdminTab[] = [
-  "dashboard","settings","products","services","references","brands",
-  "certificates","team","testimonials","faqs","blog","blogcats","jobs",
-  "applications","messages","quotes","users",
+  // Ana Yönetim
+  "dashboard","myTasks","approvals","notifications",
+  // Müşteri Yönetimi
+  "companies","dealers","companyUsers","customerGroups","applications","salesReps",
+  // Satış
+  "quotations","orders","quickOrder","carts","opportunities","discountApprovals",
+  // Ürün ve Fiyat
+  "products","categories","brands","priceLists","specialPrices","discounts","stock",
+  // Finans
+  "accounts","creditLimits","dueTracking","payments","statements","risk",
+  // Operasyon
+  "warehouse","shipments","deliveries","returns","documents",
+  // Raporlar
+  "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
+  // Site Yönetimi
+  "settings","services","references","certificates","team","testimonials",
+  "faqs","blog","blogcats","jobs","messages","quotes",
+  // Sistem
+  "users","roles","workflows","integrations","activityLogs","security","backup",
 ];
 
 export const Route = createFileRoute("/admin")({
@@ -147,6 +164,204 @@ function AdminPage() {
         {tab === "jobs" && <JobsTab />}
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
+        {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
+        {tab === "companies" && <CompaniesTab />}
+        {tab === "dealers" && <DealersTab />}
+        {tab === "customerGroups" && <CustomerGroupsTab />}
+        {tab === "salesReps" && <SalesRepsTab />}
+        {tab === "companyUsers" && <CompanyUsersTab />}
+        {/* ============ Faz 2+ modülleri için yol haritası ============ */}
+        {tab === "myTasks" && (
+          <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
+            "Onay adımlarında size atanan iş kalemleri",
+            "Süre aşımı ve hatırlatmalar",
+            "Tek tıkla onay / reddet + not bırakma",
+          ]} />
+        )}
+        {tab === "approvals" && (
+          <ComingSoon tab="approvals" phase="Faz 3 · Onay Motoru" bullets={[
+            "Yeni firma, kredi limiti, özel indirim onayları",
+            "Yüksek tutarlı teklif ve sipariş onayları",
+            "Kredi limiti aşan sipariş onayları",
+          ]} />
+        )}
+        {tab === "notifications" && (
+          <ComingSoon tab="notifications" phase="Faz 5 · Bildirim Merkezi" bullets={[
+            "Sistem içi bildirim akışı ve okundu takibi",
+            "E-posta ve WhatsApp entegrasyonu",
+            "Rol bazlı bildirim tercihleri",
+          ]} />
+        )}
+        {tab === "quotations" && (
+          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[
+            "Çok kalemli teklif oluşturma, iskonto ve KDV",
+            "Revizyon takibi ve PDF çıktı",
+            "Teklifi tek tıkla siparişe dönüştürme",
+          ]} />
+        )}
+        {tab === "orders" && (
+          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={[
+            "Sipariş durum akışı: Onay → Hazırlık → Sevkiyat → Teslim",
+            "Kısmi sevkiyat ve iade süreçleri",
+            "Satış temsilcisi ve depo görevleri",
+          ]} />
+        )}
+        {tab === "quickOrder" && (
+          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={[
+            "SKU ile çoklu satır girişi",
+            "Firma seçildiğinde otomatik fiyat & stok kontrolü",
+          ]} />
+        )}
+        {tab === "carts" && (
+          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={[
+            "Firmaların açık sepetlerini görüntüleme",
+            "Portal üzerinden gelen taleplere anında müdahale",
+          ]} />
+        )}
+        {tab === "opportunities" && (
+          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={[
+            "Aktif fırsatlar ve tahmini kapanış tarihleri",
+            "Satış temsilcisi bazlı pipeline raporu",
+          ]} />
+        )}
+        {tab === "discountApprovals" && (
+          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={[
+            "Standart dışı indirim talepleri",
+            "Fiyat override kayıtları",
+          ]} />
+        )}
+        {tab === "categories" && (
+          <ComingSoon tab="categories" phase="Faz 2 · Ürün Kataloğu" bullets={[
+            "Kategori ve alt kategori ağacı",
+            "Mevcut ürünlerin normalize edilmesi",
+          ]} />
+        )}
+        {tab === "priceLists" && (
+          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
+            "Kademeli fiyatlandırma",
+          ]} />
+        )}
+        {tab === "specialPrices" && (
+          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Firma × ürün özel fiyatları",
+            "Sözleşme fiyatları ve geçerlilik tarihleri",
+          ]} />
+        )}
+        {tab === "discounts" && (
+          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Kampanya, kategori ve ürün bazlı kurallar",
+            "Tarih aralıklı kampanyalar",
+          ]} />
+        )}
+        {tab === "stock" && (
+          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={[
+            "Depo × ürün stok haritası",
+            "Mevcut / rezerve / gelen stok",
+          ]} />
+        )}
+        {tab === "accounts" && (
+          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={[
+            "Firma bazlı cari hesap özeti",
+            "Açık faturalar ve tahsilatlar",
+          ]} />
+        )}
+        {tab === "creditLimits" && (
+          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={[
+            "Kredi limiti değişiklik geçmişi",
+            "Onay akışına bağlı limit güncelleme",
+          ]} />
+        )}
+        {tab === "dueTracking" && (
+          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={[
+            "Yaklaşan vadeler ve otomatik uyarılar",
+            "Geciken tahsilat raporu",
+          ]} />
+        )}
+        {tab === "payments" && (
+          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={[
+            "Tahsilat kayıtları",
+            "Fatura eşleştirmesi",
+          ]} />
+        )}
+        {tab === "statements" && (
+          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={[
+            "PDF ekstre çıktısı",
+            "Firma paylaşımı için imzalı bağlantı",
+          ]} />
+        )}
+        {tab === "risk" && (
+          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={[
+            "Risk skoru ve engelli hesaplar",
+            "Vadesi geçmiş bakiye yaşlandırma",
+          ]} />
+        )}
+        {tab === "warehouse" && (
+          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={[
+            "Depo tanımları ve sorumlu kullanıcılar",
+            "Depolar arası transfer",
+          ]} />
+        )}
+        {tab === "shipments" && (
+          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={[
+            "Sevkiyat oluşturma ve kargo bilgisi",
+            "Kısmi sevkiyat desteği",
+          ]} />
+        )}
+        {tab === "deliveries" && (
+          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={[
+            "Teslimat belgeleri ve tesellüm",
+          ]} />
+        )}
+        {tab === "returns" && (
+          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={[
+            "İade talepleri ve nedenleri",
+            "Stok ve cari düzeltmeleri",
+          ]} />
+        )}
+        {tab === "documents" && (
+          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={[
+            "Sözleşmeler, faturalar ve teknik belgeler için ortak depo",
+            "Rol bazlı erişim kontrolü",
+          ]} />
+        )}
+        {tab === "reportSales" && <ComingSoon tab="reportSales" phase="Faz 5 · Raporlar" />}
+        {tab === "reportQuotes" && <ComingSoon tab="reportQuotes" phase="Faz 5 · Raporlar" />}
+        {tab === "reportOrders" && <ComingSoon tab="reportOrders" phase="Faz 5 · Raporlar" />}
+        {tab === "reportCustomers" && <ComingSoon tab="reportCustomers" phase="Faz 5 · Raporlar" />}
+        {tab === "reportProducts" && <ComingSoon tab="reportProducts" phase="Faz 5 · Raporlar" />}
+        {tab === "reportFinance" && <ComingSoon tab="reportFinance" phase="Faz 5 · Raporlar" />}
+        {tab === "roles" && (
+          <ComingSoon tab="roles" phase="Faz 1 · Sistem" bullets={[
+            "Dahili ve firma rolleri artık veritabanında tanımlı",
+            "Kullanıcı ekranı üzerinden rol atanabilir",
+          ]} />
+        )}
+        {tab === "workflows" && (
+          <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
+        )}
+        {tab === "integrations" && (
+          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={[
+            "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
+          ]} />
+        )}
+        {tab === "activityLogs" && (
+          <ComingSoon tab="activityLogs" phase="Faz 5 · Denetim" bullets={[
+            "Tüm mutasyonların otomatik kaydı",
+            "Rol bazlı görüntüleme",
+          ]} />
+        )}
+        {tab === "security" && (
+          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
+            "Oturum ve başarısız giriş takibi",
+            "Şifre politikası",
+          ]} />
+        )}
+        {tab === "backup" && (
+          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={[
+            "Yedekleme durumu ve geri yükleme",
+          ]} />
+        )}
       </AdminShell>
       <ConfirmDialogHost />
     </>
@@ -191,6 +406,167 @@ function ProductsTab() {
             {r.is_active ? "Yayında" : "Gizli"}
           </StatusBadge>
         ) },
+      ]}
+    />
+  );
+}
+
+// ================================================================
+// B2B Çekirdek Modülleri (Faz 1)
+// ================================================================
+
+export function CustomerGroupsTab() {
+  return (
+    <GenericCrud
+      table="customer_groups"
+      title="Müşteri Grupları"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "name", label: "Ad" },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "default_discount_pct", label: "Varsayılan İskonto (%)", type: "number" },
+        { name: "display_order", label: "Sıra", type: "number" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "code", label: "Kod" },
+        { key: "name", label: "Ad" },
+        { key: "default_discount_pct", label: "İskonto %" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function DealersTab() {
+  return (
+    <GenericCrud
+      table="dealer_levels"
+      title="Bayi Seviyeleri"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "name", label: "Ad" },
+        { name: "tier", label: "Kademe", type: "number" },
+        { name: "discount_pct", label: "İskonto (%)", type: "number" },
+        { name: "min_annual_volume", label: "Min. Yıllık Ciro", type: "number" },
+        { name: "color_hex", label: "Renk (HEX)" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "tier", label: "Kademe" },
+        { key: "code", label: "Kod" },
+        { key: "name", label: "Ad" },
+        { key: "discount_pct", label: "İskonto %" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function SalesRepsTab() {
+  return (
+    <GenericCrud
+      table="sales_representatives"
+      title="Satış Temsilcileri"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "full_name", label: "Ad Soyad" },
+        { name: "email", label: "E-posta" },
+        { name: "phone", label: "Telefon" },
+        { name: "region", label: "Bölge" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "code", label: "Kod" },
+        { key: "full_name", label: "Ad Soyad" },
+        { key: "region", label: "Bölge" },
+        { key: "email", label: "E-posta" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function CompaniesTab() {
+  return (
+    <GenericCrud
+      table="companies"
+      title="Firmalar"
+      fields={[
+        { name: "legal_name", label: "Ünvan" },
+        { name: "trade_name", label: "Ticari Ad" },
+        { name: "account_code", label: "Cari Kodu" },
+        { name: "company_type", label: "Firma Tipi", type: "select", options: [
+          { value: "corporate", label: "Kurumsal" },
+          { value: "dealer", label: "Bayi" },
+          { value: "distributor", label: "Distribütör" },
+          { value: "public_sector", label: "Kamu" },
+          { value: "individual", label: "Bireysel" },
+        ] },
+        { name: "sector", label: "Sektör" },
+        { name: "tax_number", label: "Vergi Numarası" },
+        { name: "tax_office", label: "Vergi Dairesi" },
+        { name: "primary_contact_name", label: "İlgili Kişi" },
+        { name: "primary_contact_email", label: "İlgili E-posta" },
+        { name: "primary_contact_phone", label: "İlgili Telefon" },
+        { name: "credit_limit", label: "Kredi Limiti", type: "number" },
+        { name: "available_limit", label: "Kullanılabilir Limit", type: "number" },
+        { name: "payment_term_days", label: "Vade (Gün)", type: "number" },
+        { name: "currency", label: "Para Birimi" },
+        { name: "account_status", label: "Hesap Durumu", type: "select", options: [
+          { value: "active", label: "Aktif" },
+          { value: "on_hold", label: "Beklemede" },
+          { value: "blocked", label: "Engelli" },
+          { value: "closed", label: "Kapalı" },
+        ] },
+        { name: "approval_status", label: "Onay Durumu", type: "select", options: [
+          { value: "pending", label: "Beklemede" },
+          { value: "approved", label: "Onaylı" },
+          { value: "rejected", label: "Reddedildi" },
+        ] },
+        { name: "risk_status", label: "Risk", type: "select", options: [
+          { value: "low", label: "Düşük" },
+          { value: "medium", label: "Orta" },
+          { value: "high", label: "Yüksek" },
+        ] },
+        { name: "internal_notes", label: "Dahili Notlar", type: "textarea" },
+      ]}
+      columns={[
+        { key: "legal_name", label: "Ünvan" },
+        { key: "company_type", label: "Tip" },
+        { key: "account_code", label: "Cari" },
+        { key: "credit_limit", label: "Kredi Limiti" },
+        { key: "account_status", label: "Durum" },
+        { key: "approval_status", label: "Onay" },
+      ]}
+    />
+  );
+}
+
+export function CompanyUsersTab() {
+  return (
+    <GenericCrud
+      table="company_users"
+      title="Firma Kullanıcıları"
+      fields={[
+        { name: "company_id", label: "Firma ID" },
+        { name: "user_id", label: "Kullanıcı ID" },
+        { name: "role", label: "Rol", type: "select", options: [
+          { value: "owner", label: "Sahip" },
+          { value: "purchaser", label: "Satın Alma" },
+          { value: "finance", label: "Finans" },
+          { value: "viewer", label: "Görüntüleyici" },
+        ] },
+        { name: "title", label: "Görev" },
+        { name: "is_primary", label: "Birincil", type: "checkbox" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "company_id", label: "Firma" },
+        { key: "user_id", label: "Kullanıcı" },
+        { key: "role", label: "Rol" },
+        { key: "is_primary", label: "Birincil", render: (r) => (r.is_primary ? "Evet" : "Hayır") },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
       ]}
     />
   );
