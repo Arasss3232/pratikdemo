@@ -171,8 +171,8 @@ export function useAiAssistant() {
   );
 
   const approve = useCallback(
-    async (id: string) => {
-      const updated = (await approveFn({ data: { id } })) as Proposal;
+    async (id: string, force = false) => {
+      const updated = (await approveFn({ data: { id, force } })) as Proposal;
       if (updated) setProposals((p) => ({ ...p, [updated.id]: updated }));
       return updated;
     },
