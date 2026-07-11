@@ -408,7 +408,7 @@ function BrochuresTab() {
               .from("homepage_brochures")
               .update({ is_active: next })
               .eq("id", row.id);
-            if (error) { toast.error("Güncellenemedi", { description: error.message });
+            if (error) { toast.error("Güncellenemedi", { description: error.message }); return; }
             toast.success(next ? "Broşür yayınlandı" : "Broşür pasif hale getirildi");
             refresh();
           },
@@ -423,7 +423,7 @@ function BrochuresTab() {
               .from("homepage_brochures")
               .update({ display_order: Math.max(0, current - 1) })
               .eq("id", row.id);
-            if (error) { toast.error("Sıralama güncellenemedi", { description: error.message });
+            if (error) { toast.error("Sıralama güncellenemedi", { description: error.message }); return; }
             toast.success("Sıralama güncellendi");
             refresh();
           },
@@ -438,7 +438,7 @@ function BrochuresTab() {
               .from("homepage_brochures")
               .update({ display_order: current + 1 })
               .eq("id", row.id);
-            if (error) { toast.error("Sıralama güncellenemedi", { description: error.message });
+            if (error) { toast.error("Sıralama güncellenemedi", { description: error.message }); return; }
             toast.success("Sıralama güncellendi");
             refresh();
           },
@@ -463,7 +463,7 @@ function BrochuresTab() {
             const { error } = await supabase
               .from("homepage_brochures")
               .insert(copy as never);
-            if (error) { toast.error("Kopyalanamadı", { description: error.message });
+            if (error) { toast.error("Kopyalanamadı", { description: error.message }); return; }
             toast.success("Broşür kopyalandı (taslak)");
             refresh();
           },
