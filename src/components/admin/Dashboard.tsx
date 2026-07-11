@@ -230,25 +230,25 @@ function RecentList({
   onSeeAll: () => void;
 }) {
   return (
-    <section className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
-      <header className="flex items-center justify-between px-5 py-3 border-b border-outline-variant">
-        <h2 className="font-label-bold text-body-md">{title}</h2>
-        <button onClick={onSeeAll} className="text-body-sm text-primary hover:underline">
+    <section className="rounded-xl overflow-hidden" style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}>
+      <header className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--admin-border)" }}>
+        <h2 className="font-bold text-[14px]" style={{ color: "var(--admin-text)" }}>{title}</h2>
+        <button onClick={onSeeAll} className="text-sm font-semibold hover:underline" style={{ color: "var(--admin-navy)" }}>
           Tümünü gör
         </button>
       </header>
       {items.length === 0 ? (
-        <p className="p-8 text-center text-body-sm text-on-surface-variant">{emptyLabel}</p>
+        <p className="p-8 text-center text-sm" style={{ color: "var(--admin-text-2)" }}>{emptyLabel}</p>
       ) : (
-        <ul className="divide-y divide-outline-variant">
+        <ul style={{ borderTop: "0" }}>
           {items.map((it) => (
-            <li key={it.id} className="px-5 py-3 flex items-center gap-3">
+            <li key={it.id} className="px-5 py-3 flex items-center gap-3" style={{ borderTop: "1px solid var(--admin-border)" }}>
               <div className="min-w-0 flex-1">
-                <p className="text-body-sm font-label-bold truncate">{it.primary}</p>
-                <p className="text-body-sm text-on-surface-variant truncate">{it.secondary}</p>
+                <p className="text-sm font-semibold truncate" style={{ color: "var(--admin-text)" }}>{it.primary}</p>
+                <p className="text-sm truncate" style={{ color: "var(--admin-text-2)" }}>{it.secondary}</p>
               </div>
               <StatusBadge status={it.status} />
-              <span className="text-[11px] text-on-surface-variant whitespace-nowrap">
+              <span className="text-[11px] whitespace-nowrap" style={{ color: "var(--admin-text-mute)" }}>
                 {new Date(it.date).toLocaleDateString("tr-TR")}
               </span>
             </li>
@@ -261,17 +261,17 @@ function RecentList({
 
 function StatusBadge({ status }: { status: string | null }) {
   const map: Record<string, { label: string; cls: string }> = {
-    new: { label: "Yeni", cls: "bg-primary/10 text-primary" },
-    in_progress: { label: "İşlemde", cls: "bg-secondary/15 text-on-secondary-fixed-variant" },
-    resolved: { label: "Çözüldü", cls: "bg-green-100 text-green-800" },
-    completed: { label: "Tamamlandı", cls: "bg-green-100 text-green-800" },
-    cancelled: { label: "İptal", cls: "bg-surface-container-highest text-on-surface-variant" },
-    archived: { label: "Arşiv", cls: "bg-surface-container-highest text-on-surface-variant" },
+    new: { label: "Yeni", cls: "bg-[var(--admin-yellow-soft)] text-[var(--admin-navy)]" },
+    in_progress: { label: "İşlemde", cls: "bg-blue-50 text-blue-700" },
+    resolved: { label: "Çözüldü", cls: "bg-green-50 text-green-700" },
+    completed: { label: "Tamamlandı", cls: "bg-green-50 text-green-700" },
+    cancelled: { label: "İptal", cls: "bg-gray-100 text-gray-600" },
+    archived: { label: "Arşiv", cls: "bg-gray-100 text-gray-600" },
   };
   const m = status ? map[status] : null;
   if (!m) return null;
   return (
-    <span className={`hidden sm:inline text-[11px] px-2 py-0.5 rounded-full font-label-bold ${m.cls}`}>
+    <span className={`hidden sm:inline text-[11px] px-2 py-0.5 rounded-full font-semibold ${m.cls}`}>
       {m.label}
     </span>
   );
