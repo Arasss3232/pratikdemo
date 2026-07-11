@@ -81,17 +81,46 @@ function AdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen grid place-items-center text-on-surface-variant">Yükleniyor…</div>
+      <div
+        className="admin-scope min-h-screen grid place-items-center"
+        style={{ background: "var(--admin-bg)", color: "var(--admin-text-2)" }}
+      >
+        <div className="flex items-center gap-3 text-sm">
+          <span
+            className="h-5 w-5 rounded-full border-2 animate-spin"
+            style={{ borderColor: "var(--admin-navy)", borderTopColor: "transparent" }}
+          />
+          Yönetim paneli yükleniyor…
+        </div>
+      </div>
     );
   }
   if (!user) return null;
   if (!isAdmin) {
     return (
-      <div className="min-h-screen grid place-items-center p-8 text-center">
-        <div className="flex flex-col gap-4 items-center">
-          <p className="font-headline-sm text-headline-sm">Yetkisiz erişim</p>
-          <p className="text-on-surface-variant text-body-sm">Bu sayfayı görüntülemek için admin yetkiniz olmalı.</p>
-          <Link to="/" className={buttonStyles({ variant: "primary", size: "sm" })}>Ana sayfaya dön</Link>
+      <div
+        className="admin-scope min-h-screen grid place-items-center p-8 text-center"
+        style={{ background: "var(--admin-bg)" }}
+      >
+        <div
+          className="max-w-md w-full flex flex-col gap-4 items-center rounded-2xl p-8 shadow-sm"
+          style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}
+        >
+          <div
+            className="h-14 w-14 rounded-full grid place-items-center"
+            style={{ background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" }}
+          >
+            <Icon name="lock" className="text-[28px]" />
+          </div>
+          <p className="text-xl font-bold" style={{ color: "var(--admin-text)" }}>
+            Yetkisiz erişim
+          </p>
+          <p className="text-sm" style={{ color: "var(--admin-text-2)" }}>
+            Bu sayfayı görüntülemek için yönetici yetkiniz olmalı. Yetki için sistem sorumlunuzla iletişime geçin.
+          </p>
+          <Link to="/" className={buttonStyles({ variant: "primary", size: "sm" })}>
+            Ana sayfaya dön
+          </Link>
         </div>
       </div>
     );
