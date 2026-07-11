@@ -676,10 +676,10 @@ function CompanyAddressesTab({ companyId, addresses, onRefresh }: { companyId: s
       company_id: companyId,
       label: label || (type === "billing" ? "Fatura Adresi" : "Sevkiyat Adresi"),
       address_type: type,
-      address_line1: line,
-      city: city || null,
+      line1: line,
+      city: city || "—",
       district: district || null,
-      phone: phone || null,
+      contact_phone: phone || null,
     });
     setBusy(false);
     setLabel(""); setLine(""); setCity(""); setDistrict(""); setPhone("");
@@ -720,9 +720,9 @@ function CompanyAddressesTab({ companyId, addresses, onRefresh }: { companyId: s
                   {a.address_type === "billing" ? "Fatura" : "Sevkiyat"}
                 </span>
               </div>
-              <p className="mt-2 text-[12.5px]" style={{ color: "var(--admin-text-2)" }}>{a.address_line1}</p>
+              <p className="mt-2 text-[12.5px]" style={{ color: "var(--admin-text-2)" }}>{a.line1}</p>
               {(a.district || a.city) && <p className="text-[12px]" style={{ color: "var(--admin-text-mute)" }}>{[a.district, a.city].filter(Boolean).join(" / ")}</p>}
-              {a.phone && <p className="text-[12px] mt-1" style={{ color: "var(--admin-text-mute)" }}>{a.phone}</p>}
+              {a.contact_phone && <p className="text-[12px] mt-1" style={{ color: "var(--admin-text-mute)" }}>{a.contact_phone}</p>}
               <div className="mt-3 flex justify-end">
                 <button onClick={() => void remove(a.id)} className="admin-btn admin-btn-ghost admin-btn-xs" style={{ color: "#991B1B" }}>Sil</button>
               </div>
