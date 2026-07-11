@@ -1,103 +1,101 @@
-## Pratik Endüstriyel — Kapsamlı SEO Kurulum & Optimizasyon Planı
+# 1. Tur — Kurumsal CMS Eklentisi
 
-Türkçe endüstriyel donanım sitesi (Bosch, Makita, DeWalt, Hilti tedariki) için sıfırdan uçtan uca SEO altyapısı. Site henüz yayınlanmadığı için kanonik URL'ler ve sitemap `BASE_URL` başlangıçta göreli/boş bırakılır; domain bağlanınca güncellenir.
+Mevcut Pratik Endüstriyel (ürünler + teklif + admin) korunur. Üzerine kurumsal site + CMS eklenir. Firma bilgisi verilmedi — jenerik "Pratik Endüstriyel" metinleriyle başlarız, admin panelinden düzenlenir.
 
----
+## Kapsam (bu turda)
 
-### 1) Teknik Temel (Foundation)
+**A. Temel sayfalar + tasarım**
+- `/hakkimizda` — tarihçe, misyon, vizyon, değerler, ekip, sertifikalar
+- `/hizmetler` + `/hizmetler/$slug` — kart listesi + detay
+- `/referanslar` — kategori filtreli grid
+- `/iletisim` — form + harita + KVKK onayı
+- Header/footer cilası, mevcut hamburger menü korunur
 
-- **`public/robots.txt`** oluştur:
-  ```
-  User-agent: *
-  Allow: /
-  ```
-  (Yayınlandığında `Sitemap:` satırı eklenecek.)
-- **`src/routes/sitemap[.]xml.ts`** server route — her public route için bir `<url>` üret (`/`, `/urunler`, `/urunler/elektrikli-el-aletleri`, `/markalar`, `/kataloglar`, `/hizmetler`, `/sektorel`, `/kurumsal`, `/teklif`, `/iletisim`, `/teknik-destek`, `/kvkk`). `BASE_URL = ""` + TODO.
-- **`__root.tsx`** yalnızca site geneli varsayılanlar tutar: charSet, viewport, `og:site_name: "Pratik"`, `og:type: "website"`, Organization JSON-LD.
-- Root'taki jenerik başlığı kaldır — her leaf route kendi title/description'ını yazacak.
+**B. CMS temeli**
+Admin panele sekmeler eklenir: Site Ayarları · Hizmetler · Referanslar · Ekip · SSS · Markalar · Sertifikalar · Medya Kütüphanesi
 
-### 2) Her Route için Head Metadata
+**C. Blog & Haberler**
+- `/blog` liste + `/blog/$slug` detay + kategori filtresi
+- Admin: Blog Yazıları · Kategoriler · Etiketler
 
-Her sayfa için `head()` içinde: `title` (<60 kar, keyword önde), `description` (<160 kar), `og:title`, `og:description`, `og:type`, `og:url` (göreli), `<link rel="canonical">` (göreli, self-referencing).
+**D. İK + Formlar + Mesajlar**
+- `/kariyer` açık pozisyonlar + `/kariyer/$slug` başvuru formu (CV upload)
+- Admin: Pozisyonlar · Başvurular (durum yönetimi) · İletişim Mesajları (yeni/okundu/cevaplandı/arşiv)
 
-Örnek anahtar başlıklar (Türkçe, keyword-odaklı):
+## Sonraki turlara ertelenenler
+Sayfa oluşturucu (block editor), form builder, gerçek analytics, tasarım-token editörü, rol/yetki matrisi, işlem geçmişi, 301 yönetimi, bildirim merkezi, çoklu menü yöneticisi. Şu an admin sadece admin rolüne açık kalır.
 
-| Route | Title | Ana Keyword |
-|---|---|---|
-| `/` | Endüstriyel Donanım Tedariki — Pratik | endüstriyel donanım tedarik |
-| `/urunler` | Endüstriyel Ürün Kategorileri — Pratik | endüstriyel ürünler |
-| `/urunler/elektrikli-el-aletleri` | Elektrikli El Aletleri — Bosch, Makita, DeWalt | elektrikli el aletleri |
-| `/markalar` | Yetkili Distribütör Markalar — Pratik | bosch yetkili satıcı |
-| `/kataloglar` | Ürün Katalogları ve Teknik Dokümanlar | ürün kataloğu indir |
-| `/hizmetler` | Endüstriyel Tedarik ve Servis Hizmetleri | endüstriyel tedarik hizmeti |
-| `/sektorel` | Sektörel Çözümler — İnşaat, İmalat, Enerji | sektörel endüstriyel çözüm |
-| `/kurumsal` | Kurumsal — Hakkımızda | pratik endüstriyel hakkında |
-| `/teklif` | Toplu Teklif Formu — Endüstriyel Alım | toplu teklif |
-| `/iletisim` | İletişim — Pratik Endüstriyel | iletişim |
-| `/teknik-destek` | Teknik Destek ve Servis | teknik destek |
-| `/kvkk` | KVKK Aydınlatma Metni | kvkk (noindex opsiyonel) |
+## Teknik plan
 
-### 3) Yapısal Veri (JSON-LD)
+### 1. Veritabanı (tek migration)
+Yeni tablolar (hepsi RLS + GRANT + updated_at trigger'ları):
 
-- **Root**: `Organization` (isim, logo, iletişim, sameAs sosyal linkler) + `WebSite` (potentialAction: SearchAction).
-- **`/urunler/elektrikli-el-aletleri`** ve kategori sayfaları: `BreadcrumbList` + `ItemList` (ürünleri listeler).
-- Her ürün için: `Product` schema (name, brand, sku, image, offers/availability).
-- **`/iletisim`**: `LocalBusiness` (adres, telefon, açılış saatleri).
-- **`/kurumsal`**: `AboutPage` + `Organization` referansı.
+```text
+site_settings      (singleton: logo, iletişim, sosyal, harita, footer)
+services           (slug, title, excerpt, body, cover, icon, order, published)
+service_images     (service_id, url, order)
+references         (slug, title, client, category, cover, project_date, url, order, published)
+reference_images
+team_members       (name, role, photo, bio, order)
+testimonials       (name, company, quote, avatar, rating, order, published)
+brands             (name, logo, url, order)
+certificates       (name, image, issued_at, order)
+faqs               (question, answer, category, order, published)
+blog_categories    (slug, name)
+blog_tags          (slug, name)
+blog_posts         (slug, title, excerpt, body, cover, category_id, author, published_at, featured, seo_title, seo_desc, published)
+blog_post_tags     (post_id, tag_id)
+job_posts          (slug, title, department, location, type, body, published)
+job_applications   (job_id, name, email, phone, cv_url, note, status)
+contact_messages   (name, email, phone, department, subject, message, kvkk, status)
+media              (path, filename, mime, size, alt)
+```
 
-### 4) İçerik & Bilgi Mimarisi
+Storage bucket: `media` (public) — CV'ler `cv/` prefix (private policy).
 
-- H1 her sayfada TEK ve keyword içerir; H2/H3 hiyerarşisi korunur.
-- **Kategori sayfaları için 150-300 kelimelik SEO paragrafı** (elektrikli el aletleri hakkında rehber metin — hem kullanıcıya değer hem long-tail için).
-- **Internal linking**: breadcrumbs (var ✓), her kategori kartından ürün detayına, related brand → related products cross-links.
-- Anchor text: "buraya tıkla" yerine "elektrikli el aletleri kategorisine göz atın" gibi keyword'lü.
+RLS:
+- SELECT `anon+authenticated`: yayında (`published=true`) olan içerikler + site_settings
+- INSERT `anon`: contact_messages, job_applications
+- Diğer tüm yazma: admin (has_role)
 
-### 5) Görsel & Erişilebilirlik SEO
+### 2. Server functions
+`src/lib/cms.functions.ts` — public read'ler (SSR uyumlu, publishable client)
+`src/lib/admin.functions.ts` — admin yazma (requireSupabaseAuth + has_role kontrol)
+İletişim/başvuru gönderimi doğrudan browser client'tan anon INSERT ile.
 
-- Tüm `<img>` için açıklayıcı Türkçe `alt` (mevcut altlar İngilizce — Türkçeye çevir: "Bosch darbeli matkap beyaz zeminde").
-- `width`/`height` ekle (CLS için — logo'lar zaten yapıldı; ürün ve hero görselleri de).
-- `loading="lazy"` + `decoding="async"` (yapıldı ✓); LCP hero preload (yapıldı ✓).
-- Semantic HTML: `<article>`, `<nav>`, `<main>`, `<section>` — mevcut yapı büyük ölçüde uygun.
+### 3. Public sayfalar
+Mevcut `SiteShell` + `PageHero` + marketing bileşenleri kullanılır. Her rota kendi `head()` meta ve JSON-LD (Article/Organization/BreadcrumbList) ile.
 
-### 6) Performans (Core Web Vitals — SEO ranking sinyali)
+### 4. Admin
+Mevcut `/admin` sidebar'ına yeni bölümler:
+```text
+İçerik          Ayarlar
+├ Hizmetler    ├ Site Ayarları
+├ Referanslar  ├ Ekip
+├ Blog         ├ Markalar
+├ SSS          ├ Sertifikalar
+├ Pozisyonlar  └ Medya
 
-- ✓ LCP preload eklendi.
-- ✓ Görsel lazy-load + preconnect eklendi.
-- ✓ Icon font tek varyanta indirildi.
-- Sonraki adım: hero görsellerini WebP/AvIF olarak host etmek (şu an lh3.googleusercontent).
+İletişim
+├ Mesajlar
+├ Başvurular
+└ Teklif Talepleri (mevcut)
 
-### 7) URL & Kanonik Politika
+Sistem
+├ Ürünler (mevcut)
+└ Kullanıcılar (mevcut)
+```
+Her modül: liste (arama + sayfalama) · ekle/düzenle modal · sil onaylı · yayında/taslak toggle · sürükle-bırak sıra (dnd-kit). Zengin metin için `@tiptap/react`.
 
-- Kısa, keyword'lü, Türkçe URL'ler (mevcut ✓).
-- Trailing slash yok (TanStack kuralı ✓).
-- Her leaf `canonical` self-referencing — parametreli URL'ler ana URL'ye canonical.
-- İleride: `/urunler/{kategori}/{urun-slug}` dynamic route eklenirse aynı desen.
+### 5. Uygulama sırası (aynı turda)
+1. Migration (schema + RLS + bucket + storage policies)
+2. Server fn'ler + admin bileşen kütüphanesi (DataTable, MediaPicker, RichEditor, SortableList)
+3. Admin CRUD ekranları
+4. Public sayfalar + head/JSON-LD
+5. Seed: örnek 3 hizmet, 4 referans, 2 blog yazısı, 6 SSS — admin'den silinebilir
 
-### 8) Yayın Sonrası (Post-Publish)
-
-1. `BASE_URL`'i sitemap ve tüm `og:url`/`canonical`'larda gerçek domaine set et.
-2. `robots.txt`'e `Sitemap: https://domain.com/sitemap.xml` ekle.
-3. **Google Search Console**: site verification (META token) → `__root.tsx`'e meta tag ekle → verify → property olarak ekle → sitemap submit.
-4. **Bing Webmaster** aynı akış.
-5. og:image üret (imagegen, 1200×630) — marka + slogan; leaf route'larda hero görseline eşle.
-
-### 9) Devam Eden İzleme
-
-- Yayından sonra Semrush `domain_analysis` + `seo_trend` ile takip.
-- Google Search Console `urlInspection` ile indexleme durumu kontrolü.
-- Ayda bir SEO scan (Lovable SEO sekmesi) + eksikleri kapatma döngüsü.
-
----
-
-### Uygulama Sırası (Build Order)
-
-1. `robots.txt` + `sitemap[.]xml.ts` oluştur.
-2. `__root.tsx`'i sitewide-only'a indir + Organization/WebSite JSON-LD ekle.
-3. 12 route'un her birine `head()` (title, description, og:*, canonical) yaz.
-4. Ürün ve kategori sayfalarına BreadcrumbList + ItemList + Product JSON-LD.
-5. İletişim sayfasına LocalBusiness JSON-LD.
-6. Görsel `alt`'larını Türkçeleştir; H1 kontrolü.
-7. Kategori sayfasına SEO açıklama paragrafı ekle.
-8. Yayın sonrası: BASE_URL güncelle, GSC verify + sitemap submit.
-
-Onaylarsan sırayla uygularım. İstersen belirli bir adımı önce/yalnız yapabilirim.
+## Notlar
+- Görsel yükleme: yeni Media Kütüphanesi → Supabase Storage `media` bucket
+- Analytics/ziyaretçi sayaçları bu turda YOK (gerçek veri için ayrı entegrasyon turu)
+- Tasarım-token editörü YOK — renkler `src/styles.css`'te sabit
+- Firma metinlerini sen doldurana kadar jenerik lorem yerine sektörel şablon metin kullanılır
