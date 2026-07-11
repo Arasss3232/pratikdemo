@@ -37,6 +37,7 @@ import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunle
 import { Route as UrunlerElAletleriRouteImport } from './routes/urunler.el-aletleri'
 import { Route as UrunlerBaglantiElemanlariRouteImport } from './routes/urunler.baglanti-elemanlari'
 import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
+import { Route as PortalUrunlerRouteImport } from './routes/portal.urunler'
 import { Route as PortalTekliflerimRouteImport } from './routes/portal.tekliflerim'
 import { Route as PortalTeklifAlRouteImport } from './routes/portal.teklif-al'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
@@ -187,6 +188,11 @@ const UrunDetaySkuRoute = UrunDetaySkuRouteImport.update({
   path: '/urun-detay/$sku',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalUrunlerRoute = PortalUrunlerRouteImport.update({
+  id: '/urunler',
+  path: '/urunler',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalTekliflerimRoute = PortalTekliflerimRouteImport.update({
   id: '/tekliflerim',
   path: '/tekliflerim',
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
+  '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
+  '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
+  '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/kariyer/$slug'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
+    | '/portal/urunler'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
     | '/urunler/el-aletleri'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/kariyer/$slug'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
+    | '/portal/urunler'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
     | '/urunler/el-aletleri'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/kariyer/$slug'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
+    | '/portal/urunler'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
     | '/urunler/el-aletleri'
@@ -659,6 +671,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UrunDetaySkuRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/urunler': {
+      id: '/portal/urunler'
+      path: '/urunler'
+      fullPath: '/portal/urunler'
+      preLoaderRoute: typeof PortalUrunlerRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/tekliflerim': {
       id: '/portal/tekliflerim'
       path: '/tekliflerim'
@@ -740,12 +759,14 @@ const KariyerRouteWithChildren =
 interface PortalRouteChildren {
   PortalTeklifAlRoute: typeof PortalTeklifAlRoute
   PortalTekliflerimRoute: typeof PortalTekliflerimRoute
+  PortalUrunlerRoute: typeof PortalUrunlerRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
   PortalTeklifAlRoute: PortalTeklifAlRoute,
   PortalTekliflerimRoute: PortalTekliflerimRoute,
+  PortalUrunlerRoute: PortalUrunlerRoute,
   PortalIndexRoute: PortalIndexRoute,
 }
 
