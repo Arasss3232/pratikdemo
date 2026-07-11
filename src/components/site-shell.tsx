@@ -6,7 +6,6 @@ import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
-import { PublicBrandLockup } from "./PublicBrandLockup";
 
 function BrandWordmark({
   logoUrl,
@@ -247,11 +246,10 @@ export function SiteHeader() {
             className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
             aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
           >
-            <PublicBrandLockup
+            <BrandWordmark
               logoUrl={settings.mobile_logo_url || settings.logo_url}
               companyName={settings.company_name}
-              size={scrolled ? "sm" : "md"}
-              tone="dark"
+              size={scrolled ? "md" : "lg"}
             />
           </Link>
 
@@ -443,11 +441,10 @@ export function SiteHeader() {
               style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
             >
               <Link to="/" onClick={() => setMenuOpen(false)} aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
-                <PublicBrandLockup
+                <BrandWordmark
                   logoUrl={settings.mobile_logo_url || settings.logo_url}
                   companyName={settings.company_name}
-                  size="sm"
-                  tone="dark"
+                  size="md"
                 />
               </Link>
               <button
