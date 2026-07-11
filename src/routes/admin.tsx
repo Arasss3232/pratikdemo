@@ -54,6 +54,9 @@ export const Route = createFileRoute("/admin")({
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
+    aiAction: typeof s.aiAction === "string" ? (s.aiAction as string) : undefined,
+    aiTarget: typeof s.aiTarget === "string" ? (s.aiTarget as string) : undefined,
+    aiPrompt: typeof s.aiPrompt === "string" ? (s.aiPrompt as string) : undefined,
   }),
   component: AdminPage,
 });
