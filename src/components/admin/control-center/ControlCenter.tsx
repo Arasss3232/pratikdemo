@@ -35,20 +35,43 @@ const TASK_CARDS: {
   hint: string;
   icon: string;
   target: AdminTab;
-  advancedOnly?: boolean;
+  workflow?: "homepage" | "product" | "brochure" | "seo" | "mobile" | "spelling" | "images" | "messages" | "newpage" | "design";
 }[] = [
-  { key: "homepage", title: "Ana Sayfayı Düzenle", hint: "Broşür slaytları ve öne çıkan bölümleri güncelleyin.", icon: "home", target: "brochures" },
+  { key: "homepage", title: "Ana Sayfayı Düzenle", hint: "Adım adım ana sayfa bölümlerini iyileştirin.", icon: "home", target: "brochures", workflow: "homepage" },
   { key: "new-product", title: "Yeni Ürün Ekle", hint: "Katalog için yeni bir ürün oluşturun.", icon: "add_box", target: "products" },
-  { key: "product-desc", title: "Ürün Açıklaması Hazırla", hint: "Yapay Zekâ ile açıklama taslağı üretin.", icon: "description", target: "aiAssistant" },
-  { key: "new-brochure", title: "Yeni Broşür Oluştur", hint: "Ana sayfa slider için yeni bir slayt hazırlayın.", icon: "view_carousel", target: "brochures" },
-  { key: "audit", title: "Siteyi Baştan Sona Kontrol Et", hint: "Eksik görsel, SEO ve tutarlılık taraması çalıştırın.", icon: "health_and_safety", target: "dashboard" },
-  { key: "seo", title: "SEO Eksiklerini Bul", hint: "Google'da görünen başlık ve açıklamaları iyileştirin.", icon: "trending_up", target: "aiAssistant" },
-  { key: "messages", title: "Gelen Mesajları Görüntüle", hint: "Yeni iletişim mesajlarını inceleyin.", icon: "mail", target: "messages" },
-  { key: "quotes", title: "Teklif Taleplerini İncele", hint: "Bekleyen web teklif taleplerini yönetin.", icon: "request_quote", target: "quotes" },
-  { key: "new-page", title: "Yeni Blog Yazısı", hint: "Blog için yeni bir yazı hazırlayın.", icon: "article", target: "blog" },
-  { key: "contact", title: "İletişim Bilgilerini Kontrol Et", hint: "Site genelinde görünen iletişim bilgilerini gözden geçirin.", icon: "contact_phone", target: "settings" },
-  { key: "ai-history", title: "AI Geçmişini Aç", hint: "Yapay Zekâ'nın önceki önerilerini inceleyin.", icon: "history", target: "aiHistory", advancedOnly: false },
-  { key: "team", title: "Ekip Bilgilerini Güncelle", hint: "Ekip üyelerini ve rollerini düzenleyin.", icon: "group", target: "team" },
+  { key: "product-desc", title: "Ürün Açıklaması Hazırla", hint: "Yapay Zekâ ile açıklama taslağı üretin.", icon: "description", target: "aiAssistant", workflow: "product" },
+  { key: "new-brochure", title: "Yeni Broşür Oluştur", hint: "Ana sayfa slider için yeni bir slayt hazırlayın.", icon: "view_carousel", target: "brochures", workflow: "brochure" },
+  { key: "audit", title: "Siteyi Kontrol Et", hint: "Eksik görsel, SEO ve tutarlılık taraması çalıştırın.", icon: "health_and_safety", target: "dashboard" },
+  { key: "seo", title: "SEO Eksiklerini Bul", hint: "Google'da görünen başlık ve açıklamaları iyileştirin.", icon: "trending_up", target: "aiAssistant", workflow: "seo" },
+  { key: "mobile", title: "Mobil Görünümü Kontrol Et", hint: "Küçük ekranda taşan alanları ve sorunları bulun.", icon: "smartphone", target: "dashboard", workflow: "mobile" },
+  { key: "spelling", title: "Yazım Hatalarını Düzelt", hint: "Site metinlerinde yazım/dilbilgisi taraması yapın.", icon: "spellcheck", target: "aiAssistant", workflow: "spelling" },
+  { key: "images", title: "Eksik Görselleri Bul", hint: "Görseli olmayan ürün ve içerikleri listeleyin.", icon: "image_search", target: "products", workflow: "images" },
+  { key: "messages", title: "Mesajları Özetle", hint: "Yeni iletişim mesajlarını özetleyip önceliklendirin.", icon: "mail", target: "messages", workflow: "messages" },
+  { key: "new-page", title: "Yeni Sayfa Oluştur", hint: "Yeni bir blog yazısı veya sayfa taslağı hazırlayın.", icon: "post_add", target: "blog", workflow: "newpage" },
+  { key: "design", title: "Tasarım Tutarlılığını Kontrol Et", hint: "Renk, tipografi ve buton tutarlılığını denetleyin.", icon: "palette", target: "aiAssistant", workflow: "design" },
+];
+
+const SUGGESTED_PROMPTS: string[] = [
+  "Ana sayfayı daha modern göster",
+  "Eksik ürün açıklamalarını listele",
+  "En son gelen mesajları özetle",
+  "SEO eksiklerini bul",
+  "Mobil ekranda taşan bölümleri bul",
+  "Broşür sliderına yeni bir slayt hazırla",
+];
+
+const SITE_MAP: { key: string; label: string; icon: string; tab: AdminTab; hint: string }[] = [
+  { key: "header", label: "Header", icon: "view_headline", tab: "settings", hint: "Menü, logo ve üst şerit." },
+  { key: "home", label: "Ana Sayfa", icon: "home", tab: "brochures", hint: "Slider ve öne çıkan bölümler." },
+  { key: "slider", label: "Broşür Slider", icon: "view_carousel", tab: "brochures", hint: "Ana sayfadaki slaytlar." },
+  { key: "products", label: "Ürün Grupları", icon: "inventory_2", tab: "products", hint: "Kategoriler ve ürünler." },
+  { key: "about", label: "Hakkımızda", icon: "info", tab: "settings", hint: "Kurumsal tanıtım metinleri." },
+  { key: "services", label: "Hizmetler", icon: "handyman", tab: "services", hint: "Hizmet sayfaları." },
+  { key: "brands", label: "Markalar", icon: "workspace_premium", tab: "brands", hint: "Yer alan markalar." },
+  { key: "references", label: "Referanslar", icon: "star", tab: "references", hint: "Proje referansları." },
+  { key: "blog", label: "Blog", icon: "article", tab: "blog", hint: "Yazılar." },
+  { key: "contact", label: "İletişim", icon: "contact_phone", tab: "settings", hint: "Telefon, e-posta, adres." },
+  { key: "footer", label: "Footer", icon: "table_rows", tab: "settings", hint: "Alt kısım ve iletişim." },
 ];
 
 function useSnapshot() {
@@ -91,6 +114,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
   const { data, loading, error, reload } = useSnapshot();
   const { items: tasks, reload: reloadTasks } = useTasks();
   const [auditRunning, setAuditRunning] = useState(false);
+  const [workflow, setWorkflow] = useState<null | { kind: string; title: string }>(null);
   const runAudit = useServerFn(runSiteAudit);
   const updFinding = useServerFn(updateFindingStatus);
   const createT = useServerFn(createTask);
@@ -157,13 +181,13 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         <div>
           <div className="flex items-center gap-2" style={{ color: "var(--admin-text-mute)" }}>
             <Icon name="auto_awesome" className="text-[18px]" />
-            <span className="text-[12px] uppercase tracking-wider font-semibold">Kontrol Merkezi</span>
+            <span className="text-[12px] uppercase tracking-wider font-semibold">Yapay Zekâ Kontrol Merkezi</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mt-1" style={{ color: "var(--admin-text)" }}>
-            Bugün sitenizde ne yapmak istersiniz?
+            Bugün web sitenizde ne yapmak istersiniz?
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--admin-text-2)" }}>
-            Sitenizi tek yerden yönetin: sağlık durumu, öneriler, bekleyen değişiklikler ve hızlı görevler.
+            Sitenizin tamamını buradan yönetin. Yapay Zekâ her değişikliği önce taslak olarak hazırlar; siz onaylamadan yayınlanmaz.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -180,6 +204,9 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         </div>
       </div>
 
+      {/* Zekâ şeridi */}
+      <IntelligenceBar data={data} onNavigate={onNavigate} />
+
       {/* Akıllı komut alanı */}
       <section
         className="rounded-2xl p-4 md:p-5 border"
@@ -187,21 +214,25 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
       >
         <label className="flex flex-col gap-2">
           <span className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
-            Yapay Zekâ Asistanına söyleyin
+            Yapay Zekâ Asistanına ne yapmak istediğinizi yazın
           </span>
           <div className="flex flex-col md:flex-row gap-2">
             <textarea
               rows={2}
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              placeholder="Ana sayfayı daha dikkat çekici yap, eksik ürün görsellerini bul veya yeni bir broşür hazırla…"
+              placeholder="Ana sayfayı düzenle, yeni ürün ekle, eksikleri bul veya yapmak istediğiniz işlemi yazın..."
               className="admin-input flex-1 resize-y"
               style={{ minHeight: 60 }}
             />
             <div className="flex md:flex-col gap-2">
               <button className="admin-btn admin-btn-primary" onClick={handleSendCommand} disabled={!command.trim()}>
                 <Icon name="send" className="text-[16px]" />
-                Görev Olarak Ekle
+                Gönder
+              </button>
+              <button className="admin-btn admin-btn-sm" onClick={() => setCommand("")} disabled={!command} title="Metni temizle">
+                <Icon name="close" className="text-[16px]" />
+                Temizle
               </button>
               <button className="admin-btn admin-btn-sm" onClick={() => onNavigate("aiAssistant")}>
                 <Icon name="chat" className="text-[16px]" />
@@ -209,9 +240,21 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
               </button>
             </div>
           </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {SUGGESTED_PROMPTS.map((p) => (
+              <button
+                key={p}
+                onClick={() => setCommand(p)}
+                className="text-[12px] px-2.5 py-1 rounded-full border"
+                style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
           {mode === "easy" && (
             <span className="text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
-              İpucu: Doğal Türkçe kullanabilirsiniz. Yapay Zekâ değişiklikleri her zaman önce taslak olarak hazırlar; siz onaylamadan yayınlanmaz.
+              İpucu: Doğal Türkçe kullanabilirsiniz. En güvenli seçeneği öneririz ve tüm değişiklikler onayınıza sunulur.
             </span>
           )}
         </label>
@@ -219,12 +262,16 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
 
       {/* Görev kartları */}
       <section>
-        <SectionHeader icon="rocket_launch" title="Ne yapmak istiyorsunuz?" subtitle="Sık kullanılan işlemlere tek tıkla ulaşın." />
+        <SectionHeader icon="rocket_launch" title="Hızlı işlemler" subtitle="En sık yapılan işlere tek tıkla başlayın." />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-3">
           {TASK_CARDS.map((c) => (
             <button
               key={c.key}
-              onClick={() => c.key === "audit" ? handleAudit() : onNavigate(c.target)}
+              onClick={() => {
+                if (c.key === "audit" || c.key === "mobile") { void handleAudit(); return; }
+                if (mode === "easy" && c.workflow) { setWorkflow({ kind: c.workflow, title: c.title }); return; }
+                onNavigate(c.target);
+              }}
               className="text-left rounded-xl border p-4 hover:shadow-sm transition-all"
               style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
             >
@@ -245,6 +292,12 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         </div>
       </section>
 
+      {/* Site Haritası */}
+      <section>
+        <SectionHeader icon="map" title="Site haritası" subtitle="Bir bölüme tıklayın: doğrudan düzenleyin veya Yapay Zekâ'ya sorun." />
+        <SiteMapGrid onEdit={(t: AdminTab) => onNavigate(t)} onAsk={(label: string) => { setCommand(`${label} bölümünü düzenle`); }} />
+      </section>
+
       {/* İki kolonlu: sağlık + öneriler */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <section>
@@ -260,6 +313,25 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           <Recommendations grouped={grouped} onHandle={handleFinding} onNavigate={onNavigate} />
         </section>
       </div>
+
+      {workflow && (
+        <GuidedWorkflow
+          kind={workflow.kind}
+          title={workflow.title}
+          onClose={() => setWorkflow(null)}
+          onSubmit={async (summary: string) => {
+            try {
+              await createT({ data: { title_tr: summary, description_tr: `Rehberli akış: ${workflow.title}`, priority: "normal" } });
+              toast.success("İsteğiniz alındı. Yapay Zekâ Asistanı hazırlıyor.");
+              await reloadTasks();
+              setWorkflow(null);
+              onNavigate("aiAssistant");
+            } catch (e: any) {
+              toast.error(e?.message ?? "Kaydedilemedi.");
+            }
+          }}
+        />
+      )}
 
       {/* Bekleyen değişiklikler + görevler */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -588,6 +660,237 @@ function RecentActivity({ items, onOpen }: { items: any[]; onOpen: () => void })
       <button className="w-full text-[12px] py-2 font-semibold" onClick={onOpen} style={{ color: "var(--admin-navy)" }}>
         Tüm geçmişi aç →
       </button>
+    </div>
+  );
+}
+
+function IntelligenceBar({ data, onNavigate }: { data: Snapshot | null; onNavigate: (t: AdminTab) => void }) {
+  const c = data?.counts ?? {};
+  const score = data?.healthScore ?? 0;
+  const scoreColor = score >= 85 ? "#059669" : score >= 65 ? "#EA580C" : "#DC2626";
+  const chips: { label: string; value: number | string; icon: string; tab?: AdminTab; tone?: string }[] = [
+    { label: "Site durumu", value: score >= 85 ? "İyi" : score >= 65 ? "Orta" : "Dikkat", icon: "circle", tone: scoreColor },
+    { label: "Sağlık puanı", value: score, icon: "monitor_heart", tone: scoreColor },
+    { label: "Bekleyen görev", value: (c.pendingProposals ?? 0), icon: "task_alt", tab: "myTasks" },
+    { label: "Bekleyen AI değişiklik", value: (c.pendingProposals ?? 0), icon: "approval", tab: "aiHistory" },
+    { label: "Yeni mesaj", value: (c.newMessages ?? 0), icon: "mark_email_unread", tab: "messages" },
+    { label: "Bekleyen teklif", value: (c.pendingQuotes ?? 0), icon: "request_quote", tab: "quotes" },
+  ];
+  return (
+    <div
+      className="rounded-xl border px-3 py-2 flex items-center gap-2 overflow-x-auto"
+      style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+    >
+      {chips.map((ch) => (
+        <button
+          key={ch.label}
+          onClick={() => ch.tab && onNavigate(ch.tab)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] shrink-0"
+          style={{ background: "var(--admin-surface-2)", color: "var(--admin-text)" }}
+          title={ch.label}
+        >
+          <Icon name={ch.icon} className="text-[14px]" style={{ color: ch.tone ?? "var(--admin-navy)" }} />
+          <span className="font-semibold">{ch.value}</span>
+          <span style={{ color: "var(--admin-text-2)" }}>{ch.label}</span>
+        </button>
+      ))}
+      <div className="ml-auto flex items-center gap-1">
+        <button className="admin-btn admin-btn-xs" onClick={() => onNavigate("notifications" as AdminTab)} title="Bildirimler">
+          <Icon name="notifications" className="text-[14px]" />
+        </button>
+        <button
+          className="admin-btn admin-btn-xs"
+          title="Yardım: Bu sayfada sitenizin sağlık durumu, öneriler ve hızlı işlemler yer alır."
+        >
+          <Icon name="help" className="text-[14px]" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SiteMapGrid({ onEdit, onAsk }: { onEdit: (t: AdminTab) => void; onAsk: (label: string) => void }) {
+  return (
+    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+      {SITE_MAP.map((s) => (
+        <div
+          key={s.key}
+          className="rounded-xl border p-3 flex items-start gap-3"
+          style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+        >
+          <div
+            className="h-9 w-9 rounded-lg grid place-items-center shrink-0"
+            style={{ background: "var(--admin-navy)", color: "#fff" }}
+          >
+            <Icon name={s.icon} className="text-[18px]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>{s.label}</div>
+            <div className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>{s.hint}</div>
+            <div className="flex gap-1.5 mt-2">
+              <button className="admin-btn admin-btn-xs" onClick={() => onEdit(s.tab)}>
+                <Icon name="edit" className="text-[14px]" />
+                Düzenle
+              </button>
+              <button className="admin-btn admin-btn-xs" onClick={() => onAsk(s.label)}>
+                <Icon name="auto_awesome" className="text-[14px]" />
+                AI'ye Sor
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const WORKFLOW_STEPS: Record<string, { question: string; options: { key: string; label: string }[] }[]> = {
+  homepage: [
+    {
+      question: "Ana sayfada hangi alanı değiştirmek istiyorsunuz?",
+      options: [
+        { key: "hero", label: "Üst Tanıtım Alanı" },
+        { key: "slider", label: "Broşür Slider" },
+        { key: "groups", label: "Ürün Grupları" },
+        { key: "about", label: "Hakkımızda" },
+        { key: "services", label: "Hizmetler" },
+        { key: "brands", label: "Markalar" },
+        { key: "contact", label: "İletişim Alanı" },
+        { key: "auto", label: "Emin Değilim, Siteyi İncele" },
+      ],
+    },
+    {
+      question: "Nasıl görünmesini istersiniz?",
+      options: [
+        { key: "sade", label: "Daha Sade" },
+        { key: "dikkat", label: "Daha Dikkat Çekici" },
+        { key: "kurumsal", label: "Daha Kurumsal" },
+        { key: "modern", label: "Daha Modern" },
+        { key: "okunur", label: "Daha Kolay Okunur" },
+        { key: "koru", label: "Mevcut Tasarımı Koru" },
+      ],
+    },
+  ],
+  product: [
+    { question: "Hangi tür ürün açıklaması hazırlanacak?", options: [
+      { key: "kisa", label: "Kısa (satır arası)" }, { key: "detay", label: "Detaylı (teknik)" }, { key: "seo", label: "SEO odaklı" },
+    ] },
+    { question: "Dil tonu?", options: [
+      { key: "kurumsal", label: "Kurumsal" }, { key: "samimi", label: "Samimi" }, { key: "teknik", label: "Teknik" },
+    ] },
+  ],
+  brochure: [
+    { question: "Broşür temasını seçin", options: [
+      { key: "kampanya", label: "Kampanya" }, { key: "yeni", label: "Yeni Ürün" }, { key: "marka", label: "Marka Öne Çıkarma" },
+    ] },
+  ],
+  seo: [
+    { question: "SEO taraması nerede çalışsın?", options: [
+      { key: "urunler", label: "Ürünler" }, { key: "blog", label: "Blog" }, { key: "tumu", label: "Tüm site" },
+    ] },
+  ],
+  mobile: [{ question: "Mobil taramayı başlatalım mı?", options: [{ key: "evet", label: "Evet, taramayı başlat" }] }],
+  spelling: [{ question: "Yazım kontrolü hangi alanda?", options: [
+    { key: "urunler", label: "Ürün metinleri" }, { key: "blog", label: "Blog yazıları" }, { key: "tumu", label: "Tüm site" },
+  ] }],
+  images: [{ question: "Eksik görsel taraması hangi alanda?", options: [
+    { key: "urunler", label: "Ürünler" }, { key: "blog", label: "Blog" }, { key: "brosur", label: "Broşürler" },
+  ] }],
+  messages: [{ question: "Mesaj özeti nasıl olsun?", options: [
+    { key: "kisa", label: "Kısa özet" }, { key: "oncelikli", label: "Öncelikli olanlar" }, { key: "yanit", label: "Yanıt önerisi" },
+  ] }],
+  newpage: [{ question: "Ne tür bir sayfa hazırlanacak?", options: [
+    { key: "blog", label: "Blog yazısı" }, { key: "hizmet", label: "Hizmet sayfası" }, { key: "kampanya", label: "Kampanya sayfası" },
+  ] }],
+  design: [{ question: "Hangi tasarım denetimi?", options: [
+    { key: "renk", label: "Renk tutarlılığı" }, { key: "tipografi", label: "Tipografi" }, { key: "buton", label: "Butonlar" },
+  ] }],
+};
+
+function GuidedWorkflow({
+  kind, title, onClose, onSubmit,
+}: { kind: string; title: string; onClose: () => void; onSubmit: (summary: string) => void }) {
+  const steps = WORKFLOW_STEPS[kind] ?? [];
+  const [answers, setAnswers] = useState<string[]>([]);
+  const stepIndex = answers.length;
+  const done = stepIndex >= steps.length;
+
+  function pick(label: string) {
+    setAnswers((prev) => [...prev, label]);
+  }
+
+  function submit() {
+    const summary = `${title}: ${answers.join(" → ")}`;
+    onSubmit(summary);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(8,24,44,0.55)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl border p-5"
+        style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-[12px] uppercase tracking-wider font-semibold" style={{ color: "var(--admin-text-mute)" }}>
+              Rehberli Akış
+            </div>
+            <h3 className="text-lg font-bold" style={{ color: "var(--admin-text)" }}>{title}</h3>
+          </div>
+          <button className="admin-btn admin-btn-xs" onClick={onClose} aria-label="Kapat">
+            <Icon name="close" className="text-[14px]" />
+          </button>
+        </div>
+
+        {!done ? (
+          <div className="mt-4">
+            <div className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
+              {steps[stepIndex].question}
+            </div>
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {steps[stepIndex].options.map((o) => (
+                <button
+                  key={o.key}
+                  onClick={() => pick(o.label)}
+                  className="text-left rounded-lg border p-3 hover:shadow-sm"
+                  style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)", color: "var(--admin-text)" }}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
+              {stepIndex + 1} / {steps.length}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-4">
+            <div className="text-[13px]" style={{ color: "var(--admin-text)" }}>
+              Seçimleriniz özetlendi. Yapay Zekâ Asistanı bir taslak hazırlayacak; siz onaylamadan yayınlanmaz.
+            </div>
+            <div
+              className="mt-2 rounded-lg border p-3 text-[13px]"
+              style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
+            >
+              {title}: {answers.join(" → ")}
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="admin-btn admin-btn-sm" onClick={() => setAnswers([])}>Baştan Başla</button>
+              <button className="admin-btn admin-btn-sm admin-btn-primary" onClick={submit}>
+                <Icon name="send" className="text-[14px]" />
+                Yapay Zekâ'ya Gönder
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
