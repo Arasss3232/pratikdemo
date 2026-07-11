@@ -295,7 +295,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
       {/* Site Haritası */}
       <section>
         <SectionHeader icon="map" title="Site haritası" subtitle="Bir bölüme tıklayın: doğrudan düzenleyin veya Yapay Zekâ'ya sorun." />
-        <SiteMap onEdit={(t) => onNavigate(t)} onAsk={(label) => { setCommand(`${label} bölümünü düzenle`); }} />
+        <SiteMapGrid onEdit={(t: AdminTab) => onNavigate(t)} onAsk={(label: string) => { setCommand(`${label} bölümünü düzenle`); }} />
       </section>
 
       {/* İki kolonlu: sağlık + öneriler */}
