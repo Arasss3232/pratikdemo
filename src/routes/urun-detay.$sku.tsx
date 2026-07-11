@@ -3,7 +3,7 @@ import { BRAND_LOGOS, PRODUCTS, productSrcSet } from "../data/catalog";
 import { buttonStyles } from "../lib/button-styles";
 import { Icon, PagePlaceholder, SiteShell } from "../components/site-shell";
 
-export const Route = createFileRoute("/urunler/elektrikli-el-aletleri/$sku")({
+export const Route = createFileRoute("/urun-detay/$sku")({
   head: () => ({
     meta: [
       { title: "Ürün Detayı — Pratik Endüstriyel" },

@@ -63,7 +63,7 @@ function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "li
         </ul>
         <div className={`mt-auto pt-2 border-t border-outline-variant flex gap-2 ${isList ? "flex-col sm:flex-row" : "flex-col"}`}>
           <Link
-            to="/urunler/elektrikli-el-aletleri/$sku"
+            to="/urun-detay/$sku"
             params={{ sku: p.sku }}
             className={buttonStyles({ variant: "outline-dark", size: "sm", className: "w-full px-3" })}
             aria-label={`${p.name} detaylarını incele`}
