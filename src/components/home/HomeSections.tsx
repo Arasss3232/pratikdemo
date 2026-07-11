@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Icon } from "../site-shell";
+import { SectionMarker } from "../marketing/SectionMarker";
 import { PRODUCTS, FEATURED_LOGOS } from "@/data/catalog";
 import {
   useHomeBlog,
@@ -42,11 +43,14 @@ function PubHead({
   return (
     <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
       <div className="max-w-2xl">
-        <span className={`pub-marker ${inv ? "" : "pub-marker-dark"}`}>
-          {index} / {eyebrow}
-        </span>
+        <SectionMarker
+          number={index}
+          label={eyebrow}
+          tone={inv ? "dark" : "light"}
+          className="mb-4"
+        />
         <h2
-          className="mt-4"
+          className=""
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 700,
