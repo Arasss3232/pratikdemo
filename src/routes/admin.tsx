@@ -190,8 +190,10 @@ function ProductsTab() {
       : await supabase.from("products").insert(payload);
     if (error) {
       setError(error.message);
+      toast.error("Kaydedilemedi", { description: error.message });
       return;
     }
+    toast.success(p.id ? "Ürün güncellendi" : "Ürün eklendi");
     setEditing(null);
     refresh();
   }
