@@ -663,3 +663,234 @@ function RecentActivity({ items, onOpen }: { items: any[]; onOpen: () => void })
     </div>
   );
 }
+
+function IntelligenceBar({ data, onNavigate }: { data: Snapshot | null; onNavigate: (t: AdminTab) => void }) {
+  const c = data?.counts ?? {};
+  const score = data?.healthScore ?? 0;
+  const scoreColor = score >= 85 ? "#059669" : score >= 65 ? "#EA580C" : "#DC2626";
+  const chips: { label: string; value: number | string; icon: string; tab?: AdminTab; tone?: string }[] = [
+    { label: "Site durumu", value: score >= 85 ? "İyi" : score >= 65 ? "Orta" : "Dikkat", icon: "circle", tone: scoreColor },
+    { label: "Sağlık puanı", value: score, icon: "monitor_heart", tone: scoreColor },
+    { label: "Bekleyen görev", value: (c.pendingProposals ?? 0), icon: "task_alt", tab: "myTasks" },
+    { label: "Bekleyen AI değişiklik", value: (c.pendingProposals ?? 0), icon: "approval", tab: "aiHistory" },
+    { label: "Yeni mesaj", value: (c.newMessages ?? 0), icon: "mark_email_unread", tab: "messages" },
+    { label: "Bekleyen teklif", value: (c.pendingQuotes ?? 0), icon: "request_quote", tab: "quotes" },
+  ];
+  return (
+    <div
+      className="rounded-xl border px-3 py-2 flex items-center gap-2 overflow-x-auto"
+      style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+    >
+      {chips.map((ch) => (
+        <button
+          key={ch.label}
+          onClick={() => ch.tab && onNavigate(ch.tab)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] shrink-0"
+          style={{ background: "var(--admin-surface-2)", color: "var(--admin-text)" }}
+          title={ch.label}
+        >
+          <Icon name={ch.icon} className="text-[14px]" style={{ color: ch.tone ?? "var(--admin-navy)" }} />
+          <span className="font-semibold">{ch.value}</span>
+          <span style={{ color: "var(--admin-text-2)" }}>{ch.label}</span>
+        </button>
+      ))}
+      <div className="ml-auto flex items-center gap-1">
+        <button className="admin-btn admin-btn-xs" onClick={() => onNavigate("notifications" as AdminTab)} title="Bildirimler">
+          <Icon name="notifications" className="text-[14px]" />
+        </button>
+        <button
+          className="admin-btn admin-btn-xs"
+          title="Yardım: Bu sayfada sitenizin sağlık durumu, öneriler ve hızlı işlemler yer alır."
+        >
+          <Icon name="help" className="text-[14px]" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SiteMapGrid({ onEdit, onAsk }: { onEdit: (t: AdminTab) => void; onAsk: (label: string) => void }) {
+  return (
+    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+      {SITE_MAP.map((s) => (
+        <div
+          key={s.key}
+          className="rounded-xl border p-3 flex items-start gap-3"
+          style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+        >
+          <div
+            className="h-9 w-9 rounded-lg grid place-items-center shrink-0"
+            style={{ background: "var(--admin-navy)", color: "#fff" }}
+          >
+            <Icon name={s.icon} className="text-[18px]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>{s.label}</div>
+            <div className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>{s.hint}</div>
+            <div className="flex gap-1.5 mt-2">
+              <button className="admin-btn admin-btn-xs" onClick={() => onEdit(s.tab)}>
+                <Icon name="edit" className="text-[14px]" />
+                Düzenle
+              </button>
+              <button className="admin-btn admin-btn-xs" onClick={() => onAsk(s.label)}>
+                <Icon name="auto_awesome" className="text-[14px]" />
+                AI'ye Sor
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const WORKFLOW_STEPS: Record<string, { question: string; options: { key: string; label: string }[] }[]> = {
+  homepage: [
+    {
+      question: "Ana sayfada hangi alanı değiştirmek istiyorsunuz?",
+      options: [
+        { key: "hero", label: "Üst Tanıtım Alanı" },
+        { key: "slider", label: "Broşür Slider" },
+        { key: "groups", label: "Ürün Grupları" },
+        { key: "about", label: "Hakkımızda" },
+        { key: "services", label: "Hizmetler" },
+        { key: "brands", label: "Markalar" },
+        { key: "contact", label: "İletişim Alanı" },
+        { key: "auto", label: "Emin Değilim, Siteyi İncele" },
+      ],
+    },
+    {
+      question: "Nasıl görünmesini istersiniz?",
+      options: [
+        { key: "sade", label: "Daha Sade" },
+        { key: "dikkat", label: "Daha Dikkat Çekici" },
+        { key: "kurumsal", label: "Daha Kurumsal" },
+        { key: "modern", label: "Daha Modern" },
+        { key: "okunur", label: "Daha Kolay Okunur" },
+        { key: "koru", label: "Mevcut Tasarımı Koru" },
+      ],
+    },
+  ],
+  product: [
+    { question: "Hangi tür ürün açıklaması hazırlanacak?", options: [
+      { key: "kisa", label: "Kısa (satır arası)" }, { key: "detay", label: "Detaylı (teknik)" }, { key: "seo", label: "SEO odaklı" },
+    ] },
+    { question: "Dil tonu?", options: [
+      { key: "kurumsal", label: "Kurumsal" }, { key: "samimi", label: "Samimi" }, { key: "teknik", label: "Teknik" },
+    ] },
+  ],
+  brochure: [
+    { question: "Broşür temasını seçin", options: [
+      { key: "kampanya", label: "Kampanya" }, { key: "yeni", label: "Yeni Ürün" }, { key: "marka", label: "Marka Öne Çıkarma" },
+    ] },
+  ],
+  seo: [
+    { question: "SEO taraması nerede çalışsın?", options: [
+      { key: "urunler", label: "Ürünler" }, { key: "blog", label: "Blog" }, { key: "tumu", label: "Tüm site" },
+    ] },
+  ],
+  mobile: [{ question: "Mobil taramayı başlatalım mı?", options: [{ key: "evet", label: "Evet, taramayı başlat" }] }],
+  spelling: [{ question: "Yazım kontrolü hangi alanda?", options: [
+    { key: "urunler", label: "Ürün metinleri" }, { key: "blog", label: "Blog yazıları" }, { key: "tumu", label: "Tüm site" },
+  ] }],
+  images: [{ question: "Eksik görsel taraması hangi alanda?", options: [
+    { key: "urunler", label: "Ürünler" }, { key: "blog", label: "Blog" }, { key: "brosur", label: "Broşürler" },
+  ] }],
+  messages: [{ question: "Mesaj özeti nasıl olsun?", options: [
+    { key: "kisa", label: "Kısa özet" }, { key: "oncelikli", label: "Öncelikli olanlar" }, { key: "yanit", label: "Yanıt önerisi" },
+  ] }],
+  newpage: [{ question: "Ne tür bir sayfa hazırlanacak?", options: [
+    { key: "blog", label: "Blog yazısı" }, { key: "hizmet", label: "Hizmet sayfası" }, { key: "kampanya", label: "Kampanya sayfası" },
+  ] }],
+  design: [{ question: "Hangi tasarım denetimi?", options: [
+    { key: "renk", label: "Renk tutarlılığı" }, { key: "tipografi", label: "Tipografi" }, { key: "buton", label: "Butonlar" },
+  ] }],
+};
+
+function GuidedWorkflow({
+  kind, title, onClose, onSubmit,
+}: { kind: string; title: string; onClose: () => void; onSubmit: (summary: string) => void }) {
+  const steps = WORKFLOW_STEPS[kind] ?? [];
+  const [answers, setAnswers] = useState<string[]>([]);
+  const stepIndex = answers.length;
+  const done = stepIndex >= steps.length;
+
+  function pick(label: string) {
+    setAnswers((prev) => [...prev, label]);
+  }
+
+  function submit() {
+    const summary = `${title}: ${answers.join(" → ")}`;
+    onSubmit(summary);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(8,24,44,0.55)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-lg rounded-2xl border p-5"
+        style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-[12px] uppercase tracking-wider font-semibold" style={{ color: "var(--admin-text-mute)" }}>
+              Rehberli Akış
+            </div>
+            <h3 className="text-lg font-bold" style={{ color: "var(--admin-text)" }}>{title}</h3>
+          </div>
+          <button className="admin-btn admin-btn-xs" onClick={onClose} aria-label="Kapat">
+            <Icon name="close" className="text-[14px]" />
+          </button>
+        </div>
+
+        {!done ? (
+          <div className="mt-4">
+            <div className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
+              {steps[stepIndex].question}
+            </div>
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {steps[stepIndex].options.map((o) => (
+                <button
+                  key={o.key}
+                  onClick={() => pick(o.label)}
+                  className="text-left rounded-lg border p-3 hover:shadow-sm"
+                  style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)", color: "var(--admin-text)" }}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
+              {stepIndex + 1} / {steps.length}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-4">
+            <div className="text-[13px]" style={{ color: "var(--admin-text)" }}>
+              Seçimleriniz özetlendi. Yapay Zekâ Asistanı bir taslak hazırlayacak; siz onaylamadan yayınlanmaz.
+            </div>
+            <div
+              className="mt-2 rounded-lg border p-3 text-[13px]"
+              style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
+            >
+              {title}: {answers.join(" → ")}
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="admin-btn admin-btn-sm" onClick={() => setAnswers([])}>Baştan Başla</button>
+              <button className="admin-btn admin-btn-sm admin-btn-primary" onClick={submit}>
+                <Icon name="send" className="text-[14px]" />
+                Yapay Zekâ'ya Gönder
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
