@@ -94,7 +94,7 @@ export function SiteHeader() {
             </div>
             <Link
               to="/teklif"
-              className="hidden sm:inline-flex items-center whitespace-nowrap bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-primary transition-all"
+              className={buttonStyles({ variant: "primary", size: "sm", className: "hidden sm:inline-flex whitespace-nowrap" })}
             >
               Teklif Al
             </Link>
@@ -151,7 +151,7 @@ export function SiteHeader() {
             <Link
               to="/teklif"
               onClick={() => setMenuOpen(false)}
-              className="sm:hidden mt-2 inline-flex items-center justify-center bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all"
+              className={buttonStyles({ variant: "primary", size: "sm", className: "sm:hidden mt-2 w-full" })}
             >
               Teklif Al
             </Link>

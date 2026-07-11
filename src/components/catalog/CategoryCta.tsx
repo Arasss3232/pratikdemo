@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { CTA_IMG } from "../../data/catalog";
 import { Icon } from "../site-shell";
+import { buttonStyles } from "../../lib/button-styles";
 
 export function CategoryCta() {
   return (
@@ -28,17 +29,11 @@ export function CategoryCta() {
             şartname desteği sağlamak için hazırdır.
           </p>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Link
-              to="/teklif"
-              className="bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 transition-all active:scale-95 flex items-center justify-center gap-2"
-            >
+            <Link to="/teklif" className={buttonStyles({ variant: "primary" })}>
               Toplu Teklif Formu
               <Icon name="arrow_forward" />
             </Link>
-            <a
-              href="tel:+905550000000"
-              className="bg-transparent border-2 border-on-primary/30 text-on-primary px-8 py-3 rounded font-label-bold text-label-bold hover:border-on-primary transition-all flex items-center justify-center gap-2"
-            >
+            <a href="tel:+905550000000" className={buttonStyles({ variant: "outline-light" })}>
               <Icon name="support_agent" />
               Bizi Arayın
             </a>
