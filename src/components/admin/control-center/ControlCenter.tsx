@@ -54,11 +54,19 @@ const TASK_CARDS: {
 const SUGGESTED_PROMPTS: string[] = [
   "Ana sayfayı daha modern göster",
   "Eksik ürün açıklamalarını listele",
-  "En son gelen mesajları özetle",
   "SEO eksiklerini bul",
-  "Mobil ekranda taşan bölümleri bul",
-  "Broşür sliderına yeni bir slayt hazırla",
+  "Mobilde taşan bölümleri bul",
 ];
+
+// Sadeleştirilmiş modda gösterilecek 6 temel hızlı işlem
+const EASY_TASK_KEYS = new Set([
+  "homepage",
+  "product-desc",
+  "new-brochure",
+  "audit",
+  "seo",
+  "mobile",
+]);
 
 const SITE_MAP: { key: string; label: string; icon: string; tab: AdminTab; hint: string }[] = [
   { key: "header", label: "Header", icon: "view_headline", tab: "settings", hint: "Menü, logo ve üst şerit." },
