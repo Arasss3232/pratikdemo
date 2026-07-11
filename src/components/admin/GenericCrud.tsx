@@ -26,7 +26,7 @@ export type CrudRowAction = {
   label: string;
   icon?: string;
   tone?: "default" | "primary" | "danger" | "success";
-  onRun: (row: Record<string, unknown> & { id: string }, ctx: { refresh: () => void }) => void | Promise<void>;
+  onRun: (row: Record<string, unknown> & { id: string }, ctx: { refresh: () => void }) => unknown | Promise<unknown>;
   visible?: (row: Record<string, unknown> & { id: string }) => boolean;
 };
 
