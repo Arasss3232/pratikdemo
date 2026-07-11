@@ -200,16 +200,24 @@
 }
 /* "Industrial Measurement Marker" */
 .pub-marker {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--public-yellow-500);
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: "Manrope", "Segoe UI", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: rgba(255,255,255,0.92);
 }
 .pub-marker::before {
-  content: ""; width: 34px; height: 2px; background: var(--public-yellow-500);
+  content: ""; width: 28px; height: 2px; background: var(--public-yellow-500); border-radius: 1px;
 }
 .pub-marker-dark { color: var(--public-navy-900); }
 .pub-marker-dark::before { background: var(--public-navy-900); }
+@media (max-width: 640px) {
+  .pub-marker { font-size: 12px; gap: 6px; }
+  .pub-marker::before { width: 22px; }
+}
 
 /* Buttons */
 .pub-btn {
@@ -249,12 +257,12 @@
 .pub-ticks > .pub-tick-br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
 
 .hp-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 14px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 600;
+  font-family: "Manrope", "Segoe UI", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 700;
   color: var(--color-primary);
 }
 .hp-eyebrow-inverse { color: var(--color-brand-yellow); }
