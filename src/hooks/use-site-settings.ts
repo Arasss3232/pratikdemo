@@ -25,6 +25,9 @@ export type SiteSettings = {
   social_facebook?: string | null;
   social_twitter?: string | null;
   footer_text?: string | null;
+  logo_url?: string | null;
+  mobile_logo_url?: string | null;
+  favicon_url?: string | null;
 };
 
 let cache: SiteSettings | null = null;
