@@ -284,7 +284,7 @@ export function SiteHeader() {
       {menuOpen && (
         <div
           id="mobile-nav"
-          className="lg:hidden fixed inset-0 top-16 z-40 bg-background overflow-y-auto"
+          className="lg:hidden fixed top-16 right-0 bottom-0 left-0 z-40 bg-background overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-label="Site menüsü"
