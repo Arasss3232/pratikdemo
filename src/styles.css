@@ -266,6 +266,18 @@
   color: var(--color-primary);
 }
 .hp-eyebrow-inverse { color: var(--color-brand-yellow); }
+/* Reusable small section label (eyebrow / footer headings) — Manrope */
+.section-label {
+  font-family: "Manrope", "Segoe UI", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+@media (max-width: 640px) {
+  .section-label { font-size: 12px; }
+}
 .hp-display {
   font-family: var(--font-display);
   font-weight: 600;
