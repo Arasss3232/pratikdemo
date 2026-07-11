@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
 
@@ -27,7 +26,7 @@ const AUTOPLAY_MS = 6500;
 
 function isInternal(href: string | null | undefined) {
   if (!href) return false;
-  return href.startsWith("/") && !href.startsWith("//");
+  return href.startsWith("/") && !href.startsWith("//") && !href.startsWith("/__");
 }
 
 function CtaButton({
@@ -56,21 +55,25 @@ function CtaButton({
           border: "1px solid rgba(255,255,255,0.35)",
           backdropFilter: "blur(6px)",
         };
+  const isExternal = /^https?:\/\//i.test(href);
   const inner = (
     <>
       <span>{label}</span>
       <Icon name="arrow_forward" className="text-[18px]" />
     </>
   );
-  if (isInternal(href)) {
-    return (
-      <Link to={href} className={base} style={style}>
-        {inner}
-      </Link>
-    );
-  }
+  // Use a plain <a> for both internal and external hrefs to avoid TanStack
+  // Router typed-link compile errors on admin-defined dynamic paths. Internal
+  // links still do a normal browser navigation (acceptable for a hero CTA).
   return (
-    <a href={href} className={base} style={style} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener">
+    <a
+      href={href}
+      className={base}
+      style={style}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      data-internal={isInternal(href) ? "true" : undefined}
+    >
       {inner}
     </a>
   );
@@ -136,18 +139,18 @@ function Overlay({ b }: { b: Brochure }) {
           </span>
         ) : null}
         <h2
-          className="font-black leading-[0.95] tracking-tight text-[clamp(1.75rem,4.2vw,3.75rem)]"
+          className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-3"
           style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
         >
           {b.title}
         </h2>
         {b.subtitle ? (
-          <p className="text-lg md:text-xl font-medium" style={{ color: subColor }}>
+          <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
             {b.subtitle}
           </p>
         ) : null}
         {b.description ? (
-          <p className="text-sm md:text-base max-w-xl leading-relaxed" style={{ color: subColor }}>
+          <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
             {b.description}
           </p>
         ) : null}
@@ -173,28 +176,53 @@ function Overlay({ b }: { b: Brochure }) {
   );
 }
 
-function Slide({ b, active }: { b: Brochure; active: boolean }) {
+function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: boolean }) {
+  const [imgFailed, setImgFailed] = useState(false);
   return (
     <div
       className="absolute inset-0 transition-opacity duration-700 ease-out"
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
       aria-hidden={!active}
+      // Keep inactive slide contents out of the tab order for keyboard users.
+      {...(!active ? { inert: "" as unknown as boolean } : {})}
     >
-      <picture>
-        {b.image_mobile ? (
-          <source media="(max-width: 640px)" srcSet={b.image_mobile} />
-        ) : null}
-        {b.image_tablet ? (
-          <source media="(max-width: 1024px)" srcSet={b.image_tablet} />
-        ) : null}
-        <img
-          src={b.image_desktop}
-          alt={b.image_alt || b.title}
-          className="h-full w-full object-cover"
-          loading="eager"
-          decoding="async"
+      {imgFailed ? (
+        <div
+          className="h-full w-full"
+          style={{
+            background:
+              "linear-gradient(135deg, #061426 0%, #0A2342 55%, #0F3460 100%)",
+          }}
+          aria-hidden="true"
         />
-      </picture>
+      ) : (
+        <picture>
+          {b.image_mobile ? (
+            <source media="(max-width: 640px)" srcSet={b.image_mobile} />
+          ) : null}
+          {b.image_tablet ? (
+            <source media="(max-width: 1024px)" srcSet={b.image_tablet} />
+          ) : null}
+          <img
+            src={b.image_desktop}
+            alt={b.image_alt || b.title}
+            className="h-full w-full object-cover"
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "low"}
+            decoding="async"
+            onError={() => setImgFailed(true)}
+          />
+        </picture>
+      )}
+      {/* Mobile-only scrim so overlay text stays legible on any photo */}
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(6,20,38,0.35) 0%, rgba(6,20,38,0.55) 55%, rgba(6,20,38,0.85) 100%)",
+        }}
+        aria-hidden="true"
+      />
       <Overlay b={b} />
     </div>
   );
@@ -205,6 +233,8 @@ export function BrochureSlider() {
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const timerRef = useRef<number | null>(null);
   const touchStart = useRef<number | null>(null);
 
@@ -232,6 +262,16 @@ export function BrochureSlider() {
     };
   }, []);
 
+  // Respect prefers-reduced-motion
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const on = () => setReduceMotion(mq.matches);
+    on();
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
+  }, []);
+
   const total = slides.length;
 
   const goTo = useCallback(
@@ -246,12 +286,12 @@ export function BrochureSlider() {
   const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useEffect(() => {
-    if (paused || total < 2) return;
+    if (paused || userPaused || reduceMotion || total < 2) return;
     timerRef.current = window.setTimeout(next, AUTOPLAY_MS);
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
-  }, [index, paused, next, total]);
+  }, [index, paused, userPaused, reduceMotion, next, total]);
 
   // Pause when tab hidden
   useEffect(() => {
@@ -296,6 +336,7 @@ export function BrochureSlider() {
   if (total === 0) return null;
 
   const current = slides[index];
+  const autoplayActive = !paused && !userPaused && !reduceMotion && total > 1;
 
   return (
     <section
@@ -326,7 +367,7 @@ export function BrochureSlider() {
       }}
     >
       {slides.map((s, i) => (
-        <Slide key={s.id} b={s} active={i === index} />
+        <Slide key={s.id} b={s} active={i === index} eager={i === 0} />
       ))}
 
       {/* Accent bottom line */}
@@ -351,7 +392,7 @@ export function BrochureSlider() {
             type="button"
             aria-label="Önceki broşür"
             onClick={prev}
-            className="absolute top-1/2 left-3 md:left-5 -translate-y-1/2 grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-full transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2"
+            className="absolute top-1/2 left-3 md:left-5 -translate-y-1/2 grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-full transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-yellow,#F5D311)]"
             style={{
               background: "rgba(6,20,38,0.55)",
               color: "#fff",
@@ -365,7 +406,7 @@ export function BrochureSlider() {
             type="button"
             aria-label="Sonraki broşür"
             onClick={next}
-            className="absolute top-1/2 right-3 md:right-5 -translate-y-1/2 grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-full transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2"
+            className="absolute top-1/2 right-3 md:right-5 -translate-y-1/2 grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-full transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-yellow,#F5D311)]"
             style={{
               background: "rgba(6,20,38,0.55)",
               color: "#fff",
@@ -385,7 +426,7 @@ export function BrochureSlider() {
                 onClick={() => goTo(i)}
                 aria-label={`${i + 1}. broşüre git`}
                 aria-current={i === index}
-                className="group relative h-2 rounded-full transition-all"
+                className="group relative h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-yellow,#F5D311)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#061426]"
                 style={{
                   width: i === index ? 36 : 12,
                   background:
@@ -393,9 +434,38 @@ export function BrochureSlider() {
                       ? "var(--brand-yellow, #F5D311)"
                       : "rgba(255,255,255,0.35)",
                 }}
-              />
+              >
+                {i === index && autoplayActive ? (
+                  <span
+                    key={`p-${index}`}
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 rounded-full"
+                    style={{
+                      background: "rgba(6,20,38,0.35)",
+                      animation: `brochure-progress ${AUTOPLAY_MS}ms linear forwards`,
+                    }}
+                  />
+                ) : null}
+              </button>
             ))}
           </div>
+
+          {/* Play / Pause toggle */}
+          <button
+            type="button"
+            onClick={() => setUserPaused((p) => !p)}
+            aria-label={userPaused ? "Otomatik oynatmayı başlat" : "Otomatik oynatmayı duraklat"}
+            aria-pressed={userPaused}
+            className="absolute bottom-5 right-4 md:bottom-6 md:right-6 grid place-items-center h-11 w-11 rounded-full transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-yellow,#F5D311)]"
+            style={{
+              background: "rgba(6,20,38,0.55)",
+              color: "#fff",
+              border: "1px solid rgba(255,255,255,0.25)",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <Icon name={userPaused ? "play_arrow" : "pause"} className="text-[22px]" />
+          </button>
 
           {/* Counter */}
           <div
@@ -415,6 +485,7 @@ export function BrochureSlider() {
           </div>
         </>
       )}
+      <style>{`@keyframes brochure-progress { from { width: 0% } to { width: 100% } }`}</style>
     </section>
   );
 }
