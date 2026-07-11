@@ -92,28 +92,45 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   return (
     <div className="flex flex-col gap-6">
       {/* Welcome + setup */}
-      <section className="bg-gradient-to-br from-primary to-primary/80 text-on-primary rounded-xl p-6 flex flex-col md:flex-row md:items-center gap-4 md:justify-between">
-        <div className="min-w-0">
-          <p className="text-headline-md font-headline-md">Hoş geldiniz 👋</p>
-          <p className="text-body-sm opacity-90 mt-1">
-            Buradan tüm site içeriğinizi tek noktadan yönetebilirsiniz.
+      <section
+        className="relative overflow-hidden rounded-2xl p-6 md:p-7 flex flex-col md:flex-row md:items-center gap-5 md:justify-between shadow-sm"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--admin-navy) 0%, var(--admin-navy-med) 100%)",
+          color: "#fff",
+        }}
+      >
+        <div
+          className="absolute -right-16 -top-16 h-56 w-56 rounded-full opacity-20"
+          style={{ background: "var(--admin-yellow)", filter: "blur(20px)" }}
+          aria-hidden="true"
+        />
+        <div className="min-w-0 relative">
+          <div
+            className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-[11px] font-semibold mb-3"
+            style={{ background: "color-mix(in oklab, var(--admin-yellow) 22%, transparent)", color: "var(--admin-yellow)" }}
+          >
+            <Icon name="dashboard" className="text-[13px]" />
+            Kontrol Paneli
+          </div>
+          <p className="text-2xl md:text-[26px] font-bold tracking-tight">Hoş geldiniz 👋</p>
+          <p className="text-sm opacity-80 mt-1 max-w-xl">
+            Buradan tüm site içeriğinizi tek noktadan yönetebilirsiniz. Hızlı Ekle butonu ile saniyeler içinde yeni içerik oluşturun.
           </p>
         </div>
         {setup.length > 0 && (() => {
           const done = setup.filter((s) => s.done).length;
           const pct = Math.round((done / setup.length) * 100);
           return (
-            <div className="min-w-[220px]">
-              <div className="flex items-baseline justify-between text-body-sm opacity-90 mb-1.5">
-                <span>Site kurulumu</span>
-                <span className="font-label-bold">{done}/{setup.length}</span>
+            <div className="min-w-[240px] relative rounded-xl p-4" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              <div className="flex items-baseline justify-between text-sm mb-2">
+                <span className="opacity-90">Site kurulumu</span>
+                <span className="font-bold" style={{ color: "var(--admin-yellow)" }}>{pct}%</span>
               </div>
-              <div className="h-2 rounded-full bg-on-primary/25 overflow-hidden">
-                <div
-                  className="h-full bg-on-primary transition-all"
-                  style={{ width: `${pct}%` }}
-                />
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.15)" }}>
+                <div className="h-full transition-all rounded-full" style={{ width: `${pct}%`, background: "var(--admin-yellow)" }} />
               </div>
+              <p className="text-[11px] mt-2 opacity-70">{done} / {setup.length} adım tamamlandı</p>
             </div>
           );
         })()}
@@ -125,37 +142,46 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
           <button
             key={s.key}
             onClick={() => onNavigate(s.key)}
-            className="group text-left bg-surface-container-lowest border border-outline-variant rounded-lg p-4 hover:border-primary hover:shadow-sm transition"
+            className="group text-left rounded-xl p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}
           >
             <div className="flex items-center justify-between mb-3">
-              <div className="h-9 w-9 rounded-md bg-primary/10 text-primary grid place-items-center">
+              <div
+                className="h-10 w-10 rounded-lg grid place-items-center transition"
+                style={{ background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" }}
+              >
                 <Icon name={s.icon} className="text-[20px]" />
               </div>
-              <Icon name="arrow_forward" className="text-[16px] text-on-surface-variant opacity-0 group-hover:opacity-100 transition" />
+              <span className="opacity-0 group-hover:opacity-100 transition" style={{ color: "var(--admin-navy)" }}>
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </span>
             </div>
-            <p className="text-headline-md font-headline-md text-on-background">
+            <p className="text-2xl font-bold" style={{ color: "var(--admin-text)" }}>
               {loading ? "—" : s.value ?? 0}
             </p>
-            <p className="text-body-sm text-on-surface-variant mt-0.5">{s.label}</p>
-            {s.hint && <p className="text-[11px] text-on-surface-variant mt-1">{s.hint}</p>}
+            <p className="text-[13px] mt-0.5" style={{ color: "var(--admin-text-2)" }}>{s.label}</p>
+            {s.hint && <p className="text-[11px] mt-1" style={{ color: "var(--admin-text-mute)" }}>{s.hint}</p>}
           </button>
         ))}
       </div>
 
       {/* Quick actions */}
-      <section className="bg-surface-container-lowest border border-outline-variant rounded-lg p-5">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-label-bold text-body-md">Hızlı İşlemler</h2>
+      <section className="rounded-xl p-5" style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-bold text-[15px]" style={{ color: "var(--admin-text)" }}>Hızlı İşlemler</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
           {quick.map((q) => (
             <button
               key={q.key + q.label}
               onClick={() => onNavigate(q.key)}
-              className="flex items-center gap-2 h-11 px-3 rounded-md border border-outline-variant text-body-sm hover:bg-surface-container hover:border-primary transition text-left"
+              className="flex items-center gap-2 h-11 px-3 rounded-lg text-sm text-left transition hover:-translate-y-0.5"
+              style={{ background: "var(--admin-surface-2)", border: "1px solid var(--admin-border)" }}
             >
-              <Icon name={q.icon} className="text-[18px] text-primary shrink-0" />
-              <span className="truncate">{q.label}</span>
+              <span className="shrink-0" style={{ color: "var(--admin-navy)" }}>
+                <Icon name={q.icon} className="text-[18px]" />
+              </span>
+              <span className="truncate" style={{ color: "var(--admin-text)" }}>{q.label}</span>
             </button>
           ))}
         </div>
