@@ -1,5 +1,7 @@
-import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
-import { Icon, SiteShell } from "../components/site-shell";
+import { createFileRoute, Outlet, useMatchRoute } from "@tanstack/react-router";
+import { SiteShell } from "../components/site-shell";
+import { PageHero } from "../components/marketing/PageHero";
+import { CategoryCard } from "../components/marketing/CategoryCard";
 
 export const Route = createFileRoute("/urunler")({
   head: () => ({
@@ -89,63 +91,15 @@ function UrunlerLayout() {
   return (
     <SiteShell>
       <>
-        <div className="bg-inverse-surface text-inverse-on-surface pt-4 pb-16">
-          <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop pt-4">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex text-on-surface-variant text-label-bold font-label-bold mb-8"
-            >
-              <ol className="inline-flex items-center gap-2">
-                <li className="inline-flex items-center">
-                  <Link to="/" className="hover:text-inverse-on-surface transition-colors">
-                    Ana Sayfa
-                  </Link>
-                </li>
-                <li>
-                  <Icon name="chevron_right" className="text-[16px]" />
-                </li>
-                <li aria-current="page">
-                  <span className="text-inverse-on-surface font-semibold">Ürünler</span>
-                </li>
-              </ol>
-            </nav>
-            <div className="max-w-3xl">
-              <h1 className="font-headline-xl text-headline-xl text-inverse-on-surface mb-4">
-                Tüm Ürün Kategorileri
-              </h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant">
-                20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin.
-                Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar.
-              </p>
-            </div>
-          </div>
-        </div>
-
+        <PageHero
+          title="Tüm Ürün Kategorileri"
+          description="20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar."
+          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürünler" }]}
+        />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {CATEGORIES.map((c) => (
-              <Link
-                key={c.title}
-                to={c.to}
-                className="group bg-surface-container-lowest border border-outline-variant p-6 hover:border-primary transition-colors flex flex-col gap-3"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="w-12 h-12 bg-primary-container text-on-primary-container flex items-center justify-center rounded">
-                    <Icon name={c.icon} className="text-[24px]" />
-                  </div>
-                  <span className="text-body-sm font-body-sm text-on-surface-variant">
-                    {c.count} ürün
-                  </span>
-                </div>
-                <h2 className="font-headline-md text-headline-md font-bold text-on-background group-hover:text-primary transition-colors">
-                  {c.title}
-                </h2>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">{c.desc}</p>
-                <div className="mt-auto pt-2 text-primary font-label-bold text-label-bold inline-flex items-center gap-1">
-                  Kategoriyi İncele
-                  <Icon name="arrow_forward" className="text-[16px]" />
-                </div>
-              </Link>
+              <CategoryCard key={c.title} {...c} />
             ))}
           </div>
         </div>
