@@ -15,6 +15,7 @@ import { Route as TeklifSepetiRouteImport } from './routes/teklif-sepeti'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
+import { Route as ReferanslarRouteImport } from './routes/referanslar'
 import { Route as MarkalarRouteImport } from './routes/markalar'
 import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KurumsalRouteImport } from './routes/kurumsal'
@@ -62,6 +63,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SektorelRoute = SektorelRouteImport.update({
   id: '/sektorel',
   path: '/sektorel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReferanslarRoute = ReferanslarRouteImport.update({
+  id: '/referanslar',
+  path: '/referanslar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarkalarRoute = MarkalarRouteImport.update({
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
+  '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
+  '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
+  '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/kurumsal'
     | '/kvkk'
     | '/markalar'
+    | '/referanslar'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/kurumsal'
     | '/kvkk'
     | '/markalar'
+    | '/referanslar'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/kurumsal'
     | '/kvkk'
     | '/markalar'
+    | '/referanslar'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   KurumsalRoute: typeof KurumsalRoute
   KvkkRoute: typeof KvkkRoute
   MarkalarRoute: typeof MarkalarRoute
+  ReferanslarRoute: typeof ReferanslarRoute
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
@@ -381,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/sektorel'
       fullPath: '/sektorel'
       preLoaderRoute: typeof SektorelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/referanslar': {
+      id: '/referanslar'
+      path: '/referanslar'
+      fullPath: '/referanslar'
+      preLoaderRoute: typeof ReferanslarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markalar': {
@@ -559,6 +579,7 @@ const rootRouteChildren: RootRouteChildren = {
   KurumsalRoute: KurumsalRoute,
   KvkkRoute: KvkkRoute,
   MarkalarRoute: MarkalarRoute,
+  ReferanslarRoute: ReferanslarRoute,
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
