@@ -182,10 +182,10 @@ export function AIAssistantWorkspace({
                 <Icon name="auto_awesome" className="text-[22px]" />
               </div>
               <p className="text-[14px] font-semibold" style={{ color: "var(--admin-text)" }}>
-                Site içeriğinizi sohbetle yönetin
+                Site danışmanınızla konuşun
               </p>
               <p className="text-[12px] mt-1" style={{ color: "var(--admin-text-mute)" }}>
-                Sağ paneldeki bağlamdan bir modül ve kayıt seçin, ardından ne yapmak istediğinizi Türkçe olarak yazın.
+                Serbestçe soru sorun, görüş isteyin, karşılaştırın. Belirli bir kayıt düzenlemek isterseniz sağdan bağlam seçin — asistan size seçenekler sunar, siz onaylayınca uygulanır.
               </p>
             </div>
           )}
