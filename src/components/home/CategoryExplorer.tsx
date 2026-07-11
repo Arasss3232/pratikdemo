@@ -104,109 +104,231 @@ export function CategoryExplorer() {
   }, []);
 
   return (
-    <section className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-24">
-      <SectionHead index="02" title="Ürün Grupları" action={{ label: "Tüm kategoriler", to: "/urunler" }} />
-
-      {/* Desktop: split layout */}
-      <div className="hidden md:grid grid-cols-12 gap-8 mt-10">
-        <ul
-          role="tablist"
-          aria-label="Ürün grupları"
-          data-category-tablist
-          className="col-span-5 lg:col-span-4 flex flex-col border-t hp-hairline"
-        >
-          {CATEGORIES.map((c, i) => {
-            const isActive = i === active;
-            return (
-              <li key={c.slug}>
-                <button
-                  role="tab"
-                  aria-selected={isActive}
-                  tabIndex={isActive ? 0 : -1}
-                  onClick={() => setActive(i)}
-                  className={`w-full text-left py-5 flex items-baseline gap-5 border-b hp-hairline transition-colors ${
-                    isActive ? "text-primary" : "text-on-background hover:text-primary"
-                  }`}
-                >
-                  <span className="hp-mono text-[11px] uppercase tracking-widest text-on-surface-variant">
-                    {c.index}
-                  </span>
-                  <span className="text-[20px] leading-tight font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-                    {c.title}
-                  </span>
-                  <span className="ml-auto">
-                    <Icon
-                      name="arrow_forward"
-                      className={`text-[18px] transition-transform ${isActive ? "translate-x-1 text-secondary" : ""}`}
-                    />
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-
-        <div
-          role="tabpanel"
-          className="col-span-7 lg:col-span-8 hp-card p-6 lg:p-8 flex flex-col gap-6"
-        >
-          <div className="aspect-[16/9] overflow-hidden bg-surface-container relative">
-            <img
-              key={cat.image}
-              src={cat.image}
-              alt={cat.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-            <span className="absolute top-4 left-4 hp-mono text-[11px] uppercase tracking-widest px-2 py-1 bg-inverse-surface text-inverse-on-surface">
-              {cat.index} / {cat.count}
-            </span>
+    <section
+      className="relative text-white overflow-hidden"
+      style={{ backgroundColor: "var(--public-navy-950)" }}
+      aria-label="Ürün grupları"
+    >
+      <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+          <div>
+            <span className="pub-marker mb-4">02 / Ürün Grupları</span>
+            <h2 className="pub-h2 text-white mt-4 max-w-2xl">
+              Tek tedarikçiden, altı ana grup.
+            </h2>
+            <p className="mt-4 max-w-xl text-white/70 text-[15px] md:text-[17px] leading-relaxed">
+              Sanayi, şantiye ve teknik servis operasyonlarınızın ihtiyaç duyduğu profesyonel
+              donanımı, kategori uzmanı ekibimizle tek noktadan sunuyoruz.
+            </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <h3 className="hp-h2">{cat.title}</h3>
-            <p className="text-body-md font-body-md text-on-surface-variant max-w-xl">{cat.desc}</p>
-            <div className="flex flex-wrap gap-2">
-              {cat.sub.map((s) => (
-                <span
-                  key={s}
-                  className="hp-mono text-[11px] uppercase tracking-widest px-3 py-1 border hp-hairline text-on-surface-variant"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-            <Link
-              to={cat.to}
-              className="mt-2 inline-flex items-center gap-2 text-primary font-semibold text-label-bold uppercase tracking-widest hover:text-secondary-container transition-colors"
+          <Link
+            to="/urunler"
+            className="pub-btn pub-btn-outline-light pub-btn-sm self-start md:self-end"
+          >
+            Tüm Kategoriler
+            <Icon name="arrow_forward" className="text-[16px]" />
+          </Link>
+        </div>
+
+        {/* Desktop: split layout */}
+        <div className="hidden md:grid grid-cols-12 gap-10">
+          <ul
+            role="tablist"
+            aria-label="Ürün grupları"
+            data-category-tablist
+            className="col-span-5 lg:col-span-5 flex flex-col"
+            style={{ borderTop: "1px solid var(--public-navy-border)" }}
+          >
+            {CATEGORIES.map((c, i) => {
+              const isActive = i === active;
+              return (
+                <li key={c.slug}>
+                  <button
+                    role="tab"
+                    aria-selected={isActive}
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => setActive(i)}
+                    className="w-full text-left py-6 flex items-baseline gap-6 transition-colors relative group"
+                    style={{
+                      borderBottom: "1px solid var(--public-navy-border)",
+                      color: isActive ? "var(--public-yellow-500)" : "#FFFFFF",
+                    }}
+                  >
+                    {isActive && (
+                      <span
+                        className="absolute left-0 top-0 bottom-0 w-[3px]"
+                        style={{ backgroundColor: "var(--public-yellow-500)" }}
+                        aria-hidden
+                      />
+                    )}
+                    <span
+                      className="pub-mono w-8 tabular-nums pl-4"
+                      style={{ color: isActive ? "var(--public-yellow-500)" : "rgba(255,255,255,0.5)" }}
+                    >
+                      {c.index}
+                    </span>
+                    <span
+                      className="text-[22px] lg:text-[28px] leading-tight font-semibold flex-1"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 600, letterSpacing: 0 }}
+                    >
+                      {c.title}
+                    </span>
+                    <span className="pr-4">
+                      <Icon
+                        name="arrow_forward"
+                        className={`text-[20px] transition-transform ${isActive ? "translate-x-1" : "opacity-40 group-hover:opacity-100"}`}
+                      />
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div
+            role="tabpanel"
+            className="col-span-7 lg:col-span-7 flex flex-col"
+          >
+            <div
+              className="relative aspect-[16/10] overflow-hidden pub-ticks"
+              style={{ border: "1px solid var(--public-navy-border)", backgroundColor: "var(--public-navy-800)" }}
             >
-              Kategoriye Git
-              <Icon name="arrow_forward" className="text-[16px]" />
-            </Link>
+              <span className="pub-tick-bl" aria-hidden />
+              <span className="pub-tick-br" aria-hidden />
+              <img
+                key={cat.image}
+                src={cat.image}
+                alt={cat.title}
+                className="w-full h-full object-cover opacity-95"
+                loading="lazy"
+                decoding="async"
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(6,20,38,0.15) 0%, rgba(6,20,38,0.55) 100%)",
+                }}
+                aria-hidden
+              />
+              <span
+                className="absolute top-4 left-4 pub-mono px-3 py-1.5"
+                style={{
+                  backgroundColor: "var(--public-yellow-500)",
+                  color: "var(--public-navy-950)",
+                }}
+              >
+                {cat.index} · {cat.count}
+              </span>
+            </div>
+
+            <div
+              className="mt-6 p-6 lg:p-8"
+              style={{
+                backgroundColor: "var(--public-navy-800)",
+                border: "1px solid var(--public-navy-border)",
+              }}
+            >
+              <h3
+                className="text-white"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(28px, 3vw, 40px)",
+                  fontWeight: 700,
+                  lineHeight: 1.05,
+                }}
+              >
+                {cat.title}
+              </h3>
+              <p className="mt-3 text-white/75 text-[15px] leading-relaxed max-w-xl">
+                {cat.desc}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {cat.sub.map((s) => (
+                  <span
+                    key={s}
+                    className="pub-mono px-3 py-1.5"
+                    style={{
+                      color: "var(--public-yellow-500)",
+                      border: "1px solid var(--public-navy-border)",
+                    }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+              <Link
+                to={cat.to}
+                className="pub-btn pub-btn-primary pub-btn-sm mt-6"
+              >
+                Kategoriyi İncele
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile: swipe rail */}
-      <div className="md:hidden mt-8 -mx-margin-mobile px-margin-mobile flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4">
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.slug}
-            to={c.to}
-            className="snap-start shrink-0 w-[78vw] hp-card p-4 flex flex-col gap-3"
+        {/* Mobile: horizontal chip nav + selected panel */}
+        <div className="md:hidden">
+          <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
+            {CATEGORIES.map((c, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={c.slug}
+                  onClick={() => setActive(i)}
+                  className="pub-mono shrink-0 px-4 py-2.5 transition-colors"
+                  style={{
+                    backgroundColor: isActive ? "var(--public-yellow-500)" : "transparent",
+                    color: isActive ? "var(--public-navy-950)" : "#FFFFFF",
+                    border: `1px solid ${isActive ? "var(--public-yellow-500)" : "var(--public-navy-border)"}`,
+                  }}
+                  aria-pressed={isActive}
+                >
+                  {c.index} · {c.title}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            className="mt-4"
+            style={{
+              backgroundColor: "var(--public-navy-800)",
+              border: "1px solid var(--public-navy-border)",
+            }}
           >
-            <div className="aspect-[16/10] bg-surface-container overflow-hidden">
-              <img src={c.image} alt={c.title} className="w-full h-full object-cover" loading="lazy" />
+            <div className="relative aspect-[16/10] overflow-hidden">
+              <img
+                key={cat.image}
+                src={cat.image}
+                alt={cat.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <span
+                className="absolute top-3 left-3 pub-mono px-2.5 py-1"
+                style={{ backgroundColor: "var(--public-yellow-500)", color: "var(--public-navy-950)" }}
+              >
+                {cat.index} · {cat.count}
+              </span>
             </div>
-            <span className="hp-mono text-[11px] uppercase tracking-widest text-on-surface-variant">
-              {c.index} · {c.count}
-            </span>
-            <h3 className="text-[18px] font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-              {c.title}
-            </h3>
-            <p className="text-body-sm font-body-sm text-on-surface-variant line-clamp-3">{c.desc}</p>
-          </Link>
-        ))}
+            <div className="p-5">
+              <h3
+                className="text-white"
+                style={{ fontFamily: "var(--font-display)", fontSize: "28px", fontWeight: 700, lineHeight: 1.05 }}
+              >
+                {cat.title}
+              </h3>
+              <p className="mt-3 text-white/75 text-[14px] leading-relaxed">{cat.desc}</p>
+              <Link to={cat.to} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
+                Kategoriyi İncele
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

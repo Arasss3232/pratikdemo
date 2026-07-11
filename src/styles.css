@@ -81,17 +81,17 @@
   --container-max-width: 1280px;
 
   /* Fonts */
-  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-display: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-sans: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Manrope", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-body-md: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-body-sm: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-body-lg: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-label-bold: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-md: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-lg: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-lg-mobile: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-xl: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-body-md: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-body-sm: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-body-lg: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-label-bold: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-headline-md: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-headline-lg: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-headline-lg-mobile: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-headline-xl: "Barlow Condensed", "Arial Narrow", sans-serif;
 
   /* Text sizes */
   --text-body-sm: 14px;
@@ -120,6 +120,132 @@
 }
 
 /* ============ Public homepage helpers (do not affect .admin-scope) ============ */
+/* ----------- Public site design tokens (Industrial Authority) ----------- */
+:root {
+  --public-navy-950: #061426;
+  --public-navy-900: #0A2342;
+  --public-navy-800: #123A63;
+  --public-navy-700: #173F6B;
+  --public-navy-600: #1D4B7D;
+  --public-navy-border: #294D73;
+  --public-yellow-500: #F5C400;
+  --public-yellow-600: #E6B700;
+  --public-yellow-700: #D7A900;
+  --public-yellow-soft: #FFF2AD;
+  --public-graphite: #1D2430;
+  --public-steel: #8692A3;
+  --public-border: #D9DEE5;
+  --public-bg: #F3F1E9;
+  --public-surface: #FFFFFF;
+  --public-text-light: #FFFFFF;
+  --public-text-muted: #B7C4D4;
+  --public-text-dark: #142033;
+  --public-radius-sm: 2px;
+  --public-radius-md: 4px;
+  --public-radius-lg: 8px;
+  --public-shadow-sm: 0 1px 2px rgba(6,20,38,0.08);
+  --public-shadow-md: 0 18px 40px -18px rgba(6,20,38,0.45);
+  --public-container: 1280px;
+  --public-section-space: clamp(64px, 8vw, 120px);
+}
+
+/* Blueprint grid on navy surfaces */
+.pub-navy { background-color: var(--public-navy-900); color: var(--public-text-light); }
+.pub-navy-deep { background-color: var(--public-navy-950); color: var(--public-text-light); }
+.pub-navy-elev { background-color: var(--public-navy-700); color: var(--public-text-light); }
+.pub-yellow-bar { background-color: var(--public-yellow-500); }
+.pub-blueprint {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.pub-blueprint-lg {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+.pub-glow-yellow {
+  background: radial-gradient(600px 400px at 90% 20%, rgba(245,196,0,0.14), transparent 70%);
+}
+.pub-display {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  font-size: clamp(48px, 7vw, 104px);
+}
+.pub-h2 {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  font-size: clamp(38px, 5vw, 72px);
+}
+.pub-h3 {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 600;
+  line-height: 1.05;
+  font-size: clamp(24px, 2.4vw, 32px);
+}
+.pub-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+/* "Industrial Measurement Marker" */
+.pub-marker {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--public-yellow-500);
+}
+.pub-marker::before {
+  content: ""; width: 34px; height: 2px; background: var(--public-yellow-500);
+}
+.pub-marker-dark { color: var(--public-navy-900); }
+.pub-marker-dark::before { background: var(--public-navy-900); }
+
+/* Buttons */
+.pub-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 52px; padding: 0 22px;
+  font-family: "Manrope", sans-serif; font-weight: 700; font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border-radius: var(--public-radius-sm);
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, border-color 180ms ease;
+  white-space: nowrap;
+}
+.pub-btn:focus-visible { outline: 2px solid var(--public-yellow-500); outline-offset: 3px; }
+.pub-btn-primary { background: var(--public-yellow-500); color: var(--public-navy-950); }
+.pub-btn-primary:hover { background: var(--public-yellow-600); transform: translateY(-1px); }
+.pub-btn-outline-light {
+  background: transparent; color: var(--public-text-light);
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.pub-btn-outline-light:hover { border-color: var(--public-yellow-500); color: var(--public-yellow-500); }
+.pub-btn-outline-dark {
+  background: transparent; color: var(--public-navy-900);
+  border: 1.5px solid var(--public-navy-900);
+}
+.pub-btn-outline-dark:hover { background: var(--public-navy-900); color: var(--public-text-light); }
+.pub-btn-sm { height: 40px; padding: 0 16px; font-size: 12px; }
+
+/* Corner ticks helper */
+.pub-ticks { position: relative; }
+.pub-ticks::before, .pub-ticks::after,
+.pub-ticks > .pub-tick-bl, .pub-ticks > .pub-tick-br {
+  content: ""; position: absolute; width: 18px; height: 18px;
+  border-color: var(--public-yellow-500); pointer-events: none;
+}
+.pub-ticks::before { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+.pub-ticks::after { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+.pub-ticks > .pub-tick-bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+.pub-ticks > .pub-tick-br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+
 .hp-eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -325,21 +451,22 @@
   }
 
   html, body, #root {
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: "Manrope", "Segoe UI", Arial, sans-serif;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family: "Manrope", "Segoe UI", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    letter-spacing: -0.01em;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    letter-spacing: 0;
+    font-weight: 700;
   }
 
   button, input, textarea, select, optgroup, option {
@@ -430,6 +557,13 @@
   font-family: inherit;
 }
 .admin-scope ::selection { background: var(--admin-yellow-soft); color: var(--admin-text); }
+
+/* Keep admin panel typography on Inter regardless of global heading font */
+.admin-scope, .admin-scope h1, .admin-scope h2, .admin-scope h3,
+.admin-scope h4, .admin-scope h5, .admin-scope h6 {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
 
 /* Custom scrollbar for the brand sidebar */
 .admin-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.14) transparent; }
