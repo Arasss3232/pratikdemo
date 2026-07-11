@@ -378,6 +378,100 @@ function AdminPage() {
 
 /* ================= Products ================= */
 
+function BrochuresTab() {
+  return (
+    <GenericCrud
+      table="homepage_brochures"
+      quickAddKey="brochures"
+      title="Anasayfa Broşürleri"
+      description="Anasayfanın üst kısmında dönen tanıtım broşürlerini yönetin. Sıralama, yayın tarihi ve cihaza özel görseller destekler."
+      orderBy="display_order"
+      ascending={true}
+      defaults={{ is_active: true, overlay_style: "left-navy", text_theme: "light", display_order: 0 }}
+      fields={[
+        { name: "title", label: "Başlık", required: true, help: "Slaytın büyük başlığı" },
+        { name: "eyebrow", label: "Üst Etiket", help: "Örn: YENİ · KAMPANYA · 2025 KATALOĞU" },
+        { name: "subtitle", label: "Alt Başlık" },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "image_desktop", label: "Masaüstü Görsel URL (16:9 ya da 21:9)", type: "url", required: true, help: "Önerilen: 1920×900 px" },
+        { name: "image_tablet", label: "Tablet Görsel URL", type: "url", help: "Önerilen: 1280×720 px (boş bırakılırsa masaüstü kullanılır)" },
+        { name: "image_mobile", label: "Mobil Görsel URL", type: "url", help: "Önerilen: 900×1100 px (dikey)" },
+        { name: "image_alt", label: "Görsel Alt Metni (SEO / erişilebilirlik)" },
+        { name: "primary_cta_label", label: "Birincil Buton Metni", help: "Örn: Kataloğu İndir" },
+        { name: "primary_cta_href", label: "Birincil Buton Bağlantısı", help: "Örn: /urunler veya https://..." },
+        { name: "secondary_cta_label", label: "İkincil Buton Metni" },
+        { name: "secondary_cta_href", label: "İkincil Buton Bağlantısı" },
+        {
+          name: "overlay_style",
+          label: "Metin Yerleşimi",
+          type: "select",
+          options: [
+            { value: "left-navy", label: "Sol · Lacivert Panel" },
+            { value: "right-navy", label: "Sağ · Lacivert Panel" },
+            { value: "center-navy", label: "Ortalanmış · Yumuşak Overlay" },
+            { value: "bottom-gradient", label: "Alt · Gradient" },
+            { value: "minimal", label: "Minimal · Sol" },
+          ],
+        },
+        {
+          name: "text_theme",
+          label: "Metin Rengi",
+          type: "select",
+          options: [
+            { value: "light", label: "Açık (koyu arka plan için)" },
+            { value: "dark", label: "Koyu (açık arka plan için)" },
+          ],
+        },
+        { name: "accent_color", label: "Vurgu Rengi (HEX)", help: "Örn: #F5D311 (boş bırakılırsa marka sarısı)" },
+        { name: "display_order", label: "Sıra", type: "number", help: "Küçük değer önce gösterilir" },
+        { name: "start_at", label: "Yayın Başlangıcı", type: "date" },
+        { name: "end_at", label: "Yayın Bitişi", type: "date" },
+        { name: "is_active", label: "Yayında", type: "checkbox" },
+      ]}
+      columns={[
+        {
+          key: "image_desktop",
+          label: "Görsel",
+          render: (r) => {
+            const src = r.image_desktop as string | null;
+            return src ? (
+              <div
+                className="h-11 w-20 rounded-md overflow-hidden"
+                style={{ background: "var(--admin-bg-2, #eef2f7)", border: "1px solid var(--admin-border)" }}
+              >
+                <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+              </div>
+            ) : (
+              <span style={{ color: "var(--admin-text-mute)" }}>—</span>
+            );
+          },
+        },
+        { key: "display_order", label: "Sıra", render: (r) => (
+          <span className="font-mono text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+            {String(r.display_order ?? 0)}
+          </span>
+        ) },
+        { key: "title", label: "Başlık", render: (r) => (
+          <div className="flex flex-col">
+            <span className="font-medium">{String(r.title ?? "—")}</span>
+            {r.eyebrow ? (
+              <span className="text-[11px] uppercase tracking-wider" style={{ color: "var(--admin-text-mute)" }}>
+                {String(r.eyebrow)}
+              </span>
+            ) : null}
+          </div>
+        ) },
+        { key: "overlay_style", label: "Yerleşim" },
+        { key: "is_active", label: "Durum", render: (r) => (
+          <StatusBadge tone={r.is_active ? "success" : "neutral"}>
+            {r.is_active ? "Yayında" : "Gizli"}
+          </StatusBadge>
+        ) },
+      ]}
+    />
+  );
+}
+
 function ProductsTab() {
   return (
     <GenericCrud
