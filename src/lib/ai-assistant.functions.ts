@@ -193,10 +193,18 @@ Cevabını KATİ olarak aşağıdaki JSON şemasında dön (başka metin ekleme)
 async function checkRateLimit(context: any) {
   const sb: any = context.supabase;
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  // Per-user rate limit: only count messages inside this user's own conversations
+  const { data: myConvos } = await sb
+    .from("ai_conversations")
+    .select("id")
+    .eq("user_id", (context as any).userId);
+  const ids = ((myConvos ?? []) as AnyObj[]).map((r) => r.id);
+  if (ids.length === 0) return;
   const { count } = await sb
     .from("ai_messages")
     .select("id", { count: "exact", head: true })
     .eq("role", "user")
+    .in("conversation_id", ids)
     .gte("created_at", since);
   if ((count ?? 0) >= RATE_PER_HOUR) {
     throw new Error("Saatlik kullanım sınırına ulaştınız. Daha sonra tekrar deneyin.");
