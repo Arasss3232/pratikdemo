@@ -1,0 +1,1483 @@
+import { Link } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
+import { Icon } from "../site-shell";
+import { PRODUCTS, FEATURED_LOGOS } from "@/data/catalog";
+import {
+  useHomeBlog,
+  useHomeBrands,
+  useHomeReferences,
+  useHomeServices,
+  useHomeSettings,
+} from "@/hooks/use-home-data";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+/* =====================================================================
+ * Shared building blocks — "Industrial Authority"
+ * ===================================================================== */
+
+const NAVY_950 = "var(--public-navy-950)";
+const NAVY_900 = "var(--public-navy-900)";
+const NAVY_800 = "var(--public-navy-800)";
+const NAVY_700 = "var(--public-navy-700)";
+const NAVY_BORDER = "var(--public-navy-border)";
+const YELLOW = "var(--public-yellow-500)";
+
+function PubHead({
+  index,
+  eyebrow,
+  title,
+  subtitle,
+  action,
+  tone = "dark",
+}: {
+  index: string;
+  eyebrow: string;
+  title: ReactNode;
+  subtitle?: string;
+  action?: { label: string; to: string };
+  tone?: "dark" | "light";
+}) {
+  const inv = tone === "dark";
+  return (
+    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <div className="max-w-2xl">
+        <span className={`pub-marker ${inv ? "" : "pub-marker-dark"}`}>
+          {index} / {eyebrow}
+        </span>
+        <h2
+          className="mt-4"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            lineHeight: 1.02,
+            letterSpacing: "-0.005em",
+            fontSize: "clamp(36px, 4.6vw, 64px)",
+            color: inv ? "#fff" : NAVY_950,
+          }}
+        >
+          {title}
+        </h2>
+        {subtitle && (
+          <p
+            className="mt-4 text-[15px] md:text-[17px] leading-relaxed"
+            style={{ color: inv ? "rgba(255,255,255,0.75)" : "#38455C" }}
+          >
+            {subtitle}
+          </p>
+        )}
+      </div>
+      {action && (
+        <Link
+          to={action.to}
+          className={`pub-btn pub-btn-sm ${inv ? "pub-btn-outline-light" : "pub-btn-outline-dark"} self-start md:self-end`}
+        >
+          {action.label}
+          <Icon name="arrow_forward" className="text-[16px]" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+/* Backward-compat re-export used by CategoryExplorer/other files */
+export function SectionHead(props: {
+  index: string;
+  title: string;
+  subtitle?: string;
+  action?: { label: string; to: string };
+  inverse?: boolean;
+}) {
+  return (
+    <PubHead
+      index={props.index}
+      eyebrow={props.title}
+      title={props.title}
+      subtitle={props.subtitle}
+      action={props.action}
+      tone={props.inverse ? "dark" : "light"}
+    />
+  );
+}
+
+/* =====================================================================
+ * 03 — Company Capability (navy frame + warm-light content panel)
+ * ===================================================================== */
+export function ValueProps() {
+  const capabilities = [
+    { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle ilk turda doğru ürünü öneriyoruz." },
+    { k: "02", t: "Kurumsal Tedarik", d: "Sipariş, fatura, sevkiyat ve garanti tek muhatap üzerinden yürütülür." },
+    { k: "03", t: "Geniş Ürün Grubu", d: "Elektrikli el aletlerinden bağlantı elemanlarına altı ana grup." },
+    { k: "04", t: "Satış Sonrası İletişim", d: "Teslimat sonrası da ulaşılabilir tek muhataplı destek." },
+  ];
+  return (
+    <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
+      <div className="absolute inset-0 pub-blueprint opacity-70 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="03"
+          eyebrow="Kurumsal Yetkinlik"
+          title={
+            <>
+              Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
+            </>
+          }
+          subtitle="Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Hızlı sevkiyat kadar doğru ürün, doğru marka ve doğru teknik yönlendirme sunuyoruz."
+        />
+
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          <div
+            className="lg:col-span-7 relative pub-ticks overflow-hidden"
+            style={{ border: `1px solid ${NAVY_BORDER}` }}
+          >
+            <span className="pub-tick-bl" aria-hidden />
+            <span className="pub-tick-br" aria-hidden />
+            <div className="aspect-[16/10]">
+              <img
+                src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1600&q=80"
+                alt="Endüstriyel depo ve tedarik operasyonu"
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+                width={1600}
+                height={1000}
+              />
+            </div>
+            <div
+              className="absolute bottom-0 left-0 right-0 flex items-center gap-4 px-6 py-4"
+              style={{ backgroundColor: "rgba(6,20,38,0.85)", borderTop: `2px solid ${YELLOW}` }}
+            >
+              <span className="pub-mono" style={{ color: YELLOW }}>OPS · 12</span>
+              <span className="text-white/85 text-[13px]">Kurumsal tedarik hattı — tek muhatap, tek fatura akışı</span>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 relative" style={{ backgroundColor: "#F5F1E8", color: NAVY_950 }}>
+            <div className="p-8 md:p-10 flex flex-col gap-6 h-full">
+              <span className="pub-marker pub-marker-dark">HAKKIMIZDA</span>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(26px, 2.6vw, 34px)",
+                  lineHeight: 1.05,
+                  fontWeight: 700,
+                }}
+              >
+                Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır.
+              </h3>
+              <p className="text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+                Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi
+                ilişkileri kurmak için çalışıyoruz.
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ backgroundColor: "#E4DFD1" }}>
+                {capabilities.map((c) => (
+                  <li key={c.k} className="p-4" style={{ backgroundColor: "#F5F1E8" }}>
+                    <span className="pub-mono" style={{ color: NAVY_900 }}>{c.k}</span>
+                    <p
+                      className="mt-1 text-[15px] font-semibold"
+                      style={{ fontFamily: "var(--font-display)", color: NAVY_950 }}
+                    >
+                      {c.t}
+                    </p>
+                    <p className="mt-1 text-[12.5px] leading-snug" style={{ color: "#38455C" }}>
+                      {c.d}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <Link to="/kurumsal" className="pub-btn pub-btn-outline-dark pub-btn-sm self-start">
+                Hakkımızda
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 04 — Application Sectors (corporate navy interactive)
+ * ===================================================================== */
+export function SectorGrid() {
+  const sectors = [
+    {
+      k: "01",
+      t: "Sanayi ve Üretim",
+      d: "Üretim tesisleri için elektrikli el aletleri, bağlantı elemanları ve endüstriyel makine grupları.",
+      groups: [
+        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
+        { label: "Bağlantı Elemanları", to: "/urunler/baglanti-elemanlari" },
+        { label: "Endüstriyel Makineler", to: "/urunler/endustriyel-makineler" },
+      ],
+      image: "https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=1600&q=80",
+    },
+    {
+      k: "02",
+      t: "İnşaat ve Şantiye",
+      d: "Şantiye ekipmanları, kırıcı-delici sistemler ve saha güvenliği için kişisel koruyucu donanım.",
+      groups: [
+        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
+        { label: "Kişisel Koruyucu Donanım", to: "/urunler/kkd" },
+        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
+      ],
+      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
+    },
+    {
+      k: "03",
+      t: "Otomotiv ve Teknik Servis",
+      d: "OEM üretim hattı, servis atölyeleri ve bakım ekipleri için hassas el aletleri ve ölçüm çözümleri.",
+      groups: [
+        { label: "El Aletleri", to: "/urunler/el-aletleri" },
+        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
+        { label: "Endüstriyel Makineler", to: "/urunler/endustriyel-makineler" },
+      ],
+      image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1600&q=80",
+    },
+    {
+      k: "04",
+      t: "Mobilya ve Ahşap İşleme",
+      d: "Ahşap işleme atölyeleri için testere, zımpara, yüzey işleme ekipmanları ve tamamlayıcı sarflar.",
+      groups: [
+        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
+        { label: "El Aletleri", to: "/urunler/el-aletleri" },
+        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
+      ],
+      image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
+    },
+  ];
+  const [active, setActive] = useState(0);
+  const cur = sectors[active];
+
+  return (
+    <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_800, color: "#fff" }}>
+      <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="04"
+          eyebrow="Uygulama Sektörleri"
+          title={
+            <>
+              Sahaya göre <span style={{ color: YELLOW }}>tedarik</span>.
+            </>
+          }
+          subtitle="Farklı disiplinlerdeki ekiplere; sahalarına, ölçeklerine ve tempolarına uygun donanım tedariki yürütüyoruz."
+        />
+
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <ul
+            className="lg:col-span-5 flex flex-col"
+            style={{ borderTop: `1px solid ${NAVY_BORDER}` }}
+            role="tablist"
+            aria-label="Sektörler"
+          >
+            {sectors.map((s, i) => {
+              const isA = i === active;
+              return (
+                <li key={s.k}>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={isA}
+                    onClick={() => setActive(i)}
+                    className="w-full text-left py-6 flex items-baseline gap-5 transition-colors relative"
+                    style={{
+                      borderBottom: `1px solid ${NAVY_BORDER}`,
+                      color: isA ? YELLOW : "#fff",
+                    }}
+                  >
+                    {isA && (
+                      <span
+                        aria-hidden
+                        className="absolute left-0 top-0 bottom-0"
+                        style={{ width: 3, backgroundColor: YELLOW }}
+                      />
+                    )}
+                    <span className="pub-mono pl-4 tabular-nums" style={{ color: isA ? YELLOW : "rgba(255,255,255,0.5)" }}>
+                      {s.k}
+                    </span>
+                    <span
+                      className="flex-1 text-[20px] md:text-[24px] leading-tight"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+                    >
+                      {s.t}
+                    </span>
+                    <Icon
+                      name="arrow_forward"
+                      className={`text-[18px] pr-4 transition-transform ${isA ? "translate-x-1" : "opacity-40"}`}
+                    />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="lg:col-span-7 flex flex-col gap-6" role="tabpanel">
+            <div
+              className="relative aspect-[16/10] overflow-hidden pub-ticks"
+              style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_700 }}
+            >
+              <span className="pub-tick-bl" aria-hidden />
+              <span className="pub-tick-br" aria-hidden />
+              <img
+                key={cur.image}
+                src={cur.image}
+                alt={cur.t}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+              <div
+                className="absolute inset-0"
+                style={{ background: "linear-gradient(180deg, rgba(6,20,38,0.15), rgba(6,20,38,0.55))" }}
+                aria-hidden
+              />
+              <span
+                className="absolute top-4 left-4 pub-mono px-3 py-1.5"
+                style={{ backgroundColor: YELLOW, color: NAVY_950 }}
+              >
+                {cur.k} · {cur.t}
+              </span>
+            </div>
+
+            <div className="p-6 md:p-7" style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}>
+              <p className="text-white/80 text-[15px] leading-relaxed">{cur.d}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {cur.groups.map((g) => (
+                  <Link
+                    key={g.label}
+                    to={g.to}
+                    className="pub-mono px-3 py-1.5 transition-colors"
+                    style={{ color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
+                  >
+                    {g.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 05 — Featured Products (graphite/navy, editorial hero + rail)
+ * ===================================================================== */
+export function FeaturedProducts() {
+  const items = PRODUCTS.slice(0, 5);
+  const [hero, ...rail] = items;
+  if (!hero) return null;
+  return (
+    <section
+      className="relative overflow-hidden"
+      style={{ backgroundColor: "var(--public-graphite)", color: "#fff" }}
+    >
+      <div className="absolute inset-0 pub-blueprint opacity-30 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="05"
+          eyebrow="Öne Çıkan Ürünler"
+          title={
+            <>
+              Sık talep edilen <span style={{ color: YELLOW }}>profesyonel</span> ürünler.
+            </>
+          }
+          subtitle="Sipariş yoğunluğuna göre öne çıkan modeller. Tüm ürünler için kurumsal teklif hazırlayabiliriz."
+          action={{ label: "Tüm Ürünler", to: "/urunler" }}
+        />
+
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Hero product */}
+          <Link
+            to="/urunler/elektrikli-el-aletleri/$sku"
+            params={{ sku: hero.sku }}
+            className="lg:col-span-7 group flex flex-col pub-ticks"
+            style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
+          >
+            <span className="pub-tick-bl" aria-hidden />
+            <span className="pub-tick-br" aria-hidden />
+            <div className="relative aspect-[16/11]" style={{ backgroundColor: "#F5F1E8" }}>
+              <img
+                src={hero.productImg}
+                alt={hero.productAlt}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-contain p-10 transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+              <span
+                className="absolute top-4 left-4 pub-mono px-2.5 py-1"
+                style={{ backgroundColor: YELLOW, color: NAVY_950 }}
+              >
+                REF · {hero.sku}
+              </span>
+            </div>
+            <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6" style={{ borderTop: `1px solid ${NAVY_BORDER}` }}>
+              <div className="md:col-span-8">
+                <span className="pub-mono" style={{ color: YELLOW }}>
+                  {hero.brandAlt.replace(" logo", "")}
+                </span>
+                <h3
+                  className="mt-2 text-[24px] md:text-[30px] leading-tight text-white"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
+                >
+                  {hero.name}
+                </h3>
+                <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+                  {hero.specs.slice(0, 3).map((s) => (
+                    <li key={s.label} className="flex items-center gap-2 text-[13.5px] text-white/75">
+                      <Icon name={s.icon} className="text-[16px]" style={{ color: YELLOW }} aria-hidden />
+                      <span>{s.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="md:col-span-4 md:text-right flex flex-col md:items-end gap-3">
+                <span className="pub-btn pub-btn-primary pub-btn-sm">
+                  Ürünü İncele
+                  <Icon name="arrow_forward" className="text-[16px]" />
+                </span>
+                <Link
+                  to="/teklif"
+                  onClick={(e) => e.stopPropagation()}
+                  className="pub-mono text-white/70 hover:text-white transition-colors"
+                >
+                  Teklif Talep Et →
+                </Link>
+              </div>
+            </div>
+          </Link>
+
+          {/* Rail */}
+          <ul className="lg:col-span-5 flex flex-col gap-4">
+            {rail.map((p, i) => (
+              <li key={p.sku}>
+                <Link
+                  to="/urunler/elektrikli-el-aletleri/$sku"
+                  params={{ sku: p.sku }}
+                  className="group flex items-center gap-5 p-4"
+                  style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}
+                >
+                  <div className="w-20 h-20 shrink-0" style={{ backgroundColor: "#F5F1E8" }}>
+                    <img
+                      src={p.productImg}
+                      alt={p.productAlt}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-contain p-2"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="pub-mono" style={{ color: YELLOW }}>
+                      0{i + 2} · {p.sku}
+                    </span>
+                    <h4 className="mt-1 text-[15px] leading-snug font-semibold text-white line-clamp-2">
+                      {p.name}
+                    </h4>
+                  </div>
+                  <Icon
+                    name="arrow_forward"
+                    className="text-[20px] text-white/50 group-hover:text-white transition-colors"
+                    aria-hidden
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 06 — Why Choose Us (warm-light with strong navy framing)
+ * ===================================================================== */
+export function WhyChoose() {
+  const items = [
+    { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle uygun ürünü ilk turda öneriyoruz." },
+    { k: "02", t: "Kurumsal Tedarik", d: "Cari kart, fatura, teslimat ve garanti süreçleri kurumsal standartlarda yürütülür." },
+    { k: "03", t: "Sipariş Şeffaflığı", d: "Teklif, stok durumu ve teslim süresi konusunda net bilgi verir; süreç boyunca haber veririz." },
+    { k: "04", t: "Kolay İletişim", d: "Telefon, e-posta veya WhatsApp — hangisi kolaysa. Muhatabınız değişmez." },
+    { k: "05", t: "Yedek Parça Sürekliliği", d: "Satılan ürünlerin yedek parçası ve sarfları için sürekli tedarik desteği." },
+  ];
+  return (
+    <section className="relative" style={{ backgroundColor: NAVY_950, padding: "48px 0" }}>
+      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+        <div
+          className="relative pub-ticks"
+          style={{
+            backgroundColor: "#F5F1E8",
+            color: NAVY_950,
+            border: `1px solid ${NAVY_BORDER}`,
+          }}
+        >
+          <span className="pub-tick-bl" aria-hidden />
+          <span className="pub-tick-br" aria-hidden />
+          <div className="p-8 md:p-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+            <div className="lg:col-span-5">
+              <span className="pub-marker pub-marker-dark">06 / Neden Pratik</span>
+              <h2
+                className="mt-4"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(34px, 4vw, 56px)",
+                  fontWeight: 700,
+                  lineHeight: 1.02,
+                  color: NAVY_950,
+                }}
+              >
+                Doğru ürün, doğru marka, <br />
+                doğru yönlendirme.
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#38455C" }}>
+                Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor.
+              </p>
+              <div
+                className="mt-8 aspect-[4/5] overflow-hidden pub-ticks relative"
+                style={{ border: `1px solid ${NAVY_900}` }}
+              >
+                <span className="pub-tick-bl" aria-hidden />
+                <span className="pub-tick-br" aria-hidden />
+                <img
+                  src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=1200&q=80"
+                  alt="Endüstriyel atölyede profesyonel ekipman"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  width={1200}
+                  height={1500}
+                />
+                <div
+                  className="absolute bottom-0 left-0 right-0 px-5 py-4"
+                  style={{ backgroundColor: "rgba(6,20,38,0.85)", borderTop: `2px solid ${YELLOW}` }}
+                >
+                  <span className="pub-mono" style={{ color: YELLOW }}>SAHA</span>
+                  <p className="mt-1 text-[13.5px] text-white/90">
+                    Tesis ekipleriyle birlikte doğru ürünü belirliyoruz.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <ol className="lg:col-span-7 flex flex-col" style={{ borderTop: `1px solid ${NAVY_BORDER}` }}>
+              {items.map((it) => (
+                <li
+                  key={it.k}
+                  className="py-6 md:py-8 grid grid-cols-[auto_1fr] gap-6 md:gap-10 items-start group"
+                  style={{ borderBottom: `1px solid ${NAVY_BORDER}` }}
+                >
+                  <span
+                    className="pub-mono pt-1"
+                    style={{ color: NAVY_900, fontSize: 13, letterSpacing: "0.16em" }}
+                  >
+                    {it.k}
+                  </span>
+                  <div>
+                    <h3
+                      className="text-[22px] md:text-[26px] leading-tight transition-colors group-hover:text-[color:var(--public-navy-700)]"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: NAVY_950 }}
+                    >
+                      {it.t}
+                    </h3>
+                    <p className="mt-2 text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+                      {it.d}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 07 — Services (deep navy editorial)
+ * ===================================================================== */
+export function ServicesStrip() {
+  const { data } = useHomeServices();
+  if (!data || data.length === 0) return null;
+  return (
+    <section
+      className="relative overflow-hidden"
+      style={{ backgroundColor: NAVY_900, color: "#fff" }}
+    >
+      <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="07"
+          eyebrow="Hizmetlerimiz"
+          title={
+            <>
+              Ürün tedariki + <span style={{ color: YELLOW }}>süreç yönetimi</span>.
+            </>
+          }
+          subtitle="Kurulum, teknik destek ve tedarik yönetimi hizmetlerimizle projelerinizi baştan sona destekliyoruz."
+          action={{ label: "Tüm Hizmetler", to: "/hizmetler" }}
+        />
+        <ul className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ backgroundColor: NAVY_BORDER }}>
+          {data.map((svc, i) => (
+            <li key={svc.id} style={{ backgroundColor: NAVY_900 }}>
+              <Link
+                to="/hizmetler/$slug"
+                params={{ slug: svc.slug }}
+                className="group p-8 flex flex-col gap-5 h-full transition-colors hover:bg-[color:var(--public-navy-800)]"
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className="inline-flex items-center justify-center w-12 h-12"
+                    style={{ backgroundColor: NAVY_800, color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
+                  >
+                    <Icon name={svc.icon || "engineering"} className="text-[24px]" />
+                  </span>
+                  <span className="pub-mono" style={{ color: "rgba(255,255,255,0.4)" }}>0{i + 1}</span>
+                </div>
+                <h3
+                  className="text-[22px] leading-snug text-white"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+                >
+                  {svc.title}
+                </h3>
+                {svc.excerpt && (
+                  <p className="text-white/70 text-[14px] leading-relaxed line-clamp-3">{svc.excerpt}</p>
+                )}
+                <span
+                  className="mt-auto pub-mono flex items-center gap-2"
+                  style={{ color: YELLOW }}
+                >
+                  Detay <Icon name="arrow_forward" className="text-[14px]" aria-hidden />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 08 — Brands (deep navy logo grid)
+ * ===================================================================== */
+export function BrandStrip() {
+  const { data } = useHomeBrands();
+  const logos: { key: string; src: string; alt: string; href?: string }[] =
+    data && data.length > 0
+      ? data.map((b) => ({ key: b.id, src: b.logo_url, alt: b.name, href: b.website_url || undefined }))
+      : FEATURED_LOGOS.map((src, i) => ({ key: `f-${i}`, src, alt: `Marka ${i + 1}` }));
+
+  return (
+    <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_950, color: "#fff" }}>
+      <div className="absolute inset-0 pub-blueprint opacity-50 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="08"
+          eyebrow="Marka Ekosistemi"
+          title={
+            <>
+              Birlikte çalıştığımız <span style={{ color: YELLOW }}>markalar</span>.
+            </>
+          }
+          subtitle="Uluslararası ve yerel üretici markalarla düzenli tedarik hattı yürütüyoruz."
+          action={{ label: "Tüm Markalar", to: "/markalar" }}
+        />
+        <div
+          className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px"
+          style={{ backgroundColor: NAVY_BORDER }}
+        >
+          {logos.map((logo) => {
+            const inner = (
+              <div
+                className="h-28 flex items-center justify-center p-6 transition-colors hover:bg-[color:var(--public-navy-800)]"
+                style={{ backgroundColor: NAVY_900 }}
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={160}
+                  height={40}
+                  className="max-h-10 max-w-full object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
+              </div>
+            );
+            return logo.href ? (
+              <a key={logo.key} href={logo.href} target="_blank" rel="noreferrer" aria-label={logo.alt}>
+                {inner}
+              </a>
+            ) : (
+              <div key={logo.key} aria-label={logo.alt}>
+                {inner}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 09 — Corporate Evidence / Selected References (corporate navy)
+ * ===================================================================== */
+export function SelectedReferences() {
+  const { data } = useHomeReferences();
+  const stats = [
+    { n: "6", l: "Ana Ürün Grubu" },
+    { n: "40+", l: "Marka" },
+    { n: "3.000+", l: "SKU" },
+    { n: "TR", l: "Tedarik Coğrafyası" },
+  ];
+  const [hero, ...rest] = data || [];
+  return (
+    <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_800, color: "#fff" }}>
+      <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="09"
+          eyebrow="Kurumsal Kayıt"
+          title={
+            <>
+              Referanslar ve <span style={{ color: YELLOW }}>ürün derinliği</span>.
+            </>
+          }
+          subtitle="Birlikte çalıştığımız sanayi, inşaat ve teknik servis kuruluşları ile taşıdığımız ürün derinliği."
+          action={data && data.length > 0 ? { label: "Tüm Referanslar", to: "/referanslar" } : undefined}
+        />
+
+        <div
+          className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-px"
+          style={{ backgroundColor: NAVY_BORDER, border: `1px solid ${NAVY_BORDER}` }}
+        >
+          {stats.map((s) => (
+            <div key={s.l} className="p-6 md:p-8" style={{ backgroundColor: NAVY_900 }}>
+              <span
+                className="block"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(38px, 5vw, 60px)",
+                  fontWeight: 700,
+                  color: YELLOW,
+                  lineHeight: 1,
+                }}
+              >
+                {s.n}
+              </span>
+              <span className="pub-mono mt-3 block text-white/70">{s.l}</span>
+            </div>
+          ))}
+        </div>
+
+        {hero && (
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <article
+              className="lg:col-span-7 pub-ticks overflow-hidden flex flex-col"
+              style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
+            >
+              <span className="pub-tick-bl" aria-hidden />
+              <span className="pub-tick-br" aria-hidden />
+              {hero.cover_url && (
+                <div className="aspect-[16/10] relative overflow-hidden" style={{ backgroundColor: NAVY_700 }}>
+                  <img src={hero.cover_url} alt={hero.title} loading="lazy" className="w-full h-full object-cover" />
+                  <span
+                    className="absolute top-4 left-4 pub-mono px-3 py-1.5"
+                    style={{ backgroundColor: YELLOW, color: NAVY_950 }}
+                  >
+                    01 · Referans
+                  </span>
+                </div>
+              )}
+              <div className="p-6 md:p-8 flex flex-col gap-2">
+                {hero.category && (
+                  <span className="pub-mono" style={{ color: YELLOW }}>{hero.category}</span>
+                )}
+                <h3
+                  className="text-[24px] md:text-[30px] leading-tight text-white"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
+                >
+                  {hero.title}
+                </h3>
+                {hero.client_name && <p className="text-white/70 text-[15px]">{hero.client_name}</p>}
+              </div>
+            </article>
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              {rest.slice(0, 2).map((r, i) => (
+                <article
+                  key={r.id}
+                  className="overflow-hidden flex flex-col md:flex-row"
+                  style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
+                >
+                  {r.cover_url && (
+                    <div className="md:w-2/5 aspect-[16/10] md:aspect-auto" style={{ backgroundColor: NAVY_700 }}>
+                      <img src={r.cover_url} alt={r.title} loading="lazy" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <div className="p-5 md:p-6 flex flex-col gap-2 flex-1">
+                    <span className="pub-mono" style={{ color: YELLOW }}>
+                      0{i + 2} · {r.category || "Referans"}
+                    </span>
+                    <h3
+                      className="text-[17px] leading-snug text-white"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+                    >
+                      {r.title}
+                    </h3>
+                    {r.client_name && <p className="text-white/60 text-[13.5px]">{r.client_name}</p>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 10 — Supply Process (main navy, technical timeline)
+ * ===================================================================== */
+export function ProcessTimeline() {
+  const steps = [
+    { k: "01", t: "İhtiyacınızı Belirleyelim", d: "Ürün listesi, marka tercihi veya teknik gereksinim — elinizdekini iletin.", icon: "forward_to_inbox" },
+    { k: "02", t: "Uygun Ürünü Seçelim", d: "Satış ekibimiz projenize uygun ürün ve alternatifleri birlikte değerlendirir.", icon: "insights" },
+    { k: "03", t: "Teklifinizi Hazırlayalım", d: "Fiyat, teslim süresi ve garanti koşulları dahil karşılaştırılabilir teklif.", icon: "request_quote" },
+    { k: "04", t: "Tedariki Tamamlayalım", d: "Sevkiyat, faturalama ve satış sonrası iletişim tek muhatap üzerinden.", icon: "local_shipping" },
+  ];
+  return (
+    <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_900, color: "#fff" }}>
+      <div className="absolute inset-0 pub-blueprint opacity-50 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="10"
+          eyebrow="Tedarik Süreci"
+          title={
+            <>
+              Talepten teslimata <span style={{ color: YELLOW }}>tek muhatap</span>.
+            </>
+          }
+          subtitle="Öngörülebilir, takip edilebilir ve tek muhataplı bir süreç yürütüyoruz."
+        />
+
+        {/* Desktop horizontal */}
+        <div className="hidden md:block mt-16 relative">
+          <div className="absolute top-6 left-0 right-0 h-px" style={{ backgroundColor: NAVY_BORDER }} aria-hidden />
+          <div className="absolute top-6 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, ${YELLOW}, transparent)` }} aria-hidden />
+          <ol className="grid grid-cols-4 gap-6">
+            {steps.map((s) => (
+              <li key={s.k} className="flex flex-col items-start">
+                <span
+                  className="relative z-10 w-12 h-12 grid place-items-center"
+                  style={{ backgroundColor: NAVY_950, border: `2px solid ${YELLOW}`, color: YELLOW }}
+                >
+                  <Icon name={s.icon} className="text-[22px]" aria-hidden />
+                </span>
+                <span className="mt-6 pub-mono" style={{ color: YELLOW }}>{s.k}</span>
+                <h3
+                  className="mt-2 text-[20px] leading-tight text-white"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+                >
+                  {s.t}
+                </h3>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-white/70 max-w-xs">{s.d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Mobile vertical */}
+        <ol className="md:hidden mt-10 relative">
+          <div className="absolute left-6 top-2 bottom-2 w-px" style={{ backgroundColor: NAVY_BORDER }} aria-hidden />
+          {steps.map((s) => (
+            <li key={s.k} className="relative pl-16 pb-8 last:pb-0">
+              <span
+                className="absolute left-0 top-0 w-12 h-12 grid place-items-center"
+                style={{ backgroundColor: NAVY_950, border: `2px solid ${YELLOW}`, color: YELLOW }}
+              >
+                <Icon name={s.icon} className="text-[22px]" aria-hidden />
+              </span>
+              <span className="pub-mono" style={{ color: YELLOW }}>{s.k}</span>
+              <h3
+                className="mt-1 text-[19px] leading-tight text-white"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+              >
+                {s.t}
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-white/70">{s.d}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 11 — Knowledge / Blog (warm-light editorial framed by navy)
+ * ===================================================================== */
+export function InsightsPreview() {
+  const { data } = useHomeBlog();
+  if (!data || data.length === 0) return null;
+  const [feat, ...rest] = data;
+  return (
+    <section className="relative" style={{ backgroundColor: NAVY_950, padding: "48px 0" }}>
+      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+        <div
+          className="relative pub-ticks p-8 md:p-12"
+          style={{ backgroundColor: "#F5F1E8", border: `1px solid ${NAVY_BORDER}`, color: NAVY_950 }}
+        >
+          <span className="pub-tick-bl" aria-hidden />
+          <span className="pub-tick-br" aria-hidden />
+          <PubHead
+            index="11"
+            eyebrow="Bilgi Merkezi"
+            title={<>Sektörel içerik ve <span style={{ color: NAVY_900 }}>uygulama önerileri</span>.</>}
+            subtitle="Ürün seçimi, uygulama önerileri ve sektörel içerikler."
+            action={{ label: "Tüm Yazıları Gör", to: "/blog" }}
+            tone="light"
+          />
+
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            {feat && (
+              <Link
+                to="/blog/$slug"
+                params={{ slug: feat.slug }}
+                className="lg:col-span-7 group flex flex-col overflow-hidden pub-ticks"
+                style={{ border: `1px solid ${NAVY_900}`, backgroundColor: "#FFFFFF" }}
+              >
+                <span className="pub-tick-bl" aria-hidden />
+                <span className="pub-tick-br" aria-hidden />
+                {feat.cover_url && (
+                  <div className="aspect-[16/10] overflow-hidden" style={{ backgroundColor: "#E4DFD1" }}>
+                    <img
+                      src={feat.cover_url}
+                      alt={feat.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                )}
+                <div className="p-6 md:p-8 flex flex-col gap-3">
+                  {feat.published_at && (
+                    <span className="pub-mono" style={{ color: NAVY_900 }}>
+                      {new Date(feat.published_at).toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" })}
+                    </span>
+                  )}
+                  <h3
+                    className="text-[24px] md:text-[30px] leading-tight"
+                    style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: NAVY_950 }}
+                  >
+                    {feat.title}
+                  </h3>
+                  {feat.excerpt && (
+                    <p className="text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+                      {feat.excerpt}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            )}
+            <ul className="lg:col-span-5 flex flex-col gap-6">
+              {rest.slice(0, 2).map((p) => (
+                <li key={p.id}>
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: p.slug }}
+                    className="flex md:h-full overflow-hidden"
+                    style={{ border: `1px solid ${NAVY_900}`, backgroundColor: "#FFFFFF" }}
+                  >
+                    {p.cover_url && (
+                      <div className="w-2/5 shrink-0" style={{ backgroundColor: "#E4DFD1" }}>
+                        <img src={p.cover_url} alt={p.title} loading="lazy" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="p-5 flex flex-col gap-2 flex-1">
+                      {p.published_at && (
+                        <span className="pub-mono" style={{ color: NAVY_900 }}>
+                          {new Date(p.published_at).toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" })}
+                        </span>
+                      )}
+                      <h3
+                        className="text-[17px] leading-snug"
+                        style={{ fontFamily: "var(--font-display)", fontWeight: 600, color: NAVY_950 }}
+                      >
+                        {p.title}
+                      </h3>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* =====================================================================
+ * 12 — Quotation & Contact (deepest navy conversion section)
+ * ===================================================================== */
+const quoteSchema = z.object({
+  name: z.string().trim().min(2, "Ad Soyad en az 2 karakter olmalı").max(100),
+  company: z.string().trim().max(120).optional().or(z.literal("")),
+  email: z.string().trim().email("Geçerli bir e-posta girin").max(160),
+  phone: z.string().trim().min(7, "Geçerli bir telefon girin").max(30),
+  category: z.string().trim().min(1, "Bir ürün grubu seçin").max(80),
+  message: z.string().trim().max(1200).optional().or(z.literal("")),
+  kvkk: z.literal(true, { errorMap: () => ({ message: "KVKK metnini onaylayın" }) }),
+});
+
+export function QuoteCTA() {
+  const { data: s } = useHomeSettings();
+  const phone = s?.phone;
+  const wa = s?.whatsapp;
+
+  const [state, setState] = useState<"idle" | "loading" | "ok" | "err">("idle");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+
+  const categories = [
+    "Elektrikli El Aletleri",
+    "El Aletleri",
+    "Bağlantı Elemanları",
+    "Kişisel Koruyucu Donanım",
+    "Endüstriyel Makineler",
+    "Sarf Malzemeleri",
+    "Diğer / Belirtiniz",
+  ];
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setErrors({});
+    setErrMsg(null);
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: String(fd.get("name") || ""),
+      company: String(fd.get("company") || ""),
+      email: String(fd.get("email") || ""),
+      phone: String(fd.get("phone") || ""),
+      category: String(fd.get("category") || ""),
+      message: String(fd.get("message") || ""),
+      kvkk: fd.get("kvkk") === "on",
+    };
+    const parsed = quoteSchema.safeParse(payload);
+    if (!parsed.success) {
+      const errs: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as string;
+        if (!errs[key]) errs[key] = issue.message;
+      }
+      setErrors(errs);
+      return;
+    }
+    setState("loading");
+    const { error } = await supabase.from("quote_requests").insert({
+      contact_name: parsed.data.name,
+      company: parsed.data.company || null,
+      email: parsed.data.email,
+      phone: parsed.data.phone,
+      message: parsed.data.message || null,
+      items: [{ category: parsed.data.category }],
+    });
+    if (error) {
+      setState("err");
+      setErrMsg("Talebiniz gönderilemedi. Lütfen tekrar deneyin veya bize ulaşın.");
+      return;
+    }
+    setState("ok");
+    (e.target as HTMLFormElement).reset();
+  }
+
+  const inputCls =
+    "w-full bg-white text-[color:var(--public-navy-950)] border border-[color:var(--public-navy-border)] focus:border-[color:var(--public-yellow-500)] focus:outline-none px-4 py-3 text-[15px] placeholder:text-[#8692A3] transition-colors";
+
+  return (
+    <section
+      id="teklif-al"
+      className="relative overflow-hidden"
+      style={{ backgroundColor: NAVY_950, color: "#fff" }}
+    >
+      <div className="absolute inset-0 pub-blueprint-lg opacity-40 pointer-events-none" aria-hidden />
+      <div className="absolute inset-0 pub-glow-yellow pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          <div className="lg:col-span-5">
+            <span className="pub-marker">12 / Teklif ve İletişim</span>
+            <h2
+              className="mt-4"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(38px, 5vw, 72px)",
+                fontWeight: 700,
+                lineHeight: 1.02,
+                color: "#fff",
+              }}
+            >
+              Projeniz için <span style={{ color: YELLOW }}>teklif</span> hazırlayalım.
+            </h2>
+            <p className="mt-4 max-w-md text-[15px] md:text-[16px] leading-relaxed text-white/75">
+              Ürün listenizi veya ihtiyacınızın kısa özetini paylaşın. Satış ekibimiz kısa süre içinde geri dönsün.
+            </p>
+            <div className="mt-8 flex flex-col">
+              {phone && (
+                <a
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className="flex items-center gap-4 py-4 text-white hover:text-[color:var(--public-yellow-500)] transition-colors"
+                  style={{ borderTop: `1px solid ${NAVY_BORDER}` }}
+                >
+                  <span className="w-11 h-11 grid place-items-center" style={{ border: `1px solid ${NAVY_BORDER}`, color: YELLOW }}>
+                    <Icon name="call" />
+                  </span>
+                  <span className="flex-1">
+                    <span className="block pub-mono text-white/50">Telefon</span>
+                    <span className="block text-[17px] font-semibold">{phone}</span>
+                  </span>
+                  <Icon name="arrow_forward" className="text-white/40" />
+                </a>
+              )}
+              {wa && (
+                <a
+                  href={`https://wa.me/${wa.replace(/[^\d]/g, "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-4 py-4 text-white hover:text-[color:var(--public-yellow-500)] transition-colors"
+                  style={{ borderTop: `1px solid ${NAVY_BORDER}` }}
+                >
+                  <span className="w-11 h-11 grid place-items-center" style={{ border: `1px solid ${NAVY_BORDER}`, color: YELLOW }}>
+                    <Icon name="chat" />
+                  </span>
+                  <span className="flex-1">
+                    <span className="block pub-mono text-white/50">WhatsApp</span>
+                    <span className="block text-[17px] font-semibold">Hemen mesaj yazın</span>
+                  </span>
+                  <Icon name="arrow_forward" className="text-white/40" />
+                </a>
+              )}
+              {s?.email && (
+                <a
+                  href={`mailto:${s.email}`}
+                  className="flex items-center gap-4 py-4 text-white hover:text-[color:var(--public-yellow-500)] transition-colors"
+                  style={{ borderTop: `1px solid ${NAVY_BORDER}`, borderBottom: `1px solid ${NAVY_BORDER}` }}
+                >
+                  <span className="w-11 h-11 grid place-items-center" style={{ border: `1px solid ${NAVY_BORDER}`, color: YELLOW }}>
+                    <Icon name="mail" />
+                  </span>
+                  <span className="flex-1">
+                    <span className="block pub-mono text-white/50">E-posta</span>
+                    <span className="block text-[17px] font-semibold break-all">{s.email}</span>
+                  </span>
+                  <Icon name="arrow_forward" className="text-white/40" />
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-7">
+            {state === "ok" ? (
+              <div
+                className="p-8 md:p-12 text-center pub-ticks"
+                style={{ backgroundColor: NAVY_900, border: `1px solid ${YELLOW}` }}
+              >
+                <span className="pub-tick-bl" aria-hidden />
+                <span className="pub-tick-br" aria-hidden />
+                <span
+                  className="inline-flex items-center justify-center w-14 h-14 mb-4"
+                  style={{ border: `2px solid ${YELLOW}`, color: YELLOW }}
+                >
+                  <Icon name="check" className="text-[28px]" />
+                </span>
+                <h3
+                  className="text-white"
+                  style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 700 }}
+                >
+                  Talebiniz alındı.
+                </h3>
+                <p className="mt-3 text-white/75">
+                  Ekibimiz kısa süre içinde tarafınıza dönecek. Aciliyet durumunda telefonla ulaşabilirsiniz.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setState("idle")}
+                  className="mt-6 pub-mono transition-colors"
+                  style={{ color: YELLOW }}
+                >
+                  Yeni bir talep gönder →
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={onSubmit}
+                noValidate
+                className="pub-ticks p-6 md:p-8 flex flex-col gap-4"
+                style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}
+                aria-label="Hızlı teklif formu"
+              >
+                <span className="pub-tick-bl" aria-hidden />
+                <span className="pub-tick-br" aria-hidden />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Field label="Ad Soyad *" name="name" required inputCls={inputCls} error={errors.name} autoComplete="name" />
+                  <Field label="Firma Adı" name="company" inputCls={inputCls} error={errors.company} autoComplete="organization" />
+                  <Field label="Telefon *" name="phone" type="tel" required inputCls={inputCls} error={errors.phone} autoComplete="tel" />
+                  <Field label="E-posta *" name="email" type="email" required inputCls={inputCls} error={errors.email} autoComplete="email" />
+                </div>
+                <label className="flex flex-col gap-2">
+                  <span className="pub-mono text-white/70">Ürün Grubu *</span>
+                  <select name="category" required className={inputCls} defaultValue="" aria-invalid={!!errors.category}>
+                    <option value="" disabled>Seçiniz…</option>
+                    {categories.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  {errors.category && <span className="text-[color:var(--public-yellow-500)] text-[12px]">{errors.category}</span>}
+                </label>
+                <label className="flex flex-col gap-2">
+                  <span className="pub-mono text-white/70">Talebiniz</span>
+                  <textarea
+                    name="message"
+                    rows={4}
+                    maxLength={1200}
+                    className={inputCls}
+                    placeholder="Kısaca ihtiyacınızı yazın veya bir ürün listesi belirtin."
+                  />
+                </label>
+                <label className="flex items-start gap-3 text-white/80 text-[13.5px]">
+                  <input type="checkbox" name="kvkk" required className="mt-1" style={{ accentColor: "#F5C400" }} />
+                  <span>
+                    Kişisel verilerimin{" "}
+                    <Link to="/kvkk" className="underline hover:text-white" style={{ color: YELLOW }}>
+                      KVKK aydınlatma metni
+                    </Link>{" "}
+                    kapsamında işlenmesini kabul ediyorum.
+                  </span>
+                </label>
+                {errors.kvkk && <span className="text-[color:var(--public-yellow-500)] text-[12px]">{errors.kvkk}</span>}
+                {errMsg && <p className="text-[color:var(--public-yellow-500)] text-[13px]">{errMsg}</p>}
+                <button
+                  type="submit"
+                  disabled={state === "loading"}
+                  className="pub-btn pub-btn-primary self-start disabled:opacity-70"
+                >
+                  {state === "loading" ? "Gönderiliyor…" : "Teklif Talebi Gönder"}
+                  <Icon name="arrow_forward" aria-hidden />
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = "text",
+  required,
+  inputCls,
+  error,
+  autoComplete,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  inputCls: string;
+  error?: string;
+  autoComplete?: string;
+}) {
+  return (
+    <label className="flex flex-col gap-2">
+      <span className="pub-mono text-white/70">{label}</span>
+      <input
+        name={name}
+        type={type}
+        required={required}
+        autoComplete={autoComplete}
+        maxLength={200}
+        className={inputCls}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${name}-err` : undefined}
+      />
+      {error && (
+        <span id={`${name}-err`} className="text-[color:var(--public-yellow-500)] text-[12px]">
+          {error}
+        </span>
+      )}
+    </label>
+  );
+}
+
+/* =====================================================================
+ * 13 — Location (navy outer + warm-light info block)
+ * ===================================================================== */
+export function ContactInfo() {
+  const { data: s } = useHomeSettings();
+  const address = s?.address;
+  const phone = s?.phone;
+  const email = s?.email;
+  const hours = s?.working_hours || "Pzt – Cmt · 08:30 – 18:00";
+  const mapQ = address ? encodeURIComponent(address) : "Pratik Endüstriyel";
+  return (
+    <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_900, color: "#fff" }}>
+      <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
+      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
+        <PubHead
+          index="13"
+          eyebrow="Konum ve İletişim"
+          title={
+            <>
+              Merkez ofisimize <span style={{ color: YELLOW }}>ulaşın</span>.
+            </>
+          }
+          subtitle="Yol tarifi alın, bize doğrudan yazın veya çalışma saatleri içinde arayın."
+        />
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          <div
+            className="lg:col-span-5 p-8 md:p-10 pub-ticks flex flex-col"
+            style={{ backgroundColor: "#F5F1E8", color: NAVY_950, border: `1px solid ${NAVY_BORDER}` }}
+          >
+            <span className="pub-tick-bl" aria-hidden />
+            <span className="pub-tick-br" aria-hidden />
+            {address && <ContactRow icon="location_on" title="Adres" value={address} />}
+            {phone && <ContactRow icon="call" title="Telefon" value={phone} href={`tel:${phone.replace(/\s+/g, "")}`} />}
+            {email && <ContactRow icon="mail" title="E-posta" value={email} href={`mailto:${email}`} />}
+            <ContactRow icon="schedule" title="Çalışma Saatleri" value={hours} />
+            {address && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${mapQ}`}
+                target="_blank"
+                rel="noreferrer"
+                className="pub-btn pub-btn-outline-dark pub-btn-sm self-start mt-6"
+              >
+                <Icon name="directions" aria-hidden />
+                Yol Tarifi Al
+              </a>
+            )}
+          </div>
+          <div className="lg:col-span-7">
+            <div
+              className="aspect-[16/10] w-full overflow-hidden pub-ticks"
+              style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_800 }}
+            >
+              <span className="pub-tick-bl" aria-hidden />
+              <span className="pub-tick-br" aria-hidden />
+              <iframe
+                title="Harita — Pratik Endüstriyel konumu"
+                src={`https://www.google.com/maps?q=${mapQ}&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactRow({ icon, title, value, href }: { icon: string; title: string; value: string; href?: string }) {
+  const content = (
+    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `1px solid ${NAVY_BORDER}` }}>
+      <span
+        className="w-11 h-11 grid place-items-center shrink-0"
+        style={{ border: `1px solid ${NAVY_900}`, color: NAVY_900 }}
+      >
+        <Icon name={icon} className="text-[22px]" />
+      </span>
+      <div className="min-w-0">
+        <span className="block pub-mono" style={{ color: NAVY_900 }}>{title}</span>
+        <span className="block mt-1 text-[15.5px] font-semibold break-words" style={{ color: NAVY_950 }}>
+          {value}
+        </span>
+      </div>
+    </div>
+  );
+  return href ? (
+    <a href={href} className="block transition-colors hover:text-[color:var(--public-navy-700)]">
+      {content}
+    </a>
+  ) : (
+    content
+  );
+}
+
+/* =====================================================================
+ * Mobile floating contact FAB
+ * ===================================================================== */
+export function MobileContactBar() {
+  const { data: s } = useHomeSettings();
+  const [open, setOpen] = useState(false);
+  const phone = s?.phone;
+  const wa = s?.whatsapp;
+
+  return (
+    <div
+      className="lg:hidden fixed right-4 z-40 flex flex-col items-end gap-3"
+      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
+    >
+      {open && (
+        <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <Link
+            to="/teklif"
+            onClick={() => setOpen(false)}
+            className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
+            style={{ backgroundColor: YELLOW, color: NAVY_950 }}
+          >
+            Teklif Talep Et
+            <Icon name="request_quote" className="text-[18px]" />
+          </Link>
+          {wa && (
+            <a
+              href={`https://wa.me/${wa.replace(/[^\d]/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="WhatsApp ile yaz"
+              className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
+              style={{ backgroundColor: NAVY_900, color: "#fff", border: `1px solid ${NAVY_BORDER}` }}
+            >
+              WhatsApp
+              <Icon name="chat" className="text-[18px]" />
+            </a>
+          )}
+          {phone && (
+            <a
+              href={`tel:${phone.replace(/\s+/g, "")}`}
+              aria-label="Telefonla ara"
+              className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
+              style={{ backgroundColor: NAVY_900, color: "#fff", border: `1px solid ${NAVY_BORDER}` }}
+            >
+              Telefon
+              <Icon name="call" className="text-[18px]" />
+            </a>
+          )}
+        </div>
+      )}
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-label={open ? "İletişim menüsünü kapat" : "İletişim menüsünü aç"}
+        onClick={() => setOpen((v) => !v)}
+        className="w-14 h-14 rounded-full shadow-xl grid place-items-center transition-colors"
+        style={{ backgroundColor: YELLOW, color: NAVY_950 }}
+      >
+        <Icon name={open ? "close" : "support_agent"} className="text-[26px]" />
+      </button>
+    </div>
+  );
+}
+
+/* Backward-compat export (unused after shell merge) */
+export function HomeUtilityStrip() {
+  return null;
+}
