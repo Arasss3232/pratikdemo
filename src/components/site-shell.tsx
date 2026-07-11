@@ -36,7 +36,7 @@ export function SiteHeader() {
   const settings = useSiteSettings();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -69,33 +69,37 @@ export function SiteHeader() {
   return (
     <>
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-[0_1px_0_rgba(21,32,51,0.06),0_8px_24px_-16px_rgba(8,24,44,0.18)]"
-          : "bg-background/80 backdrop-blur-sm"
-      }`}
+      className="sticky top-0 z-50 w-full transition-all duration-300 text-white"
+      style={{
+        backgroundColor: scrolled ? "var(--public-navy-950)" : "var(--public-navy-900)",
+        boxShadow: scrolled ? "0 1px 0 rgba(245,196,0,0.35), 0 12px 28px -20px rgba(0,0,0,0.6)" : "none",
+        borderBottom: scrolled ? "0" : "1px solid rgba(255,255,255,0.06)",
+      }}
     >
-      {/* Utility strip — desktop only, compact */}
-      <div className="hidden md:block border-b border-outline-variant/60">
-        <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12px] font-mono uppercase tracking-[0.12em] text-on-surface-variant">
+      {/* Utility strip — desktop only */}
+      <div
+        className="hidden md:block"
+        style={{ backgroundColor: "var(--public-navy-950)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.16em] text-white/60">
           <div className="flex items-center gap-6">
             {settings.working_hours && (
               <span className="inline-flex items-center gap-2">
-                <Icon name="schedule" className="text-[14px] text-primary" aria-hidden="true" />
+                <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                 {settings.working_hours}
               </span>
             )}
             {settings.address && (
               <span className="inline-flex items-center gap-2">
-                <Icon name="location_on" className="text-[14px] text-primary" aria-hidden="true" />
+                <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                 {settings.address}
               </span>
             )}
           </div>
           <div className="flex items-center gap-5">
             {phone && (
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-                <Icon name="call" className="text-[14px] text-primary" aria-hidden="true" />
+              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                 {phone}
               </a>
             )}
@@ -104,13 +108,13 @@ export function SiteHeader() {
                 href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 hover:text-primary transition-colors"
+                className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
-                <Icon name="chat" className="text-[14px] text-primary" aria-hidden="true" />
+                <Icon name="chat" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                 WhatsApp
               </a>
             )}
-            <Link to="/teklif" className="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 font-semibold">
+            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
@@ -120,7 +124,10 @@ export function SiteHeader() {
 
       {/* Main header row */}
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 h-16 md:h-20">
+        <div
+          className="grid grid-cols-[auto_1fr_auto] items-center gap-6 transition-all duration-300"
+          style={{ height: scrolled ? "64px" : "84px" }}
+        >
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group" aria-label="Pratik ana sayfa">
             <img
@@ -128,7 +135,7 @@ export function SiteHeader() {
               src={LOGO_URL}
               width={132}
               height={44}
-              className="h-9 md:h-11 w-auto object-contain"
+              className="h-9 md:h-10 w-auto object-contain brightness-0 invert"
               decoding="async"
             />
           </Link>
@@ -147,8 +154,11 @@ export function SiteHeader() {
                     to={l.to}
                     onFocus={openMega}
                     onBlur={closeMega}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold text-on-background hover:text-primary transition-colors"
-                    activeProps={{ className: "inline-flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold text-primary" }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
+                    activeProps={{
+                      className:
+                        "inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
+                    }}
                     aria-expanded={megaOpen}
                     aria-haspopup="true"
                   >
@@ -164,11 +174,11 @@ export function SiteHeader() {
                 <Link
                   key={l.to}
                   to={l.to}
-                  className="px-3 py-2 text-[14px] font-semibold text-on-background hover:text-primary transition-colors relative"
+                  className="px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
                   activeOptions={{ exact: true }}
                   activeProps={{
                     className:
-                      "px-3 py-2 text-[14px] font-semibold text-primary relative after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:bg-secondary",
+                      "px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
                   }}
                 >
                   {l.label}
@@ -182,7 +192,7 @@ export function SiteHeader() {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded text-on-background hover:bg-surface-container hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
                 aria-label="Yönetim paneli"
                 title="Yönetim"
               >
@@ -191,28 +201,28 @@ export function SiteHeader() {
             )}
             <Link
               to="/giris"
-              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded text-on-background hover:bg-surface-container hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
               aria-label="Bayi girişi"
             >
               <Icon name="account_circle" aria-hidden="true" />
             </Link>
             <Link
               to="/teklif-sepeti"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded text-on-background hover:bg-surface-container hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
               aria-label="Teklif sepeti"
             >
               <Icon name="shopping_cart" aria-hidden="true" />
             </Link>
             <Link
               to="/teklif"
-              className="hidden sm:inline-flex items-center gap-2 bg-secondary text-on-secondary hover:bg-secondary-container transition-colors px-4 py-2.5 text-[13px] font-semibold uppercase tracking-[0.08em] rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="pub-btn pub-btn-primary pub-btn-sm hidden sm:inline-flex ml-2"
             >
-              Teklif Al
+              Teklif Talep Et
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
             </Link>
             <button
               type="button"
-              className="lg:hidden text-on-background min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
+              className="lg:hidden text-white min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)] transition-colors"
               aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
@@ -226,26 +236,29 @@ export function SiteHeader() {
         {/* Mega menu — desktop */}
         {megaOpen && (
           <div
-            className="hidden lg:block absolute left-0 right-0 top-full bg-background border-t border-outline-variant shadow-[0_24px_48px_-24px_rgba(8,24,44,0.25)]"
+            className="hidden lg:block absolute left-0 right-0 top-full text-white shadow-[0_28px_48px_-16px_rgba(0,0,0,0.55)]"
+            style={{
+              backgroundColor: "var(--public-navy-950)",
+              borderTop: "1px solid rgba(255,255,255,0.08)",
+            }}
             onMouseEnter={openMega}
             onMouseLeave={closeMega}
             role="menu"
           >
             <div className="max-w-max-width mx-auto px-margin-desktop py-10 grid grid-cols-[240px_1fr] gap-12">
               <div>
-                <div className="hp-mono text-[11px] uppercase tracking-[0.18em] text-on-surface-variant mb-3">
-                  02 / Ürün Grupları
-                </div>
-                <h3 className="font-display text-[28px] leading-tight font-semibold text-on-background mb-4">
+                <span className="pub-marker mb-4">02 / Ürün Grupları</span>
+                <h3 className="pub-h3 mt-4 mb-4 text-white">
                   Tedarik zincirinizin her katmanı için.
                 </h3>
-                <p className="text-[14px] text-on-surface-variant leading-relaxed mb-5">
+                <p className="text-[14px] text-white/70 leading-relaxed mb-5">
                   Yetkili distribütör kanalları ve doğrudan üretici tedariğiyle tek noktadan sipariş.
                 </p>
                 <Link
                   to="/urunler"
                   onClick={() => setMegaOpen(false)}
-                  className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.08em] text-primary hover:text-primary/80"
+                  className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] hover:opacity-80"
+                  style={{ color: "var(--public-yellow-500)" }}
                 >
                   Tüm ürün gruplarını gör
                   <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
@@ -258,18 +271,18 @@ export function SiteHeader() {
                       to={g.to}
                       role="menuitem"
                       onClick={() => setMegaOpen(false)}
-                      className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-surface-container transition-colors"
+                      className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
                     >
-                      <span className="hp-mono text-[11px] text-on-surface-variant pt-1.5 tabular-nums">{g.code}</span>
+                      <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
                       <span className="flex-1 min-w-0">
-                        <span className="block text-[15px] font-semibold text-on-background group-hover:text-primary transition-colors">
+                        <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
                           {g.title}
                         </span>
-                        <span className="block text-[13px] text-on-surface-variant mt-0.5">{g.desc}</span>
+                        <span className="block text-[13px] text-white/60 mt-0.5">{g.desc}</span>
                       </span>
                       <Icon
                         name="north_east"
-                        className="text-[16px] text-outline group-hover:text-secondary transition-colors mt-1.5"
+                        className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
                         aria-hidden="true"
                       />
                     </Link>
@@ -286,7 +299,8 @@ export function SiteHeader() {
       {menuOpen && (
         <div
           id="mobile-nav"
-          className="lg:hidden fixed top-16 right-0 bottom-0 left-0 z-40 bg-background overflow-y-auto"
+          className="lg:hidden fixed top-16 right-0 bottom-0 left-0 z-40 overflow-y-auto text-white"
+          style={{ backgroundColor: "var(--public-navy-950)" }}
           role="dialog"
           aria-modal="true"
           aria-label="Site menüsü"
@@ -297,29 +311,29 @@ export function SiteHeader() {
                 key={l.to}
                 to={l.to}
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-between py-3.5 px-2 text-[16px] font-semibold text-on-background border-b border-outline-variant hover:text-primary transition-colors"
+                className="flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-white/90 border-b border-white/10 hover:text-[var(--public-yellow-500)] transition-colors"
                 activeOptions={{ exact: true }}
                 activeProps={{
-                  className: "flex items-center justify-between py-3.5 px-2 text-[16px] font-semibold text-primary border-b border-outline-variant",
+                  className: "flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-[var(--public-yellow-500)] border-b border-white/10",
                 }}
               >
                 {l.label}
-                <Icon name="chevron_right" className="text-[20px] text-outline" aria-hidden="true" />
+                <Icon name="chevron_right" className="text-[20px] text-white/40" aria-hidden="true" />
               </Link>
             ))}
 
             {/* Products expandable */}
-            <div className="border-b border-outline-variant">
+            <div className="border-b border-white/10">
               <button
                 type="button"
                 onClick={() => setMobileProductsOpen((v) => !v)}
-                className="w-full flex items-center justify-between py-3.5 px-2 text-[16px] font-semibold text-on-background hover:text-primary transition-colors"
+                className="w-full flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors"
                 aria-expanded={mobileProductsOpen}
               >
                 Ürünler
                 <Icon
                   name="expand_more"
-                  className={`text-[20px] text-outline transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
+                  className={`text-[20px] text-white/40 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
                   aria-hidden="true"
                 />
               </button>
@@ -329,7 +343,8 @@ export function SiteHeader() {
                     <Link
                       to="/urunler"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 py-2.5 text-[14px] font-semibold text-primary"
+                      className="flex items-center gap-3 py-2.5 text-[14px] font-semibold"
+                      style={{ color: "var(--public-yellow-500)" }}
                     >
                       Tüm ürün grupları
                       <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
@@ -340,9 +355,9 @@ export function SiteHeader() {
                       <Link
                         to={g.to}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-baseline gap-3 py-2.5 text-[14px] text-on-background hover:text-primary transition-colors"
+                        className="flex items-baseline gap-3 py-2.5 text-[14px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
                       >
-                        <span className="hp-mono text-[11px] text-on-surface-variant tabular-nums w-6">{g.code}</span>
+                        <span className="pub-mono tabular-nums w-6" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
                         <span>{g.title}</span>
                       </Link>
                     </li>
@@ -356,11 +371,11 @@ export function SiteHeader() {
               {phone && (
                 <a
                   href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="flex flex-col items-start gap-1 border border-outline-variant rounded-sm p-4 hover:border-primary transition-colors"
+                  className="flex flex-col items-start gap-1 border border-white/15 rounded-sm p-4 hover:border-[var(--public-yellow-500)] transition-colors"
                 >
-                  <Icon name="call" className="text-[20px] text-primary" aria-hidden="true" />
-                  <span className="hp-mono text-[10px] uppercase tracking-[0.14em] text-on-surface-variant">Telefon</span>
-                  <span className="text-[13px] font-semibold text-on-background">{phone}</span>
+                  <Icon name="call" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                  <span className="pub-mono text-white/60">Telefon</span>
+                  <span className="text-[13px] font-semibold text-white">{phone}</span>
                 </a>
               )}
               {whatsapp && (
@@ -368,11 +383,11 @@ export function SiteHeader() {
                   href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-start gap-1 border border-outline-variant rounded-sm p-4 hover:border-primary transition-colors"
+                  className="flex flex-col items-start gap-1 border border-white/15 rounded-sm p-4 hover:border-[var(--public-yellow-500)] transition-colors"
                 >
-                  <Icon name="chat" className="text-[20px] text-primary" aria-hidden="true" />
-                  <span className="hp-mono text-[10px] uppercase tracking-[0.14em] text-on-surface-variant">WhatsApp</span>
-                  <span className="text-[13px] font-semibold text-on-background">Yaz</span>
+                  <Icon name="chat" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                  <span className="pub-mono text-white/60">WhatsApp</span>
+                  <span className="text-[13px] font-semibold text-white">Yaz</span>
                 </a>
               )}
             </div>
@@ -380,7 +395,7 @@ export function SiteHeader() {
             <Link
               to="/teklif"
               onClick={() => setMenuOpen(false)}
-              className="mt-4 inline-flex items-center justify-center gap-2 bg-secondary text-on-secondary hover:bg-secondary-container transition-colors px-4 py-3.5 text-[14px] font-semibold uppercase tracking-[0.08em] rounded-sm"
+              className="pub-btn pub-btn-primary mt-4 w-full"
             >
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
@@ -390,7 +405,7 @@ export function SiteHeader() {
               <Link
                 to="/giris"
                 onClick={() => setMenuOpen(false)}
-                className="flex-1 inline-flex items-center justify-center gap-2 border border-outline-variant text-on-background px-4 py-3 text-[13px] font-semibold rounded-sm hover:border-primary hover:text-primary transition-colors"
+                className="pub-btn pub-btn-outline-light pub-btn-sm flex-1"
               >
                 <Icon name="account_circle" className="text-[18px]" aria-hidden="true" />
                 Bayi Girişi
@@ -399,7 +414,7 @@ export function SiteHeader() {
                 <Link
                   to="/admin"
                   onClick={() => setMenuOpen(false)}
-                  className="inline-flex items-center justify-center gap-2 border border-outline-variant text-on-background px-4 py-3 text-[13px] font-semibold rounded-sm hover:border-primary hover:text-primary transition-colors"
+                  className="pub-btn pub-btn-outline-light pub-btn-sm"
                   aria-label="Yönetim paneli"
                 >
                   <Icon name="admin_panel_settings" className="text-[18px]" aria-hidden="true" />
