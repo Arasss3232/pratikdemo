@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UrunlerRouteImport } from './routes/urunler'
 import { Route as TeknikDestekRouteImport } from './routes/teknik-destek'
+import { Route as TeklifSepetiRouteImport } from './routes/teklif-sepeti'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
@@ -20,6 +21,7 @@ import { Route as KurumsalRouteImport } from './routes/kurumsal'
 import { Route as KataloglarRouteImport } from './routes/kataloglar'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HizmetlerRouteImport } from './routes/hizmetler'
+import { Route as GirisRouteImport } from './routes/giris'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
 
@@ -31,6 +33,11 @@ const UrunlerRoute = UrunlerRouteImport.update({
 const TeknikDestekRoute = TeknikDestekRouteImport.update({
   id: '/teknik-destek',
   path: '/teknik-destek',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeklifSepetiRoute = TeklifSepetiRouteImport.update({
+  id: '/teklif-sepeti',
+  path: '/teklif-sepeti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeklifRoute = TeklifRouteImport.update({
@@ -78,6 +85,11 @@ const HizmetlerRoute = HizmetlerRouteImport.update({
   path: '/hizmetler',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GirisRoute = GirisRouteImport.update({
+  id: '/giris',
+  path: '/giris',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,6 +104,7 @@ const UrunlerElektrikliElAletleriRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -101,12 +114,14 @@ export interface FileRoutesByFullPath {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -116,6 +131,7 @@ export interface FileRoutesByTo {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
@@ -123,6 +139,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -132,6 +149,7 @@ export interface FileRoutesById {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
@@ -140,6 +158,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -149,12 +168,14 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -164,12 +185,14 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
   id:
     | '__root__'
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -179,6 +202,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
@@ -186,6 +210,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GirisRoute: typeof GirisRoute
   HizmetlerRoute: typeof HizmetlerRoute
   IletisimRoute: typeof IletisimRoute
   KataloglarRoute: typeof KataloglarRoute
@@ -195,6 +220,7 @@ export interface RootRouteChildren {
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
+  TeklifSepetiRoute: typeof TeklifSepetiRoute
   TeknikDestekRoute: typeof TeknikDestekRoute
   UrunlerRoute: typeof UrunlerRouteWithChildren
 }
@@ -213,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/teknik-destek'
       fullPath: '/teknik-destek'
       preLoaderRoute: typeof TeknikDestekRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teklif-sepeti': {
+      id: '/teklif-sepeti'
+      path: '/teklif-sepeti'
+      fullPath: '/teklif-sepeti'
+      preLoaderRoute: typeof TeklifSepetiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teklif': {
@@ -278,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HizmetlerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/giris': {
+      id: '/giris'
+      path: '/giris'
+      fullPath: '/giris'
+      preLoaderRoute: typeof GirisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -308,6 +348,7 @@ const UrunlerRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GirisRoute: GirisRoute,
   HizmetlerRoute: HizmetlerRoute,
   IletisimRoute: IletisimRoute,
   KataloglarRoute: KataloglarRoute,
@@ -317,6 +358,7 @@ const rootRouteChildren: RootRouteChildren = {
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
+  TeklifSepetiRoute: TeklifSepetiRoute,
   TeknikDestekRoute: TeknikDestekRoute,
   UrunlerRoute: UrunlerRouteWithChildren,
 }
