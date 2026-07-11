@@ -15,7 +15,7 @@ function NewQuote() {
   const ctx = usePortalContext();
   const navigate = useNavigate();
   const [contact, setContact] = useState(ctx.email?.split("@")[0] ?? "");
-  const [phone, setPhone] = useState(ctx.activeCompany?.phone ?? "");
+  const [phone, setPhone] = useState(ctx.activeCompany?.primary_contact_phone ?? "");
   const [message, setMessage] = useState("");
   const [lines, setLines] = useState<Line[]>([{ name: "", sku: "", qty: 1, note: "" }]);
   const [submitting, setSubmitting] = useState(false);
