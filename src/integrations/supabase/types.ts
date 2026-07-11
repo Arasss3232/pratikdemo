@@ -612,6 +612,81 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_brochures: {
+        Row: {
+          accent_color: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          end_at: string | null
+          eyebrow: string | null
+          id: string
+          image_alt: string | null
+          image_desktop: string
+          image_mobile: string | null
+          image_tablet: string | null
+          is_active: boolean
+          overlay_style: string
+          primary_cta_href: string | null
+          primary_cta_label: string | null
+          secondary_cta_href: string | null
+          secondary_cta_label: string | null
+          start_at: string | null
+          subtitle: string | null
+          text_theme: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          end_at?: string | null
+          eyebrow?: string | null
+          id?: string
+          image_alt?: string | null
+          image_desktop: string
+          image_mobile?: string | null
+          image_tablet?: string | null
+          is_active?: boolean
+          overlay_style?: string
+          primary_cta_href?: string | null
+          primary_cta_label?: string | null
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          start_at?: string | null
+          subtitle?: string | null
+          text_theme?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          end_at?: string | null
+          eyebrow?: string | null
+          id?: string
+          image_alt?: string | null
+          image_desktop?: string
+          image_mobile?: string | null
+          image_tablet?: string | null
+          is_active?: boolean
+          overlay_style?: string
+          primary_cta_href?: string | null
+          primary_cta_label?: string | null
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          start_at?: string | null
+          subtitle?: string | null
+          text_theme?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       job_applications: {
         Row: {
           admin_notes: string | null
