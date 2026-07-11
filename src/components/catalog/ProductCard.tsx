@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { BRAND_LOGOS, productSrcSet, type Product } from "../../data/catalog";
 import { Icon } from "../site-shell";
+import { buttonStyles } from "../../lib/button-styles";
 
 function ProductCardBase({ p }: { p: Product }) {
   return (
@@ -54,11 +55,11 @@ function ProductCardBase({ p }: { p: Product }) {
           ))}
         </ul>
         <div className="mt-auto pt-2 border-t border-outline-variant flex flex-col gap-2">
-          <button className="w-full bg-transparent border-2 border-primary text-primary py-2 rounded font-label-bold text-label-bold hover:bg-surface-variant transition-colors flex justify-center items-center gap-1">
+          <button className={buttonStyles({ variant: "outline-dark", size: "sm", className: "w-full px-3" })}>
             <Icon name="visibility" className="text-[16px]" />
             Detayları İncele
           </button>
-          <button className="w-full bg-secondary text-on-secondary py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all flex justify-center items-center gap-1">
+          <button className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}>
             <Icon name="request_quote" className="text-[16px]" />
             Teklif Al
           </button>
