@@ -20,6 +20,7 @@ import { Route as KurumsalRouteImport } from './routes/kurumsal'
 import { Route as KataloglarRouteImport } from './routes/kataloglar'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HizmetlerRouteImport } from './routes/hizmetler'
+import { Route as GirisRouteImport } from './routes/giris'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
 
@@ -78,6 +79,11 @@ const HizmetlerRoute = HizmetlerRouteImport.update({
   path: '/hizmetler',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GirisRoute = GirisRouteImport.update({
+  id: '/giris',
+  path: '/giris',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,6 +98,7 @@ const UrunlerElektrikliElAletleriRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -123,6 +131,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/giris': typeof GirisRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
   '/kataloglar': typeof KataloglarRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -170,6 +181,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/giris'
     | '/hizmetler'
     | '/iletisim'
     | '/kataloglar'
@@ -186,6 +198,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GirisRoute: typeof GirisRoute
   HizmetlerRoute: typeof HizmetlerRoute
   IletisimRoute: typeof IletisimRoute
   KataloglarRoute: typeof KataloglarRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HizmetlerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/giris': {
+      id: '/giris'
+      path: '/giris'
+      fullPath: '/giris'
+      preLoaderRoute: typeof GirisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -308,6 +328,7 @@ const UrunlerRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GirisRoute: GirisRoute,
   HizmetlerRoute: HizmetlerRoute,
   IletisimRoute: IletisimRoute,
   KataloglarRoute: KataloglarRoute,
