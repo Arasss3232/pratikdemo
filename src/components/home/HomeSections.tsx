@@ -61,7 +61,7 @@ function PubHead({
         {subtitle && (
           <p
             className="mt-4 text-[15px] md:text-[17px] leading-relaxed"
-            style={{ color: inv ? "rgba(255,255,255,0.75)" : "#38455C" }}
+            style={{ color: inv ? "rgba(255,255,255,0.75)" : "#455A73" }}
           >
             {subtitle}
           </p>
@@ -152,7 +152,7 @@ export function ValueProps() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative" style={{ backgroundColor: "#F5F1E8", color: NAVY_950 }}>
+          <div className="lg:col-span-5 relative" style={{ backgroundColor: "#F2F5F8", color: NAVY_950 }}>
             <div className="p-8 md:p-10 flex flex-col gap-6 h-full">
               <span className="pub-marker pub-marker-dark">HAKKIMIZDA</span>
               <h3
@@ -165,13 +165,13 @@ export function ValueProps() {
               >
                 Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır.
               </h3>
-              <p className="text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+              <p className="text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
                 Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi
                 ilişkileri kurmak için çalışıyoruz.
               </p>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ backgroundColor: "#E4DFD1" }}>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ backgroundColor: "#DBE2EB" }}>
                 {capabilities.map((c) => (
-                  <li key={c.k} className="p-4" style={{ backgroundColor: "#F5F1E8" }}>
+                  <li key={c.k} className="p-4" style={{ backgroundColor: "#F2F5F8" }}>
                     <span className="pub-mono" style={{ color: NAVY_900 }}>{c.k}</span>
                     <p
                       className="mt-1 text-[15px] font-semibold"
@@ -179,7 +179,7 @@ export function ValueProps() {
                     >
                       {c.t}
                     </p>
-                    <p className="mt-1 text-[12.5px] leading-snug" style={{ color: "#38455C" }}>
+                    <p className="mt-1 text-[12.5px] leading-snug" style={{ color: "#455A73" }}>
                       {c.d}
                     </p>
                   </li>
@@ -403,7 +403,7 @@ export function FeaturedProducts() {
               aria-label={hero.name}
               className="absolute inset-0 z-[1] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)]"
             />
-            <div className="relative aspect-[16/11]" style={{ backgroundColor: "#F5F1E8" }}>
+            <div className="relative aspect-[16/11]" style={{ backgroundColor: "#F2F5F8" }}>
               <img
                 src={hero.productImg}
                 alt={hero.productAlt}
@@ -463,7 +463,7 @@ export function FeaturedProducts() {
                   className="group flex items-center gap-5 p-4"
                   style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}
                 >
-                  <div className="w-20 h-20 shrink-0" style={{ backgroundColor: "#F5F1E8" }}>
+                  <div className="w-20 h-20 shrink-0" style={{ backgroundColor: "#F2F5F8" }}>
                     <img
                       src={p.productImg}
                       alt={p.productAlt}
@@ -512,7 +512,7 @@ export function WhyChoose() {
         <div
           className="relative pub-ticks"
           style={{
-            backgroundColor: "#F5F1E8",
+            backgroundColor: "#F2F5F8",
             color: NAVY_950,
             border: `1px solid ${NAVY_BORDER}`,
           }}
@@ -535,7 +535,7 @@ export function WhyChoose() {
                 Doğru ürün, doğru marka, <br />
                 doğru yönlendirme.
               </h2>
-              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#38455C" }}>
+              <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#455A73" }}>
                 Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor.
               </p>
               <div
@@ -585,7 +585,7 @@ export function WhyChoose() {
                     >
                       {it.t}
                     </h3>
-                    <p className="mt-2 text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+                    <p className="mt-2 text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
                       {it.d}
                     </p>
                   </div>
@@ -956,7 +956,7 @@ export function InsightsPreview() {
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
         <div
           className="relative pub-ticks p-8 md:p-12"
-          style={{ backgroundColor: "#F5F1E8", border: `1px solid ${NAVY_BORDER}`, color: NAVY_950 }}
+          style={{ backgroundColor: "#F2F5F8", border: `1px solid ${NAVY_BORDER}`, color: NAVY_950 }}
         >
           <span className="pub-tick-bl" aria-hidden />
           <span className="pub-tick-br" aria-hidden />
@@ -980,7 +980,7 @@ export function InsightsPreview() {
                 <span className="pub-tick-bl" aria-hidden />
                 <span className="pub-tick-br" aria-hidden />
                 {feat.cover_url && (
-                  <div className="aspect-[16/10] overflow-hidden" style={{ backgroundColor: "#E4DFD1" }}>
+                  <div className="aspect-[16/10] overflow-hidden" style={{ backgroundColor: "#DBE2EB" }}>
                     <img
                       src={feat.cover_url}
                       alt={feat.title}
@@ -1002,7 +1002,7 @@ export function InsightsPreview() {
                     {feat.title}
                   </h3>
                   {feat.excerpt && (
-                    <p className="text-[14.5px] leading-relaxed" style={{ color: "#38455C" }}>
+                    <p className="text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
                       {feat.excerpt}
                     </p>
                   )}
@@ -1019,7 +1019,7 @@ export function InsightsPreview() {
                     style={{ border: `1px solid ${NAVY_900}`, backgroundColor: "#FFFFFF" }}
                   >
                     {p.cover_url && (
-                      <div className="w-2/5 shrink-0" style={{ backgroundColor: "#E4DFD1" }}>
+                      <div className="w-2/5 shrink-0" style={{ backgroundColor: "#DBE2EB" }}>
                         <img src={p.cover_url} alt={p.title} loading="lazy" className="w-full h-full object-cover" />
                       </div>
                     )}
@@ -1368,7 +1368,7 @@ export function ContactInfo() {
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           <div
             className="lg:col-span-5 p-8 md:p-10 pub-ticks flex flex-col"
-            style={{ backgroundColor: "#F5F1E8", color: NAVY_950, border: `1px solid ${NAVY_BORDER}` }}
+            style={{ backgroundColor: "#F2F5F8", color: NAVY_950, border: `1px solid ${NAVY_BORDER}` }}
           >
             <span className="pub-tick-bl" aria-hidden />
             <span className="pub-tick-br" aria-hidden />
