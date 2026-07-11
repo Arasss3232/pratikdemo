@@ -28,7 +28,7 @@ function HakkimizdaPage() {
   const [certs, setCerts] = useState<Cert[]>([]);
 
   useEffect(() => {
-    supabase.from("team_members").select("*").eq("is_active", true).order("display_order").then(({ data }) => setTeam((data as Team[]) ?? []));
+    supabase.from("team_members").select("*").eq("published", true).order("display_order").then(({ data }) => setTeam((data as Team[]) ?? []));
     supabase.from("certificates").select("*").order("display_order").then(({ data }) => setCerts((data as Cert[]) ?? []));
   }, []);
 
