@@ -6,32 +6,32 @@
 
 @theme {
   /* Industrial hardware palette */
-  --color-primary: #0c3474;
+  --color-primary: #0E294B;
   --color-on-primary: #ffffff;
-  --color-primary-container: #2b4c8c;
+  --color-primary-container: #173B67;
   --color-on-primary-container: #a4bfff;
-  --color-primary-fixed: #d9e2ff;
+  --color-primary-fixed: #EAF0F7;
   --color-primary-fixed-dim: #afc6ff;
-  --color-on-primary-fixed: #001943;
+  --color-on-primary-fixed: #08182C;
   --color-on-primary-fixed-variant: #234584;
   --color-inverse-primary: #afc6ff;
 
-  --color-secondary: #d69a1c;
-  --color-on-secondary: #1a1200;
-  --color-secondary-container: #b7801a;
+  --color-secondary: #F4C542;
+  --color-on-secondary: #152033;
+  --color-secondary-container: #DFAE1B;
   --color-on-secondary-container: #ffffff;
-  --color-secondary-fixed: #ffe6b5;
-  --color-secondary-fixed-dim: #f2cf7a;
-  --color-on-secondary-fixed: #2a1c00;
-  --color-on-secondary-fixed-variant: #7a5610;
+  --color-secondary-fixed: #FFF3C4;
+  --color-secondary-fixed-dim: #F2D264;
+  --color-on-secondary-fixed: #2A1C00;
+  --color-on-secondary-fixed-variant: #7A5610;
 
-  --color-tertiary: #28384d;
+  --color-tertiary: #08182C;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #3f4f64;
+  --color-tertiary-container: #173B67;
   --color-on-tertiary-container: #b0c1da;
   --color-tertiary-fixed: #d3e4fe;
   --color-tertiary-fixed-dim: #b7c8e1;
-  --color-on-tertiary-fixed: #0b1c30;
+  --color-on-tertiary-fixed: #08182C;
   --color-on-tertiary-fixed-variant: #38485d;
 
   --color-error: #ba1a1a;
@@ -39,25 +39,31 @@
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
-  --color-background: #f7f9fb;
-  --color-on-background: #191c1e;
-  --color-surface: #f7f9fb;
-  --color-on-surface: #191c1e;
-  --color-surface-variant: #e0e3e5;
-  --color-on-surface-variant: #434750;
-  --color-surface-tint: #3d5d9e;
-  --color-surface-bright: #f7f9fb;
-  --color-surface-dim: #d8dadc;
+  --color-background: #F7F7F4;
+  --color-on-background: #152033;
+  --color-surface: #F7F7F4;
+  --color-on-surface: #152033;
+  --color-surface-variant: #EEF1F4;
+  --color-on-surface-variant: #667085;
+  --color-surface-tint: #0E294B;
+  --color-surface-bright: #FFFFFF;
+  --color-surface-dim: #E4E8ED;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f2f4f6;
-  --color-surface-container: #eceef0;
-  --color-surface-container-high: #e6e8ea;
-  --color-surface-container-highest: #e0e3e5;
-  --color-inverse-surface: #2d3133;
-  --color-inverse-on-surface: #eff1f3;
+  --color-surface-container-low: #F2F3F0;
+  --color-surface-container: #EEF1F4;
+  --color-surface-container-high: #E6EAEE;
+  --color-surface-container-highest: #DFE3E8;
+  --color-inverse-surface: #08182C;
+  --color-inverse-on-surface: #F7F7F4;
 
-  --color-outline: #747781;
-  --color-outline-variant: #c4c6d2;
+  --color-outline: #667085;
+  --color-outline-variant: #DFE3E8;
+
+  /* Editorial brand additions */
+  --color-graphite: #202630;
+  --color-brand-yellow: #F4C542;
+  --color-brand-yellow-strong: #DFAE1B;
+  --shadow-blueprint: 0 1px 0 rgba(21,32,51,.04), 0 24px 48px -32px rgba(8,24,44,.22);
 
   /* Radii */
   --radius: 0.125rem;
@@ -74,16 +80,18 @@
   /* Container max width for max-w-max-width */
   --container-max-width: 1280px;
 
-  /* Fonts — tek font ailesi (Inter) */
+  /* Fonts */
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-display: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-body-md: "Inter", "Segoe UI", Arial, sans-serif;
   --font-body-sm: "Inter", "Segoe UI", Arial, sans-serif;
   --font-body-lg: "Inter", "Segoe UI", Arial, sans-serif;
   --font-label-bold: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-md: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-lg: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-lg-mobile: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-headline-xl: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-md: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-lg: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-lg-mobile: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-xl: "Inter Tight", "Inter", "Segoe UI", Arial, sans-serif;
 
   /* Text sizes */
   --text-body-sm: 14px;
@@ -109,6 +117,57 @@
   --text-headline-xl--line-height: 56px;
   --text-headline-xl--letter-spacing: -0.02em;
   --text-headline-xl--font-weight: 700;
+}
+
+/* ============ Public homepage helpers (do not affect .admin-scope) ============ */
+.hp-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.hp-eyebrow-inverse { color: var(--color-brand-yellow); }
+.hp-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  font-size: clamp(40px, 6vw, 68px);
+  color: var(--color-on-background);
+}
+.hp-h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-size: clamp(26px, 3.2vw, 40px);
+  color: var(--color-on-background);
+}
+.hp-mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
+.hp-hairline { border-color: var(--color-outline-variant); }
+.hp-card {
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 4px;
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.hp-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-blueprint);
+}
+.hp-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(21,32,51,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(21,32,51,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hp-reveal { opacity: 0; transform: translateY(12px); transition: opacity 500ms ease, transform 500ms ease; }
+.hp-reveal.is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .hp-reveal { opacity: 1; transform: none; transition: none; }
 }
 
 .material-symbols-outlined {
