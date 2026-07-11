@@ -434,6 +434,7 @@ function BrochuresTab() {
             window.open("/", "_blank", "noopener,noreferrer");
           },
         },
+        askAiAction("brochure.update"),
         {
           key: "toggle",
           label: "Yayın Durumu",
