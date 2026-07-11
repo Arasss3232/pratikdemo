@@ -258,7 +258,7 @@ async function callLovableAi(messages: any[]) {
       model: MODEL,
       messages,
       response_format: { type: "json_object" },
-      temperature: 0.4,
+      temperature: 0.6,
     }),
   });
   if (res.status === 429) throw new Error("Yapay zekâ servisi çok yoğun. Bir süre sonra tekrar deneyin.");
