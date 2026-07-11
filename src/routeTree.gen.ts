@@ -40,6 +40,7 @@ import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
 import { Route as PortalUrunlerRouteImport } from './routes/portal.urunler'
 import { Route as PortalTekliflerimRouteImport } from './routes/portal.tekliflerim'
 import { Route as PortalTeklifAlRouteImport } from './routes/portal.teklif-al'
+import { Route as PortalSiparislerimRouteImport } from './routes/portal.siparislerim'
 import { Route as PortalHizliSiparisRouteImport } from './routes/portal.hizli-siparis'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
 import { Route as HizmetlerSlugRouteImport } from './routes/hizmetler.$slug'
@@ -204,6 +205,11 @@ const PortalTeklifAlRoute = PortalTeklifAlRouteImport.update({
   path: '/teklif-al',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalSiparislerimRoute = PortalSiparislerimRouteImport.update({
+  id: '/siparislerim',
+  path: '/siparislerim',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalHizliSiparisRoute = PortalHizliSiparisRouteImport.update({
   id: '/hizli-siparis',
   path: '/hizli-siparis',
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
+  '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -293,6 +300,7 @@ export interface FileRoutesByTo {
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
+  '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -332,6 +340,7 @@ export interface FileRoutesById {
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
+  '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -372,6 +381,7 @@ export interface FileRouteTypes {
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/portal/hizli-siparis'
+    | '/portal/siparislerim'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/portal/hizli-siparis'
+    | '/portal/siparislerim'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -447,6 +458,7 @@ export interface FileRouteTypes {
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/portal/hizli-siparis'
+    | '/portal/siparislerim'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -704,6 +716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalTeklifAlRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/siparislerim': {
+      id: '/portal/siparislerim'
+      path: '/siparislerim'
+      fullPath: '/portal/siparislerim'
+      preLoaderRoute: typeof PortalSiparislerimRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/hizli-siparis': {
       id: '/portal/hizli-siparis'
       path: '/hizli-siparis'
@@ -777,6 +796,7 @@ const KariyerRouteWithChildren =
 
 interface PortalRouteChildren {
   PortalHizliSiparisRoute: typeof PortalHizliSiparisRoute
+  PortalSiparislerimRoute: typeof PortalSiparislerimRoute
   PortalTeklifAlRoute: typeof PortalTeklifAlRoute
   PortalTekliflerimRoute: typeof PortalTekliflerimRoute
   PortalUrunlerRoute: typeof PortalUrunlerRoute
@@ -785,6 +805,7 @@ interface PortalRouteChildren {
 
 const PortalRouteChildren: PortalRouteChildren = {
   PortalHizliSiparisRoute: PortalHizliSiparisRoute,
+  PortalSiparislerimRoute: PortalSiparislerimRoute,
   PortalTeklifAlRoute: PortalTeklifAlRoute,
   PortalTekliflerimRoute: PortalTekliflerimRoute,
   PortalUrunlerRoute: PortalUrunlerRoute,
