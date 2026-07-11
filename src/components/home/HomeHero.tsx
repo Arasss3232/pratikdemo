@@ -86,7 +86,7 @@ export function HomeHero() {
               src={heroImg}
               alt={heroProduct.productAlt}
               className="absolute inset-0 w-full h-full object-contain p-10"
-              fetchpriority="high"
+              fetchPriority="high"
               decoding="async"
               width={480}
               height={600}
