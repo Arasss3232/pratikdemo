@@ -94,7 +94,8 @@ type UserRoleRow = {
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const { tab } = Route.useSearch();
+  const search = Route.useSearch();
+  const { tab } = search;
 
   function setTab(t: Tab) {
     navigate({ to: "/admin", search: { tab: t } });
