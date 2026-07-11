@@ -274,7 +274,7 @@
   font-size: clamp(26px, 3.2vw, 40px);
   color: currentColor;
 }
-.hp-mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
+.hp-mono { font-family: var(--font-body); font-weight: 600; letter-spacing: 0.04em; font-feature-settings: "tnum" 1, "ss01" 1; }
 .hp-hairline { border-color: var(--color-outline-variant); }
 .hp-card {
   background: var(--color-surface-container-lowest);

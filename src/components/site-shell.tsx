@@ -194,7 +194,7 @@ export function SiteHeader() {
         className="hidden md:block"
         style={{ backgroundColor: "var(--public-navy-950)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
       >
-        <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.16em] text-white/60">
+        <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
           <div className="flex items-center gap-6">
             {settings.working_hours && (
               <span className="inline-flex items-center gap-2">
