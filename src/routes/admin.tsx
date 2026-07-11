@@ -411,6 +411,167 @@ function ProductsTab() {
   );
 }
 
+// ================================================================
+// B2B Çekirdek Modülleri (Faz 1)
+// ================================================================
+
+export function CustomerGroupsTab() {
+  return (
+    <GenericCrud
+      table="customer_groups"
+      title="Müşteri Grupları"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "name", label: "Ad" },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "default_discount_pct", label: "Varsayılan İskonto (%)", type: "number" },
+        { name: "display_order", label: "Sıra", type: "number" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "code", label: "Kod" },
+        { key: "name", label: "Ad" },
+        { key: "default_discount_pct", label: "İskonto %" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function DealersTab() {
+  return (
+    <GenericCrud
+      table="dealer_levels"
+      title="Bayi Seviyeleri"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "name", label: "Ad" },
+        { name: "tier", label: "Kademe", type: "number" },
+        { name: "discount_pct", label: "İskonto (%)", type: "number" },
+        { name: "min_annual_volume", label: "Min. Yıllık Ciro", type: "number" },
+        { name: "color_hex", label: "Renk (HEX)" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "tier", label: "Kademe" },
+        { key: "code", label: "Kod" },
+        { key: "name", label: "Ad" },
+        { key: "discount_pct", label: "İskonto %" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function SalesRepsTab() {
+  return (
+    <GenericCrud
+      table="sales_representatives"
+      title="Satış Temsilcileri"
+      fields={[
+        { name: "code", label: "Kod" },
+        { name: "full_name", label: "Ad Soyad" },
+        { name: "email", label: "E-posta" },
+        { name: "phone", label: "Telefon" },
+        { name: "region", label: "Bölge" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "code", label: "Kod" },
+        { key: "full_name", label: "Ad Soyad" },
+        { key: "region", label: "Bölge" },
+        { key: "email", label: "E-posta" },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
+export function CompaniesTab() {
+  return (
+    <GenericCrud
+      table="companies"
+      title="Firmalar"
+      fields={[
+        { name: "legal_name", label: "Ünvan" },
+        { name: "trade_name", label: "Ticari Ad" },
+        { name: "account_code", label: "Cari Kodu" },
+        { name: "company_type", label: "Firma Tipi", type: "select", options: [
+          { value: "corporate", label: "Kurumsal" },
+          { value: "dealer", label: "Bayi" },
+          { value: "distributor", label: "Distribütör" },
+          { value: "public_sector", label: "Kamu" },
+          { value: "individual", label: "Bireysel" },
+        ] },
+        { name: "sector", label: "Sektör" },
+        { name: "tax_number", label: "Vergi Numarası" },
+        { name: "tax_office", label: "Vergi Dairesi" },
+        { name: "primary_contact_name", label: "İlgili Kişi" },
+        { name: "primary_contact_email", label: "İlgili E-posta" },
+        { name: "primary_contact_phone", label: "İlgili Telefon" },
+        { name: "credit_limit", label: "Kredi Limiti", type: "number" },
+        { name: "available_limit", label: "Kullanılabilir Limit", type: "number" },
+        { name: "payment_term_days", label: "Vade (Gün)", type: "number" },
+        { name: "currency", label: "Para Birimi" },
+        { name: "account_status", label: "Hesap Durumu", type: "select", options: [
+          { value: "active", label: "Aktif" },
+          { value: "on_hold", label: "Beklemede" },
+          { value: "blocked", label: "Engelli" },
+          { value: "closed", label: "Kapalı" },
+        ] },
+        { name: "approval_status", label: "Onay Durumu", type: "select", options: [
+          { value: "pending", label: "Beklemede" },
+          { value: "approved", label: "Onaylı" },
+          { value: "rejected", label: "Reddedildi" },
+        ] },
+        { name: "risk_status", label: "Risk", type: "select", options: [
+          { value: "low", label: "Düşük" },
+          { value: "medium", label: "Orta" },
+          { value: "high", label: "Yüksek" },
+        ] },
+        { name: "internal_notes", label: "Dahili Notlar", type: "textarea" },
+      ]}
+      columns={[
+        { key: "legal_name", label: "Ünvan" },
+        { key: "company_type", label: "Tip" },
+        { key: "account_code", label: "Cari" },
+        { key: "credit_limit", label: "Kredi Limiti" },
+        { key: "account_status", label: "Durum" },
+        { key: "approval_status", label: "Onay" },
+      ]}
+    />
+  );
+}
+
+export function CompanyUsersTab() {
+  return (
+    <GenericCrud
+      table="company_users"
+      title="Firma Kullanıcıları"
+      fields={[
+        { name: "company_id", label: "Firma ID" },
+        { name: "user_id", label: "Kullanıcı ID" },
+        { name: "role", label: "Rol", type: "select", options: [
+          { value: "owner", label: "Sahip" },
+          { value: "purchaser", label: "Satın Alma" },
+          { value: "finance", label: "Finans" },
+          { value: "viewer", label: "Görüntüleyici" },
+        ] },
+        { name: "title", label: "Görev" },
+        { name: "is_primary", label: "Birincil", type: "checkbox" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "company_id", label: "Firma" },
+        { key: "user_id", label: "Kullanıcı" },
+        { key: "role", label: "Rol" },
+        { key: "is_primary", label: "Birincil", render: (r) => (r.is_primary ? "Evet" : "Hayır") },
+        { key: "is_active", label: "Aktif", render: (r) => (r.is_active ? "Evet" : "Hayır") },
+      ]}
+    />
+  );
+}
+
 /* ================= Quotes (inbox) ================= */
 
 const QUOTE_STATUSES = [
