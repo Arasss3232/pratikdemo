@@ -319,7 +319,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           kind={workflow.kind}
           title={workflow.title}
           onClose={() => setWorkflow(null)}
-          onSubmit={async (summary) => {
+          onSubmit={async (summary: string) => {
             try {
               await createT({ data: { title_tr: summary, description_tr: `Rehberli akış: ${workflow.title}`, priority: "normal" } });
               toast.success("İsteğiniz alındı. Yapay Zekâ Asistanı hazırlıyor.");
