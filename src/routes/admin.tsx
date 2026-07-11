@@ -55,6 +55,15 @@ export const Route = createFileRoute("/admin")({
 
 type Tab = AdminTab;
 
+function DashboardHost({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
+  const ctx = useB2BContext();
+  if (ctx.loading) {
+    return <div className="p-6 text-[13px]" style={{ color: "var(--admin-text-mute)" }}>Panel yükleniyor…</div>;
+  }
+  if (!ctx.profile) return <Dashboard onNavigate={onNavigate} />;
+  return <RoleDashboard ctx={ctx} onNavigate={onNavigate} />;
+}
+
 type QuoteRequest = {
   id: string;
   contact_name: string;
