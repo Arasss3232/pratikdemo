@@ -443,23 +443,14 @@ export function SiteHeader() {
                   companyName={settings.company_name}
                 />
               </Link>
-              <div className="flex items-center gap-2">
-                <span
-                  className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2 py-1"
-                  style={{ color: "var(--public-yellow-500)", border: "1px solid rgba(245,196,0,0.4)" }}
-                  aria-hidden
-                >
-                  Menü
-                </span>
-                <button
+              <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
                   className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm border border-white/15 text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
                   aria-label="Menüyü kapat"
                 >
                   <Icon name="close" aria-hidden="true" />
-                </button>
-              </div>
+              </button>
             </div>
 
             {/* Scrollable content */}
