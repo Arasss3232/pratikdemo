@@ -17,8 +17,9 @@ function CompanyInfo() {
     ["Yetkili", c.primary_contact_name],
     ["Yetkili Telefon", c.primary_contact_phone],
     ["Yetkili E-posta", c.primary_contact_email],
-    ["Web Sitesi", c.website],
-    ["Sektör", c.industry],
+    ["Sektör", c.sector],
+    ["Cari Para Birimi", c.currency],
+    ["Vade (gün)", c.payment_term_days != null ? String(c.payment_term_days) : null],
   ];
   return (
     <>
