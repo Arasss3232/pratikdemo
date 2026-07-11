@@ -163,7 +163,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     title: "Site Yönetimi",
     items: [
       { key: "settings", label: "Site Ayarları", icon: "settings" },
-      { key: "brochures", label: "Broşür ve Banner", icon: "view_carousel", description: "Anasayfa broşür slaytları" },
+      { key: "brochures", label: "Broşür ve Slider Yönetimi", icon: "view_carousel", description: "Anasayfa broşür slaytları" },
       { key: "services", label: "Hizmetler", icon: "handyman" },
       { key: "references", label: "Referanslar", icon: "workspace_premium" },
       { key: "certificates", label: "Sertifikalar", icon: "verified" },

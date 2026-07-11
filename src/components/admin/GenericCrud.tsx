@@ -21,6 +21,15 @@ export type CrudColumn = {
   render?: (row: Record<string, unknown>) => React.ReactNode;
 };
 
+export type CrudRowAction = {
+  key: string;
+  label: string;
+  icon?: string;
+  tone?: "default" | "primary" | "danger" | "success";
+  onRun: (row: Record<string, unknown> & { id: string }, ctx: { refresh: () => void }) => unknown | Promise<unknown>;
+  visible?: (row: Record<string, unknown> & { id: string }) => boolean;
+};
+
 type Row = Record<string, unknown> & { id: string };
 
 export function GenericCrud({
@@ -35,6 +44,7 @@ export function GenericCrud({
   allowDelete = true,
   quickAddKey,
   description,
+  extraRowActions,
 }: {
   table: string;
   title: string;
@@ -47,6 +57,7 @@ export function GenericCrud({
   allowDelete?: boolean;
   quickAddKey?: string;
   description?: string;
+  extraRowActions?: CrudRowAction[];
 }) {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
@@ -315,6 +326,24 @@ export function GenericCrud({
                           <Icon name="edit" className="text-[16px]" />
                           Düzenle
                         </button>
+                        {extraRowActions?.filter(a => !a.visible || a.visible(r)).map((a) => (
+                          <button
+                            key={a.key}
+                            onClick={() => a.onRun(r, { refresh })}
+                            className="admin-btn admin-btn-ghost admin-btn-sm ml-1"
+                            style={{
+                              color:
+                                a.tone === "danger" ? "var(--admin-danger)" :
+                                a.tone === "success" ? "var(--admin-success, #0a7c3a)" :
+                                a.tone === "primary" ? "var(--admin-navy)" :
+                                "var(--admin-text-2)",
+                            }}
+                            title={a.label}
+                          >
+                            {a.icon ? <Icon name={a.icon} className="text-[16px]" /> : null}
+                            {a.label}
+                          </button>
+                        ))}
                         {allowDelete && (
                           <button
                             onClick={() => remove(r.id)}
@@ -366,6 +395,16 @@ export function GenericCrud({
                     <Icon name="edit" className="text-[16px]" />
                     Düzenle
                   </button>
+                  {extraRowActions?.filter(a => !a.visible || a.visible(r)).map((a) => (
+                    <button
+                      key={a.key}
+                      onClick={() => a.onRun(r, { refresh })}
+                      className="admin-btn admin-btn-outline admin-btn-sm"
+                    >
+                      {a.icon ? <Icon name={a.icon} className="text-[16px]" /> : null}
+                      {a.label}
+                    </button>
+                  ))}
                   {allowDelete && (
                     <button
                       onClick={() => remove(r.id)}
