@@ -172,6 +172,15 @@ function ProductsTab() {
     refresh();
   }, []);
 
+  useEffect(() => {
+    function onQuickAdd(e: Event) {
+      const d = (e as CustomEvent<{ tab: string }>).detail;
+      if (d?.tab === "products") setEditing({ ...EMPTY_PRODUCT });
+    }
+    window.addEventListener("admin:quick-add", onQuickAdd);
+    return () => window.removeEventListener("admin:quick-add", onQuickAdd);
+  }, []);
+
   async function handleSave(p: Omit<Product, "id"> & { id?: string }) {
     setError(null);
     const payload = {
