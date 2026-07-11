@@ -1026,7 +1026,7 @@ export function ContactInfo() {
               href={`https://www.google.com/maps/search/?api=1&query=${mapQ}`}
               target="_blank"
               rel="noreferrer"
-              className={buttonStyles({ variant: "outline", className: "self-start" })}
+              className={buttonStyles({ variant: "outline-dark", className: "self-start" })}
             >
               <Icon name="directions" aria-hidden />
               Yol Tarifi Al
