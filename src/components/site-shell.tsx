@@ -511,16 +511,8 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           {/* Brand & summary */}
           <div className="lg:col-span-4 flex flex-col gap-5">
-            <Link to="/" className="inline-flex items-center gap-2" aria-label="Pratik ana sayfa">
-              <img
-                alt="Pratik logosu"
-                className="h-12 object-contain"
-                src={FOOTER_LOGO_URL}
-                width={140}
-                height={48}
-                loading="lazy"
-                decoding="async"
-              />
+            <Link to="/" className="inline-flex items-center gap-2" aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
+              <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
               Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve
