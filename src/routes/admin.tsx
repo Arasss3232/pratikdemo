@@ -598,7 +598,7 @@ function ProductsTab() {
       quickAddKey="products"
       title="Ürünler"
       description="Ürün kataloğunuz. Sitede görünen tüm ürünleri buradan yönetin."
-      extraRowActions={[askAiAction("product.update")]}
+      extraRowActions={[askAiAction("update_product_content")]}
       fields={[
         { name: "sku", label: "Ürün Kodu (SKU)", required: true, help: "Örn: PRT-2024-001" },
         { name: "name", label: "Ürün Adı", required: true },
@@ -1306,7 +1306,7 @@ export function ServicesTab() {
       table="services"
       quickAddKey="services"
       title="Hizmetler"
-      extraRowActions={[askAiAction("service.update")]}
+      extraRowActions={[askAiAction("update_service_content")]}
       orderBy="display_order"
       ascending
       fields={[
@@ -1453,7 +1453,7 @@ export function FaqsTab() {
       table="faqs"
       quickAddKey="faqs"
       title="Sık Sorulan Sorular"
-      extraRowActions={[askAiAction("faq.update")]}
+      extraRowActions={[askAiAction("update_faq_content")]}
       orderBy="display_order"
       ascending
       fields={[
@@ -1497,7 +1497,7 @@ export function BlogPostsTab() {
       table="blog_posts"
       quickAddKey="blog"
       title="Blog Yazıları"
-      extraRowActions={[askAiAction("blog.update")]}
+      extraRowActions={[askAiAction("update_blog_content")]}
       orderBy="published_at"
       fields={[
         { name: "slug", label: "Slug", required: true },
