@@ -5,7 +5,7 @@ import { ACTION_REGISTRY, type ActionType } from "./ai-assistant-registry";
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 const MAX_MSG_LEN = 4000;
-const MAX_HISTORY = 16;
+const MAX_HISTORY = 30;
 const RATE_PER_HOUR = 60;
 
 type AnyObj = Record<string, any>;
@@ -165,29 +165,66 @@ function buildSystemPrompt(): string {
     .map(([key, e]) =>
       `- ${key} → tablo: ${e.table}; izinli alanlar: ${e.allowedFields.join(", ")}`)
     .join("\n");
-  return `Sen bir Türkçe web sitesi yönetim asistanısın. Kullanıcı, bir hırdavat B2B şirketinin yönetim panelini kullanıyor.
+  return `Sen, bir Türkçe hırdavat B2B firmasının yönetim panelinde çalışan deneyimli bir web sitesi danışmanısın. Aynı anda UX tasarımcı, içerik editörü, SEO danışmanı ve marka danışmanısın.
 
-Kurallar:
-- Her yanıtın Türkçe, kurumsal ve net olsun.
-- Kullanıcı bir kaydı ve modülü seçmediyse sadece öneri ver veya soru sor. Kayıt seçilmemişse proposal üretme.
-- Kullanıcı bir "bağlam" bloğu gönderdiyse (action_type + target_id + mevcut alanlar), o kayıt için değişiklik önerisi üretebilirsin.
-- Asla teknik özellik, marka, sertifika, fiyat veya iş taahhüdü uydurma. Bilgi eksikse öneriyi taslak olarak işaretle ve summary'de belirt.
-- İzin verilen aksiyon tipleri ve alanları:
+KİŞİLİK VE DİL
+- Yardımsever, dürüst, doğrudan, çözüm odaklısın. Robotik değilsin.
+- Türkçe konuşuyorsun. Yazım hatalarını, eksik cümleleri, günlük dili anlarsın.
+- Kısa ve odaklı yaz. Gereksiz dolgu yok. Aşırı resmi hukuki dil yok.
+- Kullanıcının her fikrine körü körüne katılma. Zayıf, riskli veya tutarsız fikirleri saygıyla eleştir ve daha iyi seçenek öner.
+- Emin değilsen "emin değilim" de. Uydurma. Teknik özellik, sertifika, fiyat, stok, ortaklık, müşteri sayısı, deneyim yılı gibi bilgileri kayıt sende yoksa asla uydurma.
+
+YANIT DAVRANIŞI
+- Bir soru sorulduysa önce doğrudan cevap ver, sonra seçenek/aksiyon sun.
+- Görüş bildirdiğinde: (1) Değerlendirmen, (2) Neden (2-3 kısa madde), (3) Önerdiğin çözüm, (4) Alternatifler.
+- Fikir isterken tek "en iyi" çözüm dayatma. En fazla 3 alternatif üret. Her birinin avantajını ve dezavantajını söyle.
+- Kullanıcı "Sen öner" derse sayfayı, şirket tipini, mevcut içeriği ve mobil düzeni dikkate alıp bir birincil çözüm + iki alternatif üret.
+- Zararlı istek varsa (okunmaz renkler, çok küçük yazı, önemli navigasyonu silme, sahte içerik, gereksiz URL değişikliği vb.) "Bu şekilde yapılabilir ancak tavsiye etmiyorum" diyerek nedenini ve daha iyi yolu açıkla. Zararsız stil tercihini engelleme.
+
+BAĞLAM VE HAFIZA
+- Kullanıcının bir "[Bağlam]" bloğu gönderdiği modül+kayıttır. Yalnızca o zaman bir değişiklik önerisi (proposal) üretebilirsin.
+- Kayıt seçilmemişse: cevap ver, seçenek göster, ama proposal üretme (null bırak).
+- Konuşma geçmişinde daha önce sunduğun seçenekleri hatırla. Kullanıcı "ikincisini yap", "daha sade yap" gibi konuşursa aktif teklifi değiştir; sıfırdan başlama.
+- Proposal önermeden önce "içerik önerisi" (options veya content taslağı) sunman genelde daha iyidir. Kullanıcı onaylayınca proposal'e döndürürsün.
+
+GÜVENLİK
+- Sadece aşağıdaki whitelisted alanları değiştirebilirsin:
 ${menu}
-- Sadece izinli alanları değiştir.
+- Fiyat, kullanıcı rolü, bakiye, dealer_level, company_users, user_roles, URL/slug gibi alanlar YOKTUR — istenirse de yapma, kısaca güvenlik gerekçesiyle reddet.
 
-Cevabını KATİ olarak aşağıdaki JSON şemasında dön (başka metin ekleme):
+ÇIKTI FORMATI (KATI JSON, başka metin ekleme):
 {
-  "reply": "kısa açıklayıcı Türkçe yanıt",
+  "reply": "Kısa markdown destekli Türkçe cevap. Başlık için ###, güçlü için **kalın**, madde için '- '. 4-10 satırı geçme.",
+  "response_type": "info" | "recommendation" | "options" | "content_draft" | "design" | "audit" | "warning" | "clarify" | "proposal",
+  "confidence": "low" | "medium" | "high",
+  "options": null | [ // en fazla 3
+    {
+      "name": "Kısa ad",
+      "description": "1 cümle açıklama",
+      "advantage": "Avantajı",
+      "tradeoff": "Dikkat edilmesi gereken",
+      "use_case": "En uygun olduğu durum"
+    }
+  ],
+  "clarify": null | { "question": "Tek soru", "choices": ["Seçim 1", "Seçim 2", "Sen Öner"] },
+  "follow_ups": [ "Kısa tıklanabilir eylem metni", "..." ], // en fazla 4, isteğe bağlı
+  "warnings": [ "Kısa uyarı metni" ], // isteğe bağlı
   "proposal": null | {
     "action_type": "<yukarıdaki listeden>",
-    "target_id": "<seçili kayıt id'si>",
-    "summary": "değişikliğin bir cümlelik özeti",
+    "target_id": "<seçili kayıt id>",
+    "summary": "değişikliğin tek cümlelik özeti",
     "risk_level": "low" | "medium",
-    "changes": { "alan_adı": "yeni değer", ... },
+    "changes": { "alan_adı": "yeni değer" },
     "reasoning": "kısa gerekçe"
   }
-}`;
+}
+
+KURAL ÖZETİ
+- Cevabın türü ne olursa olsun response_type doldur. options doldurduysan tipini "options" veya "recommendation" yap.
+- follow_ups: kullanıcının bir sonraki adımı için kısa etiketlerdir. Örn: "Önerilen Düzenlemeyi Gör", "Farklı Seçenekler Göster", "Mevcut Hali Koru", "Mobil İçin Uyarla".
+- clarify sadece soru gerçekten sonucu değiştirecekse doldur. Aksi halde null bırak.
+- Bilginin eksik olduğu durumu warnings dizisiyle şeffafça belirt.
+- Cevap dili her zaman Türkçe.`;
 }
 
 async function checkRateLimit(context: any) {
@@ -221,7 +258,7 @@ async function callLovableAi(messages: any[]) {
       model: MODEL,
       messages,
       response_format: { type: "json_object" },
-      temperature: 0.4,
+      temperature: 0.6,
     }),
   });
   if (res.status === 429) throw new Error("Yapay zekâ servisi çok yoğun. Bir süre sonra tekrar deneyin.");
@@ -350,6 +387,57 @@ export const aiSendMessage = createServerFn({ method: "POST" })
     const reply: string = String(ai.reply ?? "").slice(0, 4000) ||
       "Yardımcı olabileceğim başka bir şey var mı?";
 
+    // Extract conversational metadata (response_type, options, follow_ups, clarify, warnings, confidence)
+    const assistantMeta: AnyObj = {};
+    const RT_ALLOWED = new Set([
+      "info", "recommendation", "options", "content_draft",
+      "design", "audit", "warning", "clarify", "proposal",
+    ]);
+    if (typeof ai.response_type === "string" && RT_ALLOWED.has(ai.response_type)) {
+      assistantMeta.response_type = ai.response_type;
+    }
+    if (ai.confidence === "low" || ai.confidence === "medium" || ai.confidence === "high") {
+      assistantMeta.confidence = ai.confidence;
+    }
+    if (Array.isArray(ai.options)) {
+      const opts = ai.options
+        .slice(0, 3)
+        .map((o: AnyObj) => ({
+          name: String(o?.name ?? "").slice(0, 80),
+          description: String(o?.description ?? "").slice(0, 300),
+          advantage: String(o?.advantage ?? "").slice(0, 240),
+          tradeoff: String(o?.tradeoff ?? "").slice(0, 240),
+          use_case: String(o?.use_case ?? "").slice(0, 240),
+        }))
+        .filter((o: AnyObj) => o.name && o.description);
+      if (opts.length) assistantMeta.options = opts;
+    }
+    if (Array.isArray(ai.follow_ups)) {
+      const fu = ai.follow_ups
+        .map((f: any) => String(f ?? "").trim())
+        .filter(Boolean)
+        .slice(0, 4)
+        .map((s: string) => s.slice(0, 60));
+      if (fu.length) assistantMeta.follow_ups = fu;
+    }
+    if (Array.isArray(ai.warnings)) {
+      const w = ai.warnings
+        .map((x: any) => String(x ?? "").trim())
+        .filter(Boolean)
+        .slice(0, 3)
+        .map((s: string) => s.slice(0, 240));
+      if (w.length) assistantMeta.warnings = w;
+    }
+    if (ai.clarify && typeof ai.clarify === "object" && ai.clarify.question) {
+      const choices = Array.isArray(ai.clarify.choices)
+        ? ai.clarify.choices.map((c: any) => String(c ?? "").slice(0, 60)).filter(Boolean).slice(0, 5)
+        : [];
+      assistantMeta.clarify = {
+        question: String(ai.clarify.question).slice(0, 240),
+        choices,
+      };
+    }
+
     let proposalId: string | null = null;
     let proposalRow: AnyObj | null = null;
 
@@ -390,6 +478,7 @@ export const aiSendMessage = createServerFn({ method: "POST" })
         conversation_id: data.conversationId,
         role: "assistant",
         content: reply,
+        metadata: assistantMeta,
         proposal_id: proposalId,
       })
       .select("id, role, content, metadata, proposal_id, created_at")

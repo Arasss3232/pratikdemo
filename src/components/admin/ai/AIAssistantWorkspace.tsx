@@ -6,6 +6,7 @@ import { useAiAssistant, type Proposal } from "@/hooks/use-ai-assistant";
 import { ActionProposalCard } from "./ActionProposalCard";
 import { CONTEXT_MODULES, ACTION_REGISTRY, type ActionType } from "@/lib/ai-assistant-registry";
 import { aiListTargets } from "@/lib/ai-assistant.functions";
+import { RichText, ResponseTypePill, OptionsGrid, WarningsList, ClarifyBlock, FollowUps, type OptionCard } from "./RichMessage";
 
 function formatDate(s: string) {
   try {
@@ -14,10 +15,12 @@ function formatDate(s: string) {
 }
 
 const QUICK_PROMPTS = [
+  "Sen en uygununu öner",
+  "Bu bölümü değerlendir, güçlü ve zayıf yanlarını söyle.",
+  "Üç farklı yaklaşım göster, avantaj ve dezavantajlarıyla karşılaştır.",
   "Bu içeriği daha kurumsal bir dile göre yeniden yaz.",
   "SEO açısından geliştir, anahtar kelimeleri koru.",
-  "Daha kısa ve etkileyici bir başlık öner.",
-  "Türkçe dilbilgisi ve noktalama hatalarını düzelt.",
+  "Mobilde daha iyi görünecek şekilde sadeleştir.",
 ];
 
 type TargetOption = { id: string; label: string };
@@ -88,6 +91,17 @@ export function AIAssistantWorkspace({
     } catch (e: any) {
       toast.error(e?.message ?? "Mesaj gönderilemedi.");
     }
+  }
+
+  async function sendPrompt(text: string) {
+    if (asst.sending) return;
+    if (!asst.activeId) await asst.newConversation();
+    try { await asst.send(text, ctx); }
+    catch (e: any) { toast.error(e?.message ?? "Mesaj gönderilemedi."); }
+  }
+
+  function handleOptionSelect(o: OptionCard, index: number) {
+    void sendPrompt(`"${o.name}" seçeneğini (${index + 1}. seçenek) uygula. Bu yönde bir değişiklik önerisi hazırla.`);
   }
 
   async function handleNewConversation() {
@@ -168,10 +182,10 @@ export function AIAssistantWorkspace({
                 <Icon name="auto_awesome" className="text-[22px]" />
               </div>
               <p className="text-[14px] font-semibold" style={{ color: "var(--admin-text)" }}>
-                Site içeriğinizi sohbetle yönetin
+                Site danışmanınızla konuşun
               </p>
               <p className="text-[12px] mt-1" style={{ color: "var(--admin-text-mute)" }}>
-                Sağ paneldeki bağlamdan bir modül ve kayıt seçin, ardından ne yapmak istediğinizi Türkçe olarak yazın.
+                Serbestçe soru sorun, görüş isteyin, karşılaştırın. Belirli bir kayıt düzenlemek isterseniz sağdan bağlam seçin — asistan size seçenekler sunar, siz onaylayınca uygulanır.
               </p>
             </div>
           )}
@@ -179,9 +193,14 @@ export function AIAssistantWorkspace({
           {asst.messages.map((m) => {
             const isUser = m.role === "user";
             const proposal = m.proposal_id ? asst.proposals[m.proposal_id] : null;
+            const meta = (m.metadata ?? {}) as any;
+            const options: OptionCard[] | undefined = Array.isArray(meta.options) ? meta.options : undefined;
+            const followUps: string[] | undefined = Array.isArray(meta.follow_ups) ? meta.follow_ups : undefined;
+            const warnings: string[] | undefined = Array.isArray(meta.warnings) ? meta.warnings : undefined;
+            const clarify = meta.clarify && typeof meta.clarify === "object" ? meta.clarify : null;
             return (
               <div key={m.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] space-y-2`}>
+                <div className={`max-w-[88%] space-y-2 w-full ${isUser ? "flex flex-col items-end" : ""}`}>
                   <div
                     className={`rounded-2xl px-3.5 py-2.5 text-[13.5px] whitespace-pre-wrap leading-relaxed`}
                     style={
@@ -190,8 +209,33 @@ export function AIAssistantWorkspace({
                         : { background: "var(--admin-surface)", color: "var(--admin-text)", border: "1px solid var(--admin-border)", borderTopLeftRadius: 4 }
                     }
                   >
-                    {m.content}
+                    {isUser ? (
+                      m.content
+                    ) : (
+                      <>
+                        <ResponseTypePill type={meta.response_type} confidence={meta.confidence} />
+                        <RichText text={m.content} />
+                      </>
+                    )}
                   </div>
+                  {!isUser && warnings && <WarningsList items={warnings} />}
+                  {!isUser && options && (
+                    <OptionsGrid options={options} onSelect={handleOptionSelect} />
+                  )}
+                  {!isUser && clarify && clarify.question && (
+                    <ClarifyBlock
+                      clarify={{
+                        question: String(clarify.question),
+                        choices: Array.isArray(clarify.choices) && clarify.choices.length
+                          ? clarify.choices
+                          : ["Sen Öner"],
+                      }}
+                      onChoose={(c) => sendPrompt(c === "Sen Öner" ? "Sen en uygununu öner." : c)}
+                    />
+                  )}
+                  {!isUser && followUps && (
+                    <FollowUps items={followUps} onChoose={(f) => sendPrompt(f)} />
+                  )}
                   {proposal && (
                     <ActionProposalCard
                       proposal={proposal as Proposal}
