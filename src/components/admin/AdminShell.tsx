@@ -624,7 +624,9 @@ function CommandTopbar({
                   target="_blank"
                   className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-[var(--admin-surface-2)]"
                 >
-                  <Icon name="open_in_new" className="text-[18px]" style={{ color: "var(--admin-text-2)" }} />
+                  <span style={{ color: "var(--admin-text-2)" }}>
+                    <Icon name="open_in_new" className="text-[18px]" />
+                  </span>
                   Siteyi yeni sekmede aç
                 </Link>
                 <button
