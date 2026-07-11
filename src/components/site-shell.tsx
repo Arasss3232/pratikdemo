@@ -3,6 +3,7 @@ import { memo, useEffect, useState, type ReactNode } from "react";
 import { NAV_LINKS } from "../data/nav";
 import { PageHero } from "./marketing/PageHero";
 import { buttonStyles } from "../lib/button-styles";
+import { useAuth } from "@/hooks/use-auth";
 
 const LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
@@ -17,6 +18,7 @@ export const Icon = memo(IconBase);
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isAdmin } = useAuth();
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
@@ -77,6 +79,16 @@ export function SiteHeader() {
               />
             </div>
             <div className="flex items-center gap-2 text-on-primary">
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+                  aria-label="Admin paneli"
+                  title="Admin"
+                >
+                  <Icon name="admin_panel_settings" aria-hidden="true" />
+                </Link>
+              )}
               <Link
                 to="/giris"
                 className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
