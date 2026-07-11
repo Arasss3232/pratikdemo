@@ -414,63 +414,139 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const settings = useSiteSettings();
+  const currentYear = new Date().getFullYear();
+  const address = settings.address;
+  const phone = settings.phone;
+  const email = settings.email;
+  const hours = settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
+
+  const productCols = PRODUCT_GROUPS;
+  const corporateLinks = [
+    { to: "/kurumsal", label: "Hakkımızda" },
+    { to: "/hizmetler", label: "Hizmetlerimiz" },
+    { to: "/referanslar", label: "Referanslar" },
+    { to: "/markalar", label: "Markalar" },
+    { to: "/blog", label: "Bilgi Merkezi" },
+    { to: "/kariyer", label: "Kariyer" },
+  ] as const;
+  const legalLinks = [
+    { to: "/kvkk", label: "KVKK ve Gizlilik" },
+    { to: "/kvkk", label: "Çerez Politikası" },
+    { to: "/iletisim", label: "İletişim" },
+  ] as const;
+
   return (
-    <footer className="bg-tertiary border-t-4 border-secondary w-full">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-12">
-        <div className="col-span-1 md:col-span-4 mb-8">
-          <Link
-            to="/"
-            className="text-headline-md font-headline-md text-on-tertiary flex items-center gap-2"
-          >
-            <img alt="Pratik Logo" className="h-12 object-contain" src={FOOTER_LOGO_URL} width={140} height={48} loading="lazy" decoding="async" />
-          </Link>
+    <footer
+      className="text-inverse-on-surface"
+      style={{ background: "var(--color-inverse-surface)", borderTop: "4px solid var(--color-secondary)" }}
+    >
+      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+          {/* Brand & summary */}
+          <div className="lg:col-span-4 flex flex-col gap-5">
+            <Link to="/" className="inline-flex items-center gap-2" aria-label="Pratik ana sayfa">
+              <img
+                alt="Pratik logosu"
+                className="h-12 object-contain"
+                src={FOOTER_LOGO_URL}
+                width={140}
+                height={48}
+                loading="lazy"
+                decoding="async"
+              />
+            </Link>
+            <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
+              Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve
+              satış sonrası iletişim.
+            </p>
+            <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
+              {address && (
+                <span className="flex items-start gap-2">
+                  <Icon name="location_on" className="text-[16px] text-secondary mt-0.5" aria-hidden />
+                  <span>{address}</span>
+                </span>
+              )}
+              {phone && (
+                <a href={`tel:${phone.replace(/\s+/g, "")}`} className="flex items-center gap-2 hover:text-secondary transition-colors">
+                  <Icon name="call" className="text-[16px] text-secondary" aria-hidden />
+                  <span>{phone}</span>
+                </a>
+              )}
+              {email && (
+                <a href={`mailto:${email}`} className="flex items-center gap-2 hover:text-secondary transition-colors break-all">
+                  <Icon name="mail" className="text-[16px] text-secondary" aria-hidden />
+                  <span>{email}</span>
+                </a>
+              )}
+              <span className="flex items-center gap-2 text-white/60">
+                <Icon name="schedule" className="text-[16px] text-secondary" aria-hidden />
+                <span>{hours}</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Product groups */}
+          <div className="lg:col-span-4">
+            <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Ürün Grupları</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+              {productCols.map((g) => (
+                <li key={g.to}>
+                  <Link
+                    to={g.to}
+                    className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
+                  >
+                    <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">{g.code}</span>
+                    <span className="text-[14px]">{g.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Corporate + Legal */}
+          <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+            <div>
+              <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Kurumsal</h3>
+              <ul className="flex flex-col gap-3">
+                {corporateLinks.map((l) => (
+                  <li key={l.to + l.label}>
+                    <Link to={l.to} className="text-[14px] text-white/80 hover:text-secondary transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Yasal</h3>
+              <ul className="flex flex-col gap-3">
+                {legalLinks.map((l) => (
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-[14px] text-white/80 hover:text-secondary transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/teklif"
+                className={buttonStyles({
+                  variant: "primary",
+                  size: "sm",
+                  className: "mt-6 !bg-secondary !text-on-secondary hover:!bg-secondary-container",
+                })}
+              >
+                Teklif Al
+                <Icon name="arrow_forward" aria-hidden />
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="col-span-1 flex flex-col gap-4">
-          <Link
-            to="/"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            Ürün Grupları
-          </Link>
-          <Link
-            to="/teknik-destek"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            Teknik Destek
-          </Link>
-        </div>
-        <div className="col-span-1 flex flex-col gap-4">
-          <Link
-            to="/sektorel"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            Sektörel Çözümler
-          </Link>
-          <Link
-            to="/kurumsal"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            Kurumsal Bilgiler
-          </Link>
-        </div>
-        <div className="col-span-1 flex flex-col gap-4">
-          <Link
-            to="/kvkk"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            KVKK ve Gizlilik
-          </Link>
-          <Link
-            to="/iletisim"
-            className="font-body-sm text-body-sm text-on-tertiary opacity-70 hover:opacity-100 transition-opacity block"
-          >
-            Bize Ulaşın
-          </Link>
-        </div>
-        <div className="col-span-1 md:col-span-4 mt-8 pt-8 border-t border-outline/30 text-center">
-          <p className="font-body-sm text-body-sm text-on-tertiary opacity-70">
-            © 2024 Pratik Professional Industrial Hardware Solutions. Tüm Hakları Saklıdır.
-          </p>
+
+        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
+          <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
+          <p className="hp-mono text-[11px] uppercase tracking-widest text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
         </div>
       </div>
     </footer>
