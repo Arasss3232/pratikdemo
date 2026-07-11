@@ -184,7 +184,7 @@ function ElectricToolsPage() {
               onBrandSearchChange={setBrandSearch}
               onClear={clearFilters}
             />
-            <div className="flex-grow flex flex-col">
+            <div id="catalog-results" className="flex-grow flex flex-col scroll-mt-28">
               <CatalogToolbar
                 count={filteredProducts.length}
                 sort={sort}
