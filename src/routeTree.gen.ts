@@ -36,6 +36,7 @@ import { Route as UrunlerElAletleriRouteImport } from './routes/urunler.el-aletl
 import { Route as UrunlerBaglantiElemanlariRouteImport } from './routes/urunler.baglanti-elemanlari'
 import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
+import { Route as HizmetlerSlugRouteImport } from './routes/hizmetler.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as UrunlerElektrikliElAletleriSkuRouteImport } from './routes/urunler.elektrikli-el-aletleri.$sku'
 
@@ -177,6 +178,11 @@ const KariyerSlugRoute = KariyerSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => KariyerRoute,
 } as any)
+const HizmetlerSlugRoute = HizmetlerSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => HizmetlerRoute,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -195,7 +201,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRoute
+  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
   '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -226,7 +233,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRouteWithChildren
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRoute
+  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
   '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -258,7 +266,7 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRoute
+  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
   '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/teknik-destek'
     | '/urunler'
     | '/blog/$slug'
+    | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | '/teknik-destek'
     | '/urunler'
     | '/blog/$slug'
+    | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/teknik-destek'
     | '/urunler'
     | '/blog/$slug'
+    | '/hizmetler/$slug'
     | '/kariyer/$slug'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -385,7 +397,7 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   GirisRoute: typeof GirisRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
-  HizmetlerRoute: typeof HizmetlerRoute
+  HizmetlerRoute: typeof HizmetlerRouteWithChildren
   IletisimRoute: typeof IletisimRoute
   KariyerRoute: typeof KariyerRouteWithChildren
   KataloglarRoute: typeof KataloglarRoute
@@ -593,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KariyerSlugRouteImport
       parentRoute: typeof KariyerRoute
     }
+    '/hizmetler/$slug': {
+      id: '/hizmetler/$slug'
+      path: '/$slug'
+      fullPath: '/hizmetler/$slug'
+      preLoaderRoute: typeof HizmetlerSlugRouteImport
+      parentRoute: typeof HizmetlerRoute
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -619,6 +638,18 @@ const BlogRouteChildren: BlogRouteChildren = {
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
+interface HizmetlerRouteChildren {
+  HizmetlerSlugRoute: typeof HizmetlerSlugRoute
+}
+
+const HizmetlerRouteChildren: HizmetlerRouteChildren = {
+  HizmetlerSlugRoute: HizmetlerSlugRoute,
+}
+
+const HizmetlerRouteWithChildren = HizmetlerRoute._addFileChildren(
+  HizmetlerRouteChildren,
+)
 
 interface KariyerRouteChildren {
   KariyerSlugRoute: typeof KariyerSlugRoute
@@ -673,7 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   GirisRoute: GirisRoute,
   HakkimizdaRoute: HakkimizdaRoute,
-  HizmetlerRoute: HizmetlerRoute,
+  HizmetlerRoute: HizmetlerRouteWithChildren,
   IletisimRoute: IletisimRoute,
   KariyerRoute: KariyerRouteWithChildren,
   KataloglarRoute: KataloglarRoute,
