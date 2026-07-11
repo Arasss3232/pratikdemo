@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Icon } from "../components/site-shell";
 import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,8 +11,14 @@ import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
 import { PageHeader } from "../components/admin/PageHeader";
-import { ConfirmDialogHost } from "../components/admin/ConfirmDialog";
+import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
+
+const TAB_KEYS: AdminTab[] = [
+  "dashboard","settings","products","services","references","brands",
+  "certificates","team","testimonials","faqs","blog","blogcats","jobs",
+  "applications","messages","quotes","users",
+];
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -18,6 +26,9 @@ export const Route = createFileRoute("/admin")({
       { title: "Admin Paneli — Pratik Endüstriyel" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
   }),
   component: AdminPage,
 });
@@ -59,7 +70,11 @@ type UserRoleRow = {
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>("dashboard");
+  const { tab } = Route.useSearch();
+
+  function setTab(t: Tab) {
+    navigate({ to: "/admin", search: { tab: t } });
+  }
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/giris" });
@@ -185,8 +200,13 @@ function ProductsTab() {
   async function handleDelete(id: string) {
     if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Silinemedi", { description: error.message });
+    } else {
+      toast.success("Ürün silindi");
+      refresh();
+    }
   }
 
   return (
