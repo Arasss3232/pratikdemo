@@ -191,11 +191,16 @@ function Overlay({ b }: { b: Brochure }) {
       <div className="max-w-2xl flex flex-col gap-4 md:gap-5" style={{ color: textColor }}>
         {b.eyebrow ? (
           <span
-            className="inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em]"
+            className="inline-flex items-center gap-2 self-start rounded-full px-3 py-1"
             style={{
               background: eyebrowBg,
               color: b.accent_color || "var(--brand-yellow, #F5D311)",
               border: `1px solid ${b.accent_color || "var(--brand-yellow, #F5D311)"}55`,
+              fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
+              fontWeight: 700,
+              fontSize: 13,
+              letterSpacing: "0.04em",
+              lineHeight: 1.4,
             }}
           >
             <span

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
+import { SectionMarker } from "./SectionMarker";
 
 /**
  * Section header used across the home page — optional eyebrow + action link.
@@ -25,11 +26,7 @@ export function SectionHeader({
       }`}
     >
       <div className={centered ? "mx-auto max-w-2xl" : ""}>
-        {eyebrow && (
-          <div className="font-label-bold text-label-bold text-secondary uppercase tracking-wider mb-2">
-            {eyebrow}
-          </div>
-        )}
+        {eyebrow && <SectionMarker label={eyebrow} tone="light" className="mb-3" />}
         <h2 className="font-headline-lg text-headline-lg text-on-background">{title}</h2>
       </div>
       {actionLabel && actionTo && (
