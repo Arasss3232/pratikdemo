@@ -1,0 +1,524 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState, type FormEvent } from "react";
+import { SiteShell, Icon } from "../components/site-shell";
+import { PageHero } from "../components/marketing/PageHero";
+import { buttonStyles } from "../lib/button-styles";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+
+export const Route = createFileRoute("/admin")({
+  head: () => ({
+    meta: [
+      { title: "Admin Paneli — Pratik Endüstriyel" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+  component: AdminPage,
+});
+
+type Tab = "products" | "quotes" | "users";
+
+type Product = {
+  id: string;
+  sku: string;
+  name: string;
+  brand: string;
+  category: string;
+  description: string | null;
+  image_url: string | null;
+  price: number | null;
+  is_active: boolean;
+  specs: Record<string, unknown>;
+};
+
+type QuoteRequest = {
+  id: string;
+  contact_name: string;
+  company: string | null;
+  email: string;
+  phone: string | null;
+  message: string | null;
+  items: unknown;
+  status: string;
+  created_at: string;
+};
+
+type UserRoleRow = {
+  id: string;
+  user_id: string;
+  role: "admin" | "user";
+  created_at: string;
+};
+
+function AdminPage() {
+  const { user, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<Tab>("products");
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/giris" });
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return (
+      <SiteShell>
+        <div className="max-w-max-width mx-auto p-16 text-center">Yükleniyor…</div>
+      </SiteShell>
+    );
+  }
+  if (!user) return null;
+  if (!isAdmin) {
+    return (
+      <SiteShell>
+        <PageHero
+          title="Yetkisiz Erişim"
+          description="Bu sayfayı görüntülemek için admin yetkiniz olmalı."
+          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Admin" }]}
+        />
+        <div className="max-w-max-width mx-auto p-16 text-center">
+          <Link to="/" className={buttonStyles({ variant: "primary" })}>Ana Sayfaya Dön</Link>
+        </div>
+      </SiteShell>
+    );
+  }
+
+  return (
+    <SiteShell>
+      <PageHero
+        title="Admin Paneli"
+        description="Ürünleri, teklif taleplerini ve kullanıcı yetkilerini buradan yönetin."
+        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Admin" }]}
+      />
+      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8">
+        <div className="flex gap-2 border-b border-outline-variant mb-6 overflow-x-auto">
+          {(["products", "quotes", "users"] as Tab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-4 py-3 font-label-bold text-label-bold whitespace-nowrap border-b-2 transition-colors ${
+                tab === t ? "border-secondary text-primary" : "border-transparent text-on-surface-variant hover:text-primary"
+              }`}
+            >
+              {t === "products" ? "Ürünler" : t === "quotes" ? "Teklif Talepleri" : "Kullanıcılar"}
+            </button>
+          ))}
+        </div>
+        {tab === "products" && <ProductsTab />}
+        {tab === "quotes" && <QuotesTab />}
+        {tab === "users" && <UsersTab currentUserId={user.id} />}
+      </div>
+    </SiteShell>
+  );
+}
+
+/* ================= Products ================= */
+
+const EMPTY_PRODUCT: Omit<Product, "id"> = {
+  sku: "",
+  name: "",
+  brand: "",
+  category: "",
+  description: "",
+  image_url: "",
+  price: null,
+  is_active: true,
+  specs: {},
+};
+
+function ProductsTab() {
+  const [items, setItems] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Product | (Omit<Product, "id"> & { id?: string }) | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function refresh() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) setError(error.message);
+    else setItems((data as Product[]) ?? []);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  async function handleSave(p: Omit<Product, "id"> & { id?: string }) {
+    setError(null);
+    const payload = {
+      sku: p.sku,
+      name: p.name,
+      brand: p.brand,
+      category: p.category,
+      description: p.description || null,
+      image_url: p.image_url || null,
+      price: p.price,
+      is_active: p.is_active,
+      specs: p.specs ?? {},
+    };
+    const { error } = p.id
+      ? await supabase.from("products").update(payload).eq("id", p.id)
+      : await supabase.from("products").insert(payload);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    setEditing(null);
+    refresh();
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (error) setError(error.message);
+    else refresh();
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center">
+        <h2 className="font-headline-md text-headline-md">Ürünler ({items.length})</h2>
+        <button
+          onClick={() => setEditing({ ...EMPTY_PRODUCT })}
+          className={buttonStyles({ variant: "primary", size: "sm" })}
+        >
+          <Icon name="add" className="text-[18px]" /> Yeni Ürün
+        </button>
+      </div>
+      {error && <p className="text-error text-body-sm">{error}</p>}
+      {loading ? (
+        <p>Yükleniyor…</p>
+      ) : items.length === 0 ? (
+        <p className="text-on-surface-variant">Henüz ürün eklenmedi.</p>
+      ) : (
+        <div className="overflow-x-auto border border-outline-variant rounded">
+          <table className="w-full text-body-sm">
+            <thead className="bg-surface-variant text-left">
+              <tr>
+                <th className="p-3">SKU</th>
+                <th className="p-3">Ad</th>
+                <th className="p-3">Marka</th>
+                <th className="p-3">Kategori</th>
+                <th className="p-3">Fiyat</th>
+                <th className="p-3">Aktif</th>
+                <th className="p-3">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((p) => (
+                <tr key={p.id} className="border-t border-outline-variant">
+                  <td className="p-3 font-mono text-body-sm">{p.sku}</td>
+                  <td className="p-3">{p.name}</td>
+                  <td className="p-3">{p.brand}</td>
+                  <td className="p-3">{p.category}</td>
+                  <td className="p-3">{p.price ?? "-"}</td>
+                  <td className="p-3">{p.is_active ? "✓" : "—"}</td>
+                  <td className="p-3 flex gap-2">
+                    <button onClick={() => setEditing(p)} className="text-primary hover:underline">Düzenle</button>
+                    <button onClick={() => handleDelete(p.id)} className="text-error hover:underline">Sil</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {editing && (
+        <ProductForm
+          initial={editing}
+          onCancel={() => setEditing(null)}
+          onSave={handleSave}
+        />
+      )}
+    </div>
+  );
+}
+
+function ProductForm({
+  initial,
+  onCancel,
+  onSave,
+}: {
+  initial: Omit<Product, "id"> & { id?: string };
+  onCancel: () => void;
+  onSave: (p: Omit<Product, "id"> & { id?: string }) => void;
+}) {
+  const [form, setForm] = useState(initial);
+
+  function submit(e: FormEvent) {
+    e.preventDefault();
+    onSave(form);
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <form onSubmit={submit} className="bg-surface-container-lowest max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded p-6 flex flex-col gap-3">
+        <h3 className="font-headline-md text-headline-md mb-2">
+          {form.id ? "Ürünü Düzenle" : "Yeni Ürün"}
+        </h3>
+        <Field label="SKU" required value={form.sku} onChange={(v) => setForm({ ...form, sku: v })} />
+        <Field label="Ad" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
+        <Field label="Marka" required value={form.brand} onChange={(v) => setForm({ ...form, brand: v })} />
+        <Field label="Kategori" required value={form.category} onChange={(v) => setForm({ ...form, category: v })} />
+        <Field label="Görsel URL" value={form.image_url ?? ""} onChange={(v) => setForm({ ...form, image_url: v })} />
+        <label className="flex flex-col gap-1 text-body-sm">
+          <span className="font-label-bold">Açıklama</span>
+          <textarea
+            value={form.description ?? ""}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            className="border border-outline-variant rounded px-3 py-2 min-h-24"
+          />
+        </label>
+        <Field
+          label="Fiyat (₺)"
+          type="number"
+          value={form.price?.toString() ?? ""}
+          onChange={(v) => setForm({ ...form, price: v ? Number(v) : null })}
+        />
+        <label className="flex items-center gap-2 text-body-sm">
+          <input
+            type="checkbox"
+            checked={form.is_active}
+            onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
+          />
+          Aktif (sitede göster)
+        </label>
+        <div className="flex gap-2 mt-4">
+          <button type="submit" className={buttonStyles({ variant: "primary", size: "sm" })}>Kaydet</button>
+          <button type="button" onClick={onCancel} className={buttonStyles({ variant: "outline-dark", size: "sm" })}>İptal</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
+}) {
+  return (
+    <label className="flex flex-col gap-1 text-body-sm">
+      <span className="font-label-bold">{label}{required && " *"}</span>
+      <input
+        type={type}
+        value={value}
+        required={required}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-outline-variant rounded px-3 py-2 focus:border-secondary outline-none"
+      />
+    </label>
+  );
+}
+
+/* ================= Quotes ================= */
+
+function QuotesTab() {
+  const [items, setItems] = useState<QuoteRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function refresh() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("quote_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) setError(error.message);
+    else setItems((data as QuoteRequest[]) ?? []);
+    setLoading(false);
+  }
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  async function updateStatus(id: string, status: string) {
+    const { error } = await supabase.from("quote_requests").update({ status }).eq("id", id);
+    if (error) setError(error.message);
+    else refresh();
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Bu teklif talebini silmek istediğinize emin misiniz?")) return;
+    const { error } = await supabase.from("quote_requests").delete().eq("id", id);
+    if (error) setError(error.message);
+    else refresh();
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="font-headline-md text-headline-md">Teklif Talepleri ({items.length})</h2>
+      {error && <p className="text-error text-body-sm">{error}</p>}
+      {loading ? (
+        <p>Yükleniyor…</p>
+      ) : items.length === 0 ? (
+        <p className="text-on-surface-variant">Henüz teklif talebi yok.</p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {items.map((q) => {
+            const itemsList = Array.isArray(q.items) ? (q.items as Array<{ name?: string; sku?: string; quantity?: number }>) : [];
+            return (
+              <div key={q.id} className="border border-outline-variant rounded p-4 bg-surface-container-lowest">
+                <div className="flex justify-between items-start gap-4 flex-wrap">
+                  <div>
+                    <p className="font-label-bold">{q.contact_name} {q.company && <span className="text-on-surface-variant">— {q.company}</span>}</p>
+                    <p className="text-body-sm text-on-surface-variant">{q.email}{q.phone && ` · ${q.phone}`}</p>
+                    <p className="text-body-sm text-on-surface-variant">{new Date(q.created_at).toLocaleString("tr-TR")}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={q.status}
+                      onChange={(e) => updateStatus(q.id, e.target.value)}
+                      className="border border-outline-variant rounded px-2 py-1 text-body-sm"
+                    >
+                      <option value="new">Yeni</option>
+                      <option value="in_progress">İşlemde</option>
+                      <option value="completed">Tamamlandı</option>
+                      <option value="cancelled">İptal</option>
+                    </select>
+                    <button onClick={() => handleDelete(q.id)} className="text-error hover:underline text-body-sm">Sil</button>
+                  </div>
+                </div>
+                {q.message && <p className="text-body-sm mt-2 italic">{q.message}</p>}
+                {itemsList.length > 0 && (
+                  <ul className="mt-2 text-body-sm list-disc list-inside">
+                    {itemsList.map((it, i) => (
+                      <li key={i}>
+                        {it.name ?? it.sku ?? "Ürün"} × {it.quantity ?? 1}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================= Users ================= */
+
+function UsersTab({ currentUserId }: { currentUserId: string }) {
+  const [roles, setRoles] = useState<UserRoleRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function refresh() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) setError(error.message);
+    else setRoles((data as UserRoleRow[]) ?? []);
+    setLoading(false);
+  }
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  async function makeAdmin(userId: string) {
+    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
+    if (error) setError(error.message);
+    else refresh();
+  }
+  async function removeRole(id: string) {
+    if (!confirm("Bu yetkiyi kaldırmak istediğinize emin misiniz?")) return;
+    const { error } = await supabase.from("user_roles").delete().eq("id", id);
+    if (error) setError(error.message);
+    else refresh();
+  }
+
+  const grouped = new Map<string, UserRoleRow[]>();
+  for (const r of roles) {
+    const list = grouped.get(r.user_id) ?? [];
+    list.push(r);
+    grouped.set(r.user_id, list);
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="font-headline-md text-headline-md">Kullanıcı Yetkileri</h2>
+      <p className="text-body-sm text-on-surface-variant">
+        Yeni bir kullanıcıyı admin yapmak için önce o kişinin <Link to="/giris" className="underline">/giris</Link> üzerinden kayıt olması gerekir. Ardından buradaki listede User ID'yi görüp aşağıdan admin yapabilirsiniz.
+      </p>
+      {error && <p className="text-error text-body-sm">{error}</p>}
+      {loading ? (
+        <p>Yükleniyor…</p>
+      ) : (
+        <div className="overflow-x-auto border border-outline-variant rounded">
+          <table className="w-full text-body-sm">
+            <thead className="bg-surface-variant text-left">
+              <tr>
+                <th className="p-3">User ID</th>
+                <th className="p-3">Roller</th>
+                <th className="p-3">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(grouped.entries()).map(([uid, rs]) => (
+                <tr key={uid} className="border-t border-outline-variant">
+                  <td className="p-3 font-mono text-body-sm">{uid}{uid === currentUserId && " (siz)"}</td>
+                  <td className="p-3 flex flex-wrap gap-2">
+                    {rs.map((r) => (
+                      <span key={r.id} className="inline-flex items-center gap-1 bg-primary-container text-on-primary-container px-2 py-1 rounded text-body-sm">
+                        {r.role}
+                        <button
+                          onClick={() => removeRole(r.id)}
+                          className="text-error"
+                          title="Kaldır"
+                        >×</button>
+                      </span>
+                    ))}
+                  </td>
+                  <td className="p-3">
+                    {!rs.some((r) => r.role === "admin") && (
+                      <button onClick={() => makeAdmin(uid)} className="text-primary hover:underline">Admin yap</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <ManualAdminGrant onGrant={makeAdmin} />
+    </div>
+  );
+}
+
+function ManualAdminGrant({ onGrant }: { onGrant: (id: string) => void }) {
+  const [uid, setUid] = useState("");
+  return (
+    <div className="border border-outline-variant rounded p-4 flex flex-col gap-2 max-w-lg">
+      <p className="font-label-bold">User ID ile admin ata</p>
+      <div className="flex gap-2">
+        <input
+          value={uid}
+          onChange={(e) => setUid(e.target.value)}
+          placeholder="UUID"
+          className="flex-1 border border-outline-variant rounded px-3 py-2 text-body-sm font-mono"
+        />
+        <button
+          onClick={() => uid && (onGrant(uid), setUid(""))}
+          className={buttonStyles({ variant: "primary", size: "sm" })}
+        >
+          Ata
+        </button>
+      </div>
+    </div>
+  );
+}
