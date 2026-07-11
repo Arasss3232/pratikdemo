@@ -6,6 +6,7 @@ import { useAiAssistant, type Proposal } from "@/hooks/use-ai-assistant";
 import { ActionProposalCard } from "./ActionProposalCard";
 import { CONTEXT_MODULES, ACTION_REGISTRY, type ActionType } from "@/lib/ai-assistant-registry";
 import { aiListTargets } from "@/lib/ai-assistant.functions";
+import { RichText, ResponseTypePill, OptionsGrid, WarningsList, ClarifyBlock, FollowUps, type OptionCard } from "./RichMessage";
 
 function formatDate(s: string) {
   try {
@@ -14,10 +15,12 @@ function formatDate(s: string) {
 }
 
 const QUICK_PROMPTS = [
+  "Sen en uygununu öner",
+  "Bu bölümü değerlendir, güçlü ve zayıf yanlarını söyle.",
+  "Üç farklı yaklaşım göster, avantaj ve dezavantajlarıyla karşılaştır.",
   "Bu içeriği daha kurumsal bir dile göre yeniden yaz.",
   "SEO açısından geliştir, anahtar kelimeleri koru.",
-  "Daha kısa ve etkileyici bir başlık öner.",
-  "Türkçe dilbilgisi ve noktalama hatalarını düzelt.",
+  "Mobilde daha iyi görünecek şekilde sadeleştir.",
 ];
 
 type TargetOption = { id: string; label: string };
