@@ -114,6 +114,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
   const { data, loading, error, reload } = useSnapshot();
   const { items: tasks, reload: reloadTasks } = useTasks();
   const [auditRunning, setAuditRunning] = useState(false);
+  const [workflow, setWorkflow] = useState<null | { kind: string; title: string }>(null);
   const runAudit = useServerFn(runSiteAudit);
   const updFinding = useServerFn(updateFindingStatus);
   const createT = useServerFn(createTask);
@@ -180,13 +181,13 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         <div>
           <div className="flex items-center gap-2" style={{ color: "var(--admin-text-mute)" }}>
             <Icon name="auto_awesome" className="text-[18px]" />
-            <span className="text-[12px] uppercase tracking-wider font-semibold">Kontrol Merkezi</span>
+            <span className="text-[12px] uppercase tracking-wider font-semibold">Yapay Zekâ Kontrol Merkezi</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mt-1" style={{ color: "var(--admin-text)" }}>
-            Bugün sitenizde ne yapmak istersiniz?
+            Bugün web sitenizde ne yapmak istersiniz?
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--admin-text-2)" }}>
-            Sitenizi tek yerden yönetin: sağlık durumu, öneriler, bekleyen değişiklikler ve hızlı görevler.
+            Sitenizin tamamını buradan yönetin. Yapay Zekâ her değişikliği önce taslak olarak hazırlar; siz onaylamadan yayınlanmaz.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -203,6 +204,9 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         </div>
       </div>
 
+      {/* Zekâ şeridi */}
+      <IntelligenceBar data={data} onNavigate={onNavigate} />
+
       {/* Akıllı komut alanı */}
       <section
         className="rounded-2xl p-4 md:p-5 border"
@@ -210,21 +214,25 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
       >
         <label className="flex flex-col gap-2">
           <span className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
-            Yapay Zekâ Asistanına söyleyin
+            Yapay Zekâ Asistanına ne yapmak istediğinizi yazın
           </span>
           <div className="flex flex-col md:flex-row gap-2">
             <textarea
               rows={2}
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              placeholder="Ana sayfayı daha dikkat çekici yap, eksik ürün görsellerini bul veya yeni bir broşür hazırla…"
+              placeholder="Ana sayfayı düzenle, yeni ürün ekle, eksikleri bul veya yapmak istediğiniz işlemi yazın..."
               className="admin-input flex-1 resize-y"
               style={{ minHeight: 60 }}
             />
             <div className="flex md:flex-col gap-2">
               <button className="admin-btn admin-btn-primary" onClick={handleSendCommand} disabled={!command.trim()}>
                 <Icon name="send" className="text-[16px]" />
-                Görev Olarak Ekle
+                Gönder
+              </button>
+              <button className="admin-btn admin-btn-sm" onClick={() => setCommand("")} disabled={!command} title="Metni temizle">
+                <Icon name="close" className="text-[16px]" />
+                Temizle
               </button>
               <button className="admin-btn admin-btn-sm" onClick={() => onNavigate("aiAssistant")}>
                 <Icon name="chat" className="text-[16px]" />
@@ -232,9 +240,21 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
               </button>
             </div>
           </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {SUGGESTED_PROMPTS.map((p) => (
+              <button
+                key={p}
+                onClick={() => setCommand(p)}
+                className="text-[12px] px-2.5 py-1 rounded-full border"
+                style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
           {mode === "easy" && (
             <span className="text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
-              İpucu: Doğal Türkçe kullanabilirsiniz. Yapay Zekâ değişiklikleri her zaman önce taslak olarak hazırlar; siz onaylamadan yayınlanmaz.
+              İpucu: Doğal Türkçe kullanabilirsiniz. En güvenli seçeneği öneririz ve tüm değişiklikler onayınıza sunulur.
             </span>
           )}
         </label>
@@ -242,12 +262,16 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
 
       {/* Görev kartları */}
       <section>
-        <SectionHeader icon="rocket_launch" title="Ne yapmak istiyorsunuz?" subtitle="Sık kullanılan işlemlere tek tıkla ulaşın." />
+        <SectionHeader icon="rocket_launch" title="Hızlı işlemler" subtitle="En sık yapılan işlere tek tıkla başlayın." />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-3">
           {TASK_CARDS.map((c) => (
             <button
               key={c.key}
-              onClick={() => c.key === "audit" ? handleAudit() : onNavigate(c.target)}
+              onClick={() => {
+                if (c.key === "audit" || c.key === "mobile") { void handleAudit(); return; }
+                if (mode === "easy" && c.workflow) { setWorkflow({ kind: c.workflow, title: c.title }); return; }
+                onNavigate(c.target);
+              }}
               className="text-left rounded-xl border p-4 hover:shadow-sm transition-all"
               style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
             >
@@ -268,6 +292,12 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         </div>
       </section>
 
+      {/* Site Haritası */}
+      <section>
+        <SectionHeader icon="map" title="Site haritası" subtitle="Bir bölüme tıklayın: doğrudan düzenleyin veya Yapay Zekâ'ya sorun." />
+        <SiteMap onEdit={(t) => onNavigate(t)} onAsk={(label) => { setCommand(`${label} bölümünü düzenle`); }} />
+      </section>
+
       {/* İki kolonlu: sağlık + öneriler */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <section>
@@ -283,6 +313,25 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           <Recommendations grouped={grouped} onHandle={handleFinding} onNavigate={onNavigate} />
         </section>
       </div>
+
+      {workflow && (
+        <GuidedWorkflow
+          kind={workflow.kind}
+          title={workflow.title}
+          onClose={() => setWorkflow(null)}
+          onSubmit={async (summary) => {
+            try {
+              await createT({ data: { title_tr: summary, description_tr: `Rehberli akış: ${workflow.title}`, priority: "normal" } });
+              toast.success("İsteğiniz alındı. Yapay Zekâ Asistanı hazırlıyor.");
+              await reloadTasks();
+              setWorkflow(null);
+              onNavigate("aiAssistant");
+            } catch (e: any) {
+              toast.error(e?.message ?? "Kaydedilemedi.");
+            }
+          }}
+        />
+      )}
 
       {/* Bekleyen değişiklikler + görevler */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
