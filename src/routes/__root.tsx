@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=account_circle,add,admin_panel_settings,arrow_back,arrow_forward,autorenew,battery_charging_full,bolt,build,business_center,chevron_left,chevron_right,close,compress,construction,engineering,factory,grid_view,group,hardware,inventory_2,local_shipping,logout,mail,menu,offline_bolt,open_in_new,precision_manufacturing,radio_button_unchecked,request_quote,search,settings,shield,shopping_cart,speed,support_agent,verified,view_list,visibility,weight&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap",
       },
     ],
     scripts: [
