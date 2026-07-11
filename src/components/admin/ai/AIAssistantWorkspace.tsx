@@ -93,6 +93,17 @@ export function AIAssistantWorkspace({
     }
   }
 
+  async function sendPrompt(text: string) {
+    if (asst.sending) return;
+    if (!asst.activeId) await asst.newConversation();
+    try { await asst.send(text, ctx); }
+    catch (e: any) { toast.error(e?.message ?? "Mesaj gönderilemedi."); }
+  }
+
+  function handleOptionSelect(o: OptionCard, index: number) {
+    void sendPrompt(`"${o.name}" seçeneğini (${index + 1}. seçenek) uygula. Bu yönde bir değişiklik önerisi hazırla.`);
+  }
+
   async function handleNewConversation() {
     try { await asst.newConversation(); }
     catch (e: any) { toast.error(e?.message ?? "Görüşme oluşturulamadı."); }
@@ -182,9 +193,14 @@ export function AIAssistantWorkspace({
           {asst.messages.map((m) => {
             const isUser = m.role === "user";
             const proposal = m.proposal_id ? asst.proposals[m.proposal_id] : null;
+            const meta = (m.metadata ?? {}) as any;
+            const options: OptionCard[] | undefined = Array.isArray(meta.options) ? meta.options : undefined;
+            const followUps: string[] | undefined = Array.isArray(meta.follow_ups) ? meta.follow_ups : undefined;
+            const warnings: string[] | undefined = Array.isArray(meta.warnings) ? meta.warnings : undefined;
+            const clarify = meta.clarify && typeof meta.clarify === "object" ? meta.clarify : null;
             return (
               <div key={m.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] space-y-2`}>
+                <div className={`max-w-[88%] space-y-2 w-full ${isUser ? "flex flex-col items-end" : ""}`}>
                   <div
                     className={`rounded-2xl px-3.5 py-2.5 text-[13.5px] whitespace-pre-wrap leading-relaxed`}
                     style={
@@ -193,8 +209,33 @@ export function AIAssistantWorkspace({
                         : { background: "var(--admin-surface)", color: "var(--admin-text)", border: "1px solid var(--admin-border)", borderTopLeftRadius: 4 }
                     }
                   >
-                    {m.content}
+                    {isUser ? (
+                      m.content
+                    ) : (
+                      <>
+                        <ResponseTypePill type={meta.response_type} confidence={meta.confidence} />
+                        <RichText text={m.content} />
+                      </>
+                    )}
                   </div>
+                  {!isUser && warnings && <WarningsList items={warnings} />}
+                  {!isUser && options && (
+                    <OptionsGrid options={options} onSelect={handleOptionSelect} />
+                  )}
+                  {!isUser && clarify && clarify.question && (
+                    <ClarifyBlock
+                      clarify={{
+                        question: String(clarify.question),
+                        choices: Array.isArray(clarify.choices) && clarify.choices.length
+                          ? clarify.choices
+                          : ["Sen Öner"],
+                      }}
+                      onChoose={(c) => sendPrompt(c === "Sen Öner" ? "Sen en uygununu öner." : c)}
+                    />
+                  )}
+                  {!isUser && followUps && (
+                    <FollowUps items={followUps} onChoose={(f) => sendPrompt(f)} />
+                  )}
                   {proposal && (
                     <ActionProposalCard
                       proposal={proposal as Proposal}
