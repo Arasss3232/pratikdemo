@@ -743,6 +743,39 @@ export type Database = {
         }
         Relationships: []
       }
+      portal_announcements: {
+        Row: {
+          audience: string
+          body: string
+          created_at: string
+          id: string
+          is_active: boolean
+          published_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          body: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          published_at?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          body?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          published_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           brand: string
@@ -842,6 +875,7 @@ export type Database = {
       quote_requests: {
         Row: {
           company: string | null
+          company_id: string | null
           contact_name: string
           created_at: string
           email: string
@@ -849,12 +883,15 @@ export type Database = {
           items: Json
           message: string | null
           phone: string | null
+          source: string
           status: string
+          submitted_by: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
           company?: string | null
+          company_id?: string | null
           contact_name: string
           created_at?: string
           email: string
@@ -862,12 +899,15 @@ export type Database = {
           items?: Json
           message?: string | null
           phone?: string | null
+          source?: string
           status?: string
+          submitted_by?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           company?: string | null
+          company_id?: string | null
           contact_name?: string
           created_at?: string
           email?: string
@@ -875,11 +915,21 @@ export type Database = {
           items?: Json
           message?: string | null
           phone?: string | null
+          source?: string
           status?: string
+          submitted_by?: string | null
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "quote_requests_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reference_images: {
         Row: {
