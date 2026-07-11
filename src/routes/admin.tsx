@@ -595,6 +595,7 @@ export function ServicesTab() {
   return (
     <GenericCrud
       table="services"
+      quickAddKey="services"
       title="Hizmetler"
       orderBy="display_order"
       ascending
@@ -622,6 +623,7 @@ export function ReferencesTab() {
   return (
     <GenericCrud
       table="project_references"
+      quickAddKey="references"
       title="Referanslar"
       orderBy="display_order"
       ascending
@@ -652,6 +654,7 @@ export function BrandsTab() {
   return (
     <GenericCrud
       table="brands"
+      quickAddKey="brands"
       title="Markalar"
       orderBy="display_order"
       ascending
@@ -671,6 +674,7 @@ export function CertificatesTab() {
   return (
     <GenericCrud
       table="certificates"
+      quickAddKey="certificates"
       title="Sertifikalar"
       orderBy="display_order"
       ascending
@@ -691,6 +695,7 @@ export function TeamTab() {
   return (
     <GenericCrud
       table="team_members"
+      quickAddKey="team"
       title="Ekip Üyeleri"
       orderBy="display_order"
       ascending
@@ -713,6 +718,7 @@ export function TestimonialsTab() {
   return (
     <GenericCrud
       table="testimonials"
+      quickAddKey="testimonials"
       title="Müşteri Yorumları"
       orderBy="display_order"
       ascending
@@ -735,6 +741,7 @@ export function FaqsTab() {
   return (
     <GenericCrud
       table="faqs"
+      quickAddKey="faqs"
       title="Sık Sorulan Sorular"
       orderBy="display_order"
       ascending
@@ -754,6 +761,7 @@ export function BlogCategoriesTab() {
   return (
     <GenericCrud
       table="blog_categories"
+      quickAddKey="blogcats"
       title="Blog Kategorileri"
       orderBy="display_order"
       ascending
@@ -776,6 +784,7 @@ export function BlogPostsTab() {
   return (
     <GenericCrud
       table="blog_posts"
+      quickAddKey="blog"
       title="Blog Yazıları"
       orderBy="published_at"
       fields={[
@@ -806,6 +815,7 @@ export function JobsTab() {
   return (
     <GenericCrud
       table="job_posts"
+      quickAddKey="jobs"
       title="Açık Pozisyonlar"
       orderBy="display_order"
       ascending
