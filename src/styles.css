@@ -74,15 +74,16 @@
   /* Container max width for max-w-max-width */
   --container-max-width: 1280px;
 
-  /* Fonts */
-  --font-body-md: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body-sm: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body-lg: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-label-bold: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-headline-md: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-headline-lg: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-headline-lg-mobile: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-headline-xl: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  /* Fonts — tek font ailesi (Inter) */
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-body-md: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-body-sm: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-body-lg: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-label-bold: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-md: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-lg: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-lg-mobile: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-headline-xl: "Inter", "Segoe UI", Arial, sans-serif;
 
   /* Text sizes */
   --text-body-sm: 14px;
@@ -264,21 +265,26 @@
     border-color: var(--color-border);
   }
 
+  html, body, #root {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    letter-spacing: -0.01em;
   }
 
-  button, input, textarea, select, optgroup {
-    font-family: inherit;
+  button, input, textarea, select, optgroup, option {
+    font: inherit;
   }
 }
 
