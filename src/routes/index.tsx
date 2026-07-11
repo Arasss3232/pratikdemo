@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "../components/site-shell";
 import { HomeHero } from "../components/home/HomeHero";
+import { BrochureSlider } from "../components/home/BrochureSlider";
 import { CategoryExplorer } from "../components/home/CategoryExplorer";
 import {
   BrandStrip,
@@ -44,6 +45,7 @@ function Home() {
   return (
     <SiteShell>
       <>
+        <BrochureSlider />
         <HomeHero />
         <CategoryExplorer />
         <ValueProps />
