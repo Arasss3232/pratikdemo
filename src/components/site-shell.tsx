@@ -327,7 +327,7 @@ export function SiteHeader() {
             </Link>
             <Link
               to="/teklif"
-              className="pub-btn pub-btn-primary pub-btn-sm hidden lg:inline-flex ml-2"
+              className="pub-btn pub-btn-primary pub-btn-sm !hidden lg:!inline-flex ml-2"
             >
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
