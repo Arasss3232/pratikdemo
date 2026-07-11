@@ -42,6 +42,7 @@ import { Route as PortalTekliflerimRouteImport } from './routes/portal.teklifler
 import { Route as PortalTeklifAlRouteImport } from './routes/portal.teklif-al'
 import { Route as PortalSiparislerimRouteImport } from './routes/portal.siparislerim'
 import { Route as PortalHizliSiparisRouteImport } from './routes/portal.hizli-siparis'
+import { Route as PortalFinansRouteImport } from './routes/portal.finans'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
 import { Route as HizmetlerSlugRouteImport } from './routes/hizmetler.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -215,6 +216,11 @@ const PortalHizliSiparisRoute = PortalHizliSiparisRouteImport.update({
   path: '/hizli-siparis',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalFinansRoute = PortalFinansRouteImport.update({
+  id: '/finans',
+  path: '/finans',
+  getParentRoute: () => PortalRoute,
+} as any)
 const KariyerSlugRoute = KariyerSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -261,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/finans': typeof PortalFinansRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/finans': typeof PortalFinansRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/finans': typeof PortalFinansRoute
   '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/siparislerim': typeof PortalSiparislerimRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/finans'
     | '/portal/hizli-siparis'
     | '/portal/siparislerim'
     | '/portal/teklif-al'
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/finans'
     | '/portal/hizli-siparis'
     | '/portal/siparislerim'
     | '/portal/teklif-al'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/finans'
     | '/portal/hizli-siparis'
     | '/portal/siparislerim'
     | '/portal/teklif-al'
@@ -730,6 +742,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalHizliSiparisRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/finans': {
+      id: '/portal/finans'
+      path: '/finans'
+      fullPath: '/portal/finans'
+      preLoaderRoute: typeof PortalFinansRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/kariyer/$slug': {
       id: '/kariyer/$slug'
       path: '/$slug'
@@ -795,6 +814,7 @@ const KariyerRouteWithChildren =
   KariyerRoute._addFileChildren(KariyerRouteChildren)
 
 interface PortalRouteChildren {
+  PortalFinansRoute: typeof PortalFinansRoute
   PortalHizliSiparisRoute: typeof PortalHizliSiparisRoute
   PortalSiparislerimRoute: typeof PortalSiparislerimRoute
   PortalTeklifAlRoute: typeof PortalTeklifAlRoute
@@ -804,6 +824,7 @@ interface PortalRouteChildren {
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalFinansRoute: PortalFinansRoute,
   PortalHizliSiparisRoute: PortalHizliSiparisRoute,
   PortalSiparislerimRoute: PortalSiparislerimRoute,
   PortalTeklifAlRoute: PortalTeklifAlRoute,
