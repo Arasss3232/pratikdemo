@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
 import { Icon } from "../components/site-shell";
 import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
