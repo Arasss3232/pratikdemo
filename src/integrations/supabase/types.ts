@@ -14,6 +14,164 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_action_proposals: {
+        Row: {
+          action_type: string
+          after_value: Json
+          applied_at: string | null
+          applied_by: string | null
+          before_value: Json
+          conversation_id: string | null
+          created_at: string
+          created_by: string
+          error_message: string | null
+          id: string
+          message_id: string | null
+          proposed_changes: Json
+          reversible: boolean
+          risk_level: string
+          status: string
+          summary: string
+          target_id: string | null
+          target_table: string
+          updated_at: string
+        }
+        Insert: {
+          action_type: string
+          after_value?: Json
+          applied_at?: string | null
+          applied_by?: string | null
+          before_value?: Json
+          conversation_id?: string | null
+          created_at?: string
+          created_by: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          proposed_changes?: Json
+          reversible?: boolean
+          risk_level?: string
+          status?: string
+          summary: string
+          target_id?: string | null
+          target_table: string
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          after_value?: Json
+          applied_at?: string | null
+          applied_by?: string | null
+          before_value?: Json
+          conversation_id?: string | null
+          created_at?: string
+          created_by?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          proposed_changes?: Json
+          reversible?: boolean
+          risk_level?: string
+          status?: string
+          summary?: string
+          target_id?: string | null
+          target_table?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_action_proposals_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_action_proposals_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "ai_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_conversations: {
+        Row: {
+          archived: boolean
+          category: string | null
+          context_ref: string | null
+          created_at: string
+          id: string
+          last_message_at: string
+          pinned: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived?: boolean
+          category?: string | null
+          context_ref?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          pinned?: boolean
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived?: boolean
+          category?: string | null
+          context_ref?: string | null
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          pinned?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          proposal_id: string | null
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          proposal_id?: string | null
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          proposal_id?: string | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_categories: {
         Row: {
           created_at: string

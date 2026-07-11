@@ -17,6 +17,8 @@ import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
+import { AIAssistantWorkspace } from "../components/admin/ai/AIAssistantWorkspace";
+import { AIHistoryPanel } from "../components/admin/ai/AIHistoryPanel";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
@@ -38,6 +40,8 @@ const TAB_KEYS: AdminTab[] = [
   "faqs","blog","blogcats","jobs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
+  // Akıllı Araçlar
+  "aiAssistant","aiHistory",
 ];
 
 export const Route = createFileRoute("/admin")({
@@ -178,6 +182,8 @@ function AdminPage() {
         {tab === "jobs" && <JobsTab />}
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
+        {tab === "aiAssistant" && <AIAssistantWorkspace />}
+        {tab === "aiHistory" && <AIHistoryPanel />}
         {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
         {tab === "companies" && <CompaniesWorkspace />}
         {tab === "dealers" && <DealersTab />}

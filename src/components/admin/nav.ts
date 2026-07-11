@@ -69,7 +69,10 @@ export type AdminTab =
   | "integrations"
   | "activityLogs"
   | "security"
-  | "backup";
+  | "backup"
+  // Akıllı Araçlar
+  | "aiAssistant"
+  | "aiHistory";
 
 export type AdminNavItem = {
   key: AdminTab;
@@ -187,6 +190,13 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { key: "activityLogs", label: "İşlem Geçmişi", icon: "history" },
       { key: "security", label: "Güvenlik", icon: "shield" },
       { key: "backup", label: "Yedekleme", icon: "cloud_upload" },
+    ],
+  },
+  {
+    title: "Akıllı Araçlar",
+    items: [
+      { key: "aiAssistant", label: "Yapay Zekâ Site Asistanı", icon: "smart_toy", description: "Sohbetle site içeriğini yönetin" },
+      { key: "aiHistory", label: "Yapay Zekâ Geçmişi", icon: "manage_history", description: "Öneri ve uygulama kayıtları" },
     ],
   },
 ];
