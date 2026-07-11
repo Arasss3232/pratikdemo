@@ -157,7 +157,7 @@ function ProductsTab() {
       image_url: p.image_url || null,
       price: p.price,
       is_active: p.is_active,
-      specs: p.specs ?? {},
+      specs: (p.specs ?? {}) as never,
     };
     const { error } = p.id
       ? await supabase.from("products").update(payload).eq("id", p.id)
