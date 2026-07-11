@@ -4,6 +4,7 @@ import { HomeHero } from "../components/home/HomeHero";
 import { CategoryExplorer } from "../components/home/CategoryExplorer";
 import {
   BrandStrip,
+  ContactInfo,
   FeaturedProducts,
   InsightsPreview,
   MobileContactBar,
@@ -13,6 +14,7 @@ import {
   SelectedReferences,
   ServicesStrip,
   ValueProps,
+  WhyChoose,
 } from "../components/home/HomeSections";
 
 export const Route = createFileRoute("/")({
@@ -22,20 +24,18 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri.",
+          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve kurumsal teklif hizmetleri.",
       },
       { property: "og:title", content: "Endüstriyel Donanım Tedariki — Pratik" },
       {
         property: "og:description",
         content:
-          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri.",
+          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki ve kurumsal teklif hizmetleri.",
       },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
     ],
-    links: [
-      { rel: "canonical", href: "/" },
-    ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
   component: Home,
 });
@@ -49,12 +49,14 @@ function Home() {
         <ValueProps />
         <SectorGrid />
         <FeaturedProducts />
-        <ProcessTimeline />
+        <WhyChoose />
         <ServicesStrip />
         <BrandStrip />
         <SelectedReferences />
+        <ProcessTimeline />
         <InsightsPreview />
         <QuoteCTA />
+        <ContactInfo />
         <MobileContactBar />
       </>
     </SiteShell>
