@@ -1305,6 +1305,7 @@ export function ServicesTab() {
       table="services"
       quickAddKey="services"
       title="Hizmetler"
+      extraRowActions={[askAiAction("service.update")]}
       orderBy="display_order"
       ascending
       fields={[
