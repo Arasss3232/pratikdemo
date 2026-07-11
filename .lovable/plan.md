@@ -1,101 +1,134 @@
-# 1. Tur — Kurumsal CMS Eklentisi
 
-Mevcut Pratik Endüstriyel (ürünler + teklif + admin) korunur. Üzerine kurumsal site + CMS eklenir. Firma bilgisi verilmedi — jenerik "Pratik Endüstriyel" metinleriyle başlarız, admin panelinden düzenlenir.
+# Admin Paneli Yeniden Tasarımı
 
-## Kapsam (bu turda)
+Amaç: Teknik bilgisi olmayan bir kullanıcının bile kolayca kullanabileceği; sade, ferah, hızlı, premium hisli bir yönetim paneli. Mevcut veriler, yetkiler ve veritabanı yapısı aynen korunur — sadece kullanıcı deneyimi, düzen ve ortak bileşenler yenilenir.
 
-**A. Temel sayfalar + tasarım**
-- `/hakkimizda` — tarihçe, misyon, vizyon, değerler, ekip, sertifikalar
-- `/hizmetler` + `/hizmetler/$slug` — kart listesi + detay
-- `/referanslar` — kategori filtreli grid
-- `/iletisim` — form + harita + KVKK onayı
-- Header/footer cilası, mevcut hamburger menü korunur
-
-**B. CMS temeli**
-Admin panele sekmeler eklenir: Site Ayarları · Hizmetler · Referanslar · Ekip · SSS · Markalar · Sertifikalar · Medya Kütüphanesi
-
-**C. Blog & Haberler**
-- `/blog` liste + `/blog/$slug` detay + kategori filtresi
-- Admin: Blog Yazıları · Kategoriler · Etiketler
-
-**D. İK + Formlar + Mesajlar**
-- `/kariyer` açık pozisyonlar + `/kariyer/$slug` başvuru formu (CV upload)
-- Admin: Pozisyonlar · Başvurular (durum yönetimi) · İletişim Mesajları (yeni/okundu/cevaplandı/arşiv)
-
-## Sonraki turlara ertelenenler
-Sayfa oluşturucu (block editor), form builder, gerçek analytics, tasarım-token editörü, rol/yetki matrisi, işlem geçmişi, 301 yönetimi, bildirim merkezi, çoklu menü yöneticisi. Şu an admin sadece admin rolüne açık kalır.
-
-## Teknik plan
-
-### 1. Veritabanı (tek migration)
-Yeni tablolar (hepsi RLS + GRANT + updated_at trigger'ları):
+## Genel yerleşim
 
 ```text
-site_settings      (singleton: logo, iletişim, sosyal, harita, footer)
-services           (slug, title, excerpt, body, cover, icon, order, published)
-service_images     (service_id, url, order)
-references         (slug, title, client, category, cover, project_date, url, order, published)
-reference_images
-team_members       (name, role, photo, bio, order)
-testimonials       (name, company, quote, avatar, rating, order, published)
-brands             (name, logo, url, order)
-certificates       (name, image, issued_at, order)
-faqs               (question, answer, category, order, published)
-blog_categories    (slug, name)
-blog_tags          (slug, name)
-blog_posts         (slug, title, excerpt, body, cover, category_id, author, published_at, featured, seo_title, seo_desc, published)
-blog_post_tags     (post_id, tag_id)
-job_posts          (slug, title, department, location, type, body, published)
-job_applications   (job_id, name, email, phone, cv_url, note, status)
-contact_messages   (name, email, phone, department, subject, message, kvkk, status)
-media              (path, filename, mime, size, alt)
+┌──────────────────────────────────────────────────────────┐
+│  Topbar: [☰] Arama…  [+ Hızlı ekle]  [Site] [🔔] [👤] │
+├──────────┬───────────────────────────────────────────────┤
+│ Sidebar  │  Sayfa başlığı                                │
+│  Genel   │  Breadcrumb › Bölüm › Sayfa                   │
+│  İçerik  │                                               │
+│  İletişim│  ┌ İçerik alanı (kartlar / tablo / form) ─┐  │
+│  Site    │  │                                        │  │
+│  Sistem  │  └────────────────────────────────────────┘  │
+└──────────┴───────────────────────────────────────────────┘
 ```
 
-Storage bucket: `media` (public) — CV'ler `cv/` prefix (private policy).
+- Sol **sidebar**: masaüstünde açık, tabletten itibaren ikon moduna daralabilir; mobilde hamburgerle çekmece olarak açılır. Aktif menüde sol vurgu çizgisi + hafif arka plan + kalın yazı. Menüler mantıklı gruplara ayrılır (Genel, İçerik Yönetimi, İletişim, Site Yönetimi, Sistem).
+- Sabit **topbar**: sidebar toggle, global arama, hızlı ekle menüsü, "Siteyi görüntüle", bildirim ikonu, karanlık/açık tema, kullanıcı profil menüsü (e-posta + çıkış).
+- Her sayfada **başlık + breadcrumb + kısa açıklama + sağda birincil aksiyon** başlığı.
 
-RLS:
-- SELECT `anon+authenticated`: yayında (`published=true`) olan içerikler + site_settings
-- INSERT `anon`: contact_messages, job_applications
-- Diğer tüm yazma: admin (has_role)
+## Sidebar menü yapısı
 
-### 2. Server functions
-`src/lib/cms.functions.ts` — public read'ler (SSR uyumlu, publishable client)
-`src/lib/admin.functions.ts` — admin yazma (requireSupabaseAuth + has_role kontrol)
-İletişim/başvuru gönderimi doğrudan browser client'tan anon INSERT ile.
+- **Genel**: Dashboard, Siteyi Görüntüle
+- **İçerik Yönetimi**: Hizmetler, Ürünler, Referanslar, Blog, Blog Kategorileri, SSS
+- **İletişim**: Gelen Mesajlar, Teklif Talepleri, İş Başvuruları
+- **Site Yönetimi**: Site Ayarları, Markalar, Sertifikalar, Ekip, Müşteri Yorumları, İş İlanları
+- **Sistem**: Kullanıcılar
 
-### 3. Public sayfalar
-Mevcut `SiteShell` + `PageHero` + marketing bileşenleri kullanılır. Her rota kendi `head()` meta ve JSON-LD (Article/Organization/BreadcrumbList) ile.
+Her menünün altında hover'da tooltip (daraltılmış moda hazır). Aktif öğe belirgin, alt gruplar yumuşak geçişle açılır.
 
-### 4. Admin
-Mevcut `/admin` sidebar'ına yeni bölümler:
-```text
-İçerik          Ayarlar
-├ Hizmetler    ├ Site Ayarları
-├ Referanslar  ├ Ekip
-├ Blog         ├ Markalar
-├ SSS          ├ Sertifikalar
-├ Pozisyonlar  └ Medya
+## Dashboard
 
-İletişim
-├ Mesajlar
-├ Başvurular
-└ Teklif Talepleri (mevcut)
+Sade, ferah, sadece gerçekten gerekli bilgiler:
 
-Sistem
-├ Ürünler (mevcut)
-└ Kullanıcılar (mevcut)
-```
-Her modül: liste (arama + sayfalama) · ekle/düzenle modal · sil onaylı · yayında/taslak toggle · sürükle-bırak sıra (dnd-kit). Zengin metin için `@tiptap/react`.
+- Üstte 6 özet kart (tıklanınca ilgili yönetim sayfasına gider):
+  - Toplam Ürün
+  - Toplam Hizmet
+  - Bekleyen Teklif Talebi
+  - Yeni Mesaj
+  - Yayında Blog Yazısı
+  - Açık İş İlanı
+- Kartlar: hafif gölge, yuvarlatılmış köşeler, küçük ikon, büyük sayı, açıklayıcı alt metin. Renkli arka plan yok.
+- Alt bölüm iki sütun:
+  - **Son Gelen Mesajlar** (5 kayıt, "tümünü gör")
+  - **Son Teklif Talepleri** (5 kayıt, "tümünü gör")
+- Altta **Hızlı İşlemler** butonları: Ürün Ekle, Hizmet Ekle, Blog Yazısı Ekle, Referans Ekle, Site Ayarlarına Git, Mesajları Görüntüle.
 
-### 5. Uygulama sırası (aynı turda)
-1. Migration (schema + RLS + bucket + storage policies)
-2. Server fn'ler + admin bileşen kütüphanesi (DataTable, MediaPicker, RichEditor, SortableList)
-3. Admin CRUD ekranları
-4. Public sayfalar + head/JSON-LD
-5. Seed: örnek 3 hizmet, 4 referans, 2 blog yazısı, 6 SSS — admin'den silinebilir
+Ziyaretçi grafiği ve analytics şu an sahte veri gerektirdiği için eklenmez — istenirse ayrı bir turda gerçek veri kaynağıyla entegre edilir.
 
-## Notlar
-- Görsel yükleme: yeni Media Kütüphanesi → Supabase Storage `media` bucket
-- Analytics/ziyaretçi sayaçları bu turda YOK (gerçek veri için ayrı entegrasyon turu)
-- Tasarım-token editörü YOK — renkler `src/styles.css`'te sabit
-- Firma metinlerini sen doldurana kadar jenerik lorem yerine sektörel şablon metin kullanılır
+## Standart liste sayfaları
+
+Tüm CRUD sayfaları aynı iskelette:
+
+- Sayfa başlığı + kısa açıklama + sağ üstte "Yeni ekle"
+- Arama kutusu (isim/başlık üzerinden client-side)
+- Durum filtresi (yayında/taslak) — ilgili tablolarda
+- Sıralama (yeni → eski / eski → yeni)
+- Görünüm: tablo (masaüstü) / kart (mobil, otomatik)
+- Boş durum: ikon + açıklama + "İlk kaydı ekle" butonu
+- Tablolar sade: satır aralıkları geniş, dikey çizgi yok, hover'da satır vurgusu, durum badge'i, satır sonunda üç noktalı menü (Düzenle, Yayınla/Kaldır, Sil-kırmızı)
+- Sayfalama: 20 kayıt/sayfa, altta anlaşılır kontrol
+
+## Standart form/modal
+
+Uzun formlar sekmelere ayrılır: **Genel · İçerik · Görsel · SEO · Yayın**.
+
+- Modal geniş (max-w-3xl), üstte başlık, altta sabit aksiyon barı: **Kaydet · İptal**
+- Alan etiketleri belirgin, gerekli alanlar `*` ile, altında yardımcı açıklama
+- Hata mesajları alanın hemen altında
+- Kaydedilmemiş değişiklik varsa çıkışta onay
+- Silmede kırmızı onay modal'ı (`confirm` yerine özel dialog)
+
+## Ortak bileşenler (yeni)
+
+`src/components/admin/` altında:
+
+- `AdminShell.tsx` — sidebar + topbar + içerik iskeleti, mobil çekmece, tema toggle, global arama
+- `PageHeader.tsx` — başlık + breadcrumb + açıklama + aksiyon
+- `StatCard.tsx` — dashboard özet kartı
+- `DataTable.tsx` — arama/filtre/sıralama/boş durum + satır menüsü içeren sade tablo
+- `EmptyState.tsx` — ikon + metin + CTA
+- `ConfirmDialog.tsx` — silme/tehlikeli işlem onayı
+- `Toast.tsx` + `useToast` — sağ üstten kısa bildirim ("Kaydedildi", "Silindi", "Hata")
+- `FormModal.tsx` — sekmeli, sabit alt bar aksiyonlu form konteyneri
+- Mevcut `GenericCrud.tsx` ve `SiteSettingsForm.tsx` yeni bileşenler üzerine taşınır (davranış korunur).
+
+## Görsel dil
+
+- Tek font: Inter (mevcut kurulum korunur).
+- Renk paleti: mevcut marka lacivert `primary` + amber `secondary`. Panel içinde ağırlıklı olarak beyaz, açık gri (`surface-container-*`) ve koyu gri metin. Vurgu için yalnızca aktif öğe / birincil buton.
+- Durum renkleri (badge/toast): yeşil=başarılı, turuncu=uyarı, kırmızı=hata, mavi=bilgi, gri=taslak.
+- Yumuşak gölge, `rounded-md`/`rounded-lg`, geniş iç boşluk. Ağır gölge/büyük ikon yok.
+
+## Mobil uyum
+
+- Sidebar hamburgerle sağdan çekmece.
+- Tablolar tek sütunlu kartlara dönüşür (aynı `DataTable` bileşeninde `md:` breakpoint).
+- Formlar tek sütun; alt bar (Kaydet / İptal) ekrana sabitlenir.
+- Filtreler tek butonla açılan panel.
+
+## Sayfa listesi (route içi tab yerine gerçek alt route hissi)
+
+Mevcut `/admin` tek route kalır (state ile alt sayfa değişir) ama URL query (`?tab=products`) üzerinden derin link desteği eklenir — böylece sidebar linkleri paylaşılabilir ve tarayıcı ileri/geri çalışır.
+
+## Yapılmayacaklar
+
+- Veritabanı şeması değiştirilmez.
+- Rol/yetki mantığı, oturum akışı, mevcut Supabase sorguları aynen kalır.
+- Ziyaretçi analytics, medya kütüphanesi, form builder, roller matrisi, işlem geçmişi gibi **veri altyapısı olmayan** modüller bu turda eklenmez (sahte veri kullanmama kuralı gereği). İhtiyaç varsa ayrı bir turda ele alınır.
+- Global arama şu an sayfa/menü içinde çalışır (ürün/mesaj/blog gibi tablolarda tam arama sonraki turda).
+
+## Teknik notlar
+
+- Route: `src/routes/admin.tsx` mevcut yapıdan `AdminShell` ile sarılır; her tab kendi bileşenine ayrılır (`src/routes/admin/` veya `src/components/admin/tabs/` altına dosyalar bölünür — 900 satırlık tek dosya küçültülür).
+- Tab state URL query ile senkronlanır (`useSearch` + `navigate({ search })`).
+- `sonner`/`radix` gibi yeni bağımlılık eklemeden; ortak `Toast` ve `ConfirmDialog` küçük ve stilize.
+- Karanlık tema `class="dark"` toggle'ı `localStorage`'a yazılır; mevcut `.dark` token'ları kullanılır.
+- Erişilebilirlik: tüm ikon-only butonlarda `aria-label`, klavye ile gezinme, `focus-visible` halkası, form label bağlantıları.
+
+## Kabul kriterleri
+
+- Sidebar açılıp kapanabiliyor; mobilde hamburger çalışıyor.
+- Dashboard açıldığında 6 özet kart gerçek sayılarla dolar; kartlar tıklanınca ilgili sayfaya gider.
+- Her liste sayfasında arama, sıralama, boş durum, satır menüsü, sayfalama çalışır.
+- Silme işlemleri özel onay dialog'u ile gerçekleşir, sonrasında toast gösterir.
+- URL `/admin?tab=products` gibi doğrudan açılabilir.
+- Tüm sayfalar aynı başlık/breadcrumb/aksiyon iskeletinde.
+- Mevcut CRUD davranışı ve veritabanı işlemleri hâlâ çalışır.
+
+Onaylarsan uygulamaya başlıyorum. Yalnızca "grafik/analytics" ve "medya kütüphanesi" gibi altyapı gerektiren modülleri kapsam dışında tutuyorum; onları eklemek istersen ayrıca planlayalım.
