@@ -39,6 +39,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const [messages, setMessages] = useState<Message[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [setup, setSetup] = useState<{ label: string; done: boolean; tab: AdminTab }[]>([]);
 
   useEffect(() => {
     let alive = true;
@@ -64,6 +65,13 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       ]);
       setMessages((recentMsg.data as Message[]) ?? []);
       setQuotes((recentQ.data as Quote[]) ?? []);
+      setSetup([
+        { label: "Site ayarlarını doldur", done: false, tab: "settings" },
+        { label: "En az bir hizmet ekle", done: (srv.count ?? 0) > 0, tab: "services" },
+        { label: "En az bir ürün ekle", done: (prod.count ?? 0) > 0, tab: "products" },
+        { label: "En az bir blog yazısı ekle", done: (blogP.count ?? 0) > 0, tab: "blog" },
+        { label: "İlk referansını ekle", done: false, tab: "references" },
+      ]);
       setLoading(false);
     }
     load();
@@ -83,6 +91,34 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Welcome + setup */}
+      <section className="bg-gradient-to-br from-primary to-primary/80 text-on-primary rounded-xl p-6 flex flex-col md:flex-row md:items-center gap-4 md:justify-between">
+        <div className="min-w-0">
+          <p className="text-headline-md font-headline-md">Hoş geldiniz 👋</p>
+          <p className="text-body-sm opacity-90 mt-1">
+            Buradan tüm site içeriğinizi tek noktadan yönetebilirsiniz.
+          </p>
+        </div>
+        {setup.length > 0 && (() => {
+          const done = setup.filter((s) => s.done).length;
+          const pct = Math.round((done / setup.length) * 100);
+          return (
+            <div className="min-w-[220px]">
+              <div className="flex items-baseline justify-between text-body-sm opacity-90 mb-1.5">
+                <span>Site kurulumu</span>
+                <span className="font-label-bold">{done}/{setup.length}</span>
+              </div>
+              <div className="h-2 rounded-full bg-on-primary/25 overflow-hidden">
+                <div
+                  className="h-full bg-on-primary transition-all"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
+          );
+        })()}
+      </section>
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         {stats.map((s) => (

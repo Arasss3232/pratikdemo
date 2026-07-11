@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
+import { toast } from "sonner";
 import { Icon } from "../components/site-shell";
 import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,8 +10,14 @@ import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
 import { PageHeader } from "../components/admin/PageHeader";
-import { ConfirmDialogHost } from "../components/admin/ConfirmDialog";
+import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
+
+const TAB_KEYS: AdminTab[] = [
+  "dashboard","settings","products","services","references","brands",
+  "certificates","team","testimonials","faqs","blog","blogcats","jobs",
+  "applications","messages","quotes","users",
+];
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -18,6 +25,9 @@ export const Route = createFileRoute("/admin")({
       { title: "Admin Paneli — Pratik Endüstriyel" },
       { name: "robots", content: "noindex, nofollow" },
     ],
+  }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
   }),
   component: AdminPage,
 });
@@ -59,7 +69,11 @@ type UserRoleRow = {
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>("dashboard");
+  const { tab } = Route.useSearch();
+
+  function setTab(t: Tab) {
+    navigate({ to: "/admin", search: { tab: t } });
+  }
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/giris" });
@@ -158,6 +172,15 @@ function ProductsTab() {
     refresh();
   }, []);
 
+  useEffect(() => {
+    function onQuickAdd(e: Event) {
+      const d = (e as CustomEvent<{ tab: string }>).detail;
+      if (d?.tab === "products") setEditing({ ...EMPTY_PRODUCT });
+    }
+    window.addEventListener("admin:quick-add", onQuickAdd);
+    return () => window.removeEventListener("admin:quick-add", onQuickAdd);
+  }, []);
+
   async function handleSave(p: Omit<Product, "id"> & { id?: string }) {
     setError(null);
     const payload = {
@@ -176,17 +199,30 @@ function ProductsTab() {
       : await supabase.from("products").insert(payload);
     if (error) {
       setError(error.message);
+      toast.error("Kaydedilemedi", { description: error.message });
       return;
     }
+    toast.success(p.id ? "Ürün güncellendi" : "Ürün eklendi");
     setEditing(null);
     refresh();
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu ürünü silmek istediğinize emin misiniz?",
+      description: "Bu işlem geri alınamaz.",
+      confirmLabel: "Evet, sil",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Silinemedi", { description: error.message });
+    } else {
+      toast.success("Ürün silindi");
+      refresh();
+    }
   }
 
   return (
@@ -362,10 +398,20 @@ function QuotesTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Bu teklif talebini silmek istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu teklif talebini silmek istediğinize emin misiniz?",
+      confirmLabel: "Evet, sil",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("quote_requests").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Silinemedi", { description: error.message });
+    } else {
+      toast.success("Teklif talebi silindi");
+      refresh();
+    }
   }
 
   return (
@@ -448,10 +494,20 @@ function UsersTab({ currentUserId }: { currentUserId: string }) {
     else refresh();
   }
   async function removeRole(id: string) {
-    if (!confirm("Bu yetkiyi kaldırmak istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu yetkiyi kaldırmak istediğinize emin misiniz?",
+      confirmLabel: "Kaldır",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("user_roles").delete().eq("id", id);
-    if (error) setError(error.message);
-    else refresh();
+    if (error) {
+      setError(error.message);
+      toast.error("Kaldırılamadı", { description: error.message });
+    } else {
+      toast.success("Yetki kaldırıldı");
+      refresh();
+    }
   }
 
   const grouped = new Map<string, UserRoleRow[]>();
@@ -548,6 +604,7 @@ export function ServicesTab() {
   return (
     <GenericCrud
       table="services"
+      quickAddKey="services"
       title="Hizmetler"
       orderBy="display_order"
       ascending
@@ -575,6 +632,7 @@ export function ReferencesTab() {
   return (
     <GenericCrud
       table="project_references"
+      quickAddKey="references"
       title="Referanslar"
       orderBy="display_order"
       ascending
@@ -605,6 +663,7 @@ export function BrandsTab() {
   return (
     <GenericCrud
       table="brands"
+      quickAddKey="brands"
       title="Markalar"
       orderBy="display_order"
       ascending
@@ -624,6 +683,7 @@ export function CertificatesTab() {
   return (
     <GenericCrud
       table="certificates"
+      quickAddKey="certificates"
       title="Sertifikalar"
       orderBy="display_order"
       ascending
@@ -644,6 +704,7 @@ export function TeamTab() {
   return (
     <GenericCrud
       table="team_members"
+      quickAddKey="team"
       title="Ekip Üyeleri"
       orderBy="display_order"
       ascending
@@ -666,6 +727,7 @@ export function TestimonialsTab() {
   return (
     <GenericCrud
       table="testimonials"
+      quickAddKey="testimonials"
       title="Müşteri Yorumları"
       orderBy="display_order"
       ascending
@@ -688,6 +750,7 @@ export function FaqsTab() {
   return (
     <GenericCrud
       table="faqs"
+      quickAddKey="faqs"
       title="Sık Sorulan Sorular"
       orderBy="display_order"
       ascending
@@ -707,6 +770,7 @@ export function BlogCategoriesTab() {
   return (
     <GenericCrud
       table="blog_categories"
+      quickAddKey="blogcats"
       title="Blog Kategorileri"
       orderBy="display_order"
       ascending
@@ -729,6 +793,7 @@ export function BlogPostsTab() {
   return (
     <GenericCrud
       table="blog_posts"
+      quickAddKey="blog"
       title="Blog Yazıları"
       orderBy="published_at"
       fields={[
@@ -759,6 +824,7 @@ export function JobsTab() {
   return (
     <GenericCrud
       table="job_posts"
+      quickAddKey="jobs"
       title="Açık Pozisyonlar"
       orderBy="display_order"
       ascending
