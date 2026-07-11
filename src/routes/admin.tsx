@@ -60,7 +60,7 @@ function DashboardHost({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
   if (ctx.loading) {
     return <div className="p-6 text-[13px]" style={{ color: "var(--admin-text-mute)" }}>Panel yükleniyor…</div>;
   }
-  if (!ctx.profile) return <Dashboard onNavigate={onNavigate} />;
+  if (!ctx.userId) return <Dashboard onNavigate={onNavigate} />;
   return <RoleDashboard ctx={ctx} onNavigate={onNavigate} />;
 }
 
