@@ -8,62 +8,47 @@ const MAX_MSG_LEN = 4000;
 const MAX_HISTORY = 16;
 const RATE_PER_HOUR = 60;
 
-type Row = Record<string, unknown>;
-type ProposalRow = {
-  id: string;
-  action_type: string;
-  target_table: string;
-  target_id: string | null;
-  summary: string;
-  before_value: Record<string, unknown>;
-  after_value: Record<string, unknown>;
-  proposed_changes: Record<string, unknown>;
-  risk_level: string;
-  status: string;
-  reversible: boolean;
-  error_message: string | null;
-  created_at: string;
-  applied_at: string | null;
-};
+type AnyObj = Record<string, any>;
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
-  const { data } = await ctx.supabase.rpc("is_super_admin", { _user_id: ctx.userId });
+async function assertAdmin(context: any): Promise<void> {
+  const sb: any = context.supabase;
+  const { data } = await sb.rpc("is_super_admin", { _user_id: context.userId });
   if (!data) throw new Error("Bu işlem için yetkiniz bulunmuyor.");
 }
 
-// -----------------------------------------------------------------------------
-// Conversations
-// -----------------------------------------------------------------------------
+// ---------- Conversations ----------
 
 export const aiListConversations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .handler(async ({ context }): Promise<any> => {
     await assertAdmin(context);
-    const { data, error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data, error } = await sb
       .from("ai_conversations")
       .select("id, title, category, pinned, archived, last_message_at, created_at")
       .order("pinned", { ascending: false })
       .order("last_message_at", { ascending: false })
       .limit(100);
     if (error) throw new Error(error.message);
-    return data ?? [];
+    return (data ?? []) as any;
   });
 
 export const aiCreateConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { title?: string; category?: string }) => ({
     title: (input?.title ?? "Yeni görüşme").slice(0, 120),
-    category: input?.category?.slice(0, 60),
+    category: input?.category?.slice(0, 60) ?? null,
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    const { data: row, error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data: row, error } = await sb
       .from("ai_conversations")
-      .insert({ user_id: context.userId, title: data.title, category: data.category ?? null })
+      .insert({ user_id: (context as any).userId, title: data.title, category: data.category })
       .select("id, title, category, pinned, archived, last_message_at, created_at")
       .single();
     if (error) throw new Error(error.message);
-    return row;
+    return row as any;
   });
 
 export const aiDeleteConversation = createServerFn({ method: "POST" })
@@ -71,10 +56,8 @@ export const aiDeleteConversation = createServerFn({ method: "POST" })
   .inputValidator((input: { id: string }) => ({ id: String(input.id) }))
   .handler(async ({ context, data }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase
-      .from("ai_conversations")
-      .delete()
-      .eq("id", data.id);
+    const sb: any = (context as any).supabase;
+    const { error } = await sb.from("ai_conversations").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -87,7 +70,8 @@ export const aiRenameConversation = createServerFn({ method: "POST" })
   }))
   .handler(async ({ context, data }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { error } = await sb
       .from("ai_conversations")
       .update({ title: data.title || "Yeni görüşme" })
       .eq("id", data.id);
@@ -100,9 +84,10 @@ export const aiGetMessages = createServerFn({ method: "GET" })
   .inputValidator((input: { conversationId: string }) => ({
     conversationId: String(input.conversationId),
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    const { data: rows, error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data: rows, error } = await sb
       .from("ai_messages")
       .select("id, role, content, metadata, proposal_id, created_at")
       .eq("conversation_id", data.conversationId)
@@ -111,23 +96,21 @@ export const aiGetMessages = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
 
     const proposalIds = (rows ?? [])
-      .map((r: Row) => r.proposal_id)
+      .map((r: AnyObj) => r.proposal_id)
       .filter(Boolean) as string[];
 
-    let proposals: Record<string, ProposalRow> = {};
+    const proposals: Record<string, any> = {};
     if (proposalIds.length) {
-      const { data: props } = await context.supabase
+      const { data: props } = await sb
         .from("ai_action_proposals")
         .select("*")
         .in("id", proposalIds);
-      for (const p of (props ?? []) as ProposalRow[]) proposals[p.id] = p;
+      for (const p of (props ?? []) as AnyObj[]) proposals[String(p.id)] = p;
     }
-    return { messages: rows ?? [], proposals };
+    return { messages: rows ?? [], proposals } as any;
   });
 
-// -----------------------------------------------------------------------------
-// Context: list records for the picker
-// -----------------------------------------------------------------------------
+// ---------- Targets ----------
 
 export const aiListTargets = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -135,11 +118,12 @@ export const aiListTargets = createServerFn({ method: "GET" })
     actionType: String(input.actionType),
     search: (input.search ?? "").slice(0, 120),
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
     const entry = ACTION_REGISTRY[data.actionType as ActionType];
     if (!entry) throw new Error("Geçersiz modül");
-    let q = context.supabase
+    const sb: any = (context as any).supabase;
+    let q = sb
       .from(entry.table)
       .select(`id, ${entry.labelField}`)
       .order(entry.labelField, { ascending: true })
@@ -147,10 +131,10 @@ export const aiListTargets = createServerFn({ method: "GET" })
     if (data.search) q = q.ilike(entry.labelField, `%${data.search}%`);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return (rows ?? []).map((r: Row) => ({
+    return ((rows ?? []) as AnyObj[]).map((r) => ({
       id: String(r.id),
       label: String(r[entry.labelField] ?? "—"),
-    }));
+    })) as any;
   });
 
 export const aiGetTarget = createServerFn({ method: "GET" })
@@ -159,23 +143,22 @@ export const aiGetTarget = createServerFn({ method: "GET" })
     actionType: String(input.actionType),
     targetId: String(input.targetId),
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
     const entry = ACTION_REGISTRY[data.actionType as ActionType];
     if (!entry) throw new Error("Geçersiz modül");
+    const sb: any = (context as any).supabase;
     const cols = ["id", entry.labelField, ...entry.allowedFields].join(",");
-    const { data: row, error } = await context.supabase
+    const { data: row, error } = await sb
       .from(entry.table)
       .select(cols)
       .eq("id", data.targetId)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return row ?? null;
+    return (row ?? null) as any;
   });
 
-// -----------------------------------------------------------------------------
-// Chat send
-// -----------------------------------------------------------------------------
+// ---------- Chat send ----------
 
 function buildSystemPrompt(): string {
   const menu = Object.entries(ACTION_REGISTRY)
@@ -207,9 +190,10 @@ Cevabını KATİ olarak aşağıdaki JSON şemasında dön (başka metin ekleme)
 }`;
 }
 
-async function checkRateLimit(context: { supabase: any; userId: string }) {
+async function checkRateLimit(context: any) {
+  const sb: any = context.supabase;
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const { count } = await context.supabase
+  const { count } = await sb
     .from("ai_messages")
     .select("id", { count: "exact", head: true })
     .eq("role", "user")
@@ -224,10 +208,7 @@ async function callLovableAi(messages: any[]) {
   if (!key) throw new Error("Yapay zekâ servisi yapılandırılmamış.");
   const res = await fetch(GATEWAY_URL, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: MODEL,
       messages,
@@ -235,7 +216,7 @@ async function callLovableAi(messages: any[]) {
       temperature: 0.4,
     }),
   });
-  if (res.status === 429) throw new Error("Yapay zekâ servisi şu anda çok yoğun. Bir süre sonra tekrar deneyin.");
+  if (res.status === 429) throw new Error("Yapay zekâ servisi çok yoğun. Bir süre sonra tekrar deneyin.");
   if (res.status === 402) throw new Error("Yapay zekâ kredisi tükendi. Yönetici ile iletişime geçin.");
   if (!res.ok) {
     const body = await res.text().catch(() => "");
@@ -292,35 +273,34 @@ export const aiSendMessage = createServerFn({ method: "POST" })
       ? { actionType: String(input.context.actionType), targetId: String(input.context.targetId) }
       : null,
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
     if (!data.content.trim()) throw new Error("Mesaj boş olamaz.");
     await checkRateLimit(context);
+    const sb: any = (context as any).supabase;
 
-    // Load history
-    const { data: history } = await context.supabase
+    const { data: history } = await sb
       .from("ai_messages")
       .select("role, content")
       .eq("conversation_id", data.conversationId)
       .order("created_at", { ascending: true })
       .limit(MAX_HISTORY);
 
-    // Context row snapshot
     let contextBlock = "";
-    let targetSnapshot: Row | null = null;
+    let targetSnapshot: AnyObj | null = null;
     if (data.context) {
       const entry = ACTION_REGISTRY[data.context.actionType as ActionType];
       if (entry) {
         const cols = ["id", entry.labelField, ...entry.allowedFields].join(",");
-        const { data: row } = await context.supabase
+        const { data: row } = await sb
           .from(entry.table)
           .select(cols)
           .eq("id", data.context.targetId)
           .maybeSingle();
-        targetSnapshot = row;
-        if (row) {
-          const current: Record<string, unknown> = {};
-          for (const f of entry.allowedFields) current[f] = row[f];
+        targetSnapshot = (row ?? null) as AnyObj | null;
+        if (targetSnapshot) {
+          const current: AnyObj = {};
+          for (const f of entry.allowedFields) current[f] = targetSnapshot[f];
           contextBlock = `\n\n[Bağlam]\naction_type: ${data.context.actionType}\ntarget_id: ${data.context.targetId}\nMevcut alanlar:\n${JSON.stringify(current, null, 2)}`;
         }
       }
@@ -328,18 +308,16 @@ export const aiSendMessage = createServerFn({ method: "POST" })
 
     const userContent = data.content + contextBlock;
 
-    // Store user message first
-    await context.supabase.from("ai_messages").insert({
+    await sb.from("ai_messages").insert({
       conversation_id: data.conversationId,
       role: "user",
       content: data.content,
-      metadata: data.context ? { context: data.context } : {},
+      metadata: (data.context ? { context: data.context } : {}) as any,
     });
 
-    // Build model messages
     const modelMessages = [
       { role: "system", content: buildSystemPrompt() },
-      ...(history ?? []).map((m: Row) => ({ role: m.role, content: m.content })),
+      ...((history ?? []) as AnyObj[]).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: userContent },
     ];
 
@@ -348,13 +326,13 @@ export const aiSendMessage = createServerFn({ method: "POST" })
       ai = await callLovableAi(modelMessages);
     } catch (e: any) {
       const msg = e?.message ?? "Yapay zekâ hizmetine ulaşılamadı.";
-      await context.supabase.from("ai_messages").insert({
+      await sb.from("ai_messages").insert({
         conversation_id: data.conversationId,
         role: "assistant",
         content: msg,
-        metadata: { error: true },
+        metadata: { error: true } as any,
       });
-      await context.supabase
+      await sb
         .from("ai_conversations")
         .update({ last_message_at: new Date().toISOString() })
         .eq("id", data.conversationId);
@@ -365,40 +343,40 @@ export const aiSendMessage = createServerFn({ method: "POST" })
       "Yardımcı olabileceğim başka bir şey var mı?";
 
     let proposalId: string | null = null;
-    let proposalRow: ProposalRow | null = null;
+    let proposalRow: AnyObj | null = null;
 
     if (ai.proposal) {
       const v = validateProposal(ai.proposal);
       if (v.ok && targetSnapshot) {
         const entry = ACTION_REGISTRY[v.value.action_type as ActionType];
-        const before: Record<string, unknown> = {};
+        const before: AnyObj = {};
         for (const k of Object.keys(v.value.changes)) before[k] = targetSnapshot[k] ?? null;
 
-        const { data: p, error } = await context.supabase
+        const { data: p, error } = await sb
           .from("ai_action_proposals")
           .insert({
             conversation_id: data.conversationId,
-            created_by: context.userId,
+            created_by: (context as any).userId,
             action_type: v.value.action_type,
             target_table: entry.table,
             target_id: v.value.target_id,
             summary: v.value.summary,
-            before_value: before,
-            after_value: v.value.changes,
-            proposed_changes: v.value.changes,
+            before_value: before as any,
+            after_value: v.value.changes as any,
+            proposed_changes: v.value.changes as any,
             risk_level: v.value.risk_level,
             status: "pending",
           })
           .select("*")
           .single();
         if (!error && p) {
-          proposalId = p.id;
-          proposalRow = p as ProposalRow;
+          proposalId = (p as AnyObj).id;
+          proposalRow = p as AnyObj;
         }
       }
     }
 
-    const { data: assistantMsg } = await context.supabase
+    const { data: assistantMsg } = await sb
       .from("ai_messages")
       .insert({
         conversation_id: data.conversationId,
@@ -409,84 +387,82 @@ export const aiSendMessage = createServerFn({ method: "POST" })
       .select("id, role, content, metadata, proposal_id, created_at")
       .single();
 
-    await context.supabase
+    await sb
       .from("ai_conversations")
       .update({ last_message_at: new Date().toISOString() })
       .eq("id", data.conversationId);
 
-    return { assistantMessage: assistantMsg, proposal: proposalRow };
+    return { assistantMessage: assistantMsg ?? null, proposal: proposalRow } as any;
   });
 
-// -----------------------------------------------------------------------------
-// Approve / reject / undo
-// -----------------------------------------------------------------------------
+// ---------- Approve / Reject / Undo ----------
 
 export const aiApproveProposal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => ({ id: String(input.id) }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    const { data: prop, error: fetchErr } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data: prop, error: fetchErr } = await sb
       .from("ai_action_proposals")
       .select("*")
       .eq("id", data.id)
       .maybeSingle();
     if (fetchErr || !prop) throw new Error("Öneri bulunamadı.");
-    if (prop.status !== "pending") throw new Error("Bu öneri artık uygulanamaz.");
-    const entry = ACTION_REGISTRY[prop.action_type as ActionType];
+    const p = prop as AnyObj;
+    if (p.status !== "pending") throw new Error("Bu öneri artık uygulanamaz.");
+    const entry = ACTION_REGISTRY[p.action_type as ActionType];
     if (!entry) throw new Error("Bilinmeyen aksiyon tipi.");
 
-    // Re-snapshot the CURRENT before applying (for accurate undo)
     const cols = ["id", ...entry.allowedFields].join(",");
-    const { data: current, error: curErr } = await context.supabase
+    const { data: current, error: curErr } = await sb
       .from(entry.table)
       .select(cols)
-      .eq("id", prop.target_id)
+      .eq("id", p.target_id)
       .maybeSingle();
     if (curErr || !current) throw new Error("Hedef kayıt bulunamadı.");
+    const cur = current as AnyObj;
 
-    const changes = prop.proposed_changes as Record<string, unknown>;
-    const before: Record<string, unknown> = {};
-    const clean: Record<string, unknown> = {};
+    const changes = (p.proposed_changes ?? {}) as AnyObj;
+    const before: AnyObj = {};
+    const clean: AnyObj = {};
     for (const [k, v] of Object.entries(changes)) {
       if (!entry.allowedFields.includes(k)) continue;
-      before[k] = current[k] ?? null;
+      before[k] = cur[k] ?? null;
       clean[k] = v;
     }
     if (Object.keys(clean).length === 0) throw new Error("Uygulanabilir alan yok.");
 
-    const { error: upErr } = await context.supabase
-      .from(entry.table)
-      .update(clean)
-      .eq("id", prop.target_id);
+    const { error: upErr } = await sb.from(entry.table).update(clean).eq("id", p.target_id);
     if (upErr) {
-      await context.supabase
+      await sb
         .from("ai_action_proposals")
         .update({ status: "failed", error_message: upErr.message })
         .eq("id", data.id);
       throw new Error("İçerik güncellenemedi. Mevcut veriler korunmuştur.");
     }
 
-    const { data: updated } = await context.supabase
+    const { data: updated } = await sb
       .from("ai_action_proposals")
       .update({
         status: "applied",
         applied_at: new Date().toISOString(),
-        applied_by: context.userId,
-        before_value: before,
+        applied_by: (context as any).userId,
+        before_value: before as any,
       })
       .eq("id", data.id)
       .select("*")
       .single();
-    return updated;
+    return (updated ?? null) as any;
   });
 
 export const aiRejectProposal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => ({ id: String(input.id) }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    const { data: updated, error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data: updated, error } = await sb
       .from("ai_action_proposals")
       .update({ status: "rejected" })
       .eq("id", data.id)
@@ -494,46 +470,43 @@ export const aiRejectProposal = createServerFn({ method: "POST" })
       .select("*")
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return updated;
+    return (updated ?? null) as any;
   });
 
 export const aiUndoProposal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => ({ id: String(input.id) }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    const { data: prop, error } = await context.supabase
+    const sb: any = (context as any).supabase;
+    const { data: prop, error } = await sb
       .from("ai_action_proposals")
       .select("*")
       .eq("id", data.id)
       .maybeSingle();
     if (error || !prop) throw new Error("Kayıt bulunamadı.");
-    if (prop.status !== "applied") throw new Error("Sadece uygulanmış değişiklikler geri alınabilir.");
-    const entry = ACTION_REGISTRY[prop.action_type as ActionType];
+    const p = prop as AnyObj;
+    if (p.status !== "applied") throw new Error("Sadece uygulanmış değişiklikler geri alınabilir.");
+    const entry = ACTION_REGISTRY[p.action_type as ActionType];
     if (!entry) throw new Error("Aksiyon tipi tanınmadı.");
-    const before = (prop.before_value ?? {}) as Record<string, unknown>;
-    const clean: Record<string, unknown> = {};
+    const before = (p.before_value ?? {}) as AnyObj;
+    const clean: AnyObj = {};
     for (const [k, v] of Object.entries(before)) {
       if (entry.allowedFields.includes(k)) clean[k] = v;
     }
     if (Object.keys(clean).length === 0) throw new Error("Geri alınabilecek alan yok.");
-    const { error: upErr } = await context.supabase
-      .from(entry.table)
-      .update(clean)
-      .eq("id", prop.target_id);
+    const { error: upErr } = await sb.from(entry.table).update(clean).eq("id", p.target_id);
     if (upErr) throw new Error("Geri alma sırasında bir hata oluştu.");
-    const { data: updated } = await context.supabase
+    const { data: updated } = await sb
       .from("ai_action_proposals")
       .update({ status: "undone" })
       .eq("id", data.id)
       .select("*")
       .single();
-    return updated;
+    return (updated ?? null) as any;
   });
 
-// -----------------------------------------------------------------------------
-// History
-// -----------------------------------------------------------------------------
+// ---------- History ----------
 
 export const aiListHistory = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -541,9 +514,10 @@ export const aiListHistory = createServerFn({ method: "GET" })
     status: input?.status ?? null,
     limit: Math.min(Math.max(input?.limit ?? 100, 1), 300),
   }))
-  .handler(async ({ context, data }) => {
+  .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
-    let q = context.supabase
+    const sb: any = (context as any).supabase;
+    let q = sb
       .from("ai_action_proposals")
       .select("*")
       .order("created_at", { ascending: false })
@@ -551,5 +525,5 @@ export const aiListHistory = createServerFn({ method: "GET" })
     if (data.status) q = q.eq("status", data.status);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    return (rows ?? []) as any;
   });
