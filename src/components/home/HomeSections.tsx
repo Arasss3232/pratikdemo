@@ -391,14 +391,18 @@ export function FeaturedProducts() {
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           {/* Hero product */}
-          <Link
-            to="/urunler/elektrikli-el-aletleri/$sku"
-            params={{ sku: hero.sku }}
-            className="lg:col-span-7 group flex flex-col pub-ticks"
+          <article
+            className="lg:col-span-7 relative group flex flex-col pub-ticks"
             style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
           >
             <span className="pub-tick-bl" aria-hidden />
             <span className="pub-tick-br" aria-hidden />
+            <Link
+              to="/urunler/elektrikli-el-aletleri/$sku"
+              params={{ sku: hero.sku }}
+              aria-label={hero.name}
+              className="absolute inset-0 z-[1] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)]"
+            />
             <div className="relative aspect-[16/11]" style={{ backgroundColor: "#F5F1E8" }}>
               <img
                 src={hero.productImg}
@@ -434,21 +438,20 @@ export function FeaturedProducts() {
                   ))}
                 </ul>
               </div>
-              <div className="md:col-span-4 md:text-right flex flex-col md:items-end gap-3">
-                <span className="pub-btn pub-btn-primary pub-btn-sm">
+              <div className="md:col-span-4 md:text-right flex flex-col md:items-end gap-3 relative z-[2]">
+                <span className="pub-btn pub-btn-primary pub-btn-sm pointer-events-none">
                   Ürünü İncele
                   <Icon name="arrow_forward" className="text-[16px]" />
                 </span>
                 <Link
                   to="/teklif"
-                  onClick={(e) => e.stopPropagation()}
                   className="pub-mono text-white/70 hover:text-white transition-colors"
                 >
                   Teklif Talep Et →
                 </Link>
               </div>
             </div>
-          </Link>
+          </article>
 
           {/* Rail */}
           <ul className="lg:col-span-5 flex flex-col gap-4">
