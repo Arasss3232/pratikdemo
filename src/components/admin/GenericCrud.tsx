@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { buttonStyles } from "../../lib/button-styles";
 import { Icon } from "../site-shell";
 import { confirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
@@ -152,47 +151,61 @@ export function GenericCrud({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:items-center sm:justify-between">
+      {/* Title + create */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-headline-md font-headline-md truncate">{title}</h2>
-          <p className="text-body-sm text-on-surface-variant mt-0.5">
+          <h2 className="text-[22px] font-bold tracking-tight truncate" style={{ color: "var(--admin-text)" }}>
+            {title}
+          </h2>
+          <p className="text-[13px] mt-0.5" style={{ color: "var(--admin-text-2)" }}>
             {description ?? `Toplam ${rows.length} kayıt`}
+            {query && filtered.length !== rows.length && ` · ${filtered.length} sonuç`}
           </p>
         </div>
         {allowCreate && (
           <button
             onClick={() => setEditing({ ...empty })}
-            className={buttonStyles({ variant: "primary", size: "sm" })}
+            className="admin-btn admin-btn-primary"
+            style={{ height: 40 }}
           >
-            <Icon name="add" className="text-[18px]" /> Yeni Ekle
+            <Icon name="add" className="text-[18px]" />
+            Yeni Ekle
           </button>
         )}
       </div>
 
-      {/* Toolbar: search + sort */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        <label className="flex items-center gap-2 h-10 px-3 rounded-md border border-outline-variant bg-surface-container-lowest flex-1 min-w-0">
-          <Icon name="search" className="text-[18px] text-on-surface-variant shrink-0" />
+      {/* Toolbar */}
+      <div className="admin-card p-3 flex flex-col sm:flex-row gap-2">
+        <div
+          className="flex items-center gap-2 h-10 px-3 rounded-xl flex-1 min-w-0"
+          style={{ background: "var(--admin-surface-2)", border: "1px solid var(--admin-border)" }}
+        >
+          <span style={{ color: "var(--admin-text-mute)" }}>
+            <Icon name="search" className="text-[18px]" />
+          </span>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Bu listede ara…"
-            className="bg-transparent outline-none text-body-sm flex-1 min-w-0"
+            className="bg-transparent outline-none text-sm flex-1 min-w-0"
+            style={{ color: "var(--admin-text)" }}
           />
           {query && (
             <button
               onClick={() => setQuery("")}
-              className="text-on-surface-variant hover:text-on-surface"
+              className="grid place-items-center h-6 w-6 rounded hover:bg-[var(--admin-surface)]"
+              style={{ color: "var(--admin-text-mute)" }}
               aria-label="Aramayı temizle"
             >
               <Icon name="close" className="text-[16px]" />
             </button>
           )}
-        </label>
+        </div>
         <button
           onClick={() => setSortAsc((v) => !v)}
-          className="h-10 px-3 inline-flex items-center gap-2 rounded-md border border-outline-variant bg-surface-container-lowest text-body-sm hover:bg-surface-container"
+          className="admin-btn admin-btn-outline"
+          style={{ height: 40 }}
           title="Sırayı değiştir"
         >
           <Icon name={sortAsc ? "arrow_upward" : "arrow_downward"} className="text-[16px]" />
@@ -200,21 +213,33 @@ export function GenericCrud({
         </button>
       </div>
 
-      {error && <p className="text-error text-body-sm">{error}</p>}
+      {error && (
+        <div
+          className="rounded-xl p-3 text-sm flex items-start gap-2"
+          style={{ background: "var(--admin-danger-soft)", color: "var(--admin-danger)" }}
+          role="alert"
+        >
+          <Icon name="error" className="text-[18px] mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
+
       {loading ? (
         <TableSkeleton columns={columns.length} />
       ) : rows.length === 0 ? (
         <EmptyState
           icon="inbox"
           title="Henüz kayıt eklenmedi"
-          description="Aşağıdaki butonla ilk kaydı ekleyerek başlayabilirsiniz."
+          description="Aşağıdaki butonla ilk kaydınızı ekleyerek başlayabilirsiniz."
           action={
             allowCreate ? (
               <button
                 onClick={() => setEditing({ ...empty })}
-                className={buttonStyles({ variant: "primary", size: "sm" })}
+                className="admin-btn admin-btn-primary"
+                style={{ height: 40 }}
               >
-                <Icon name="add" className="text-[18px]" /> İlk kaydı ekle
+                <Icon name="add" className="text-[18px]" />
+                İlk kaydı ekle
               </button>
             ) : undefined
           }
@@ -223,89 +248,131 @@ export function GenericCrud({
         <EmptyState
           icon="search_off"
           title="Sonuç bulunamadı"
-          description={`"${query}" için eşleşen kayıt yok.`}
+          description={`"${query}" için eşleşen kayıt yok. Farklı bir anahtar kelime deneyin.`}
         />
       ) : (
         <>
           {/* Desktop table */}
-          <div className="hidden md:block overflow-x-auto border border-outline-variant rounded-lg bg-surface-container-lowest">
-          <table className="w-full text-body-sm">
-              <thead className="text-left border-b border-outline-variant bg-surface-container-low">
-              <tr>
-                  {columns.map((c) => (
-                    <th key={c.key} className="px-4 py-3 font-label-bold text-body-sm text-on-surface-variant">
-                      {c.label}
-                    </th>
-                  ))}
-                  <th className="px-4 py-3 w-32 text-right font-label-bold text-body-sm text-on-surface-variant">
-                    İşlem
-                  </th>
-              </tr>
-            </thead>
-            <tbody>
-                {filtered.map((r) => (
-                  <tr
-                    key={r.id}
-                    className="border-t border-outline-variant hover:bg-surface-container-low transition-colors"
-                  >
-                  {columns.map((c) => (
-                      <td key={c.key} className="px-4 py-3 align-top">
-                      {c.render ? c.render(r) : String(r[c.key] ?? "—")}
-                    </td>
-                  ))}
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <button
-                        onClick={() => setEditing(r)}
-                        className="text-primary hover:underline font-label-bold text-body-sm"
+          <div className="hidden md:block admin-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-[14px] border-separate border-spacing-0">
+                <thead>
+                  <tr>
+                    {columns.map((c) => (
+                      <th
+                        key={c.key}
+                        className="text-left px-5 py-3 text-[11px] uppercase tracking-[0.08em] font-semibold"
+                        style={{
+                          color: "var(--admin-text-2)",
+                          background: "var(--admin-surface-2)",
+                          borderBottom: "1px solid var(--admin-border)",
+                        }}
                       >
-                        Düzenle
-                      </button>
-                      {allowDelete && (
-                        <button
-                          onClick={() => remove(r.id)}
-                          className="ml-4 text-error hover:underline font-label-bold text-body-sm"
+                        {c.label}
+                      </th>
+                    ))}
+                    <th
+                      className="px-5 py-3 w-40 text-right text-[11px] uppercase tracking-[0.08em] font-semibold"
+                      style={{
+                        color: "var(--admin-text-2)",
+                        background: "var(--admin-surface-2)",
+                        borderBottom: "1px solid var(--admin-border)",
+                      }}
+                    >
+                      İşlem
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((r, i) => (
+                    <tr
+                      key={r.id}
+                      className="transition-colors hover:bg-[var(--admin-surface-2)]"
+                    >
+                      {columns.map((c) => (
+                        <td
+                          key={c.key}
+                          className="px-5 py-3.5 align-middle"
+                          style={{
+                            borderTop: i === 0 ? "0" : "1px solid var(--admin-border)",
+                            color: "var(--admin-text)",
+                          }}
                         >
-                          Sil
+                          {c.render ? c.render(r) : String(r[c.key] ?? "—")}
+                        </td>
+                      ))}
+                      <td
+                        className="px-5 py-3.5 text-right whitespace-nowrap"
+                        style={{
+                          borderTop: i === 0 ? "0" : "1px solid var(--admin-border)",
+                        }}
+                      >
+                        <button
+                          onClick={() => setEditing(r)}
+                          className="admin-btn admin-btn-ghost admin-btn-sm"
+                          style={{ color: "var(--admin-navy)" }}
+                        >
+                          <Icon name="edit" className="text-[16px]" />
+                          Düzenle
                         </button>
-                      )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                        {allowDelete && (
+                          <button
+                            onClick={() => remove(r.id)}
+                            className="admin-btn admin-btn-ghost admin-btn-sm ml-1"
+                            style={{ color: "var(--admin-danger)" }}
+                          >
+                            <Icon name="delete" className="text-[16px]" />
+                            Sil
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           {/* Mobile cards */}
-          <div className="md:hidden flex flex-col gap-2">
+          <div className="md:hidden flex flex-col gap-2.5">
             {filtered.map((r) => (
-              <div
-                key={r.id}
-                className="border border-outline-variant rounded-lg bg-surface-container-lowest p-4"
-              >
-                <dl className="flex flex-col gap-1.5">
-                  {columns.map((c) => (
-                    <div key={c.key} className="flex items-baseline gap-2">
-                      <dt className="text-[11px] font-label-bold uppercase tracking-wider text-on-surface-variant shrink-0 w-24">
+              <div key={r.id} className="admin-card p-4">
+                <dl className="flex flex-col gap-2">
+                  {columns.map((c, ci) => (
+                    <div key={c.key} className={ci === 0 ? "flex items-center gap-2" : "flex items-baseline gap-2"}>
+                      <dt
+                        className="text-[10px] font-semibold uppercase tracking-wider shrink-0 w-24"
+                        style={{ color: "var(--admin-text-mute)" }}
+                      >
                         {c.label}
                       </dt>
-                      <dd className="text-body-sm min-w-0 flex-1 break-words">
+                      <dd
+                        className="text-[14px] min-w-0 flex-1 break-words"
+                        style={{ color: "var(--admin-text)" }}
+                      >
                         {c.render ? c.render(r) : String(r[c.key] ?? "—")}
                       </dd>
                     </div>
                   ))}
                 </dl>
-                <div className="mt-3 pt-3 border-t border-outline-variant flex gap-4 justify-end">
+                <div
+                  className="mt-3 pt-3 flex gap-2 justify-end"
+                  style={{ borderTop: "1px solid var(--admin-border)" }}
+                >
                   <button
                     onClick={() => setEditing(r)}
-                    className="text-primary font-label-bold text-body-sm"
+                    className="admin-btn admin-btn-outline admin-btn-sm"
                   >
+                    <Icon name="edit" className="text-[16px]" />
                     Düzenle
                   </button>
                   {allowDelete && (
                     <button
                       onClick={() => remove(r.id)}
-                      className="text-error font-label-bold text-body-sm"
+                      className="admin-btn admin-btn-sm"
+                      style={{ color: "var(--admin-danger)", background: "var(--admin-danger-soft)" }}
                     >
+                      <Icon name="delete" className="text-[16px]" />
                       Sil
                     </button>
                   )}
@@ -315,8 +382,15 @@ export function GenericCrud({
           </div>
         </>
       )}
+
       {editing && (
-        <CrudForm fields={fields} initial={editing} onCancel={() => setEditing(null)} onSave={save} />
+        <CrudForm
+          title={title}
+          fields={fields}
+          initial={editing}
+          onCancel={() => setEditing(null)}
+          onSave={save}
+        />
       )}
     </div>
   );
@@ -324,16 +398,13 @@ export function GenericCrud({
 
 function TableSkeleton({ columns }: { columns: number }) {
   return (
-    <div className="border border-outline-variant rounded-lg bg-surface-container-lowest p-4 flex flex-col gap-3">
-      {[...Array(5)].map((_, i) => (
+    <div className="admin-card p-5 flex flex-col gap-3">
+      {[...Array(6)].map((_, i) => (
         <div key={i} className="flex gap-3">
           {[...Array(columns)].map((_, j) => (
-            <div
-              key={j}
-              className="h-4 rounded bg-surface-container flex-1 animate-pulse"
-              style={{ animationDelay: `${i * 50}ms` }}
-            />
+            <div key={j} className="admin-skel h-4 flex-1" />
           ))}
+          <div className="admin-skel h-4 w-16" />
         </div>
       ))}
     </div>
@@ -341,42 +412,136 @@ function TableSkeleton({ columns }: { columns: number }) {
 }
 
 function CrudForm({
+  title,
   fields,
   initial,
   onCancel,
   onSave,
 }: {
+  title: string;
   fields: CrudField[];
   initial: Record<string, unknown> & { id?: string };
   onCancel: () => void;
   onSave: (v: Record<string, unknown> & { id?: string }) => void;
 }) {
   const [form, setForm] = useState(initial);
+  const [dirty, setDirty] = useState(false);
   function submit(e: FormEvent) {
     e.preventDefault();
     onSave(form);
   }
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onCancel]);
   return (
-    <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+    <div
+      className="admin-scope fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-0 sm:p-6"
+      style={{ background: "rgba(8,24,44,0.5)", backdropFilter: "blur(2px)" }}
+      onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+      aria-label={form.id ? "Kaydı düzenle" : "Yeni kayıt"}
+    >
       <form
         onSubmit={submit}
-        className="bg-surface-container-lowest max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded p-6 flex flex-col gap-3"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full sm:max-w-3xl max-h-[92vh] flex flex-col overflow-hidden sm:rounded-2xl rounded-t-2xl"
+        style={{
+          background: "var(--admin-surface)",
+          border: "1px solid var(--admin-border)",
+          boxShadow: "var(--admin-shadow-3)",
+        }}
       >
-        <h3 className="font-headline-md text-headline-md mb-2">
-          {form.id ? "Kaydı Düzenle" : "Yeni Kayıt"}
-        </h3>
-        {fields.map((f) => (
-          <FieldRenderer
-            key={f.name}
-            field={f}
-            value={form[f.name]}
-            onChange={(v) => setForm({ ...form, [f.name]: v })}
-          />
-        ))}
-        <div className="flex gap-2 mt-4">
-          <button type="submit" className={buttonStyles({ variant: "primary", size: "sm" })}>Kaydet</button>
-          <button type="button" onClick={onCancel} className={buttonStyles({ variant: "outline-dark", size: "sm" })}>İptal</button>
+        {/* Header */}
+        <header
+          className="px-6 py-4 flex items-start gap-3"
+          style={{ borderBottom: "1px solid var(--admin-border)" }}
+        >
+          <div
+            className="grid place-items-center h-10 w-10 rounded-xl shrink-0"
+            style={{ background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" }}
+          >
+            <Icon name={form.id ? "edit" : "add"} className="text-[20px]" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-[18px] font-semibold" style={{ color: "var(--admin-text)" }}>
+              {form.id ? `${title} — Düzenle` : `${title} — Yeni Kayıt`}
+            </h3>
+            <p className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+              Zorunlu alanları doldurun. Değişiklikler kaydedilene kadar uygulanmaz.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="grid place-items-center h-9 w-9 rounded-lg hover:bg-[var(--admin-surface-2)]"
+            style={{ color: "var(--admin-text-2)" }}
+            aria-label="Kapat"
+          >
+            <Icon name="close" className="text-[20px]" />
+          </button>
+        </header>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-4">
+          {fields.map((f) => (
+            <FieldRenderer
+              key={f.name}
+              field={f}
+              value={form[f.name]}
+              onChange={(v) => {
+                setForm({ ...form, [f.name]: v });
+                setDirty(true);
+              }}
+            />
+          ))}
         </div>
+
+        {/* Sticky save bar */}
+        <footer
+          className="px-6 py-3 flex items-center justify-between gap-3"
+          style={{
+            borderTop: "1px solid var(--admin-border)",
+            background: "var(--admin-surface-2)",
+          }}
+        >
+          <p className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+            {dirty ? (
+              <span className="inline-flex items-center gap-1.5">
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "var(--admin-warning)" }}
+                />
+                Kaydedilmemiş değişiklikler var
+              </span>
+            ) : form.id ? (
+              "Değişiklik yok"
+            ) : (
+              "Alanları doldurup kaydedin"
+            )}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="admin-btn admin-btn-ghost admin-btn-sm"
+            >
+              Vazgeç
+            </button>
+            <button type="submit" className="admin-btn admin-btn-primary admin-btn-sm">
+              <Icon name="save" className="text-[16px]" />
+              Kaydet
+            </button>
+          </div>
+        </footer>
       </form>
     </div>
   );
@@ -391,54 +556,99 @@ function FieldRenderer({
   value: unknown;
   onChange: (v: unknown) => void;
 }) {
-  const cls = "border border-outline-variant rounded px-3 py-2 focus:border-secondary outline-none";
   const v = value ?? "";
   if (field.type === "checkbox") {
     return (
-      <label className="flex items-center gap-2 text-body-sm">
-        <input type="checkbox" checked={!!value} onChange={(e) => onChange(e.target.checked)} />
-        {field.label}
+      <label
+        className="flex items-center gap-3 p-3 rounded-xl cursor-pointer"
+        style={{ background: "var(--admin-surface-2)", border: "1px solid var(--admin-border)" }}
+      >
+        <input
+          type="checkbox"
+          checked={!!value}
+          onChange={(e) => onChange(e.target.checked)}
+          className="h-4 w-4"
+        />
+        <span className="text-[14px] font-medium" style={{ color: "var(--admin-text)" }}>
+          {field.label}
+        </span>
+        {field.help && (
+          <span className="text-[12px] ml-auto" style={{ color: "var(--admin-text-2)" }}>
+            {field.help}
+          </span>
+        )}
       </label>
     );
   }
+  const labelBlock = (
+    <div className="flex items-baseline justify-between gap-2 mb-1">
+      <span className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
+        {field.label}
+        {field.required && <span style={{ color: "var(--admin-danger)" }}> *</span>}
+      </span>
+    </div>
+  );
   if (field.type === "textarea" || field.type === "richtext") {
     return (
-      <label className="flex flex-col gap-1 text-body-sm">
-        <span className="font-label-bold">{field.label}{field.required && " *"}</span>
+      <label className="flex flex-col">
+        {labelBlock}
         <textarea
           value={String(v)}
           required={field.required}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className={`${cls} min-h-32 font-mono text-body-sm`}
+          className={`admin-input admin-textarea ${field.type === "richtext" ? "font-mono" : ""}`}
+          rows={field.type === "richtext" ? 8 : 4}
         />
-        {field.help && <span className="text-body-sm text-on-surface-variant">{field.help}</span>}
+        {field.help && (
+          <span className="text-[12px] mt-1" style={{ color: "var(--admin-text-2)" }}>
+            {field.help}
+          </span>
+        )}
       </label>
     );
   }
   if (field.type === "select") {
     return (
-      <label className="flex flex-col gap-1 text-body-sm">
-        <span className="font-label-bold">{field.label}{field.required && " *"}</span>
-        <select value={String(v)} required={field.required} onChange={(e) => onChange(e.target.value)} className={cls}>
+      <label className="flex flex-col">
+        {labelBlock}
+        <select
+          value={String(v)}
+          required={field.required}
+          onChange={(e) => onChange(e.target.value)}
+          className="admin-input"
+        >
           <option value="">— Seçiniz —</option>
-          {field.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {field.options?.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
         </select>
+        {field.help && (
+          <span className="text-[12px] mt-1" style={{ color: "var(--admin-text-2)" }}>
+            {field.help}
+          </span>
+        )}
       </label>
     );
   }
   return (
-    <label className="flex flex-col gap-1 text-body-sm">
-      <span className="font-label-bold">{field.label}{field.required && " *"}</span>
+    <label className="flex flex-col">
+      {labelBlock}
       <input
         type={field.type ?? "text"}
         value={String(v)}
         required={field.required}
         placeholder={field.placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={cls}
+        className="admin-input"
       />
-      {field.help && <span className="text-body-sm text-on-surface-variant">{field.help}</span>}
+      {field.help && (
+        <span className="text-[12px] mt-1" style={{ color: "var(--admin-text-2)" }}>
+          {field.help}
+        </span>
+      )}
     </label>
   );
 }
