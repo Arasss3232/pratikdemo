@@ -325,13 +325,15 @@ export function SiteHeader() {
             >
               <Icon name="shopping_cart" aria-hidden="true" />
             </Link>
-            <Link
-              to="/teklif"
-              className="pub-btn pub-btn-primary pub-btn-sm !hidden lg:!inline-flex ml-2"
-            >
-              Teklif Talep Et
-              <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-            </Link>
+            <span className="hidden lg:inline-flex ml-2">
+              <Link
+                to="/teklif"
+                className="pub-btn pub-btn-primary pub-btn-sm"
+              >
+                Teklif Talep Et
+                <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
+              </Link>
+            </span>
             <button
               ref={menuBtnRef}
               type="button"
