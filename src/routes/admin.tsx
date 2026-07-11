@@ -187,7 +187,16 @@ function AdminPage() {
         {tab === "jobs" && <JobsTab />}
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
-        {tab === "aiAssistant" && <AIAssistantWorkspace />}
+        {tab === "aiAssistant" && (
+          <AIAssistantWorkspace
+            initialContext={
+              search.aiAction && search.aiTarget
+                ? { actionType: search.aiAction, targetId: search.aiTarget }
+                : null
+            }
+            initialPrompt={search.aiPrompt ?? null}
+          />
+        )}
         {tab === "aiHistory" && <AIHistoryPanel />}
         {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
         {tab === "companies" && <CompaniesWorkspace />}
