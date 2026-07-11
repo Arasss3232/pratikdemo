@@ -17,11 +17,12 @@ function BrandWordmark({
   size?: "md" | "lg";
 }) {
   const src = logoUrl || pratikLogo.url;
+  const height = size === "lg" ? "h-11 md:h-12" : "h-9 md:h-10";
   return (
     <img
       alt={companyName || "Pratik"}
       src={src}
-      className={size === "lg" ? "h-12 w-auto object-contain" : "h-10 md:h-11 w-auto object-contain"}
+      className={`${height} w-auto object-contain block rounded-md`}
       decoding="async"
     />
   );
