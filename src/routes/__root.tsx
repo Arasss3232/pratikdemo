@@ -82,6 +82,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Pratik Endüstriyel" },
       { property: "og:locale", content: "tr_TR" },
       { name: "twitter:card", content: "summary_large_image" },
+      { title: "Endüstriyel Donanım Tedariki — Pratik" },
+      { property: "og:title", content: "Endüstriyel Donanım Tedariki — Pratik" },
+      { name: "twitter:title", content: "Endüstriyel Donanım Tedariki — Pratik" },
+      { name: "description", content: "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri." },
+      { property: "og:description", content: "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri." },
+      { name: "twitter:description", content: "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve toplu teklif hizmetleri." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7bffd58-c723-417c-aeba-650e302ab34e/id-preview-93e539a0--9e9292e2-586e-4a0c-bd4d-0f3fd746a285.lovable.app-1783768358335.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f7bffd58-c723-417c-aeba-650e302ab34e/id-preview-93e539a0--9e9292e2-586e-4a0c-bd4d-0f3fd746a285.lovable.app-1783768358335.png" },
     ],
     links: [
       {
