@@ -29,6 +29,7 @@ import { Route as GirisRouteImport } from './routes/giris'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as UrunlerSarfMalzemeleriRouteImport } from './routes/urunler.sarf-malzemeleri'
 import { Route as UrunlerKkdRouteImport } from './routes/urunler.kkd'
 import { Route as UrunlerEndustriyelMakinelerRouteImport } from './routes/urunler.endustriyel-makineler'
@@ -141,6 +142,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
 const UrunlerSarfMalzemeleriRoute = UrunlerSarfMalzemeleriRouteImport.update({
   id: '/sarf-malzemeleri',
   path: '/sarf-malzemeleri',
@@ -214,7 +220,7 @@ export interface FileRoutesByFullPath {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/portal/': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRoutesByTo {
@@ -247,7 +254,6 @@ export interface FileRoutesByTo {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
-  '/portal': typeof PortalRoute
   '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -265,6 +271,7 @@ export interface FileRoutesByTo {
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/portal': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRoutesById {
@@ -281,7 +288,7 @@ export interface FileRoutesById {
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/referanslar': typeof ReferanslarRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -299,6 +306,7 @@ export interface FileRoutesById {
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/portal/': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRouteTypes {
@@ -334,6 +342,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/portal/'
     | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -349,7 +358,6 @@ export interface FileRouteTypes {
     | '/kurumsal'
     | '/kvkk'
     | '/markalar'
-    | '/portal'
     | '/referanslar'
     | '/sektorel'
     | '/sitemap.xml'
@@ -367,6 +375,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/portal'
     | '/urunler/elektrikli-el-aletleri/$sku'
   id:
     | '__root__'
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/portal/'
     | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesById: FileRoutesById
 }
@@ -416,7 +426,7 @@ export interface RootRouteChildren {
   KurumsalRoute: typeof KurumsalRoute
   KvkkRoute: typeof KvkkRoute
   MarkalarRoute: typeof MarkalarRoute
-  PortalRoute: typeof PortalRoute
+  PortalRoute: typeof PortalRouteWithChildren
   ReferanslarRoute: typeof ReferanslarRoute
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -569,6 +579,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/urunler/sarf-malzemeleri': {
       id: '/urunler/sarf-malzemeleri'
       path: '/sarf-malzemeleri'
@@ -682,6 +699,17 @@ const KariyerRouteChildren: KariyerRouteChildren = {
 const KariyerRouteWithChildren =
   KariyerRoute._addFileChildren(KariyerRouteChildren)
 
+interface PortalRouteChildren {
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 interface UrunlerElektrikliElAletleriRouteChildren {
   UrunlerElektrikliElAletleriSkuRoute: typeof UrunlerElektrikliElAletleriSkuRoute
 }
@@ -731,7 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   KurumsalRoute: KurumsalRoute,
   KvkkRoute: KvkkRoute,
   MarkalarRoute: MarkalarRoute,
-  PortalRoute: PortalRoute,
+  PortalRoute: PortalRouteWithChildren,
   ReferanslarRoute: ReferanslarRoute,
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
