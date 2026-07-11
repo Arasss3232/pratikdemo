@@ -197,7 +197,13 @@ function ProductsTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
+    const ok = await confirmDialog({
+      title: "Bu ürünü silmek istediğinize emin misiniz?",
+      description: "Bu işlem geri alınamaz.",
+      confirmLabel: "Evet, sil",
+      destructive: true,
+    });
+    if (!ok) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
     if (error) {
       setError(error.message);
