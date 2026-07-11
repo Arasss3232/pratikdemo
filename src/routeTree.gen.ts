@@ -20,6 +20,7 @@ import { Route as MarkalarRouteImport } from './routes/markalar'
 import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KurumsalRouteImport } from './routes/kurumsal'
 import { Route as KataloglarRouteImport } from './routes/kataloglar'
+import { Route as KariyerRouteImport } from './routes/kariyer'
 import { Route as IletisimRouteImport } from './routes/iletisim'
 import { Route as HizmetlerRouteImport } from './routes/hizmetler'
 import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
@@ -90,6 +91,11 @@ const KurumsalRoute = KurumsalRouteImport.update({
 const KataloglarRoute = KataloglarRouteImport.update({
   id: '/kataloglar',
   path: '/kataloglar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KariyerRoute = KariyerRouteImport.update({
+  id: '/kariyer',
+  path: '/kariyer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IletisimRoute = IletisimRouteImport.update({
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/hakkimizda': typeof HakkimizdaRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
+  '/kariyer': typeof KariyerRoute
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/hakkimizda': typeof HakkimizdaRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
+  '/kariyer': typeof KariyerRoute
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/hakkimizda': typeof HakkimizdaRoute
   '/hizmetler': typeof HizmetlerRoute
   '/iletisim': typeof IletisimRoute
+  '/kariyer': typeof KariyerRoute
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/hakkimizda'
     | '/hizmetler'
     | '/iletisim'
+    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/hakkimizda'
     | '/hizmetler'
     | '/iletisim'
+    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/hakkimizda'
     | '/hizmetler'
     | '/iletisim'
+    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   HakkimizdaRoute: typeof HakkimizdaRoute
   HizmetlerRoute: typeof HizmetlerRoute
   IletisimRoute: typeof IletisimRoute
+  KariyerRoute: typeof KariyerRoute
   KataloglarRoute: typeof KataloglarRoute
   KurumsalRoute: typeof KurumsalRoute
   KvkkRoute: typeof KvkkRoute
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       path: '/kataloglar'
       fullPath: '/kataloglar'
       preLoaderRoute: typeof KataloglarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kariyer': {
+      id: '/kariyer'
+      path: '/kariyer'
+      fullPath: '/kariyer'
+      preLoaderRoute: typeof KariyerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/iletisim': {
@@ -625,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   HakkimizdaRoute: HakkimizdaRoute,
   HizmetlerRoute: HizmetlerRoute,
   IletisimRoute: IletisimRoute,
+  KariyerRoute: KariyerRoute,
   KataloglarRoute: KataloglarRoute,
   KurumsalRoute: KurumsalRoute,
   KvkkRoute: KvkkRoute,
