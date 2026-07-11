@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "../site-shell";
 import { supabase } from "@/integrations/supabase/client";
 import type { AdminTab } from "./nav";
@@ -27,51 +27,78 @@ type Quote = {
   created_at: string;
 };
 
+type LoadedStats = {
+  products: number;
+  services: number;
+  quotesNew: number;
+  messagesNew: number;
+  blogPublished: number;
+  blogDrafts: number;
+  jobsOpen: number;
+  applicationsNew: number;
+  refs: number;
+  lastUpdated: string | null;
+};
+
+const initialStats: LoadedStats = {
+  products: 0,
+  services: 0,
+  quotesNew: 0,
+  messagesNew: 0,
+  blogPublished: 0,
+  blogDrafts: 0,
+  jobsOpen: 0,
+  applicationsNew: 0,
+  refs: 0,
+  lastUpdated: null,
+};
+
 export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
-  const [stats, setStats] = useState<Stat[]>([
-    { key: "products", label: "Toplam Ürün", icon: "inventory_2", value: null },
-    { key: "services", label: "Toplam Hizmet", icon: "handyman", value: null },
-    { key: "quotes", label: "Bekleyen Teklif", icon: "request_quote", value: null, hint: "Yeni durumdaki" },
-    { key: "messages", label: "Yeni Mesaj", icon: "mail", value: null, hint: "Okunmamış" },
-    { key: "blog", label: "Yayında Blog", icon: "article", value: null },
-    { key: "jobs", label: "Açık İlan", icon: "work", value: null },
-  ]);
+  const [stats, setStats] = useState<LoadedStats>(initialStats);
   const [messages, setMessages] = useState<Message[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
-  const [setup, setSetup] = useState<{ label: string; done: boolean; tab: AdminTab }[]>([]);
+  const [greeting, setGreeting] = useState("Hoş geldiniz");
+
+  useEffect(() => {
+    const h = new Date().getHours();
+    setGreeting(h < 6 ? "İyi geceler" : h < 12 ? "Günaydın" : h < 18 ? "İyi günler" : "İyi akşamlar");
+  }, []);
 
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [prod, srv, qNew, msgNew, blogP, jobsP, recentMsg, recentQ] = await Promise.all([
+      const [prod, srv, qNew, msgNew, blogP, blogD, jobsP, apps, refs, lastUpd] = await Promise.all([
         supabase.from("products").select("*", { count: "exact", head: true }),
         supabase.from("services").select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
+        supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", false),
         supabase.from("job_posts").select("*", { count: "exact", head: true }).eq("published", true),
+        supabase.from("job_applications").select("*", { count: "exact", head: true }).eq("status", "new"),
+        supabase.from("project_references").select("*", { count: "exact", head: true }),
+        supabase.from("blog_posts").select("updated_at").order("updated_at", { ascending: false }).limit(1),
+      ]);
+      const [recentMsg, recentQ] = await Promise.all([
         supabase.from("contact_messages").select("id,name,subject,status,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("quote_requests").select("id,contact_name,company,status,created_at").order("created_at", { ascending: false }).limit(5),
       ]);
       if (!alive) return;
-      setStats([
-        { key: "products", label: "Toplam Ürün", icon: "inventory_2", value: prod.count ?? 0 },
-        { key: "services", label: "Toplam Hizmet", icon: "handyman", value: srv.count ?? 0 },
-        { key: "quotes", label: "Bekleyen Teklif", icon: "request_quote", value: qNew.count ?? 0, hint: "Yeni durumda" },
-        { key: "messages", label: "Yeni Mesaj", icon: "mail", value: msgNew.count ?? 0, hint: "Okunmamış" },
-        { key: "blog", label: "Yayında Blog", icon: "article", value: blogP.count ?? 0 },
-        { key: "jobs", label: "Açık İlan", icon: "work", value: jobsP.count ?? 0 },
-      ]);
+      setStats({
+        products: prod.count ?? 0,
+        services: srv.count ?? 0,
+        quotesNew: qNew.count ?? 0,
+        messagesNew: msgNew.count ?? 0,
+        blogPublished: blogP.count ?? 0,
+        blogDrafts: blogD.count ?? 0,
+        jobsOpen: jobsP.count ?? 0,
+        applicationsNew: apps.count ?? 0,
+        refs: refs.count ?? 0,
+        lastUpdated: (lastUpd.data?.[0] as { updated_at?: string } | undefined)?.updated_at ?? null,
+      });
       setMessages((recentMsg.data as Message[]) ?? []);
       setQuotes((recentQ.data as Quote[]) ?? []);
-      setSetup([
-        { label: "Site ayarlarını doldur", done: false, tab: "settings" },
-        { label: "En az bir hizmet ekle", done: (srv.count ?? 0) > 0, tab: "services" },
-        { label: "En az bir ürün ekle", done: (prod.count ?? 0) > 0, tab: "products" },
-        { label: "En az bir blog yazısı ekle", done: (blogP.count ?? 0) > 0, tab: "blog" },
-        { label: "İlk referansını ekle", done: false, tab: "references" },
-      ]);
       setLoading(false);
     }
     load();
@@ -80,118 +107,316 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     };
   }, []);
 
-  const quick: { key: AdminTab; label: string; icon: string }[] = [
-    { key: "products", label: "Ürün Ekle", icon: "inventory_2" },
-    { key: "services", label: "Hizmet Ekle", icon: "handyman" },
-    { key: "blog", label: "Blog Ekle", icon: "article" },
-    { key: "references", label: "Referans Ekle", icon: "workspace_premium" },
-    { key: "settings", label: "Site Ayarları", icon: "settings" },
-    { key: "messages", label: "Mesajları Gör", icon: "mail" },
+  const priorities = useMemo(() => {
+    const list: { icon: string; label: string; value: string; tone: "warning" | "info" | "danger"; tab: AdminTab }[] = [];
+    if (stats.messagesNew > 0)
+      list.push({ icon: "mail", label: "Yanıtlanmamış mesaj", value: `${stats.messagesNew} adet`, tone: "warning", tab: "messages" });
+    if (stats.quotesNew > 0)
+      list.push({ icon: "request_quote", label: "Bekleyen teklif talebi", value: `${stats.quotesNew} adet`, tone: "warning", tab: "quotes" });
+    if (stats.applicationsNew > 0)
+      list.push({ icon: "assignment_ind", label: "Yeni iş başvurusu", value: `${stats.applicationsNew} adet`, tone: "info", tab: "applications" });
+    if (stats.blogDrafts > 0)
+      list.push({ icon: "edit_note", label: "Yayınlanmayı bekleyen yazı", value: `${stats.blogDrafts} taslak`, tone: "info", tab: "blog" });
+    if (stats.services === 0)
+      list.push({ icon: "handyman", label: "Henüz hizmet eklenmedi", value: "İlk hizmeti ekleyin", tone: "danger", tab: "services" });
+    if (stats.products === 0)
+      list.push({ icon: "inventory_2", label: "Henüz ürün eklenmedi", value: "İlk ürünü ekleyin", tone: "danger", tab: "products" });
+    return list.slice(0, 4);
+  }, [stats]);
+
+  const setup = useMemo(
+    () => [
+      { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
+      { label: "En az bir hizmet ekle", done: stats.services > 0, tab: "services" as AdminTab, icon: "handyman" },
+      { label: "En az bir ürün ekle", done: stats.products > 0, tab: "products" as AdminTab, icon: "inventory_2" },
+      { label: "İlk blog yazısını yayınla", done: stats.blogPublished > 0, tab: "blog" as AdminTab, icon: "article" },
+      { label: "İlk referansı ekle", done: stats.refs > 0, tab: "references" as AdminTab, icon: "workspace_premium" },
+    ],
+    [stats],
+  );
+  const setupDone = setup.filter((s) => s.done).length;
+  const setupPct = Math.round((setupDone / setup.length) * 100);
+
+  const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
+    { key: "products", label: "Ürün Ekle", icon: "inventory_2", desc: "Kataloğa yeni ürün" },
+    { key: "services", label: "Hizmet Ekle", icon: "handyman", desc: "Hizmet sayfası oluştur" },
+    { key: "blog", label: "Haber Ekle", icon: "article", desc: "Blog / duyuru yazısı" },
+    { key: "references", label: "Referans Ekle", icon: "workspace_premium", desc: "Yeni proje" },
+    { key: "team", label: "Ekip Üyesi Ekle", icon: "groups", desc: "Yeni personel" },
+  ];
+
+  const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
+    { key: "messages", label: "Yeni Mesaj", icon: "mail", value: stats.messagesNew, hint: "Yanıt bekliyor" },
+    { key: "quotes", label: "Bekleyen Teklif", icon: "request_quote", value: stats.quotesNew, hint: "İnceleme sırasında" },
+    { key: "applications", label: "Yeni Başvuru", icon: "assignment_ind", value: stats.applicationsNew, hint: "Kariyer başvurusu" },
+    { key: "blog", label: "Yayında İçerik", icon: "article", value: stats.blogPublished, hint: "Blog / haber" },
+    { key: "blog", label: "Taslak İçerik", icon: "edit_note", value: stats.blogDrafts, hint: "Henüz yayınlanmadı" },
+    { key: "products", label: "Toplam Ürün", icon: "inventory_2", value: stats.products },
+    { key: "services", label: "Toplam Hizmet", icon: "handyman", value: stats.services },
+    { key: "references", label: "Referans Projesi", icon: "workspace_premium", value: stats.refs },
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Welcome + setup */}
+    <div className="admin-section">
+      {/* Welcome hero */}
       <section
-        className="relative overflow-hidden rounded-2xl p-6 md:p-7 flex flex-col md:flex-row md:items-center gap-5 md:justify-between shadow-sm"
+        className="relative overflow-hidden rounded-[20px] p-6 md:p-8"
         style={{
           background:
-            "linear-gradient(135deg, var(--admin-navy) 0%, var(--admin-navy-med) 100%)",
+            "radial-gradient(circle at 90% 0%, rgba(244,197,66,0.28) 0%, rgba(244,197,66,0) 45%), linear-gradient(135deg, var(--admin-navy-deep) 0%, var(--admin-navy-2) 100%)",
           color: "#fff",
+          boxShadow: "var(--admin-shadow-3)",
         }}
       >
-        <div
-          className="absolute -right-16 -top-16 h-56 w-56 rounded-full opacity-20"
-          style={{ background: "var(--admin-yellow)", filter: "blur(20px)" }}
-          aria-hidden="true"
-        />
-        <div className="min-w-0 relative">
-          <div
-            className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-[11px] font-semibold mb-3"
-            style={{ background: "color-mix(in oklab, var(--admin-yellow) 22%, transparent)", color: "var(--admin-yellow)" }}
-          >
-            <Icon name="dashboard" className="text-[13px]" />
-            Kontrol Paneli
-          </div>
-          <p className="text-2xl md:text-[26px] font-bold tracking-tight">Hoş geldiniz 👋</p>
-          <p className="text-sm opacity-80 mt-1 max-w-xl">
-            Buradan tüm site içeriğinizi tek noktadan yönetebilirsiniz. Hızlı Ekle butonu ile saniyeler içinde yeni içerik oluşturun.
-          </p>
-        </div>
-        {setup.length > 0 && (() => {
-          const done = setup.filter((s) => s.done).length;
-          const pct = Math.round((done / setup.length) * 100);
-          return (
-            <div className="min-w-[240px] relative rounded-xl p-4" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <div className="flex items-baseline justify-between text-sm mb-2">
-                <span className="opacity-90">Site kurulumu</span>
-                <span className="font-bold" style={{ color: "var(--admin-yellow)" }}>{pct}%</span>
-              </div>
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.15)" }}>
-                <div className="h-full transition-all rounded-full" style={{ width: `${pct}%`, background: "var(--admin-yellow)" }} />
-              </div>
-              <p className="text-[11px] mt-2 opacity-70">{done} / {setup.length} adım tamamlandı</p>
+        <div className="relative grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-10">
+          <div>
+            <p
+              className="inline-flex items-center gap-1.5 h-6 px-3 rounded-full text-[11px] font-semibold mb-3"
+              style={{ background: "rgba(244,197,66,0.16)", color: "var(--admin-yellow)" }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--admin-yellow)" }} />
+              Yönetim Merkezi
+            </p>
+            <h1 className="text-[28px] md:text-[32px] font-bold tracking-tight leading-tight">
+              {greeting}, hoş geldiniz.
+            </h1>
+            <p className="text-[15px] mt-2 max-w-xl" style={{ color: "rgba(231,236,243,0.78)" }}>
+              Web sitenizi buradan kolayca yönetebilirsiniz. Aşağıdaki öncelikleri
+              takip ederek bugünkü işlerinizi hızlıca tamamlayın.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <button
+                onClick={() => onNavigate("messages")}
+                className="admin-btn admin-btn-accent"
+                style={{ height: 40 }}
+              >
+                <Icon name="inbox" className="text-[18px]" />
+                Gelen Mesajlar
+              </button>
+              <button
+                onClick={() => onNavigate("settings")}
+                className="admin-btn"
+                style={{
+                  height: 40,
+                  background: "rgba(255,255,255,0.10)",
+                  color: "#fff",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                }}
+              >
+                <Icon name="settings" className="text-[18px]" />
+                Site Ayarları
+              </button>
             </div>
-          );
-        })()}
+          </div>
+
+          {/* Setup checklist */}
+          <div
+            className="rounded-2xl p-5"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <div className="flex items-baseline justify-between mb-3">
+              <p className="text-[13px] font-semibold text-white/90">Site Kurulum Durumu</p>
+              <p className="text-lg font-bold" style={{ color: "var(--admin-yellow)" }}>
+                %{setupPct}
+              </p>
+            </div>
+            <div className="h-1.5 rounded-full overflow-hidden mb-4" style={{ background: "rgba(255,255,255,0.14)" }}>
+              <div
+                className="h-full rounded-full transition-all"
+                style={{ width: `${setupPct}%`, background: "var(--admin-yellow)" }}
+              />
+            </div>
+            <ul className="flex flex-col gap-1.5">
+              {setup.map((s) => (
+                <li key={s.label}>
+                  <button
+                    onClick={() => onNavigate(s.tab)}
+                    className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-left hover:bg-white/6 transition"
+                  >
+                    <span
+                      className="grid place-items-center h-6 w-6 rounded-full text-[13px] shrink-0"
+                      style={
+                        s.done
+                          ? { background: "var(--admin-yellow)", color: "var(--admin-navy-deep)" }
+                          : { background: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.6)" }
+                      }
+                    >
+                      <Icon name={s.done ? "check" : "circle"} className="text-[14px]" />
+                    </span>
+                    <span
+                      className="text-[13px] flex-1 truncate"
+                      style={{
+                        color: s.done ? "rgba(255,255,255,0.55)" : "#fff",
+                        textDecoration: s.done ? "line-through" : "none",
+                      }}
+                    >
+                      {s.label}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-        {stats.map((s) => (
-          <button
-            key={s.key}
-            onClick={() => onNavigate(s.key)}
-            className="group text-left rounded-xl p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div
-                className="h-10 w-10 rounded-lg grid place-items-center transition"
+      {/* Priorities */}
+      {priorities.length > 0 && (
+        <section className="admin-card p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span
+                className="grid place-items-center h-8 w-8 rounded-lg"
                 style={{ background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" }}
               >
-                <Icon name={s.icon} className="text-[20px]" />
-              </div>
-              <span className="opacity-0 group-hover:opacity-100 transition" style={{ color: "var(--admin-navy)" }}>
-                <Icon name="arrow_forward" className="text-[16px]" />
+                <Icon name="priority_high" className="text-[18px]" />
               </span>
+              <div>
+                <h2 className="text-[16px] font-semibold">Bugünkü Öncelikler</h2>
+                <p className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+                  Sitenizle ilgili dikkat gerektiren maddeler
+                </p>
+              </div>
             </div>
-            <p className="text-2xl font-bold" style={{ color: "var(--admin-text)" }}>
-              {loading ? "—" : s.value ?? 0}
-            </p>
-            <p className="text-[13px] mt-0.5" style={{ color: "var(--admin-text-2)" }}>{s.label}</p>
-            {s.hint && <p className="text-[11px] mt-1" style={{ color: "var(--admin-text-mute)" }}>{s.hint}</p>}
-          </button>
-        ))}
-      </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2.5">
+            {priorities.map((p) => (
+              <button
+                key={p.label + p.tab}
+                onClick={() => onNavigate(p.tab)}
+                className="flex items-center gap-3 p-3 rounded-xl text-left transition hover:-translate-y-0.5"
+                style={{
+                  background: "var(--admin-surface-2)",
+                  border: "1px solid var(--admin-border)",
+                }}
+              >
+                <span
+                  className="grid place-items-center h-10 w-10 rounded-lg shrink-0"
+                  style={
+                    p.tone === "danger"
+                      ? { background: "var(--admin-danger-soft)", color: "var(--admin-danger)" }
+                      : p.tone === "warning"
+                      ? { background: "var(--admin-warning-soft)", color: "var(--admin-warning)" }
+                      : { background: "var(--admin-info-soft)", color: "var(--admin-info)" }
+                  }
+                >
+                  <Icon name={p.icon} className="text-[20px]" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[13px]" style={{ color: "var(--admin-text-2)" }}>
+                    {p.label}
+                  </span>
+                  <span className="block text-[14px] font-semibold truncate" style={{ color: "var(--admin-text)" }}>
+                    {p.value}
+                  </span>
+                </span>
+                <Icon name="arrow_forward" className="text-[16px]" />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* Quick actions */}
-      <section className="rounded-xl p-5" style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-[15px]" style={{ color: "var(--admin-text)" }}>Hızlı İşlemler</h2>
+      {/* Quick create rail */}
+      <section className="admin-card p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="text-[16px] font-semibold">Hızlı Oluştur</h2>
+            <p className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+              Sık kullandığınız içerik türlerini tek tıkla oluşturun.
+            </p>
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-          {quick.map((q) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          {quickCreate.map((q) => (
             <button
               key={q.key + q.label}
-              onClick={() => onNavigate(q.key)}
-              className="flex items-center gap-2 h-11 px-3 rounded-lg text-sm text-left transition hover:-translate-y-0.5"
-              style={{ background: "var(--admin-surface-2)", border: "1px solid var(--admin-border)" }}
+              onClick={() => {
+                onNavigate(q.key);
+                setTimeout(() => window.dispatchEvent(new CustomEvent("admin:quick-add", { detail: { tab: q.key } })), 60);
+              }}
+              className="group flex flex-col items-start gap-2 p-3.5 rounded-xl text-left transition-all hover:-translate-y-0.5"
+              style={{
+                background: "var(--admin-surface)",
+                border: "1px solid var(--admin-border)",
+              }}
             >
-              <span className="shrink-0" style={{ color: "var(--admin-navy)" }}>
-                <Icon name={q.icon} className="text-[18px]" />
+              <span
+                className="grid place-items-center h-10 w-10 rounded-xl"
+                style={{ background: "var(--admin-navy)", color: "var(--admin-yellow)" }}
+              >
+                <Icon name={q.icon} className="text-[20px]" />
               </span>
-              <span className="truncate" style={{ color: "var(--admin-text)" }}>{q.label}</span>
+              <span className="text-[14px] font-semibold" style={{ color: "var(--admin-text)" }}>
+                {q.label}
+              </span>
+              <span className="text-[12px] leading-tight" style={{ color: "var(--admin-text-2)" }}>
+                {q.desc}
+              </span>
             </button>
           ))}
         </div>
       </section>
 
-      {/* Recent */}
+      {/* KPI grid */}
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="text-[16px] font-semibold">Sitenizin Anlık Durumu</h2>
+            <p className="text-[12px]" style={{ color: "var(--admin-text-2)" }}>
+              Her karta tıklayarak ilgili sayfaya gidin.
+            </p>
+          </div>
+          {stats.lastUpdated && (
+            <p className="hidden sm:block text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
+              Son güncelleme: {new Date(stats.lastUpdated).toLocaleString("tr-TR")}
+            </p>
+          )}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-3">
+          {kpis.map((s, i) => (
+            <button
+              key={s.label + i}
+              onClick={() => onNavigate(s.key)}
+              className="admin-card group text-left p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span
+                  className="grid place-items-center h-9 w-9 rounded-lg"
+                  style={{ background: "var(--admin-surface-2)", color: "var(--admin-navy)" }}
+                >
+                  <Icon name={s.icon} className="text-[18px]" />
+                </span>
+                {s.value > 0 && s.hint?.includes("Yanıt") && (
+                  <span className="admin-badge admin-badge-warning">Dikkat</span>
+                )}
+              </div>
+              <p className="text-[26px] font-bold tracking-tight" style={{ color: "var(--admin-text)" }}>
+                {loading ? <span className="admin-skel inline-block h-6 w-10 align-middle" /> : s.value}
+              </p>
+              <p className="text-[13px] mt-0.5" style={{ color: "var(--admin-text-2)" }}>
+                {s.label}
+              </p>
+              {s.hint && (
+                <p className="text-[11px] mt-1" style={{ color: "var(--admin-text-mute)" }}>
+                  {s.hint}
+                </p>
+              )}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <RecentList
           title="Son Gelen Mesajlar"
           emptyLabel="Henüz mesaj yok."
+          icon="mail"
           onSeeAll={() => onNavigate("messages")}
           items={messages.map((m) => ({
             id: m.id,
@@ -200,10 +425,12 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
             date: m.created_at,
             status: m.status,
           }))}
+          onOpen={() => onNavigate("messages")}
         />
         <RecentList
           title="Son Teklif Talepleri"
           emptyLabel="Henüz teklif talebi yok."
+          icon="request_quote"
           onSeeAll={() => onNavigate("quotes")}
           items={quotes.map((q) => ({
             id: q.id,
@@ -212,6 +439,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
             date: q.created_at,
             status: q.status,
           }))}
+          onOpen={() => onNavigate("quotes")}
         />
       </div>
     </div>
@@ -222,30 +450,62 @@ function RecentList({
   title,
   items,
   emptyLabel,
+  icon,
   onSeeAll,
+  onOpen,
 }: {
   title: string;
   items: { id: string; primary: string; secondary: string; date: string; status: string | null }[];
   emptyLabel: string;
+  icon: string;
   onSeeAll: () => void;
+  onOpen: () => void;
 }) {
   return (
-    <section className="rounded-xl overflow-hidden" style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}>
+    <section className="admin-card overflow-hidden">
       <header className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--admin-border)" }}>
-        <h2 className="font-bold text-[14px]" style={{ color: "var(--admin-text)" }}>{title}</h2>
-        <button onClick={onSeeAll} className="text-sm font-semibold hover:underline" style={{ color: "var(--admin-navy)" }}>
+        <div className="flex items-center gap-2">
+          <span
+            className="grid place-items-center h-7 w-7 rounded-lg"
+            style={{ background: "var(--admin-surface-2)", color: "var(--admin-navy)" }}
+          >
+            <Icon name={icon} className="text-[16px]" />
+          </span>
+          <h2 className="text-[14px] font-semibold" style={{ color: "var(--admin-text)" }}>
+            {title}
+          </h2>
+        </div>
+        <button
+          onClick={onSeeAll}
+          className="text-[12px] font-semibold inline-flex items-center gap-1 hover:underline"
+          style={{ color: "var(--admin-navy)" }}
+        >
           Tümünü gör
+          <Icon name="arrow_forward" className="text-[14px]" />
         </button>
       </header>
       {items.length === 0 ? (
-        <p className="p-8 text-center text-sm" style={{ color: "var(--admin-text-2)" }}>{emptyLabel}</p>
+        <div className="p-8 text-center">
+          <p className="text-sm" style={{ color: "var(--admin-text-2)" }}>
+            {emptyLabel}
+          </p>
+        </div>
       ) : (
-        <ul style={{ borderTop: "0" }}>
+        <ul>
           {items.map((it) => (
-            <li key={it.id} className="px-5 py-3 flex items-center gap-3" style={{ borderTop: "1px solid var(--admin-border)" }}>
+            <li
+              key={it.id}
+              className="px-5 py-3 flex items-center gap-3 hover:bg-[var(--admin-surface-2)] cursor-pointer transition"
+              style={{ borderTop: "1px solid var(--admin-border)" }}
+              onClick={onOpen}
+            >
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold truncate" style={{ color: "var(--admin-text)" }}>{it.primary}</p>
-                <p className="text-sm truncate" style={{ color: "var(--admin-text-2)" }}>{it.secondary}</p>
+                <p className="text-[14px] font-semibold truncate" style={{ color: "var(--admin-text)" }}>
+                  {it.primary}
+                </p>
+                <p className="text-[13px] truncate" style={{ color: "var(--admin-text-2)" }}>
+                  {it.secondary}
+                </p>
               </div>
               <StatusBadge status={it.status} />
               <span className="text-[11px] whitespace-nowrap" style={{ color: "var(--admin-text-mute)" }}>
@@ -261,18 +521,18 @@ function RecentList({
 
 function StatusBadge({ status }: { status: string | null }) {
   const map: Record<string, { label: string; cls: string }> = {
-    new: { label: "Yeni", cls: "bg-[var(--admin-yellow-soft)] text-[var(--admin-navy)]" },
-    in_progress: { label: "İşlemde", cls: "bg-blue-50 text-blue-700" },
-    resolved: { label: "Çözüldü", cls: "bg-green-50 text-green-700" },
-    completed: { label: "Tamamlandı", cls: "bg-green-50 text-green-700" },
-    cancelled: { label: "İptal", cls: "bg-gray-100 text-gray-600" },
-    archived: { label: "Arşiv", cls: "bg-gray-100 text-gray-600" },
+    new: { label: "Yeni", cls: "admin-badge-accent" },
+    in_progress: { label: "İşlemde", cls: "admin-badge-info" },
+    resolved: { label: "Çözüldü", cls: "admin-badge-success" },
+    completed: { label: "Tamamlandı", cls: "admin-badge-success" },
+    cancelled: { label: "İptal", cls: "admin-badge-neutral" },
+    archived: { label: "Arşiv", cls: "admin-badge-neutral" },
+    reviewing: { label: "İnceleniyor", cls: "admin-badge-info" },
+    interviewed: { label: "Görüşüldü", cls: "admin-badge-info" },
+    hired: { label: "İşe Alındı", cls: "admin-badge-success" },
+    rejected: { label: "Reddedildi", cls: "admin-badge-danger" },
   };
   const m = status ? map[status] : null;
   if (!m) return null;
-  return (
-    <span className={`hidden sm:inline text-[11px] px-2 py-0.5 rounded-full font-semibold ${m.cls}`}>
-      {m.label}
-    </span>
-  );
+  return <span className={`admin-badge ${m.cls}`}>{m.label}</span>;
 }
