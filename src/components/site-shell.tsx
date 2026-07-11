@@ -60,6 +60,8 @@ export function SiteHeader() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const megaTimeout = useRef<number | null>(null);
+  const menuBtnRef = useRef<HTMLButtonElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
   const settings = useSiteSettings();
 
@@ -70,9 +72,42 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !drawerRef.current) return;
+      const focusables = drawerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    // move focus into the drawer
+    const t = window.setTimeout(() => {
+      const firstLink = drawerRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])');
+      firstLink?.focus();
+    }, 40);
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+      window.clearTimeout(t);
+      // restore focus to trigger
+      menuBtnRef.current?.focus();
     };
   }, [menuOpen]);
   useEffect(() => {
@@ -94,6 +129,9 @@ export function SiteHeader() {
   const phone = settings.phone;
   const whatsapp = settings.whatsapp;
 
+  const waHref = whatsapp ? `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}` : undefined;
+  const telHref = phone ? `tel:${phone.replace(/\s/g, "")}` : undefined;
+
   return (
     <>
     <header
@@ -102,8 +140,54 @@ export function SiteHeader() {
         backgroundColor: scrolled ? "var(--public-navy-950)" : "var(--public-navy-900)",
         boxShadow: scrolled ? "0 1px 0 rgba(245,196,0,0.35), 0 12px 28px -20px rgba(0,0,0,0.6)" : "none",
         borderBottom: scrolled ? "0" : "1px solid rgba(255,255,255,0.06)",
+        paddingTop: "env(safe-area-inset-top)",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)",
+        fontFamily: 'var(--font-body, "Manrope", "Segoe UI", Arial, sans-serif)',
       }}
     >
+      {/* Mobile compact utility strip */}
+      <div
+        className="md:hidden"
+        style={{
+          backgroundColor: "var(--public-navy-950)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
+          {telHref ? (
+            <a href={telHref} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+              <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+              <span className="truncate">{phone}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          <div className="flex items-center gap-3 shrink-0">
+            {waHref && (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp ile yaz"
+                className="inline-flex items-center gap-1 min-h-[28px] font-medium hover:text-white transition-colors"
+              >
+                <Icon name="chat" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                WhatsApp
+              </a>
+            )}
+            <Link
+              to="/teklif"
+              className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
+              style={{ color: "var(--public-yellow-500)" }}
+            >
+              Teklif
+              <Icon name="arrow_forward" className="text-[13px]" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* Utility strip — desktop only */}
       <div
         className="hidden md:block"
@@ -151,14 +235,21 @@ export function SiteHeader() {
       </div>
 
       {/* Main header row */}
-      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+      <div className="max-w-max-width mx-auto px-4 md:px-margin-desktop">
         <div
-          className="grid grid-cols-[auto_1fr_auto] items-center gap-6 transition-all duration-300"
-          style={{ height: scrolled ? "64px" : "84px" }}
+          className="grid grid-cols-[minmax(0,auto)_1fr_auto] items-center gap-3 md:gap-6 transition-[height] duration-300"
+          style={{ height: scrolled ? "58px" : "64px" }}
         >
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group" aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
-            <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} />
+          <Link
+            to="/"
+            className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
+            aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
+          >
+            <BrandWordmark
+              logoUrl={settings.mobile_logo_url || settings.logo_url}
+              companyName={settings.company_name}
+            />
           </Link>
 
           {/* Center nav — desktop */}
@@ -229,21 +320,24 @@ export function SiteHeader() {
             </Link>
             <Link
               to="/teklif-sepeti"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
+              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
               aria-label="Teklif sepeti"
             >
               <Icon name="shopping_cart" aria-hidden="true" />
             </Link>
-            <Link
-              to="/teklif"
-              className="pub-btn pub-btn-primary pub-btn-sm hidden sm:inline-flex ml-2"
-            >
-              Teklif Talep Et
-              <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-            </Link>
+            <span className="hidden lg:inline-flex ml-2">
+              <Link
+                to="/teklif"
+                className="pub-btn pub-btn-primary pub-btn-sm"
+              >
+                Teklif Talep Et
+                <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
+              </Link>
+            </span>
             <button
+              ref={menuBtnRef}
               type="button"
-              className="lg:hidden text-white min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)] transition-colors"
+              className="lg:hidden text-white min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm border border-white/15 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)] transition-colors ml-1"
               aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
@@ -316,134 +410,245 @@ export function SiteHeader() {
       </div>
     </header>
 
-      {/* Mobile drawer — rendered outside <header> so backdrop-blur ancestor doesn't break fixed positioning */}
+      {/* Mobile drawer — full-height, safe-area aware, focus-trapped */}
       {menuOpen && (
-        <div
-          id="mobile-nav"
-          className="lg:hidden fixed top-16 right-0 bottom-0 left-0 z-40 overflow-y-auto text-white"
-          style={{ backgroundColor: "var(--public-navy-950)" }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site menüsü"
-        >
-          <div className="px-margin-mobile py-6 flex flex-col gap-1">
-            {NAV_LINKS.filter((l) => l.to !== "/urunler").map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-white/90 border-b border-white/10 hover:text-[var(--public-yellow-500)] transition-colors"
-                activeOptions={{ exact: true }}
-                activeProps={{
-                  className: "flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-[var(--public-yellow-500)] border-b border-white/10",
-                }}
-              >
-                {l.label}
-                <Icon name="chevron_right" className="text-[20px] text-white/40" aria-hidden="true" />
-              </Link>
-            ))}
-
-            {/* Products expandable */}
-            <div className="border-b border-white/10">
-              <button
-                type="button"
-                onClick={() => setMobileProductsOpen((v) => !v)}
-                className="w-full flex items-center justify-between py-4 px-2 text-[16px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors"
-                aria-expanded={mobileProductsOpen}
-              >
-                Ürünler
-                <Icon
-                  name="expand_more"
-                  className={`text-[20px] text-white/40 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
-                  aria-hidden="true"
+        <>
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/60 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-150"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            id="mobile-nav"
+            ref={drawerRef}
+            className="lg:hidden fixed inset-y-0 right-0 z-50 w-full sm:max-w-sm text-white flex flex-col motion-safe:animate-in motion-safe:slide-in-from-right motion-safe:duration-200"
+            style={{
+              backgroundColor: "var(--public-navy-950)",
+              paddingTop: "env(safe-area-inset-top)",
+              paddingBottom: "env(safe-area-inset-bottom)",
+              paddingRight: "env(safe-area-inset-right)",
+              fontFamily: 'var(--font-body, "Manrope", "Segoe UI", Arial, sans-serif)',
+              boxShadow: "-24px 0 48px -12px rgba(0,0,0,0.6)",
+            }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menüsü"
+          >
+            {/* Drawer header */}
+            <div
+              className="flex items-center justify-between px-5 h-16 shrink-0"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <Link to="/" onClick={() => setMenuOpen(false)} aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
+                <BrandWordmark
+                  logoUrl={settings.mobile_logo_url || settings.logo_url}
+                  companyName={settings.company_name}
                 />
+              </Link>
+              <button
+                  type="button"
+                  onClick={() => setMenuOpen(false)}
+                  className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm border border-white/15 text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
+                  aria-label="Menüyü kapat"
+                >
+                  <Icon name="close" aria-hidden="true" />
               </button>
-              {mobileProductsOpen && (
-                <ul className="pb-3 pl-2">
-                  <li>
-                    <Link
-                      to="/urunler"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 py-2.5 text-[14px] font-semibold"
-                      style={{ color: "var(--public-yellow-500)" }}
-                    >
-                      Tüm ürün grupları
-                      <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-                    </Link>
-                  </li>
-                  {PRODUCT_GROUPS.map((g) => (
-                    <li key={g.to}>
+            </div>
+
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
+              <nav className="px-3 py-4" aria-label="Mobil menü">
+                <ul className="flex flex-col">
+                  {NAV_LINKS.filter((l) => l.to !== "/urunler").map((l) => (
+                    <li key={l.to}>
                       <Link
-                        to={g.to}
+                        to={l.to}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-baseline gap-3 py-2.5 text-[14px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
+                        className="group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors relative"
+                        activeOptions={{ exact: true }}
+                        activeProps={{
+                          className:
+                            "group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-[var(--public-yellow-500)] transition-colors relative before:content-[''] before:absolute before:left-0 before:top-3 before:bottom-3 before:w-[3px] before:bg-[var(--public-yellow-500)]",
+                        }}
                       >
-                        <span className="pub-mono tabular-nums w-6" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
-                        <span>{g.title}</span>
+                        <span>{l.label}</span>
+                        <Icon name="chevron_right" className="text-[20px] text-white/40 group-hover:text-[var(--public-yellow-500)]" aria-hidden="true" />
                       </Link>
+                      <div className="h-px bg-white/8" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
                     </li>
                   ))}
+
+                  {/* Products accordion */}
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => setMobileProductsOpen((v) => !v)}
+                      className="w-full flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors"
+                      aria-expanded={mobileProductsOpen}
+                      aria-controls="mobile-products"
+                    >
+                      Ürün Grupları
+                      <Icon
+                        name="expand_more"
+                        className={`text-[22px] text-white/50 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {mobileProductsOpen && (
+                      <ul id="mobile-products" className="pb-2">
+                        <li>
+                          <Link
+                            to="/urunler"
+                            onClick={() => setMenuOpen(false)}
+                            className="flex items-center gap-2 min-h-[44px] px-6 text-[14px] font-semibold"
+                            style={{ color: "var(--public-yellow-500)" }}
+                          >
+                            Tüm Ürün Grupları
+                            <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
+                          </Link>
+                        </li>
+                        {PRODUCT_GROUPS.map((g) => (
+                          <li key={g.to}>
+                            <Link
+                              to={g.to}
+                              onClick={() => setMenuOpen(false)}
+                              className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
+                            >
+                              <span
+                                className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                style={{ color: "var(--public-yellow-500)" }}
+                              >
+                                {g.code}
+                              </span>
+                              <span className="min-w-0">{g.title}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} />
+                  </li>
                 </ul>
-              )}
+              </nav>
+
+              {/* Contact actions */}
+              <div className="px-5 pt-4">
+                <span className="text-[10px] uppercase tracking-[0.18em] font-semibold" style={{ color: "var(--public-yellow-500)" }}>
+                  İletişim
+                </span>
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  {telHref && (
+                    <a
+                      href={telHref}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 min-h-[52px] px-4 border border-white/12 rounded-sm hover:border-[var(--public-yellow-500)] transition-colors"
+                    >
+                      <Icon name="call" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                      <span className="flex flex-col">
+                        <span className="text-[11px] uppercase tracking-wider text-white/50">Telefon</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{phone}</span>
+                      </span>
+                    </a>
+                  )}
+                  {waHref && (
+                    <a
+                      href={waHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 min-h-[52px] px-4 border border-white/12 rounded-sm hover:border-[var(--public-yellow-500)] transition-colors"
+                    >
+                      <Icon name="chat" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                      <span className="flex flex-col">
+                        <span className="text-[11px] uppercase tracking-wider text-white/50">WhatsApp</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{whatsapp}</span>
+                      </span>
+                    </a>
+                  )}
+                  {settings.email && (
+                    <a
+                      href={`mailto:${settings.email}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 min-h-[52px] px-4 border border-white/12 rounded-sm hover:border-[var(--public-yellow-500)] transition-colors"
+                    >
+                      <Icon name="mail" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                      <span className="flex flex-col min-w-0">
+                        <span className="text-[11px] uppercase tracking-wider text-white/50">E-posta</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{settings.email}</span>
+                      </span>
+                    </a>
+                  )}
+                  {(settings.working_hours || settings.address) && (
+                    <div className="mt-2 space-y-1.5 text-[13px] text-white/60">
+                      {settings.working_hours && (
+                        <p className="flex items-start gap-2">
+                          <Icon name="schedule" className="text-[16px] mt-0.5" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                          <span>{settings.working_hours}</span>
+                        </p>
+                      )}
+                      {settings.address && (
+                        <p className="flex items-start gap-2">
+                          <Icon name="location_on" className="text-[16px] mt-0.5" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                          <span>{settings.address}</span>
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="h-6" />
             </div>
 
-            {/* Contact actions */}
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              {phone && (
-                <a
-                  href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="flex flex-col items-start gap-1 border border-white/15 rounded-sm p-4 hover:border-[var(--public-yellow-500)] transition-colors"
-                >
-                  <Icon name="call" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                  <span className="pub-mono text-white/60">Telefon</span>
-                  <span className="text-[13px] font-semibold text-white">{phone}</span>
-                </a>
-              )}
-              {whatsapp && (
-                <a
-                  href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-col items-start gap-1 border border-white/15 rounded-sm p-4 hover:border-[var(--public-yellow-500)] transition-colors"
-                >
-                  <Icon name="chat" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                  <span className="pub-mono text-white/60">WhatsApp</span>
-                  <span className="text-[13px] font-semibold text-white">Yaz</span>
-                </a>
-              )}
-            </div>
-
-            <Link
-              to="/teklif"
-              onClick={() => setMenuOpen(false)}
-              className="pub-btn pub-btn-primary mt-4 w-full"
+            {/* Sticky bottom CTA */}
+            <div
+              className="shrink-0 px-4 pt-3 pb-4"
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+                backgroundColor: "var(--public-navy-900)",
+                paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)",
+              }}
             >
-              Teklif Talep Et
-              <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-            </Link>
-
-            <div className="mt-4 flex items-center gap-3">
               <Link
-                to="/giris"
+                to="/teklif"
                 onClick={() => setMenuOpen(false)}
-                className="pub-btn pub-btn-outline-light pub-btn-sm flex-1"
+                className="pub-btn pub-btn-primary w-full min-h-12"
               >
-                <Icon name="account_circle" className="text-[18px]" aria-hidden="true" />
-                Bayi Girişi
+                Teklif Talep Et
+                <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
               </Link>
-              {isAdmin && (
+              <div className="mt-2 grid grid-cols-2 gap-2">
                 <Link
-                  to="/admin"
+                  to="/giris"
                   onClick={() => setMenuOpen(false)}
-                  className="pub-btn pub-btn-outline-light pub-btn-sm"
-                  aria-label="Yönetim paneli"
+                  className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
                 >
-                  <Icon name="admin_panel_settings" className="text-[18px]" aria-hidden="true" />
+                  <Icon name="account_circle" className="text-[18px]" aria-hidden="true" />
+                  Bayi Girişi
                 </Link>
-              )}
+                {isAdmin ? (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
+                  >
+                    <Icon name="admin_panel_settings" className="text-[18px]" aria-hidden="true" />
+                    Yönetim
+                  </Link>
+                ) : (
+                  <Link
+                    to="/iletisim"
+                    onClick={() => setMenuOpen(false)}
+                    className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
+                  >
+                    <Icon name="mail" className="text-[18px]" aria-hidden="true" />
+                    İletişim
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
