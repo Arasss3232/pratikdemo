@@ -35,20 +35,43 @@ const TASK_CARDS: {
   hint: string;
   icon: string;
   target: AdminTab;
-  advancedOnly?: boolean;
+  workflow?: "homepage" | "product" | "brochure" | "seo" | "mobile" | "spelling" | "images" | "messages" | "newpage" | "design";
 }[] = [
-  { key: "homepage", title: "Ana Sayfayı Düzenle", hint: "Broşür slaytları ve öne çıkan bölümleri güncelleyin.", icon: "home", target: "brochures" },
+  { key: "homepage", title: "Ana Sayfayı Düzenle", hint: "Adım adım ana sayfa bölümlerini iyileştirin.", icon: "home", target: "brochures", workflow: "homepage" },
   { key: "new-product", title: "Yeni Ürün Ekle", hint: "Katalog için yeni bir ürün oluşturun.", icon: "add_box", target: "products" },
-  { key: "product-desc", title: "Ürün Açıklaması Hazırla", hint: "Yapay Zekâ ile açıklama taslağı üretin.", icon: "description", target: "aiAssistant" },
-  { key: "new-brochure", title: "Yeni Broşür Oluştur", hint: "Ana sayfa slider için yeni bir slayt hazırlayın.", icon: "view_carousel", target: "brochures" },
-  { key: "audit", title: "Siteyi Baştan Sona Kontrol Et", hint: "Eksik görsel, SEO ve tutarlılık taraması çalıştırın.", icon: "health_and_safety", target: "dashboard" },
-  { key: "seo", title: "SEO Eksiklerini Bul", hint: "Google'da görünen başlık ve açıklamaları iyileştirin.", icon: "trending_up", target: "aiAssistant" },
-  { key: "messages", title: "Gelen Mesajları Görüntüle", hint: "Yeni iletişim mesajlarını inceleyin.", icon: "mail", target: "messages" },
-  { key: "quotes", title: "Teklif Taleplerini İncele", hint: "Bekleyen web teklif taleplerini yönetin.", icon: "request_quote", target: "quotes" },
-  { key: "new-page", title: "Yeni Blog Yazısı", hint: "Blog için yeni bir yazı hazırlayın.", icon: "article", target: "blog" },
-  { key: "contact", title: "İletişim Bilgilerini Kontrol Et", hint: "Site genelinde görünen iletişim bilgilerini gözden geçirin.", icon: "contact_phone", target: "settings" },
-  { key: "ai-history", title: "AI Geçmişini Aç", hint: "Yapay Zekâ'nın önceki önerilerini inceleyin.", icon: "history", target: "aiHistory", advancedOnly: false },
-  { key: "team", title: "Ekip Bilgilerini Güncelle", hint: "Ekip üyelerini ve rollerini düzenleyin.", icon: "group", target: "team" },
+  { key: "product-desc", title: "Ürün Açıklaması Hazırla", hint: "Yapay Zekâ ile açıklama taslağı üretin.", icon: "description", target: "aiAssistant", workflow: "product" },
+  { key: "new-brochure", title: "Yeni Broşür Oluştur", hint: "Ana sayfa slider için yeni bir slayt hazırlayın.", icon: "view_carousel", target: "brochures", workflow: "brochure" },
+  { key: "audit", title: "Siteyi Kontrol Et", hint: "Eksik görsel, SEO ve tutarlılık taraması çalıştırın.", icon: "health_and_safety", target: "dashboard" },
+  { key: "seo", title: "SEO Eksiklerini Bul", hint: "Google'da görünen başlık ve açıklamaları iyileştirin.", icon: "trending_up", target: "aiAssistant", workflow: "seo" },
+  { key: "mobile", title: "Mobil Görünümü Kontrol Et", hint: "Küçük ekranda taşan alanları ve sorunları bulun.", icon: "smartphone", target: "dashboard", workflow: "mobile" },
+  { key: "spelling", title: "Yazım Hatalarını Düzelt", hint: "Site metinlerinde yazım/dilbilgisi taraması yapın.", icon: "spellcheck", target: "aiAssistant", workflow: "spelling" },
+  { key: "images", title: "Eksik Görselleri Bul", hint: "Görseli olmayan ürün ve içerikleri listeleyin.", icon: "image_search", target: "products", workflow: "images" },
+  { key: "messages", title: "Mesajları Özetle", hint: "Yeni iletişim mesajlarını özetleyip önceliklendirin.", icon: "mail", target: "messages", workflow: "messages" },
+  { key: "new-page", title: "Yeni Sayfa Oluştur", hint: "Yeni bir blog yazısı veya sayfa taslağı hazırlayın.", icon: "post_add", target: "blog", workflow: "newpage" },
+  { key: "design", title: "Tasarım Tutarlılığını Kontrol Et", hint: "Renk, tipografi ve buton tutarlılığını denetleyin.", icon: "palette", target: "aiAssistant", workflow: "design" },
+];
+
+const SUGGESTED_PROMPTS: string[] = [
+  "Ana sayfayı daha modern göster",
+  "Eksik ürün açıklamalarını listele",
+  "En son gelen mesajları özetle",
+  "SEO eksiklerini bul",
+  "Mobil ekranda taşan bölümleri bul",
+  "Broşür sliderına yeni bir slayt hazırla",
+];
+
+const SITE_MAP: { key: string; label: string; icon: string; tab: AdminTab; hint: string }[] = [
+  { key: "header", label: "Header", icon: "view_headline", tab: "settings", hint: "Menü, logo ve üst şerit." },
+  { key: "home", label: "Ana Sayfa", icon: "home", tab: "brochures", hint: "Slider ve öne çıkan bölümler." },
+  { key: "slider", label: "Broşür Slider", icon: "view_carousel", tab: "brochures", hint: "Ana sayfadaki slaytlar." },
+  { key: "products", label: "Ürün Grupları", icon: "inventory_2", tab: "products", hint: "Kategoriler ve ürünler." },
+  { key: "about", label: "Hakkımızda", icon: "info", tab: "settings", hint: "Kurumsal tanıtım metinleri." },
+  { key: "services", label: "Hizmetler", icon: "handyman", tab: "services", hint: "Hizmet sayfaları." },
+  { key: "brands", label: "Markalar", icon: "workspace_premium", tab: "brands", hint: "Yer alan markalar." },
+  { key: "references", label: "Referanslar", icon: "star", tab: "references", hint: "Proje referansları." },
+  { key: "blog", label: "Blog", icon: "article", tab: "blog", hint: "Yazılar." },
+  { key: "contact", label: "İletişim", icon: "contact_phone", tab: "settings", hint: "Telefon, e-posta, adres." },
+  { key: "footer", label: "Footer", icon: "table_rows", tab: "settings", hint: "Alt kısım ve iletişim." },
 ];
 
 function useSnapshot() {
