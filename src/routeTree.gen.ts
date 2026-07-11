@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UrunlerRouteImport } from './routes/urunler'
 import { Route as TeknikDestekRouteImport } from './routes/teknik-destek'
+import { Route as TeklifSepetiRouteImport } from './routes/teklif-sepeti'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
@@ -32,6 +33,11 @@ const UrunlerRoute = UrunlerRouteImport.update({
 const TeknikDestekRoute = TeknikDestekRouteImport.update({
   id: '/teknik-destek',
   path: '/teknik-destek',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeklifSepetiRoute = TeklifSepetiRouteImport.update({
+  id: '/teklif-sepeti',
+  path: '/teklif-sepeti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeklifRoute = TeklifRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/teklif-sepeti': typeof TeklifSepetiRoute
   '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/teklif-sepeti'
     | '/teknik-destek'
     | '/urunler'
     | '/urunler/elektrikli-el-aletleri'
@@ -208,6 +220,7 @@ export interface RootRouteChildren {
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
+  TeklifSepetiRoute: typeof TeklifSepetiRoute
   TeknikDestekRoute: typeof TeknikDestekRoute
   UrunlerRoute: typeof UrunlerRouteWithChildren
 }
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/teknik-destek'
       fullPath: '/teknik-destek'
       preLoaderRoute: typeof TeknikDestekRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teklif-sepeti': {
+      id: '/teklif-sepeti'
+      path: '/teklif-sepeti'
+      fullPath: '/teklif-sepeti'
+      preLoaderRoute: typeof TeklifSepetiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teklif': {
@@ -338,6 +358,7 @@ const rootRouteChildren: RootRouteChildren = {
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
+  TeklifSepetiRoute: TeklifSepetiRoute,
   TeknikDestekRoute: TeknikDestekRoute,
   UrunlerRoute: UrunlerRouteWithChildren,
 }

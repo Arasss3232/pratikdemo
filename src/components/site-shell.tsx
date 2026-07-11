@@ -77,20 +77,20 @@ export function SiteHeader() {
               />
             </div>
             <div className="flex items-center gap-2 text-on-primary">
-              <button
-                type="button"
+              <Link
+                to="/giris"
                 className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
-                aria-label="Hesabım"
+                aria-label="Bayi girişi"
               >
                 <Icon name="account_circle" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
+              </Link>
+              <Link
+                to="/teklif-sepeti"
                 className="min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 hover:text-secondary-fixed-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
-                aria-label="Sepet"
+                aria-label="Teklif sepeti"
               >
                 <Icon name="shopping_cart" aria-hidden="true" />
-              </button>
+              </Link>
             </div>
             <Link
               to="/teklif"
