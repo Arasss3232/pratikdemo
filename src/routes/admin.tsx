@@ -4,6 +4,8 @@ import { Icon } from "../components/site-shell";
 import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { GenericCrud, type CrudField, type CrudColumn } from "../components/admin/GenericCrud";
+import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -15,7 +17,23 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "products" | "quotes" | "users";
+type Tab =
+  | "settings"
+  | "products"
+  | "services"
+  | "references"
+  | "brands"
+  | "certificates"
+  | "team"
+  | "testimonials"
+  | "faqs"
+  | "blog"
+  | "blogcats"
+  | "jobs"
+  | "applications"
+  | "messages"
+  | "quotes"
+  | "users";
 
 type Product = {
   id: string;
@@ -52,7 +70,7 @@ type UserRoleRow = {
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<Tab>("products");
+  const [tab, setTab] = useState<Tab>("settings");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/giris" });
@@ -76,11 +94,45 @@ function AdminPage() {
     );
   }
 
-  const navItems: { key: Tab; label: string; icon: string }[] = [
-    { key: "products", label: "Ürünler", icon: "inventory_2" },
-    { key: "quotes", label: "Teklif Talepleri", icon: "request_quote" },
-    { key: "users", label: "Kullanıcılar", icon: "group" },
+  const navGroups: { title: string; items: { key: Tab; label: string; icon: string }[] }[] = [
+    {
+      title: "Site",
+      items: [
+        { key: "settings", label: "Site Ayarları", icon: "settings" },
+        { key: "messages", label: "İletişim Mesajları", icon: "mail" },
+      ],
+    },
+    {
+      title: "İçerik",
+      items: [
+        { key: "services", label: "Hizmetler", icon: "handyman" },
+        { key: "references", label: "Referanslar", icon: "workspace_premium" },
+        { key: "brands", label: "Markalar", icon: "storefront" },
+        { key: "certificates", label: "Sertifikalar", icon: "verified" },
+        { key: "team", label: "Ekip", icon: "groups" },
+        { key: "testimonials", label: "Müşteri Yorumları", icon: "reviews" },
+        { key: "faqs", label: "SSS", icon: "quiz" },
+      ],
+    },
+    {
+      title: "Yayın",
+      items: [
+        { key: "blogcats", label: "Blog Kategorileri", icon: "category" },
+        { key: "blog", label: "Blog Yazıları", icon: "article" },
+        { key: "jobs", label: "İlanlar", icon: "work" },
+        { key: "applications", label: "Başvurular", icon: "assignment_ind" },
+      ],
+    },
+    {
+      title: "Ticaret",
+      items: [
+        { key: "products", label: "Ürünler", icon: "inventory_2" },
+        { key: "quotes", label: "Teklif Talepleri", icon: "request_quote" },
+        { key: "users", label: "Kullanıcılar", icon: "group" },
+      ],
+    },
   ];
+  const navItems = navGroups.flatMap((g) => g.items);
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -105,18 +157,23 @@ function AdminPage() {
         </div>
       </header>
       <div className="flex-1 flex">
-        <aside className="hidden md:flex w-56 shrink-0 flex-col gap-1 border-r border-outline-variant bg-surface p-3">
-          {navItems.map((n) => (
-            <button
-              key={n.key}
-              onClick={() => setTab(n.key)}
-              className={`flex items-center gap-2 px-3 py-2 rounded text-left text-body-sm transition-colors ${
-                tab === n.key ? "bg-primary-container text-on-primary-container font-label-bold" : "hover:bg-surface-container"
-              }`}
-            >
-              <Icon name={n.icon} className="text-[18px]" />
-              {n.label}
-            </button>
+        <aside className="hidden md:flex w-60 shrink-0 flex-col gap-4 border-r border-outline-variant bg-surface p-3 overflow-y-auto">
+          {navGroups.map((g) => (
+            <div key={g.title} className="flex flex-col gap-1">
+              <p className="px-3 pt-2 pb-1 text-body-sm uppercase tracking-wide text-on-surface-variant opacity-70">{g.title}</p>
+              {g.items.map((n) => (
+                <button
+                  key={n.key}
+                  onClick={() => setTab(n.key)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-left text-body-sm transition-colors ${
+                    tab === n.key ? "bg-primary-container text-on-primary-container font-label-bold" : "hover:bg-surface-container"
+                  }`}
+                >
+                  <Icon name={n.icon} className="text-[18px]" />
+                  {n.label}
+                </button>
+              ))}
+            </div>
           ))}
         </aside>
         <main className="flex-1 min-w-0 flex flex-col">
@@ -134,9 +191,22 @@ function AdminPage() {
             ))}
           </div>
           <div className="p-4 md:p-6">
+          {tab === "settings" && <SiteSettingsForm />}
           {tab === "products" && <ProductsTab />}
           {tab === "quotes" && <QuotesTab />}
           {tab === "users" && <UsersTab currentUserId={user.id} />}
+          {tab === "services" && <ServicesTab />}
+          {tab === "references" && <ReferencesTab />}
+          {tab === "brands" && <BrandsTab />}
+          {tab === "certificates" && <CertificatesTab />}
+          {tab === "team" && <TeamTab />}
+          {tab === "testimonials" && <TestimonialsTab />}
+          {tab === "faqs" && <FaqsTab />}
+          {tab === "blogcats" && <BlogCategoriesTab />}
+          {tab === "blog" && <BlogPostsTab />}
+          {tab === "jobs" && <JobsTab />}
+          {tab === "applications" && <ApplicationsTab />}
+          {tab === "messages" && <MessagesTab />}
           </div>
         </main>
       </div>
