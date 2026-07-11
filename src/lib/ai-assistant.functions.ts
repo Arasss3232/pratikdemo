@@ -193,10 +193,18 @@ Cevabını KATİ olarak aşağıdaki JSON şemasında dön (başka metin ekleme)
 async function checkRateLimit(context: any) {
   const sb: any = context.supabase;
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  // Per-user rate limit: only count messages inside this user's own conversations
+  const { data: myConvos } = await sb
+    .from("ai_conversations")
+    .select("id")
+    .eq("user_id", (context as any).userId);
+  const ids = ((myConvos ?? []) as AnyObj[]).map((r) => r.id);
+  if (ids.length === 0) return;
   const { count } = await sb
     .from("ai_messages")
     .select("id", { count: "exact", head: true })
     .eq("role", "user")
+    .in("conversation_id", ids)
     .gte("created_at", since);
   if ((count ?? 0) >= RATE_PER_HOUR) {
     throw new Error("Saatlik kullanım sınırına ulaştınız. Daha sonra tekrar deneyin.");
@@ -399,7 +407,10 @@ export const aiSendMessage = createServerFn({ method: "POST" })
 
 export const aiApproveProposal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => ({ id: String(input.id) }))
+  .inputValidator((input: { id: string; force?: boolean }) => ({
+    id: String(input.id),
+    force: Boolean(input?.force),
+  }))
   .handler(async ({ context, data }): Promise<any> => {
     await assertAdmin(context);
     const sb: any = (context as any).supabase;
@@ -424,14 +435,27 @@ export const aiApproveProposal = createServerFn({ method: "POST" })
     const cur = current as AnyObj;
 
     const changes = (p.proposed_changes ?? {}) as AnyObj;
+    const capturedBefore = (p.before_value ?? {}) as AnyObj;
     const before: AnyObj = {};
     const clean: AnyObj = {};
+    const drifted: string[] = [];
     for (const [k, v] of Object.entries(changes)) {
       if (!entry.allowedFields.includes(k)) continue;
       before[k] = cur[k] ?? null;
       clean[k] = v;
+      // Optimistic concurrency: detect if the record changed since the proposal was drafted
+      if (Object.prototype.hasOwnProperty.call(capturedBefore, k)) {
+        const now = cur[k] ?? null;
+        const then = capturedBefore[k] ?? null;
+        if (String(now ?? "") !== String(then ?? "")) drifted.push(entry.fieldLabels[k] ?? k);
+      }
     }
     if (Object.keys(clean).length === 0) throw new Error("Uygulanabilir alan yok.");
+    if (drifted.length && !data.force) {
+      throw new Error(
+        `Bu kayıt öneri hazırlandığından beri değişmiş: ${drifted.join(", ")}. Değişikliği yine de uygulamak için tekrar onaylayın.`,
+      );
+    }
 
     const { error: upErr } = await sb.from(entry.table).update(clean).eq("id", p.target_id);
     if (upErr) {

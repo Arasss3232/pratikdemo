@@ -54,6 +54,9 @@ export const Route = createFileRoute("/admin")({
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
+    aiAction: typeof s.aiAction === "string" ? (s.aiAction as string) : undefined,
+    aiTarget: typeof s.aiTarget === "string" ? (s.aiTarget as string) : undefined,
+    aiPrompt: typeof s.aiPrompt === "string" ? (s.aiPrompt as string) : undefined,
   }),
   component: AdminPage,
 });
@@ -91,7 +94,8 @@ type UserRoleRow = {
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const { tab } = Route.useSearch();
+  const search = Route.useSearch();
+  const { tab } = search;
 
   function setTab(t: Tab) {
     navigate({ to: "/admin", search: { tab: t } });
@@ -183,7 +187,16 @@ function AdminPage() {
         {tab === "jobs" && <JobsTab />}
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
-        {tab === "aiAssistant" && <AIAssistantWorkspace />}
+        {tab === "aiAssistant" && (
+          <AIAssistantWorkspace
+            initialContext={
+              search.aiAction && search.aiTarget
+                ? { actionType: search.aiAction, targetId: search.aiTarget }
+                : null
+            }
+            initialPrompt={search.aiPrompt ?? null}
+          />
+        )}
         {tab === "aiHistory" && <AIHistoryPanel />}
         {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
         {tab === "companies" && <CompaniesWorkspace />}
@@ -385,6 +398,23 @@ function AdminPage() {
 
 /* ================= Products ================= */
 
+function askAiAction(actionType: string) {
+  return {
+    key: `ask-ai-${actionType}`,
+    label: "AI'ya Sor",
+    icon: "auto_awesome",
+    tone: "primary" as const,
+    onRun: (row: any) => {
+      const params = new URLSearchParams({
+        tab: "aiAssistant",
+        aiAction: actionType,
+        aiTarget: String(row.id),
+      });
+      window.location.assign(`/admin?${params.toString()}`);
+    },
+  };
+}
+
 function BrochuresTab() {
   return (
     <GenericCrud
@@ -404,6 +434,7 @@ function BrochuresTab() {
             window.open("/", "_blank", "noopener,noreferrer");
           },
         },
+        askAiAction("brochure.update"),
         {
           key: "toggle",
           label: "Yayın Durumu",
@@ -567,6 +598,7 @@ function ProductsTab() {
       quickAddKey="products"
       title="Ürünler"
       description="Ürün kataloğunuz. Sitede görünen tüm ürünleri buradan yönetin."
+      extraRowActions={[askAiAction("product.update")]}
       fields={[
         { name: "sku", label: "Ürün Kodu (SKU)", required: true, help: "Örn: PRT-2024-001" },
         { name: "name", label: "Ürün Adı", required: true },
@@ -1274,6 +1306,7 @@ export function ServicesTab() {
       table="services"
       quickAddKey="services"
       title="Hizmetler"
+      extraRowActions={[askAiAction("service.update")]}
       orderBy="display_order"
       ascending
       fields={[
@@ -1420,6 +1453,7 @@ export function FaqsTab() {
       table="faqs"
       quickAddKey="faqs"
       title="Sık Sorulan Sorular"
+      extraRowActions={[askAiAction("faq.update")]}
       orderBy="display_order"
       ascending
       fields={[
@@ -1463,6 +1497,7 @@ export function BlogPostsTab() {
       table="blog_posts"
       quickAddKey="blog"
       title="Blog Yazıları"
+      extraRowActions={[askAiAction("blog.update")]}
       orderBy="published_at"
       fields={[
         { name: "slug", label: "Slug", required: true },

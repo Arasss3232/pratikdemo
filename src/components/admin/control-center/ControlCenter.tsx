@@ -145,14 +145,9 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
   async function handleSendCommand() {
     const text = command.trim();
     if (!text) return;
-    try {
-      await createT({ data: { title_tr: text, description_tr: "Yapay Zekâ asistanında ele alınacak istek.", priority: "normal" } });
-      toast.success("İsteğiniz Görev Kuyruğuna eklendi. AI Asistan ekranında ele alabilirsiniz.");
-      setCommand("");
-      await reloadTasks();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Kaydedilemedi.");
-    }
+    const params = new URLSearchParams({ tab: "aiAssistant", aiPrompt: text });
+    setCommand("");
+    window.location.assign(`/admin?${params.toString()}`);
   }
 
   async function handleFinding(id: string, status: "dismissed" | "snoozed" | "resolved") {

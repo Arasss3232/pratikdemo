@@ -22,16 +22,36 @@ const QUICK_PROMPTS = [
 
 type TargetOption = { id: string; label: string };
 
-export function AIAssistantWorkspace() {
+export function AIAssistantWorkspace({
+  initialContext,
+  initialPrompt,
+}: {
+  initialContext?: { actionType: string; targetId: string } | null;
+  initialPrompt?: string | null;
+} = {}) {
   const listTargetsFn = useServerFn(aiListTargets);
   const asst = useAiAssistant();
-  const [input, setInput] = useState("");
-  const [selectedAction, setSelectedAction] = useState<ActionType | "">("");
-  const [selectedTarget, setSelectedTarget] = useState<string>("");
+  const [input, setInput] = useState(initialPrompt ?? "");
+  const [selectedAction, setSelectedAction] = useState<ActionType | "">(
+    (initialContext?.actionType as ActionType) ?? "",
+  );
+  const [selectedTarget, setSelectedTarget] = useState<string>(initialContext?.targetId ?? "");
   const [targets, setTargets] = useState<TargetOption[]>([]);
   const [targetSearch, setTargetSearch] = useState("");
   const [loadingTargets, setLoadingTargets] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const bootedContextRef = useRef(false);
+
+  // Apply initial URL-driven context/prompt on first render only
+  useEffect(() => {
+    if (bootedContextRef.current) return;
+    bootedContextRef.current = true;
+    if (initialContext?.actionType) {
+      setSelectedAction(initialContext.actionType as ActionType);
+      setSelectedTarget(initialContext.targetId);
+    }
+    if (initialPrompt) setInput(initialPrompt);
+  }, [initialContext, initialPrompt]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });

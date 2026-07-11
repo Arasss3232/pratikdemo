@@ -6,7 +6,7 @@ import type { Proposal } from "@/hooks/use-ai-assistant";
 
 type Props = {
   proposal: Proposal;
-  onApprove: (id: string) => Promise<any>;
+  onApprove: (id: string, force?: boolean) => Promise<any>;
   onReject: (id: string) => Promise<any>;
   onUndo: (id: string) => Promise<any>;
 };
@@ -38,6 +38,44 @@ export function ActionProposalCard({ proposal, onApprove, onReject, onUndo }: Pr
     } finally {
       setBusy(false);
     }
+  }
+
+  async function handleApprove() {
+    if (proposal.risk_level !== "low") {
+      const ok = window.confirm(
+        `Bu değişiklik ${RISK_LABEL[proposal.risk_level] ?? proposal.risk_level} seviyesindedir. Uygulamak istediğinize emin misiniz?\n\n${proposal.summary}`,
+      );
+      if (!ok) return;
+    }
+    if (busy) return;
+    setBusy(true);
+    try {
+      await onApprove(proposal.id, false);
+      toast.success("Değişiklik uygulandı.");
+    } catch (e: any) {
+      const msg = String(e?.message ?? "İşlem başarısız oldu.");
+      if (msg.includes("değişmiş")) {
+        const ok = window.confirm(`${msg}\n\nGerçek değeri önerilenle değiştirmek için "Tamam"a basın.`);
+        if (ok) {
+          try {
+            await onApprove(proposal.id, true);
+            toast.success("Değişiklik uygulandı.");
+          } catch (e2: any) {
+            toast.error(e2?.message ?? "İşlem başarısız oldu.");
+          }
+        }
+      } else {
+        toast.error(msg);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleUndo() {
+    const ok = window.confirm("Bu değişikliği geri almak istediğinize emin misiniz?");
+    if (!ok) return;
+    await guard(() => onUndo(proposal.id), "Değişiklik geri alındı.");
   }
 
   return (
@@ -106,7 +144,7 @@ export function ActionProposalCard({ proposal, onApprove, onReject, onUndo }: Pr
           <>
             <button
               disabled={busy}
-              onClick={() => guard(() => onApprove(proposal.id), "Değişiklik uygulandı.")}
+              onClick={handleApprove}
               className="admin-btn admin-btn-primary admin-btn-sm"
             >
               <Icon name="check" className="text-[16px]" /> Onayla ve Uygula
@@ -123,7 +161,7 @@ export function ActionProposalCard({ proposal, onApprove, onReject, onUndo }: Pr
         {isApplied && (
           <button
             disabled={busy}
-            onClick={() => guard(() => onUndo(proposal.id), "Değişiklik geri alındı.")}
+            onClick={handleUndo}
             className="admin-btn admin-btn-ghost admin-btn-sm"
           >
             <Icon name="undo" className="text-[16px]" /> Geri Al
