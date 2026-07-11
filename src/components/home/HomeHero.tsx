@@ -118,7 +118,7 @@ export function HomeHero() {
             <div
               className="pub-ticks relative aspect-[4/5] w-full"
               style={{
-                backgroundColor: "#F7F7F4",
+                backgroundColor: "#F2F5F8",
                 border: "1px solid var(--public-navy-border)",
                 boxShadow: "var(--public-shadow-md)",
               }}
