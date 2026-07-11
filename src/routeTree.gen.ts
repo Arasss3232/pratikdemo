@@ -38,6 +38,7 @@ import { Route as UrunlerElAletleriRouteImport } from './routes/urunler.el-aletl
 import { Route as UrunlerBaglantiElemanlariRouteImport } from './routes/urunler.baglanti-elemanlari'
 import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
 import { Route as PortalTekliflerimRouteImport } from './routes/portal.tekliflerim'
+import { Route as PortalTeklifAlRouteImport } from './routes/portal.teklif-al'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
 import { Route as HizmetlerSlugRouteImport } from './routes/hizmetler.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -191,6 +192,11 @@ const PortalTekliflerimRoute = PortalTekliflerimRouteImport.update({
   path: '/tekliflerim',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalTeklifAlRoute = PortalTeklifAlRouteImport.update({
+  id: '/teklif-al',
+  path: '/teklif-al',
+  getParentRoute: () => PortalRoute,
+} as any)
 const KariyerSlugRoute = KariyerSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/urun-detay/$sku'
     | '/urunler/baglanti-elemanlari'
@@ -654,6 +666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalTekliflerimRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/teklif-al': {
+      id: '/portal/teklif-al'
+      path: '/teklif-al'
+      fullPath: '/portal/teklif-al'
+      preLoaderRoute: typeof PortalTeklifAlRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/kariyer/$slug': {
       id: '/kariyer/$slug'
       path: '/$slug'
@@ -719,11 +738,13 @@ const KariyerRouteWithChildren =
   KariyerRoute._addFileChildren(KariyerRouteChildren)
 
 interface PortalRouteChildren {
+  PortalTeklifAlRoute: typeof PortalTeklifAlRoute
   PortalTekliflerimRoute: typeof PortalTekliflerimRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalTeklifAlRoute: PortalTeklifAlRoute,
   PortalTekliflerimRoute: PortalTekliflerimRoute,
   PortalIndexRoute: PortalIndexRoute,
 }
