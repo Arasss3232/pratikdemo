@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
+import { SectionMarker } from "../marketing/SectionMarker";
 import { useHomeSettings } from "@/hooks/use-home-data";
 import { PRODUCTS } from "@/data/catalog";
 
@@ -40,7 +41,7 @@ export function HomeHero() {
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop pt-16 md:pt-24 pb-20 md:pb-28 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         {/* Left copy */}
         <div className="lg:col-span-7">
-          <span className="pub-marker mb-8">01 / Endüstriyel Tedarik</span>
+          <SectionMarker number="01" label="Endüstriyel Tedarik" tone="dark" className="mb-8" />
 
           <h1 className="pub-display text-white mt-6 mb-8 whitespace-pre-line">
             {title.split("\n").map((line, i) => (
