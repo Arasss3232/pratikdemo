@@ -43,7 +43,7 @@ function TeklifPage() {
   const settings = useSiteSettings();
   const phone = settings.phone ?? "";
   const email = settings.email ?? "";
-  const whatsapp = settings.whatsapp_number ?? phone;
+  const whatsapp = settings.whatsapp ?? phone;
 
   const [lines, setLines] = useState<LineItem[]>([
     { id: uid(), category: "", brand: "", quantity: "1", notes: "" },
