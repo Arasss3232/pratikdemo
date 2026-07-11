@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { memo, useEffect, useState, type ReactNode } from "react";
 import { NAV_LINKS } from "../data/nav";
+import { PageHero } from "./marketing/PageHero";
+import { buttonStyles } from "../lib/button-styles";
 
 const LOGO_URL =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
@@ -190,34 +192,11 @@ export function PagePlaceholder({
 }) {
   return (
     <>
-      <div className="bg-inverse-surface text-inverse-on-surface pt-4 pb-16">
-        <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop pt-4">
-          <nav
-            aria-label="Breadcrumb"
-            className="flex text-on-surface-variant text-label-bold font-label-bold mb-8"
-          >
-            <ol className="inline-flex items-center gap-2">
-              <li className="inline-flex items-center">
-                <Link to="/" className="hover:text-inverse-on-surface transition-colors">
-                  Ana Sayfa
-                </Link>
-              </li>
-              <li>
-                <Icon name="chevron_right" className="text-[16px]" />
-              </li>
-              <li aria-current="page">
-                <span className="text-inverse-on-surface font-semibold">{crumb}</span>
-              </li>
-            </ol>
-          </nav>
-          <div className="max-w-3xl">
-            <h1 className="font-headline-xl text-headline-xl text-inverse-on-surface mb-4">
-              {title}
-            </h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant">{description}</p>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        title={title}
+        description={description}
+        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: crumb }]}
+      />
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
         {children ?? (
           <div className="bg-surface-container-lowest border border-outline-variant p-8 md:p-12 text-center">
@@ -230,16 +209,13 @@ export function PagePlaceholder({
               veya bizimle iletişime geçebilirsiniz.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <Link
-                to="/"
-                className="bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all inline-flex items-center justify-center gap-2"
-              >
+              <Link to="/" className={buttonStyles({ variant: "primary", size: "sm" })}>
                 <Icon name="arrow_back" className="text-[16px]" />
                 Ürünlere Dön
               </Link>
               <Link
                 to="/iletisim"
-                className="border-2 border-primary text-primary px-6 py-2 rounded font-label-bold text-label-bold hover:bg-surface-variant transition-all inline-flex items-center justify-center gap-2"
+                className={buttonStyles({ variant: "outline-dark", size: "sm" })}
               >
                 <Icon name="mail" className="text-[16px]" />
                 İletişime Geç
