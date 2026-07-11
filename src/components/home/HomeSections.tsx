@@ -669,10 +669,32 @@ export function ServicesStrip() {
  * ===================================================================== */
 export function BrandStrip() {
   const { data } = useHomeBrands();
+  const FALLBACK_BRANDS: { name: string; domain: string; url: string }[] = [
+    { name: "Bosch Professional", domain: "bosch-professional.com", url: "https://www.bosch-professional.com" },
+    { name: "Makita", domain: "makita.com", url: "https://www.makita.com" },
+    { name: "DeWalt", domain: "dewalt.com", url: "https://www.dewalt.com" },
+    { name: "Hilti", domain: "hilti.com", url: "https://www.hilti.com" },
+    { name: "Milwaukee", domain: "milwaukeetool.com", url: "https://www.milwaukeetool.com" },
+    { name: "Stanley", domain: "stanleytools.com", url: "https://www.stanleytools.com" },
+    { name: "Karcher", domain: "kaercher.com", url: "https://www.kaercher.com" },
+    { name: "3M", domain: "3m.com", url: "https://www.3m.com" },
+    { name: "Honeywell", domain: "honeywell.com", url: "https://www.honeywell.com" },
+    { name: "Uvex", domain: "uvex-safety.com", url: "https://www.uvex-safety.com" },
+    { name: "Fischer", domain: "fischer.de", url: "https://www.fischer.de" },
+    { name: "Wurth", domain: "wurth.com", url: "https://www.wurth.com" },
+  ];
+  const logoDevKey = import.meta.env.VITE_LOVABLE_CONNECTOR_LOGO_DEV_API_KEY as string | undefined;
   const logos: { key: string; src: string; alt: string; href?: string }[] =
     data && data.length > 0
       ? data.map((b) => ({ key: b.id, src: b.logo_url, alt: b.name, href: b.website_url || undefined }))
-      : FEATURED_LOGOS.map((src, i) => ({ key: `f-${i}`, src, alt: `Marka ${i + 1}` }));
+      : FALLBACK_BRANDS.map((b) => ({
+          key: b.domain,
+          src: logoDevKey
+            ? `https://img.logo.dev/${b.domain}?token=${logoDevKey}&size=200&format=png`
+            : `https://logo.clearbit.com/${b.domain}?size=200`,
+          alt: b.name,
+          href: b.url,
+        }));
 
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_950, color: "#fff" }}>
@@ -696,23 +718,23 @@ export function BrandStrip() {
           {logos.map((logo) => {
             const inner = (
               <div
-                className="h-28 flex items-center justify-center p-6 transition-colors hover:bg-[color:var(--public-navy-800)]"
-                style={{ backgroundColor: NAVY_900 }}
+                className="h-28 flex items-center justify-center p-5 transition-transform hover:scale-[1.03]"
+                style={{ backgroundColor: "#ffffff" }}
               >
                 <img
                   src={logo.src}
                   alt={logo.alt}
+                  title={logo.alt}
                   loading="lazy"
                   decoding="async"
                   width={160}
-                  height={40}
-                  className="max-h-10 max-w-full object-contain opacity-70 hover:opacity-100 transition-opacity"
-                  style={{ filter: "brightness(0) invert(1)" }}
+                  height={60}
+                  className="max-h-12 max-w-full object-contain"
                 />
               </div>
             );
             return logo.href ? (
-              <a key={logo.key} href={logo.href} target="_blank" rel="noreferrer" aria-label={logo.alt}>
+              <a key={logo.key} href={logo.href} target="_blank" rel="noreferrer" aria-label={logo.alt} title={logo.alt}>
                 {inner}
               </a>
             ) : (
