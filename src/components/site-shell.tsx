@@ -5,6 +5,7 @@ import { PageHero } from "./marketing/PageHero";
 import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import pratikLogo from "@/assets/pratik-logo.asset.json";
 
 function BrandWordmark({
   logoUrl,
@@ -15,45 +16,14 @@ function BrandWordmark({
   companyName?: string | null;
   size?: "md" | "lg";
 }) {
-  if (logoUrl) {
-    return (
-      <img
-        alt={companyName || "Pratik"}
-        src={logoUrl}
-        className={size === "lg" ? "h-12 w-auto object-contain" : "h-9 md:h-10 w-auto object-contain"}
-        decoding="async"
-      />
-    );
-  }
-  const name = (companyName || "Pratik").trim();
-  const parts = name.split(/\s+/);
-  const head = parts[0] ?? name;
-  const tail = parts.slice(1).join(" ");
-  const headSize = size === "lg" ? "text-[30px]" : "text-[22px] md:text-[26px]";
+  const src = logoUrl || pratikLogo.url;
   return (
-    <span
-      className={`inline-flex items-baseline gap-2 leading-none text-white ${headSize}`}
-      style={{
-        fontFamily: "var(--font-display)",
-        fontWeight: 700,
-        letterSpacing: "0.02em",
-        textTransform: "uppercase",
-      }}
-    >
-      <span
-        aria-hidden
-        className="inline-block"
-        style={{
-          width: "8px",
-          height: size === "lg" ? "28px" : "22px",
-          backgroundColor: "var(--public-yellow-500)",
-        }}
-      />
-      <span>{head}</span>
-      {tail && (
-        <span style={{ color: "var(--public-yellow-500)", fontWeight: 600 }}>{tail}</span>
-      )}
-    </span>
+    <img
+      alt={companyName || "Pratik"}
+      src={src}
+      className={size === "lg" ? "h-12 w-auto object-contain" : "h-10 md:h-11 w-auto object-contain"}
+      decoding="async"
+    />
   );
 }
 
