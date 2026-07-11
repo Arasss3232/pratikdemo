@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { SiteShell, Icon } from "../components/site-shell";
-import { PageHero } from "../components/marketing/PageHero";
+import { Icon } from "../components/site-shell";
 import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -61,53 +60,85 @@ function AdminPage() {
 
   if (loading) {
     return (
-      <SiteShell>
-        <div className="max-w-max-width mx-auto p-16 text-center">Yükleniyor…</div>
-      </SiteShell>
+      <div className="min-h-screen grid place-items-center text-on-surface-variant">Yükleniyor…</div>
     );
   }
   if (!user) return null;
   if (!isAdmin) {
     return (
-      <SiteShell>
-        <PageHero
-          title="Yetkisiz Erişim"
-          description="Bu sayfayı görüntülemek için admin yetkiniz olmalı."
-          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Admin" }]}
-        />
-        <div className="max-w-max-width mx-auto p-16 text-center">
-          <Link to="/" className={buttonStyles({ variant: "primary" })}>Ana Sayfaya Dön</Link>
+      <div className="min-h-screen grid place-items-center p-8 text-center">
+        <div className="flex flex-col gap-4 items-center">
+          <p className="font-headline-sm text-headline-sm">Yetkisiz erişim</p>
+          <p className="text-on-surface-variant text-body-sm">Bu sayfayı görüntülemek için admin yetkiniz olmalı.</p>
+          <Link to="/" className={buttonStyles({ variant: "primary", size: "sm" })}>Ana sayfaya dön</Link>
         </div>
-      </SiteShell>
+      </div>
     );
   }
 
+  const navItems: { key: Tab; label: string; icon: string }[] = [
+    { key: "products", label: "Ürünler", icon: "inventory_2" },
+    { key: "quotes", label: "Teklif Talepleri", icon: "request_quote" },
+    { key: "users", label: "Kullanıcılar", icon: "group" },
+  ];
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
+  }
+
   return (
-    <SiteShell>
-      <PageHero
-        title="Admin Paneli"
-        description="Ürünleri, teklif taleplerini ve kullanıcı yetkilerini buradan yönetin."
-        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Admin" }]}
-      />
-      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-8">
-        <div className="flex gap-2 border-b border-outline-variant mb-6 overflow-x-auto">
-          {(["products", "quotes", "users"] as Tab[]).map((t) => (
+    <div className="min-h-screen bg-surface-container-low text-on-surface flex flex-col">
+      <header className="h-14 bg-primary text-on-primary flex items-center justify-between px-4 md:px-6 shadow-sm">
+        <div className="flex items-center gap-3">
+          <Icon name="admin_panel_settings" className="text-[22px]" />
+          <span className="font-label-bold text-label-bold tracking-wide">Yönetim Konsolu</span>
+        </div>
+        <div className="flex items-center gap-3 text-body-sm">
+          <Link to="/" className="hidden sm:inline-flex items-center gap-1 opacity-90 hover:opacity-100">
+            <Icon name="open_in_new" className="text-[16px]" /> Siteyi görüntüle
+          </Link>
+          <span className="hidden md:inline opacity-80 truncate max-w-[200px]">{user.email}</span>
+          <button onClick={signOut} className="inline-flex items-center gap-1 border border-white/30 hover:bg-white/10 rounded px-2 py-1">
+            <Icon name="logout" className="text-[16px]" /> Çıkış
+          </button>
+        </div>
+      </header>
+      <div className="flex-1 flex">
+        <aside className="hidden md:flex w-56 shrink-0 flex-col gap-1 border-r border-outline-variant bg-surface p-3">
+          {navItems.map((n) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`px-4 py-3 font-label-bold text-label-bold whitespace-nowrap border-b-2 transition-colors ${
-                tab === t ? "border-secondary text-primary" : "border-transparent text-on-surface-variant hover:text-primary"
+              key={n.key}
+              onClick={() => setTab(n.key)}
+              className={`flex items-center gap-2 px-3 py-2 rounded text-left text-body-sm transition-colors ${
+                tab === n.key ? "bg-primary-container text-on-primary-container font-label-bold" : "hover:bg-surface-container"
               }`}
             >
-              {t === "products" ? "Ürünler" : t === "quotes" ? "Teklif Talepleri" : "Kullanıcılar"}
+              <Icon name={n.icon} className="text-[18px]" />
+              {n.label}
+            </button>
+          ))}
+        </aside>
+        <div className="flex md:hidden overflow-x-auto border-b border-outline-variant bg-surface px-2">
+          {navItems.map((n) => (
+            <button
+              key={n.key}
+              onClick={() => setTab(n.key)}
+              className={`px-3 py-3 whitespace-nowrap text-body-sm border-b-2 ${
+                tab === n.key ? "border-secondary text-primary font-label-bold" : "border-transparent text-on-surface-variant"
+              }`}
+            >
+              {n.label}
             </button>
           ))}
         </div>
-        {tab === "products" && <ProductsTab />}
-        {tab === "quotes" && <QuotesTab />}
-        {tab === "users" && <UsersTab currentUserId={user.id} />}
+        <main className="flex-1 min-w-0 p-4 md:p-6">
+          {tab === "products" && <ProductsTab />}
+          {tab === "quotes" && <QuotesTab />}
+          {tab === "users" && <UsersTab currentUserId={user.id} />}
+        </main>
       </div>
-    </SiteShell>
+    </div>
   );
 }
 
