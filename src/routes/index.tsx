@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Icon, SiteShell } from "../components/site-shell";
+import { CategoryCard } from "../components/marketing/CategoryCard";
+import { FeatureCard } from "../components/marketing/FeatureCard";
+import { SectionHeader } from "../components/marketing/SectionHeader";
+import { buttonStyles } from "../lib/button-styles";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -126,17 +130,11 @@ function Home() {
                 elemanlarına kadar 20.000+ profesyonel ürün, tek tedarikçiden.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  to="/urunler"
-                  className="min-h-11 bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-primary transition-all inline-flex items-center justify-center gap-2"
-                >
+                <Link to="/urunler" className={buttonStyles({ variant: "primary" })}>
                   Ürünleri Keşfet
                   <Icon name="arrow_forward" aria-hidden="true" />
                 </Link>
-                <Link
-                  to="/teklif"
-                  className="min-h-11 bg-transparent border-2 border-inverse-on-surface/60 text-inverse-on-surface px-8 py-3 rounded font-label-bold text-label-bold hover:border-inverse-on-surface hover:bg-inverse-on-surface/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverse-on-surface transition-all inline-flex items-center justify-center gap-2"
-                >
+                <Link to="/teklif" className={buttonStyles({ variant: "outline-light" })}>
                   <Icon name="request_quote" aria-hidden="true" />
                   Toplu Teklif Al
                 </Link>
@@ -147,42 +145,15 @@ function Home() {
 
         {/* Categories */}
         <section className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
-          <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <div className="font-label-bold text-label-bold text-secondary uppercase tracking-wider mb-2">
-                Ürün Kategorileri
-              </div>
-              <h2 className="font-headline-lg text-headline-lg text-on-background">
-                İhtiyacınız olan her şey tek çatı altında
-              </h2>
-            </div>
-            <Link
-              to="/urunler"
-              className="text-primary font-label-bold text-label-bold hover:underline inline-flex items-center gap-1"
-            >
-              Tüm Kategoriler
-              <Icon name="arrow_forward" className="text-[16px]" />
-            </Link>
-          </div>
+          <SectionHeader
+            eyebrow="Ürün Kategorileri"
+            title="İhtiyacınız olan her şey tek çatı altında"
+            actionLabel="Tüm Kategoriler"
+            actionTo="/urunler"
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {CATEGORIES.map((c) => (
-              <Link
-                key={c.title}
-                to={c.to}
-                className="group bg-surface-container-lowest border border-outline-variant rounded-lg p-6 hover:border-primary hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all flex flex-col gap-3"
-              >
-                <div className="w-12 h-12 bg-primary-container text-on-primary-container flex items-center justify-center rounded">
-                  <Icon name={c.icon} className="text-[24px]" aria-hidden="true" />
-                </div>
-                <h3 className="font-headline-md text-headline-md font-bold text-on-background group-hover:text-primary transition-colors">
-                  {c.title}
-                </h3>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">{c.desc}</p>
-                <div className="mt-auto pt-2 text-primary font-label-bold text-label-bold inline-flex items-center gap-1">
-                  Ürünleri Görüntüle
-                  <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-                </div>
-              </Link>
+              <CategoryCard key={c.title} {...c} />
             ))}
           </div>
         </section>
@@ -190,27 +161,13 @@ function Home() {
         {/* Features */}
         <section className="bg-surface-container border-y border-outline-variant py-20">
           <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="text-center mb-12">
-              <h2 className="font-headline-lg text-headline-lg text-on-background mb-3">
-                Neden Pratik?
-              </h2>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
-                25 yılı aşkın endüstriyel tedarik deneyimi, uzman kadromuz ve geniş ürün gamımızla
-                sanayinin yanındayız.
-              </p>
-            </div>
+            <SectionHeader
+              align="center"
+              title="Neden Pratik?"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
               {FEATURES.map((f) => (
-                <div
-                  key={f.title}
-                  className="bg-surface-container-lowest border border-outline-variant p-6 flex flex-col gap-3"
-                >
-                  <Icon name={f.icon} className="text-[32px] text-secondary" />
-                  <h3 className="font-headline-md text-headline-md font-bold text-on-background">
-                    {f.title}
-                  </h3>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant">{f.desc}</p>
-                </div>
+                <FeatureCard key={f.title} {...f} />
               ))}
             </div>
           </div>
@@ -228,17 +185,11 @@ function Home() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
-              <Link
-                to="/teklif"
-                className="bg-secondary text-on-secondary px-8 py-3 rounded font-label-bold text-label-bold hover:brightness-90 transition-all inline-flex items-center justify-center gap-2"
-              >
+              <Link to="/teklif" className={buttonStyles({ variant: "primary" })}>
                 Teklif İste
                 <Icon name="arrow_forward" />
               </Link>
-              <Link
-                to="/iletisim"
-                className="bg-transparent border-2 border-on-primary/40 text-on-primary px-8 py-3 rounded font-label-bold text-label-bold hover:border-on-primary transition-all inline-flex items-center justify-center gap-2"
-              >
+              <Link to="/iletisim" className={buttonStyles({ variant: "outline-light" })}>
                 <Icon name="support_agent" />
                 İletişime Geç
               </Link>
