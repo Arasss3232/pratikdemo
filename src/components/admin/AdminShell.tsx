@@ -352,11 +352,12 @@ function SidebarPanel({
                         style={{ background: "var(--admin-yellow)" }}
                       />
                     )}
-                    <Icon
-                      name={n.icon}
-                      className="text-[20px] shrink-0"
+                    <span
+                      className="shrink-0 grid place-items-center"
                       style={{ color: active ? "var(--admin-yellow)" : "rgba(255,255,255,0.7)" }}
-                    />
+                    >
+                      <Icon name={n.icon} className="text-[20px]" />
+                    </span>
                     {!collapsed && <span className="truncate">{n.label}</span>}
                   </button>
                 );
