@@ -95,6 +95,123 @@ export type Database = {
           },
         ]
       }
+      ai_audit_findings: {
+        Row: {
+          action_type: string | null
+          category: string
+          created_at: string
+          detected_at: string
+          id: string
+          message_tr: string
+          resolved_at: string | null
+          severity: string
+          snooze_until: string | null
+          status: string
+          suggestion_tr: string | null
+          target_id: string | null
+          target_table: string | null
+          target_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          action_type?: string | null
+          category: string
+          created_at?: string
+          detected_at?: string
+          id?: string
+          message_tr: string
+          resolved_at?: string | null
+          severity: string
+          snooze_until?: string | null
+          status?: string
+          suggestion_tr?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          target_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string | null
+          category?: string
+          created_at?: string
+          detected_at?: string
+          id?: string
+          message_tr?: string
+          resolved_at?: string | null
+          severity?: string
+          snooze_until?: string | null
+          status?: string
+          suggestion_tr?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          target_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_change_bundle_items: {
+        Row: {
+          bundle_id: string
+          position: number
+          proposal_id: string
+        }
+        Insert: {
+          bundle_id: string
+          position?: number
+          proposal_id: string
+        }
+        Update: {
+          bundle_id?: string
+          position?: number
+          proposal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_change_bundle_items_bundle_id_fkey"
+            columns: ["bundle_id"]
+            isOneToOne: false
+            referencedRelation: "ai_change_bundles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_change_bundle_items_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "ai_action_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_change_bundles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description_tr: string | null
+          id: string
+          status: string
+          title_tr: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description_tr?: string | null
+          id?: string
+          status?: string
+          title_tr: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description_tr?: string | null
+          id?: string
+          status?: string
+          title_tr?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_conversations: {
         Row: {
           archived: boolean
@@ -171,6 +288,146 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_project_preferences: {
+        Row: {
+          brand_terms: string[]
+          created_at: string
+          default_mode: string
+          extra: Json
+          formality: string
+          homepage_density: string
+          id: string
+          singleton: boolean
+          tone: string
+          updated_at: string
+          updated_by: string | null
+          visual_style: string
+        }
+        Insert: {
+          brand_terms?: string[]
+          created_at?: string
+          default_mode?: string
+          extra?: Json
+          formality?: string
+          homepage_density?: string
+          id?: string
+          singleton?: boolean
+          tone?: string
+          updated_at?: string
+          updated_by?: string | null
+          visual_style?: string
+        }
+        Update: {
+          brand_terms?: string[]
+          created_at?: string
+          default_mode?: string
+          extra?: Json
+          formality?: string
+          homepage_density?: string
+          id?: string
+          singleton?: boolean
+          tone?: string
+          updated_at?: string
+          updated_by?: string | null
+          visual_style?: string
+        }
+        Relationships: []
+      }
+      ai_task_items: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          description_tr: string | null
+          due_at: string | null
+          id: string
+          priority: string
+          related_finding_id: string | null
+          related_proposal_id: string | null
+          source: string
+          status: string
+          title_tr: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          description_tr?: string | null
+          due_at?: string | null
+          id?: string
+          priority?: string
+          related_finding_id?: string | null
+          related_proposal_id?: string | null
+          source?: string
+          status?: string
+          title_tr: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          description_tr?: string | null
+          due_at?: string | null
+          id?: string
+          priority?: string
+          related_finding_id?: string | null
+          related_proposal_id?: string | null
+          source?: string
+          status?: string
+          title_tr?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_task_items_related_finding_id_fkey"
+            columns: ["related_finding_id"]
+            isOneToOne: false
+            referencedRelation: "ai_audit_findings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_logs: {
+        Row: {
+          action: string
+          created_at: string
+          error_message: string | null
+          id: string
+          latency_ms: number | null
+          model: string | null
+          status: string
+          tokens_in: number | null
+          tokens_out: number | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model?: string | null
+          status?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model?: string | null
+          status?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       blog_categories: {
         Row: {

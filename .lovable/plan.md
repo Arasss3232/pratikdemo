@@ -1,214 +1,213 @@
-## 1. Mevcut Sistem Denetimi
 
-**Yönetim paneli (`src/routes/admin.tsx`, ~1013 satır)**
-- Tek dosyalık büyük panel; `tab` query param ile sekme yönlendirmesi.
-- Modüller: dashboard, settings, products, services, references, brands, certificates, team, testimonials, faqs, blog, blogcats, jobs, applications, messages, quotes, users (bkz. `admin/nav.ts`).
-- Bileşenler: `AdminShell`, `Dashboard` (Supabase count sorguları), `GenericCrud` (SmartDataTable), `CommandPalette`, `SiteSettingsForm`, `PageHeader`, `EmptyState`, `ConfirmDialog`.
-- Tema: `admin-scope` altında navy (#08182C) + sarı token'ları, Inter yazı tipi.
+# Yapay Zekâ Kontrol Merkezi — Uygulama Planı
 
-**Public site**: `index`, `hakkimizda`, `hizmetler[/$slug]`, `urunler[+7 kategori]`, `urun-detay/$sku`, `blog[/$slug]`, `kariyer[/$slug]`, `referanslar`, `sektorel`, `kataloglar`, `markalar`, `iletisim`, `kvkk`, `teklif`, `teklif-sepeti`, `giris`, `sitemap.xml`.
+Admin panelin varsayılan `dashboard` sekmesi, mevcut CMS/B2B modülleriyle derinlemesine entegre çalışan yeni bir **Yapay Zekâ Kontrol Merkezi** ile değiştirilecek. Yeni sayfa; site sağlığı, öneriler, taslak değişiklikler, hızlı görevler ve doğal dille komutu tek ekranda toplar.
 
-**Veritabanı (mevcut 21 tablo)**: `products, services, service_images, project_references, reference_images, brands, certificates, team_members, testimonials, faqs, blog_posts, blog_categories, blog_tags, blog_post_tags, job_posts, job_applications, contact_messages, quote_requests, media, site_settings, user_roles`.
+## 1. Mevcut Sistem Denetimi (bulgular)
 
-**Auth & yetki**
-- `user_roles` (enum: admin/user) + `has_role()` security-definer.
-- `handle_new_user_role()`: ilk kayıt admin, kalanlar user (trigger yok — sadece fonksiyon var, migration'da bağlanacak).
-- RLS her tabloda; genel desen: "public read + admin ALL" (public içerik) veya "authenticated insert + admin manage" (form gönderileri).
+- **Yönlendirme**: Tek dosyalık admin (`src/routes/admin.tsx`, 1578 satır) tab tabanlı çalışıyor; URL değişmiyor. `AdminShell` sidebar + topbar yapısı hazır.
+- **Sidebar**: `src/components/admin/nav.ts` içindeki ilk grup `Ana Yönetim` — `dashboard, myTasks, approvals, notifications`. Ayrıca `Akıllı Araçlar` grubunda `aiAssistant`, `aiHistory` var.
+- **Mevcut Dashboard** (`src/components/admin/Dashboard.tsx`, 537 satır): Products, Services, Quotes, Messages, Blog, Jobs sayımları + son teklifler/mesajlar. Değerli — atılmayacak, yeni merkeze widget olarak taşınacak.
+- **AI altyapısı**: `src/lib/ai-assistant-registry.ts` (5 aksiyon whitelist), `src/lib/ai-assistant.functions.ts` (Lovable AI Gateway + rate limit + draft/approve/apply/undo akışı), `src/components/admin/ai/*` (workspace, proposal card, history). Bu altyapı korunacak ve yeniden kullanılacak.
+- **DB**: `ai_conversations`, `ai_messages`, `ai_action_proposals` mevcut. `homepage_brochures`, `products`, `services`, `blog_posts`, `faqs`, `contact_messages`, `quote_requests`, `site_settings`, `media` üzerinden gerçek veri var.
+- **Yetki**: `user_roles` + `has_role`, ayrıca B2B için `company_role` fonksiyonları. `is_super_admin`, `is_internal_staff` hazır — yeni izinleri bunlara bağlayacağız.
+- **Eksikler**: Bildirim tablosu yok, task/todo tablosu yok, audit finding tablosu yok, revision/undo snapshot AI proposal içinde tutuluyor (yeterli), site sağlığı taraması yok.
 
-**Güçlü yönler (korunacak)**
-- Navy + sarı token sistemi (`admin-scope`), SmartDataTable, CommandPalette, sticky topbar, PageHeader deseni, tek panelde tab yönlendirme mimarisi, Supabase entegrasyonu, RLS + `has_role` güvenlik omurgası.
+## 2. Navigasyon Değişikliği
 
-**Zayıflıklar (giderilecek)**
-- Tek dosyalık dev route (1000+ satır) — bakımı zor, split yok.
-- Sadece iki rol (admin/user); B2B akışları yok.
-- Firma/cari/teklif-sipariş/fiyat/stok modülleri yok.
-- Onay iş akışı, aktivite kaydı, bildirim merkezi yok.
-- Müşteri (B2B) portali yok; `teklif-sepeti` `localStorage` tabanlı.
-- Rapor, ekstre, iade, sevkiyat kavramları yok.
-- Mobil admin deneyimi sınırlı (drawer var ama tablo/CRUD ekranları dar).
+- `nav.ts` içindeki ilk öğe **"Genel Bakış" → "Yapay Zekâ Kontrol Merkezi"** olarak yeniden adlandırılacak, ikon `auto_awesome` (veya `neurology`) olacak.
+- Aynı sekme anahtarı (`dashboard`) korunacak; admin girişinde varsayılan olarak açılmaya devam edecek. İki rakip sayfa oluşturulmayacak.
+- `Akıllı Araçlar` grubu tutulacak (asistan detay ekranı ve geçmiş listesi hâlâ ayrı erişim noktaları).
+- Mobile: `AdminShell` mevcut drawer davranışı kullanılacak; yeni sayfa tek kolon dizilecek.
 
-## 2. Hedef Bilgi Mimarisi (Yönetim Paneli Sidebar)
+## 3. Bilgi Mimarisi (tek sayfa)
 
-`Ana Yönetim`, `Müşteri Yönetimi`, `Satış`, `Ürün ve Fiyat`, `Finans`, `Operasyon`, `Raporlar`, `Site Yönetimi`, `Sistem` — kullanıcı istediği yapıyı bire bir uygulayacağız. Site Yönetimi grubu mevcut CMS modüllerini (Ürünler/Hizmetler/Referanslar/Blog/SSS/Markalar/Sertifikalar/Ekip/Yorumlar/Kariyer/Mesajlar) tam olarak koruyacak — hiçbir mevcut CRUD kaybolmayacak.
+Yukarıdan aşağıya, mod anahtarı sağ üstte:
 
 ```text
-/admin
- ├─ /genel-bakis, /gorevlerim, /onaylar, /bildirimler
- ├─ /firmalar, /firmalar/$id, /bayiler, /firma-kullanicilari,
- │   /musteri-gruplari, /basvurular, /satis-temsilcileri
- ├─ /teklifler, /teklifler/$id, /siparisler, /siparisler/$id,
- │   /hizli-siparis, /sepetler, /firsatlar, /indirim-onaylari
- ├─ /urunler, /kategoriler, /markalar, /fiyat-listeleri,
- │   /ozel-fiyatlar, /iskontolar, /stok
- ├─ /cari-hesaplar, /kredi-limitleri, /vade, /odemeler,
- │   /ekstreler, /risk
- ├─ /depo, /sevkiyatlar, /teslimatlar, /iadeler, /belgeler
- ├─ /raporlar/{satis,teklif,siparis,musteri,urun,finans}
- ├─ /site/{sayfalar,icerikler,bannerlar,medya,seo,ayarlar}
- └─ /sistem/{kullanicilar,roller,onay-akislari,entegrasyonlar,
-     islem-gecmisi,guvenlik}
+[Mod: Kolay | Gelişmiş]
+┌─ Akıllı Karşılama ────────────────────────────────────┐
+│  "Bugün sitenizde ne yapmak istersiniz?"               │
+│  [ doğal dil komut alanı  ]  [ Gönder ]                │
+└────────────────────────────────────────────────────────┘
+┌─ Ne Yapmak İstiyorsunuz? (görev kartları) ────────────┐
+│  12 büyük kart — her biri rehberli akışı başlatır      │
+└────────────────────────────────────────────────────────┘
+┌─ Site Sağlık Özeti ───────────┬─ Yapay Zekâ Önerileri ┐
+│  Ziyaretçi, mesaj, başvuru,   │  Acil / Önemli /       │
+│  ürün, taslak, broşür, SEO,   │  İyileştirme / Öneri   │
+│  görsel, bağlantı, sağlık puanı│                        │
+└────────────────────────────────┴────────────────────────┘
+┌─ Bekleyen AI Değişiklikleri ──┬─ İş Kuyruğu ──────────┐
+│  proposal kartları             │  görev/onay/taslak     │
+└────────────────────────────────┴────────────────────────┘
+┌─ Görsel Site Haritası (tıklanır bölümler) ────────────┐
+└────────────────────────────────────────────────────────┘
+┌─ Son Etkinlik ────────────────────────────────────────┐
+└────────────────────────────────────────────────────────┘
 ```
 
-Panel `/admin` altına, alt-route tabanlı yeni bir shell'e taşınacak: `src/routes/admin/route.tsx` (layout + guard) + her modül için `src/routes/admin/<segment>.tsx`. Mevcut `admin.tsx` tab akışı korunarak yeni segment route'lara aşamalı olarak parçalanacak.
+Kolay Modda: görev kartları ve öneriler öne çıkar; teknik alanlar (slug, meta, tablo) gizlenir; her onay ekranında "Bu ne yapar?" açıklaması. Gelişmiş Modda: etkilenen kayıt sayıları, alan adları, JSON diff, toplu işlem düğmeleri görünür. Mod tercihi `localStorage` + `ai_project_preferences.default_mode`.
 
-## 3. Müşteri B2B Portali (Ayrı Namespace)
+## 4. Görev Kartları → Gerçek Akışlar
 
-`/portal/*` — `_authenticated/portal` altında, sadece `company_user` rolü olanlar. Modüller: Panel özeti, Ürünler (kişiye özel fiyatlarla), Sepet, Teklifler, Siparişler, Ekstre, Firma Bilgileri & Kullanıcıları, Adresler, Belgeler, Duyurular, Temsilci İletişim. İç admin verisi asla sızmayacak.
+Her kart mevcut modüle yönlendirir ve gerektiğinde AI proposal üretir:
 
-## 4. Rol & Yetki Matrisi
+| Kart | Bağlanır |
+|---|---|
+| Ana Sayfayı Düzenle | `homepage_brochures` + `site_settings` (rehberli sihirbaz) |
+| Yeni Ürün Ekle | `products` create + AI açıklama üretimi |
+| Ürün Açıklaması Hazırla | `update_product_content` proposal |
+| Yeni Broşür Oluştur | `update_brochure_content` create-mode |
+| Siteyi Baştan Sona Kontrol Et | Site sağlık taraması (bkz. §7) |
+| SEO Eksiklerini Bul | Sağlık taraması → SEO grubu |
+| Mobil Görünümü Kontrol Et | Playwright önizleme (server fn) |
+| Yazım Hatalarını Düzelt | Batch proposal — düşük risk |
+| Eksik Görselleri Bul | `products.image_url IS NULL` taraması |
+| İletişim Bilgilerini Kontrol Et | `site_settings` doğrulaması |
+| Yeni Sayfa Hazırla | Blog / Service create sihirbazı |
+| Gelen Mesajları Özetle | `contact_messages` özetleme |
 
-**Dahili roller (enum genişletmesi)**: `super_admin, general_manager, sales_manager, sales_rep, finance, warehouse, operations, content_editor, report_viewer`.
+## 5. Yeni / Genişletilen Aksiyon Kayıt Defteri
 
-**Firma rolleri (yeni enum `company_role`)**: `company_admin, purchasing, order_creator, finance_viewer, viewer`.
+`src/lib/ai-assistant-registry.ts` genişletilecek — mevcut 5 aksiyon korunacak, eklenecekler:
 
-Yetki tablosu (özet):
+- `create_product_draft`, `create_blog_draft`, `create_service_draft`, `create_brochure_draft`
+- `update_site_settings_copy` (sadece metin alanları — telefon, adres, açıklama)
+- `bulk_fix_alt_text`, `bulk_fix_typos`, `deactivate_expired_brochures`
+- `summarize_messages`, `draft_message_reply`
+- `run_site_audit` (yazma yok, sadece bulgu üretir)
 
-| Alan | super_admin | sales_mgr | sales_rep | finance | warehouse | content | company_admin | purchasing | viewer |
-|---|---|---|---|---|---|---|---|---|---|
-| Firma CRUD | ✓ | ✓ | kendi portföyü | görüntüleme | – | – | kendi firması | – | – |
-| Teklif oluştur | ✓ | ✓ | ✓ | – | – | – | ✓ | ✓ | – |
-| Teklif onay | ✓ | ✓ | – | limit üstü | – | – | – | – | – |
-| Sipariş onay | ✓ | ✓ | – | kredi/vade | – | – | ✓ | limit içi | – |
-| Fiyat listesi | ✓ | ✓ | – | – | – | – | – | – | – |
-| Stok görüntü | ✓ | ✓ | ✓ | ✓ | ✓ | – | görünürlük kuralı | görünürlük | – |
-| Cari & ödeme | ✓ | özet | özet | ✓ | – | – | kendi ekstresi | – | ekstre görüntü |
-| Sevkiyat | ✓ | – | okuma | – | ✓ | ✓ | takip | takip | – |
-| CMS | ✓ | – | – | – | – | ✓ | – | – | – |
-| Sistem | ✓ | – | – | – | – | – | – | – | – |
+Her giriş `permission`, `allowedFields`, `maxLen`, `maxAffectedRecords`, `risk`, `requiresApproval`, `previewComponent`, `rollback` metadatası taşıyacak. Sunucu, aksiyonu bu kayıt dışında **çalıştırmayacak**.
 
-## 5. Onay İş Akışı
+## 6. Yetki Matrisi
 
-Yapılandırılabilir kural motoru: `approval_workflows(trigger_type, condition_jsonb, steps_jsonb)`. Tetikleyiciler: yeni firma, kredi limiti değişikliği, özel indirim, fiyat override, yüksek tutarlı teklif/sipariş, kredi üstü sipariş, vadesi geçmiş borçlu sipariş, sözleşme, rol değişikliği. Adımlar: satış temsilcisi → satış müdürü → finans → genel müdür. Her istek `approval_requests` + `approval_steps` üzerinde ilerler; timeline UI görevi olarak da `/gorevlerim`'de gösterilir.
+`app_role` tablosuna değil, `has_permission(user, key)` yardımcısına dayalı olacak. `super_admin`/`admin` hepsini alır; `content_editor` içerik onay dışında düzenler; `report_viewer` sadece görür.
 
-## 6. Veritabanı Migration Planı (3 dalga)
+| İzin | admin | content_editor | sales/finance | report_viewer |
+|---|---|---|---|---|
+| ai_control_center.view | ✔ | ✔ | ✔ | ✔ |
+| ai_control_center.use | ✔ | ✔ | ✔ | – |
+| ai_control_center.create_draft | ✔ | ✔ | – | – |
+| ai_control_center.apply_content_changes | ✔ | ✔ | – | – |
+| ai_control_center.apply_design_changes | ✔ | – | – | – |
+| ai_control_center.run_audit | ✔ | ✔ | – | ✔ |
+| ai_control_center.approve_changes | ✔ | – | – | – |
+| ai_control_center.undo_changes | ✔ | ✔ | – | – |
+| ai_control_center.bulk_actions | ✔ | – | – | – |
+| ai_control_center.manage_settings | ✔ | – | – | – |
 
-Mevcut hiçbir tablo silinmez. Yalnızca `user_roles.role` enum'una yeni değerler eklenir (mevcut `admin/user` korunur — `admin` → `super_admin` alias'ı DB view ile sağlanır, kod kademeli geçer).
+## 7. Site Sağlık Taraması (yeni)
 
-**Dalga 1 — Firma & kullanıcı çekirdeği**
-- `companies` (firma_adi, vergi_dairesi, vergi_no, tip, musteri_grubu_id, bayi_seviyesi_id, sektor, cari_kodu, kredi_limiti, kullanilabilir_limit, vade_gun, risk_durumu, hesap_durumu, satis_temsilcisi_id, onay_durumu, notlar, created_by).
-- `customer_groups`, `dealer_levels`.
-- `company_users` (company_id, user_id, company_role, permissions_jsonb, invited_by).
-- `company_addresses` (tip: fatura/teslimat, varsayılan bayrağı).
-- `sales_representatives` (user_id, bölge, kod).
-- Enum genişletme + `has_company_role()` security-definer.
+Yazma yapmayan bir `run_site_audit` server fonksiyonu:
 
-**Dalga 2 — Ürün genişletme + fiyat + stok**
-- `product_categories` (mevcut `products.category` metnini normalize et), `products` ek kolonlar (kod, birim, paket_adedi, min_siparis, b2b_gorunur, one_cikan, publication_status).
-- `warehouses`, `inventory(product_id, warehouse_id, mevcut, rezerve, gelen)`.
-- `price_lists`, `price_list_items`, `company_prices`, `discount_rules` (kategori/marka/kampanya bazlı, tarih aralıklı).
+- Ürün: `image_url`, `description`, kısa açıklama eksikleri
+- SEO: `seo_title`, `seo_description` eksik/tekrar
+- Broşür: `is_active` ve `expire_at` tutarlılığı, mobil görsel
+- Kontak tutarlılığı: `site_settings.phone/email` ↔ ilan/iletişim sayfaları
+- Yayın: `draft` sayıları, süresi geçmiş içerik
+- Bulgular `ai_audit_findings` tablosunda saklanır ve merkezdeki "Öneriler" ile "Site Haritası" katmanlarını besler.
 
-**Dalga 3 — Teklif, sipariş, cari, onay, operasyon, log**
-- `quotations` + `quotation_items` + `quotation_revisions` (status TR label enum'u ile).
-- `orders` + `order_items` + `order_status_history`.
-- `approval_workflows`, `approval_requests`, `approval_steps`.
-- `customer_accounts` (bakiye özeti view olabilir), `account_transactions`, `credit_limits`, `payments`.
-- `shipments`, `shipment_items`, `returns`, `documents` (Storage `documents` bucket bağlı).
-- `notifications`, `tasks`, `activity_logs`.
+## 8. Veritabanı Planı
 
-Her tablo için: `GRANT` bloğu → `ENABLE RLS` → policy'ler → `updated_at` trigger. Mevcut `quote_requests` **korunur**; yeni `quotations`'a "legacy" olarak taşınır (view ile birleştirilebilir), böylece iletişim formundan gelen teklif akışı çalışmaya devam eder.
+Yeni tablolar (mevcutları çoğaltmadan):
 
-## 7. Güvenlik Planı (RLS)
+- `ai_audit_findings` — id, category, severity (acil/önemli/iyileştirme/öneri), target_table, target_id, message_tr, suggestion_tr, status (open/snoozed/dismissed/resolved), snooze_until, created_at
+- `ai_task_items` — id, user_id, title_tr, source (user/ai/audit), related_proposal_id, status, due_at, created_at
+- `ai_project_preferences` — singleton row: tone, formality, default_mode, homepage_density, brand_terms[]
+- `ai_change_bundles` — id, title_tr, description_tr, status; ilişki tablosu `ai_change_bundle_items(bundle_id, proposal_id)`
+- `ai_usage_logs` — id, user_id, action, tokens, cost_estimate, latency_ms, created_at
 
-- `has_role(uid, app_role)` genişletilir, `has_company_role(uid, company_id, company_role)` eklenir, `current_company_id(uid)` helper'ı yazılır.
-- Firma verisi izolasyonu: her B2B tabloda `company_id` + policy `USING (company_id = current_company_id(auth.uid()) OR has_role(auth.uid(),'super_admin') OR has_role(auth.uid(),'sales_manager'))`.
-- Fiyat görünürlüğü: `company_prices` sadece kendi firması + iç satış rolleri.
-- Finans tabloları: `finance` + `super_admin` yaz; `company_admin`/`finance_viewer` sadece kendi firması.
-- `activity_logs` sadece `super_admin` okur; INSERT trigger'la sistem tarafından yazılır.
-- Storage `documents` bucket'ı private; imzalı URL edge function ile (roller doğrulanır).
-- Login-attempt koruması: `failed_login_attempts` tablosu + auth webhook; 10 dk lockout.
-- İlk-admin trigger'ı yalnızca doğrulanmış e-posta ile çalışacak biçimde güncellenir.
+Her tabloda: `GRANT` blokları (`authenticated`, `service_role`), RLS, `has_role`/`is_internal_staff` bazlı politikalar, `updated_at` trigger.
 
-## 8. Tasarım Sistemi Planı
+## 9. Backend (TanStack server functions)
 
-Mevcut `admin-scope` navy/sarı paleti + Inter korunur; şu genişlemeler eklenir:
-- **Token**: `--admin-surface-1/2/3`, `--admin-border`, `--admin-text-1/2/3`, `--admin-accent`, durum renkleri (`--status-draft/pending/approved/rejected/shipped/overdue`).
-- **Tipografi**: başlıklarda Inter Tight opsiyonel; sayı gösterimlerinde `tabular-nums`.
-- **Bileşenler**: `PageHeader`, `SmartDataTable` (mevcut GenericCrud üzerine sütun seçici + kayıtlı görünüm + toplu işlem), `StatusBadge`, `Timeline`, `ApprovalTracker`, `FilterBar`, `SavedViewMenu`, `DetailDrawer`, `SplitLayout` (list+detay), `MetricCard`, `Sparkline`, `PriceInput`, `MoneyDisplay`, `AddressCard`, `AttachmentList`, `NotificationDrawer`, `HelpDrawer`, `EmptyState`, `LoadingSkeleton`, `ErrorState`, `MobileRecordCard`.
+Hepsi `createServerFn` + `requireSupabaseAuth` + izin kontrolü ile. Mevcut `src/lib/ai-assistant.functions.ts` genişletilecek:
 
-## 9. Modül Bağımlılık Haritası
+- `getControlCenterSnapshot()` → sayaçlar, öneriler (top N), bekleyen proposal, task, son etkinlik (tek istek)
+- `runSiteAudit()` → sağlık taraması, `ai_audit_findings` doldurur
+- `createProposalFromCommand(text, context?)` → doğal dil → registry aksiyonu (mevcut chat altyapısı)
+- `approveProposal / rejectProposal / applyProposal / undoProposal` (mevcut) — bundle desteği eklenecek
+- `previewProposal(id, viewport)` → önceki/sonraki HTML parçası (server render)
+- `dismissFinding / snoozeFinding / resolveFinding`
+- `savePreference / getPreferences`
+
+Gizli anahtar okuma yalnızca handler içinde. Toplu işlem `maxAffectedRecords` sınırıyla.
+
+## 10. Provider Entegrasyonu
+
+Mevcut Lovable AI Gateway kullanılacak (`LOVABLE_API_KEY` set). Varsayılan model `google/gemini-2.5-flash` (mevcut asistanla aynı — maliyet/hız dengesi). Ses girişi ilk sürümde **eklenmeyecek** (sahte kontrol yasak). System prompt Türkçe; teknik terim yasağı Kolay Modda pekiştirilir.
+
+## 11. Taslak → Önizleme → Onay → Uygulama → Geri Alma
+
+Mevcut `ai_action_proposals` akışı temel alınacak, üzerine:
+
+- Önizleme: mevcut before/after diff + yeni **cihaz sekmesi** (desktop/tablet/mobile) — ilgili public route'un iframe önizlemesi `?preview_proposal=<id>` parametresiyle
+- Bundle: birden fazla proposal aynı anda onaylanır; kısmi onay desteği
+- Undo: proposal `previous_values` snapshot'ı zaten tutuluyor; UI'dan tek tıkla geri alma; başarı sonrası `ai_task_items` otomatik kapatılır
+
+## 12. Bileşen Mimarisi
+
+Yeni dosyalar (hepsi client-safe):
 
 ```text
-companies ──► company_users ──► auth.users
-    │
-    ├─► company_addresses
-    ├─► customer_groups / dealer_levels ──► price_lists
-    ├─► sales_representatives
-    └─► customer_accounts ──► account_transactions ──► payments
-
-products ──► product_categories / brands
-    ├─► inventory ──► warehouses
-    ├─► price_list_items ──► price_lists
-    └─► company_prices (product × company)
-
-quotations ──► quotation_items ──► products
-    ├─► quotation_revisions
-    └─► convert ─► orders ──► order_items
-                          ├─► order_status_history
-                          ├─► shipments ──► shipment_items
-                          └─► returns
-
-approval_workflows ──► approval_requests ──► approval_steps
-                                     ▲
-                    quotations / orders / discounts / limits
-
-notifications ◄── (tüm event'ler)
-activity_logs ◄── (tüm mutasyonlar; DB trigger)
-tasks ◄── (approval, follow-up)
+src/components/admin/control-center/
+  ControlCenter.tsx            (bölümleri düzenleyen kapsayıcı)
+  SmartWelcome.tsx             (doğal dil komut girişi)
+  TaskCards.tsx                (12 rehberli kart)
+  HealthSummary.tsx            (10 metrik + tıklanır)
+  RecommendationsList.tsx      (severity gruplu)
+  PendingChanges.tsx           (proposal kartları — mevcut ActionProposalCard yeniden kullanılır)
+  WorkQueue.tsx                (task + approvals)
+  SiteMap.tsx                  (görsel harita, tıklanır bölümler)
+  RecentActivity.tsx           (audit log)
+  ModeToggle.tsx               (Kolay/Gelişmiş)
+  GuidedInterview.tsx          (belirsiz istekler için)
+  ChangeBundleCard.tsx
+  DevicePreviewFrame.tsx
+src/hooks/
+  use-control-center.ts        (snapshot query)
+  use-user-mode.ts             (Kolay/Gelişmiş kalıcılığı)
 ```
 
-## 10. Uygulama Fazları
+## 13. Değiştirilecek / Korunacak Dosyalar
 
-**Faz 0 — Temel refactor (kod bozmadan)**
-- `src/routes/admin.tsx`'i `src/routes/admin/route.tsx` layout + `src/routes/admin/index.tsx` (dashboard) + mevcut sekmeleri `src/routes/admin/<segment>.tsx` alt route'larına böl.
-- `nav.ts`'i yeni 9 gruba göre yeniden yaz; eski CRUD ekranları "Site Yönetimi" grubunda aynen çalışır.
-- SmartDataTable'ı `src/components/admin/data/` altına taşı; sütun-seçici, kayıtlı görünüm, toplu işlem eklenir.
+**Değişecek**
+- `src/components/admin/nav.ts` — ilk öğe etiketi + ikon
+- `src/routes/admin.tsx` — `dashboard` sekmesinde `<Dashboard />` yerine `<ControlCenter />`
+- `src/lib/ai-assistant-registry.ts` — yeni aksiyonlar
+- `src/lib/ai-assistant.functions.ts` — yeni server fonksiyonları
+- `src/components/admin/ai/ActionProposalCard.tsx` — cihaz önizleme sekmesi
 
-**Faz 1 — Rol & firma çekirdeği**
-- Dalga 1 migration + rol enum'u + `has_company_role`.
-- `/admin/firmalar`, `/admin/firma-kullanicilari`, `/admin/musteri-gruplari`, `/admin/bayiler`, `/admin/satis-temsilcileri` ekranları.
-- Kullanıcı davet akışı (`inviteUserByEmail` server fn, `requireSupabaseAuth` + rol kontrol).
+**Korunacak (silinmeyecek)**
+- `src/components/admin/Dashboard.tsx` — metrik widget'ları `HealthSummary` içine taşınır, dosya referans olarak kalır; sonradan silinir
+- `AdminShell`, `CommandPalette`, `GenericCrud`, tüm modül sekmeleri
+- Mevcut proposal / history akışı ve UI
 
-**Faz 2 — Ürün & fiyat & stok**
-- Dalga 2 migration; mevcut `products.category` metnini `product_categories`'e taşıyan veri migrasyonu (mevcut satırlar KORUNUR).
-- Fiyat listeleri, özel fiyatlar, indirim kuralları UI'ı.
-- Stok & depo ekranı; ürün detayında B2B görünürlük sekmesi.
+## 14. Uygulama Fazları
 
-**Faz 3 — Teklif & sipariş & onay**
-- Dalga 3 migration.
-- Teklif oluştur/düzenle (multi-item, indirim, KDV, revizyon, PDF export server fn), teklif → sipariş dönüşümü.
-- Sipariş yönetimi + status timeline.
-- Onay motoru + `/admin/onaylar` + `/admin/gorevlerim`.
+1. **Faz 1 — DB**: 5 yeni tablo migration + RLS + GRANT + preference singleton seed.
+2. **Faz 2 — Registry & backend**: yeni aksiyonlar, `getControlCenterSnapshot`, `runSiteAudit`, finding CRUD.
+3. **Faz 3 — Shell**: `ControlCenter` iskeleti, mod toggle, nav etiketi değişimi, dashboard yerine bağlanma.
+4. **Faz 4 — Bölümler**: SmartWelcome, TaskCards, HealthSummary, RecommendationsList, PendingChanges, WorkQueue.
+5. **Faz 5 — Görsel harita + rehberli görüşme + bundle**.
+6. **Faz 6 — Önizleme**: cihaz sekmeleri + `?preview_proposal=` iframe köprüsü.
+7. **Faz 7 — Beginner metinleri ve erişilebilirlik cilası** (ARIA, klavye, kontrast).
+8. **Faz 8 — Playwright doğrulama** (bkz. §15).
 
-**Faz 4 — Finans & operasyon**
-- Cari, kredi limiti, vade, ödeme, ekstre PDF, risk raporu.
-- Sevkiyat, teslimat, iade, belgeler.
+## 15. Tarayıcı Test Planı
 
-**Faz 5 — Raporlar & bildirim**
-- Rapor sayfaları (server fn ile agregasyon; Recharts).
-- Bildirim merkezi (in-app + opsiyonel e-posta), `activity_logs` timeline'ı.
+Playwright ile: admin girişi → `/admin` açılışında Kontrol Merkezi görünür → komut gönder → proposal oluşur → onay → uygulama → geri alma; Kolay/Gelişmiş mod geçişi; mobil viewport (390px) tek kolon; sağlık taraması sonrası bulgu kartı tıklanınca ilgili modüle yönlendirir. Her adımda ekran görüntüsü.
 
-**Faz 6 — B2B müşteri portali**
-- `/portal/*` route grubu, kişiye özel ürün/fiyat, teklif, sipariş, ekstre, firma yönetimi.
-- Mevcut public `teklif` formu yeni `quotations` tablosuna bağlanır; giriş yapmış müşteri portale yönlendirilir.
+## 16. Kabul Kriterleri
 
-**Faz 7 — Mobil, erişilebilirlik, cilalama**
-- Tüm tablolara mobil kart görünümü, sticky action bar, komut paletine yeni komutlar, klavye kısayolları, WCAG kontrast denetimi, yardım drawer'ı.
+- `/admin` girişinde ilk ekran Kontrol Merkezi, sidebar ilk öğe "Yapay Zekâ Kontrol Merkezi".
+- İki rakip dashboard yok; eski metrikler yeni ekranda erişilebilir.
+- Tüm görünür metinler Türkçe, teknik terim Kolay Modda gizli.
+- Her AI aksiyonu registry içinde, izin kontrolüyle, önizleme + onay + geri alma zinciriyle çalışır.
+- Doğal dil komutu belirsizse Rehberli Görüşme devreye girer, doğrudan yazma yapmaz.
+- Sağlık taraması gerçek verilere karşı çalışır ve bulguları önerilere yansıtır.
+- Mobil (≤640px), tablet, masaüstünde erişilebilir ve klavyeyle gezilebilir.
+- Servis rolü anahtarı istemciye sızmaz; tüm AI çağrıları server fn üzerinden.
 
-## 11. Veri Koruma Planı
-
-- Hiçbir DROP TABLE yok. Mevcut `quote_requests`, `contact_messages`, `job_applications`, `products`, `services`, tüm CMS tabloları aynen çalışmaya devam eder.
-- `products.category` (text) → `product_categories` FK migrasyonu, eski kolon `category_legacy` olarak tutulur ve 2 sürüm sonra düşürülür.
-- Rol enum genişletmesi additive; mevcut `admin` değeri korunur, kodda `super_admin` ile eşdeğer sayılır.
-- Yeni tablolar boş başlar; seed sadece `customer_groups`, `dealer_levels`, örnek `price_lists`, varsayılan onay iş akışları için.
-
-## 12. Test & Kabul Planı
-
-- Migration sonrası: `supabase--linter`, RLS smoke testleri (her rol için select/insert/update matrisi), TanStack Router typecheck.
-- E2E (Playwright): giriş → firma oluştur → kullanıcı davet → teklif oluştur → onay → siparişe dönüştür → sevkiyat → tamamlandı; müşteri portalinden teklif akışı.
-- Kabul kriterleri: her modül için Turkish label, boş/yükleniyor/hata durumu; RLS ile başka firma verisine 403; onay adımları eksik role'de görev listesine düşer; mobilde tüm tablolar kart olarak taşınır; mevcut public site sayfaları hiçbir gerilemeye uğramaz.
-
-## 13. Onay İçin Sorular
-
-Bu plan kapsamlıdır; hepsini tek turda uygulamayacağım. Onaydan sonra **Faz 0 + Faz 1**'i uygulayarak başlamayı öneriyorum (refactor + firma/kullanıcı çekirdeği). Sonraki fazları sırayla ilerleteceğiz.
-
-Onaylıyor musunuz, yoksa fazları veya kapsamı değiştirmek ister misiniz?
+Onaylarsanız Faz 1 (DB migration) ile başlıyorum.

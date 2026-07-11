@@ -90,7 +90,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "Ana Yönetim",
     items: [
-      { key: "dashboard", label: "Genel Bakış", icon: "dashboard", description: "Panel özeti" },
+      { key: "dashboard", label: "Yapay Zekâ Kontrol Merkezi", icon: "auto_awesome", description: "Site kontrol merkezi ve AI asistanı" },
       { key: "myTasks", label: "Görevlerim", icon: "task_alt", description: "Size atanmış görevler" },
       { key: "approvals", label: "Onay Bekleyenler", icon: "approval", description: "Onayınızı bekleyen işlemler" },
       { key: "notifications", label: "Bildirimler", icon: "notifications", description: "Sistem bildirimleri" },

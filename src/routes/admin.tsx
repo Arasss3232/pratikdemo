@@ -19,6 +19,7 @@ import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
 import { AIAssistantWorkspace } from "../components/admin/ai/AIAssistantWorkspace";
 import { AIHistoryPanel } from "../components/admin/ai/AIHistoryPanel";
+import { ControlCenter } from "../components/admin/control-center/ControlCenter";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
@@ -164,7 +165,7 @@ function AdminPage() {
         onQuickAdd={handleQuickAdd}
       >
         {tab !== "dashboard" && <PageHeader tab={tab} />}
-        {tab === "dashboard" && <DashboardHost onNavigate={setTab} />}
+        {tab === "dashboard" && <ControlCenter onNavigate={setTab} />}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
