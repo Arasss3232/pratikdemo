@@ -94,16 +94,16 @@ export type QuoteItem = { sku?: string; name: string; qty: number; note?: string
 
 export function parseQuoteItems(items: unknown): QuoteItem[] {
   if (!Array.isArray(items)) return [];
-  return (items as unknown[])
-    .map((it) => {
-      if (!it || typeof it !== "object") return null;
-      const r = it as Record<string, unknown>;
-      const name = typeof r.name === "string" ? r.name : typeof r.sku === "string" ? r.sku : null;
-      if (!name) return null;
-      const qty = typeof r.qty === "number" ? r.qty : typeof r.quantity === "number" ? r.quantity : Number(r.qty ?? r.quantity ?? 0) || 0;
-      const sku = typeof r.sku === "string" ? r.sku : undefined;
-      const note = typeof r.note === "string" ? r.note : undefined;
-      return { name, qty, sku, note };
-    })
-    .filter((x): x is QuoteItem => !!x);
+  const out: QuoteItem[] = [];
+  for (const it of items as unknown[]) {
+    if (!it || typeof it !== "object") continue;
+    const r = it as Record<string, unknown>;
+    const name = typeof r.name === "string" ? r.name : typeof r.sku === "string" ? r.sku : null;
+    if (!name) continue;
+    const qty = typeof r.qty === "number" ? r.qty : typeof r.quantity === "number" ? r.quantity : Number(r.qty ?? r.quantity ?? 0) || 0;
+    const sku = typeof r.sku === "string" ? r.sku : undefined;
+    const note = typeof r.note === "string" ? r.note : undefined;
+    out.push({ name, qty, sku, note });
+  }
+  return out;
 }
