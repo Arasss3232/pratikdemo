@@ -119,23 +119,25 @@ function AdminPage() {
             </button>
           ))}
         </aside>
-        <div className="flex md:hidden overflow-x-auto border-b border-outline-variant bg-surface px-2">
-          {navItems.map((n) => (
-            <button
-              key={n.key}
-              onClick={() => setTab(n.key)}
-              className={`px-3 py-3 whitespace-nowrap text-body-sm border-b-2 ${
-                tab === n.key ? "border-secondary text-primary font-label-bold" : "border-transparent text-on-surface-variant"
-              }`}
-            >
-              {n.label}
-            </button>
-          ))}
-        </div>
-        <main className="flex-1 min-w-0 p-4 md:p-6">
+        <main className="flex-1 min-w-0 flex flex-col">
+          <div className="flex md:hidden overflow-x-auto border-b border-outline-variant bg-surface px-2">
+            {navItems.map((n) => (
+              <button
+                key={n.key}
+                onClick={() => setTab(n.key)}
+                className={`px-3 py-3 whitespace-nowrap text-body-sm border-b-2 ${
+                  tab === n.key ? "border-secondary text-primary font-label-bold" : "border-transparent text-on-surface-variant"
+                }`}
+              >
+                {n.label}
+              </button>
+            ))}
+          </div>
+          <div className="p-4 md:p-6">
           {tab === "products" && <ProductsTab />}
           {tab === "quotes" && <QuotesTab />}
           {tab === "users" && <UsersTab currentUserId={user.id} />}
+          </div>
         </main>
       </div>
     </div>
