@@ -136,7 +136,7 @@
   letter-spacing: -0.025em;
   line-height: 1.02;
   font-size: clamp(40px, 6vw, 68px);
-  color: var(--color-on-background);
+  color: currentColor;
 }
 .hp-h2 {
   font-family: var(--font-display);
@@ -144,7 +144,7 @@
   letter-spacing: -0.02em;
   line-height: 1.1;
   font-size: clamp(26px, 3.2vw, 40px);
-  color: var(--color-on-background);
+  color: currentColor;
 }
 .hp-mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
 .hp-hairline { border-color: var(--color-outline-variant); }
