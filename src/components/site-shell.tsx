@@ -16,11 +16,18 @@ export const Icon = memo(IconBase);
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
     <header
@@ -94,13 +101,63 @@ export function SiteHeader() {
             <button
               type="button"
               className="lg:hidden text-on-primary min-h-11 min-w-11 inline-flex items-center justify-center rounded hover:bg-primary-container/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary transition-colors"
-              aria-label="Menüyü aç"
+              aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setMenuOpen((v) => !v)}
             >
-              <Icon name="menu" aria-hidden="true" />
+              <Icon name={menuOpen ? "close" : "menu"} aria-hidden="true" />
             </button>
           </div>
         </div>
       </div>
+      {menuOpen && (
+        <div
+          id="mobile-nav"
+          className="lg:hidden border-t border-secondary/40 bg-primary"
+        >
+          <nav className="max-w-max-width mx-auto px-margin-mobile py-4 flex flex-col gap-1">
+            <div className="relative mb-2">
+              <Icon
+                name="search"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+                aria-hidden="true"
+              />
+              <label htmlFor="mobile-search" className="sr-only">
+                Ürün ara
+              </label>
+              <input
+                id="mobile-search"
+                className="w-full pl-10 pr-4 py-2 bg-surface-container-lowest text-on-surface border border-outline-variant rounded focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-sm font-body-sm"
+                placeholder="Ara..."
+                type="search"
+              />
+            </div>
+            {NAV_LINKS.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setMenuOpen(false)}
+                className="text-on-primary opacity-90 hover:bg-primary-container/40 px-3 py-3 rounded font-label-bold text-label-bold"
+                activeOptions={{ exact: true }}
+                activeProps={{
+                  className:
+                    "text-on-primary font-bold bg-primary-container/40 px-3 py-3 rounded font-label-bold text-label-bold",
+                }}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <Link
+              to="/teklif"
+              onClick={() => setMenuOpen(false)}
+              className="sm:hidden mt-2 inline-flex items-center justify-center bg-secondary text-on-secondary px-6 py-2 rounded font-label-bold text-label-bold hover:brightness-90 transition-all"
+            >
+              Teklif Al
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
