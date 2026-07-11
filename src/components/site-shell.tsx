@@ -724,7 +724,7 @@ export function SiteFooter() {
 
           {/* Product groups */}
           <div className="lg:col-span-4">
-            <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Ürün Grupları</h3>
+            <h3 className="section-label text-secondary mb-5">Ürün Grupları</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
               {productCols.map((g) => (
                 <li key={g.to}>
@@ -743,7 +743,7 @@ export function SiteFooter() {
           {/* Corporate + Legal */}
           <div className="lg:col-span-4 grid grid-cols-2 gap-8">
             <div>
-              <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Kurumsal</h3>
+              <h3 className="section-label text-secondary mb-5">Kurumsal</h3>
               <ul className="flex flex-col gap-3">
                 {corporateLinks.map((l) => (
                   <li key={l.to + l.label}>
@@ -755,7 +755,7 @@ export function SiteFooter() {
               </ul>
             </div>
             <div>
-              <h3 className="hp-mono text-[11px] uppercase tracking-widest text-secondary mb-5">Yasal</h3>
+              <h3 className="section-label text-secondary mb-5">Yasal</h3>
               <ul className="flex flex-col gap-3">
                 {legalLinks.map((l) => (
                   <li key={l.label}>
@@ -782,7 +782,7 @@ export function SiteFooter() {
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
           <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
-          <p className="hp-mono text-[11px] uppercase tracking-widest text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
+          <p className="section-label text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
         </div>
       </div>
     </footer>
