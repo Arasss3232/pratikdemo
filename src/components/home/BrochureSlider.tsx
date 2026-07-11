@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
+import { HERO_BG, CTA_IMG, PRODUCTS } from "@/data/catalog";
 
 type Brochure = {
   id: string;
@@ -23,6 +24,72 @@ type Brochure = {
 };
 
 const AUTOPLAY_MS = 6500;
+
+function buildFallbackSlides(): Brochure[] {
+  const productImg = PRODUCTS[0]?.productImg ?? HERO_BG;
+  return [
+    {
+      id: "fallback-1",
+      title: "Endüstriyel Donanımda Güvenilir Tedarik",
+      eyebrow: "PRATİK",
+      subtitle: "Bosch · Makita · DeWalt · Hilti yetkili tedariki",
+      description:
+        "Tesis, şantiye ve üretim hatlarınız için elektrikli el aletlerinden bağlantı elemanlarına uçtan uca profesyonel donanım çözümleri.",
+      image_desktop: HERO_BG,
+      image_tablet: HERO_BG,
+      image_mobile: HERO_BG,
+      image_alt: "Endüstriyel donanım tedariki",
+      primary_cta_label: "Ürünleri İncele",
+      primary_cta_href: "/urunler",
+      secondary_cta_label: "Teklif Talep Et",
+      secondary_cta_href: "/teklif-sepeti",
+      accent_color: "#F5D311",
+      overlay_style: "left-navy",
+      text_theme: "light",
+      display_order: 1,
+    },
+    {
+      id: "fallback-2",
+      title: "Elektrikli El Aletleri Kampanyası",
+      eyebrow: "YENİ SEZON",
+      subtitle: "Profesyonel ekipler için özel kurumsal fiyat",
+      description:
+        "Akülü matkap, kırıcı, taşlama ve daha fazlasında geniş stok, hızlı sevkiyat ve teknik danışmanlık.",
+      image_desktop: productImg,
+      image_tablet: productImg,
+      image_mobile: productImg,
+      image_alt: "Elektrikli el aletleri",
+      primary_cta_label: "Ürün Grubunu İncele",
+      primary_cta_href: "/urunler/elektrikli-el-aletleri",
+      secondary_cta_label: "Tüm Markalar",
+      secondary_cta_href: "/urunler",
+      accent_color: "#F5D311",
+      overlay_style: "right-navy",
+      text_theme: "light",
+      display_order: 2,
+    },
+    {
+      id: "fallback-3",
+      title: "Kurumsal Teklif ve Bayilik Fırsatları",
+      eyebrow: "B2B",
+      subtitle: "Projelerinize özel fiyat ve teslimat planı",
+      description:
+        "Kurumsal alım hacimlerinize göre özel iskonto, cari hesap ve dedike müşteri temsilcisi desteği.",
+      image_desktop: CTA_IMG,
+      image_tablet: CTA_IMG,
+      image_mobile: CTA_IMG,
+      image_alt: "Kurumsal teklif hizmetleri",
+      primary_cta_label: "Teklif Talep Et",
+      primary_cta_href: "/teklif-sepeti",
+      secondary_cta_label: "Bize Ulaşın",
+      secondary_cta_href: "/iletisim",
+      accent_color: "#F5D311",
+      overlay_style: "bottom-gradient",
+      text_theme: "light",
+      display_order: 3,
+    },
+  ];
+}
 
 function isInternal(href: string | null | undefined) {
   if (!href) return false;
@@ -254,7 +321,8 @@ export function BrochureSlider() {
       if (error) {
         console.warn("BrochureSlider load error", error);
       }
-      setSlides((data as Brochure[]) ?? []);
+      const rows = (data as Brochure[] | null) ?? [];
+      setSlides(rows.length > 0 ? rows : buildFallbackSlides());
       setLoading(false);
     })();
     return () => {
