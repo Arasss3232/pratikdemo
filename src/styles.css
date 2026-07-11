@@ -122,23 +122,25 @@
 /* ============ Public homepage helpers (do not affect .admin-scope) ============ */
 /* ----------- Public site design tokens (Industrial Authority) ----------- */
 :root {
-  --public-navy-950: #061426;
-  --public-navy-900: #0A2342;
-  --public-navy-800: #123A63;
-  --public-navy-700: #173F6B;
-  --public-navy-600: #1D4B7D;
-  --public-navy-border: #294D73;
-  --public-yellow-500: #F5C400;
-  --public-yellow-600: #E6B700;
-  --public-yellow-700: #D7A900;
-  --public-yellow-soft: #FFF2AD;
+  /* Pratik brand palette — derived from the real logo
+     (cobalt blue #0070B0 + warm yellow #F0E010). */
+  --public-navy-950: #001F35;   /* deepest brand blue — footer, deep surfaces */
+  --public-navy-900: #003D6B;   /* primary brand surface — header, hero */
+  --public-navy-800: #005490;   /* elevated surface */
+  --public-navy-700: #0072B8;   /* logo cobalt — accents, links, hover */
+  --public-navy-600: #2A8FCC;   /* soft brand tint */
+  --public-navy-border: #1A5B8F;
+  --public-yellow-500: #F5D311; /* logo yellow — CTAs, accent */
+  --public-yellow-600: #E0BE00;
+  --public-yellow-700: #B89A00;
+  --public-yellow-soft: #FFF1A8;
   --public-graphite: #1D2430;
-  --public-steel: #8692A3;
-  --public-border: #D9DEE5;
-  --public-bg: #F3F1E9;
+  --public-steel: #7E8A9C;
+  --public-border: #DBE2EB;
+  --public-bg: #F2F5F8;      /* neutral cool-tinted reading surface */
   --public-surface: #FFFFFF;
   --public-text-light: #FFFFFF;
-  --public-text-muted: #B7C4D4;
+  --public-text-muted: #B9CCE0;  /* muted text on cobalt — AA on --public-navy-900 */
   --public-text-dark: #142033;
   --public-radius-sm: 2px;
   --public-radius-md: 4px;
