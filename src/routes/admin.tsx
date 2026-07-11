@@ -580,6 +580,7 @@ function ProductsTab() {
       quickAddKey="products"
       title="Ürünler"
       description="Ürün kataloğunuz. Sitede görünen tüm ürünleri buradan yönetin."
+      extraRowActions={[askAiAction("product.update")]}
       fields={[
         { name: "sku", label: "Ürün Kodu (SKU)", required: true, help: "Örn: PRT-2024-001" },
         { name: "name", label: "Ürün Adı", required: true },
