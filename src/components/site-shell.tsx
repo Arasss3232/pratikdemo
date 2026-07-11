@@ -466,7 +466,7 @@ export function SiteFooter() {
   return (
     <footer
       className="text-inverse-on-surface"
-      style={{ background: "var(--color-inverse-surface)", borderTop: "4px solid var(--color-secondary)" }}
+      style={{ background: "var(--public-navy-950)", borderTop: "3px solid var(--public-yellow-500)" }}
     >
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
