@@ -68,7 +68,7 @@ export function AdminShell({
   ];
 
   return (
-    <div className="min-h-screen bg-surface-container-low text-on-surface flex">
+    <div className="admin-scope min-h-screen flex" style={{ background: "var(--admin-bg)", color: "var(--admin-text)" }}>
       {/* Sidebar */}
       <SidebarPanel
         collapsed={collapsed}
@@ -81,24 +81,43 @@ export function AdminShell({
       {/* Main column */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Topbar */}
-        <header className="sticky top-0 z-30 h-14 bg-surface-container-lowest border-b border-outline-variant flex items-center gap-2 px-3 md:px-4">
+        <header
+          className="sticky top-0 z-30 h-16 flex items-center gap-2 px-3 md:px-5 backdrop-blur"
+          style={{
+            background: "color-mix(in oklab, var(--admin-surface) 92%, transparent)",
+            borderBottom: "1px solid var(--admin-border)",
+          }}
+        >
           <button
             onClick={() => (window.innerWidth < 768 ? setMobileOpen(true) : toggleSidebar())}
-            className="grid place-items-center h-9 w-9 rounded hover:bg-surface-container text-on-surface"
+            className="grid place-items-center h-9 w-9 rounded-lg hover:bg-[var(--admin-surface-2)]"
+            style={{ color: "var(--admin-text-2)" }}
             aria-label="Menüyü aç/kapat"
           >
             <Icon name="menu" className="text-[20px]" />
           </button>
 
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="hidden sm:flex items-center gap-2 h-9 px-3 rounded-md border border-outline-variant bg-surface-container-low min-w-0 flex-1 max-w-md">
-              <Icon name="search" className="text-[18px] text-on-surface-variant shrink-0" />
+            <div
+              className="hidden sm:flex items-center gap-2 h-10 px-3 rounded-lg min-w-0 flex-1 max-w-lg focus-within:ring-2"
+              style={{
+                background: "var(--admin-surface-2)",
+                border: "1px solid var(--admin-border)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+              }}
+            >
+              <Icon name="search" className="text-[18px] shrink-0" style={{ color: "var(--admin-text-mute)" }} />
               <input
                 type="search"
                 placeholder="Ara: sayfa, ürün, mesaj…"
-                className="bg-transparent outline-none text-body-sm flex-1 min-w-0"
+                className="bg-transparent outline-none text-sm flex-1 min-w-0"
               />
-              <kbd className="hidden md:inline text-[10px] text-on-surface-variant border border-outline-variant rounded px-1.5 py-0.5">/</kbd>
+              <kbd
+                className="hidden md:inline text-[10px] rounded px-1.5 py-0.5"
+                style={{ color: "var(--admin-text-mute)", border: "1px solid var(--admin-border)", background: "var(--admin-surface)" }}
+              >
+                /
+              </kbd>
             </div>
           </div>
 
@@ -107,14 +126,16 @@ export function AdminShell({
             <div className="relative">
               <button
                 onClick={() => setQuickOpen((v) => !v)}
-                className="hidden sm:inline-flex items-center gap-1 h-9 px-3 rounded-md bg-primary text-on-primary text-body-sm hover:bg-primary-container hover:text-on-primary-container transition"
+                className="hidden sm:inline-flex items-center gap-1.5 h-10 px-4 rounded-lg text-sm font-semibold transition shadow-sm hover:brightness-95"
+                style={{ background: "var(--admin-yellow)", color: "var(--admin-navy)" }}
               >
                 <Icon name="add" className="text-[18px]" />
                 Hızlı Ekle
               </button>
               <button
                 onClick={() => setQuickOpen((v) => !v)}
-                className="sm:hidden grid place-items-center h-9 w-9 rounded bg-primary text-on-primary"
+                className="sm:hidden grid place-items-center h-9 w-9 rounded-lg"
+                style={{ background: "var(--admin-yellow)", color: "var(--admin-navy)" }}
                 aria-label="Hızlı ekle"
               >
                 <Icon name="add" className="text-[20px]" />
@@ -122,7 +143,10 @@ export function AdminShell({
               {quickOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setQuickOpen(false)} />
-                  <div className="absolute right-0 top-11 z-50 w-56 rounded-md border border-outline-variant bg-surface-container-lowest shadow-lg py-1">
+                  <div
+                    className="absolute right-0 top-12 z-50 w-60 rounded-xl shadow-xl py-1.5"
+                    style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}
+                  >
                     {quickAddItems.map((q) => (
                       <button
                         key={q.key}
@@ -130,9 +154,9 @@ export function AdminShell({
                           setQuickOpen(false);
                           onQuickAdd(q.key);
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-body-sm hover:bg-surface-container text-left"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-[var(--admin-yellow-soft)]"
                       >
-                        <Icon name={q.icon} className="text-[18px] text-on-surface-variant" />
+                        <Icon name={q.icon} className="text-[18px]" style={{ color: "var(--admin-navy)" }} />
                         {q.label}
                       </button>
                     ))}
@@ -144,7 +168,8 @@ export function AdminShell({
             <Link
               to="/"
               target="_blank"
-              className="hidden md:inline-flex items-center gap-1 h-9 px-3 rounded-md text-body-sm hover:bg-surface-container text-on-surface-variant"
+              className="hidden md:inline-flex items-center gap-1.5 h-10 px-3 rounded-lg text-sm hover:bg-[var(--admin-surface-2)]"
+              style={{ color: "var(--admin-text-2)" }}
               aria-label="Siteyi görüntüle"
             >
               <Icon name="open_in_new" className="text-[18px]" />
@@ -153,7 +178,8 @@ export function AdminShell({
 
             <button
               onClick={toggleTheme}
-              className="grid place-items-center h-9 w-9 rounded hover:bg-surface-container text-on-surface-variant"
+              className="grid place-items-center h-10 w-10 rounded-lg hover:bg-[var(--admin-surface-2)]"
+              style={{ color: "var(--admin-text-2)" }}
               aria-label="Temayı değiştir"
               title="Tema"
             >
@@ -164,33 +190,40 @@ export function AdminShell({
             <div className="relative">
               <button
                 onClick={() => setProfileOpen((v) => !v)}
-                className="flex items-center gap-2 h-9 px-2 rounded hover:bg-surface-container"
+                className="flex items-center gap-2 h-10 px-2 rounded-lg hover:bg-[var(--admin-surface-2)]"
                 aria-label="Profil menüsü"
               >
-                <div className="h-7 w-7 rounded-full bg-primary text-on-primary grid place-items-center text-body-sm font-label-bold">
+                <div
+                  className="h-8 w-8 rounded-full grid place-items-center text-sm font-bold ring-2"
+                  style={{ background: "var(--admin-navy)", color: "var(--admin-yellow)", boxShadow: "0 0 0 2px var(--admin-yellow-soft)" }}
+                >
                   {userEmail.charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden lg:inline text-body-sm max-w-[160px] truncate">{userEmail}</span>
+                <span className="hidden lg:inline text-sm max-w-[160px] truncate" style={{ color: "var(--admin-text)" }}>{userEmail}</span>
               </button>
               {profileOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                  <div className="absolute right-0 top-11 z-50 w-56 rounded-md border border-outline-variant bg-surface-container-lowest shadow-lg py-1">
-                    <div className="px-3 py-2 border-b border-outline-variant">
-                      <p className="text-body-sm truncate">{userEmail}</p>
-                      <p className="text-[11px] text-on-surface-variant">Yönetici</p>
+                  <div
+                    className="absolute right-0 top-12 z-50 w-60 rounded-xl shadow-xl py-1.5"
+                    style={{ background: "var(--admin-surface)", border: "1px solid var(--admin-border)" }}
+                  >
+                    <div className="px-3 py-2.5" style={{ borderBottom: "1px solid var(--admin-border)" }}>
+                      <p className="text-sm truncate font-medium">{userEmail}</p>
+                      <p className="text-[11px]" style={{ color: "var(--admin-text-2)" }}>Yönetici</p>
                     </div>
                     <Link
                       to="/"
                       target="_blank"
-                      className="w-full flex items-center gap-2 px-3 py-2 text-body-sm hover:bg-surface-container"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--admin-surface-2)]"
                     >
-                      <Icon name="open_in_new" className="text-[18px] text-on-surface-variant" />
+                      <Icon name="open_in_new" className="text-[18px]" style={{ color: "var(--admin-text-2)" }} />
                       Siteyi aç
                     </Link>
                     <button
                       onClick={signOut}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-body-sm hover:bg-surface-container text-error"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-red-50"
+                      style={{ color: "var(--admin-danger)" }}
                     >
                       <Icon name="logout" className="text-[18px]" />
                       Çıkış yap
@@ -241,33 +274,41 @@ function SidebarPanel({
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           onClick={onMobileClose}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`${width} shrink-0 border-r border-outline-variant bg-surface-container-lowest
+        className={`${width} shrink-0
           fixed md:sticky top-0 z-50 md:z-auto h-dvh md:h-auto md:min-h-screen
           w-64 transition-transform duration-200
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
           flex flex-col`}
+        style={{
+          background: "linear-gradient(180deg, var(--admin-navy) 0%, var(--admin-navy-dark) 100%)",
+          color: "#E7ECF3",
+          borderRight: "1px solid rgba(255,255,255,0.06)",
+        }}
       >
         {/* Brand */}
-        <div className="h-14 flex items-center gap-2 px-4 border-b border-outline-variant shrink-0">
-          <div className="h-8 w-8 rounded bg-primary text-on-primary grid place-items-center shrink-0">
-            <Icon name="shield" className="text-[18px]" />
+        <div className="h-16 flex items-center gap-2.5 px-4 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <div
+            className="h-9 w-9 rounded-lg grid place-items-center shrink-0 shadow-md"
+            style={{ background: "var(--admin-yellow)", color: "var(--admin-navy)" }}
+          >
+            <Icon name="bolt" className="text-[20px]" />
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="font-label-bold text-body-sm text-on-surface truncate">Pratik</p>
-              <p className="text-[11px] text-on-surface-variant leading-none">Yönetim Paneli</p>
+              <p className="font-bold text-sm text-white truncate leading-tight">Pratik Endüstriyel</p>
+              <p className="text-[11px] leading-tight mt-0.5" style={{ color: "var(--admin-yellow)" }}>Yönetim Paneli</p>
             </div>
           )}
           <button
             onClick={onMobileClose}
-            className="md:hidden ml-auto grid place-items-center h-8 w-8 rounded hover:bg-surface-container"
+            className="md:hidden ml-auto grid place-items-center h-8 w-8 rounded hover:bg-white/10 text-white"
             aria-label="Kapat"
           >
             <Icon name="close" className="text-[18px]" />
@@ -275,11 +316,11 @@ function SidebarPanel({
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-3 flex flex-col gap-4">
+        <nav className="flex-1 overflow-y-auto py-4 flex flex-col gap-5 admin-sidebar-scroll">
           {ADMIN_NAV.map((group) => (
             <div key={group.title} className="flex flex-col gap-0.5">
               {!collapsed && (
-                <p className="px-4 pb-1 text-[11px] font-label-bold uppercase tracking-wider text-on-surface-variant">
+                <p className="px-5 pb-2 text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: "rgba(255,255,255,0.45)" }}>
                   {group.title}
                 </p>
               )}
@@ -291,15 +332,24 @@ function SidebarPanel({
                     onClick={() => onTab(n.key)}
                     title={collapsed ? n.label : undefined}
                     aria-current={active ? "page" : undefined}
-                    className={`group relative flex items-center gap-3 px-3 mx-2 h-10 rounded-md text-body-sm transition-colors
-                      ${active
-                        ? "bg-primary/10 text-primary font-label-bold"
-                        : "text-on-surface hover:bg-surface-container"}`}
+                    className={`group relative flex items-center gap-3 px-3 mx-2 h-10 rounded-lg text-sm transition-all
+                      ${active ? "font-semibold" : "hover:bg-white/5"}`}
+                    style={
+                      active
+                        ? { background: "color-mix(in oklab, var(--admin-yellow) 18%, transparent)", color: "var(--admin-yellow)" }
+                        : { color: "rgba(255,255,255,0.75)" }
+                    }
                   >
-                    {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-primary" />}
+                    {active && (
+                      <span
+                        className="absolute -left-0 top-1.5 bottom-1.5 w-1 rounded-full"
+                        style={{ background: "var(--admin-yellow)" }}
+                      />
+                    )}
                     <Icon
                       name={n.icon}
-                      className={`text-[20px] shrink-0 ${active ? "text-primary" : "text-on-surface-variant"}`}
+                      className="text-[20px] shrink-0"
+                      style={{ color: active ? "var(--admin-yellow)" : "rgba(255,255,255,0.7)" }}
                     />
                     {!collapsed && <span className="truncate">{n.label}</span>}
                   </button>
@@ -311,7 +361,7 @@ function SidebarPanel({
 
         {/* Footer */}
         {!collapsed && (
-          <div className="border-t border-outline-variant p-3 text-[11px] text-on-surface-variant">
+          <div className="p-4 text-[11px]" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)" }}>
             © {new Date().getFullYear()} Pratik Endüstriyel
           </div>
         )}
