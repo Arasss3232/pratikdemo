@@ -8,6 +8,10 @@ import { GenericCrud, type CrudField, type CrudColumn } from "../components/admi
 import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
+import { RoleDashboard } from "../components/admin/b2b/RoleDashboard";
+import { CompaniesWorkspace } from "../components/admin/b2b/CompaniesWorkspace";
+import { ApprovalCenter } from "../components/admin/b2b/ApprovalCenter";
+import { useB2BContext } from "@/hooks/use-b2b-context";
 import { PageHeader } from "../components/admin/PageHeader";
 import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
@@ -50,6 +54,15 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Tab = AdminTab;
+
+function DashboardHost({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
+  const ctx = useB2BContext();
+  if (ctx.loading) {
+    return <div className="p-6 text-[13px]" style={{ color: "var(--admin-text-mute)" }}>Panel yükleniyor…</div>;
+  }
+  if (!ctx.userId) return <Dashboard onNavigate={onNavigate} />;
+  return <RoleDashboard ctx={ctx} onNavigate={onNavigate} />;
+}
 
 type QuoteRequest = {
   id: string;
@@ -147,7 +160,7 @@ function AdminPage() {
         onQuickAdd={handleQuickAdd}
       >
         {tab !== "dashboard" && <PageHeader tab={tab} />}
-        {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
+        {tab === "dashboard" && <DashboardHost onNavigate={setTab} />}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "products" && <ProductsTab />}
         {tab === "quotes" && <QuotesTab />}
@@ -165,7 +178,7 @@ function AdminPage() {
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
         {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
-        {tab === "companies" && <CompaniesTab />}
+        {tab === "companies" && <CompaniesWorkspace />}
         {tab === "dealers" && <DealersTab />}
         {tab === "customerGroups" && <CustomerGroupsTab />}
         {tab === "salesReps" && <SalesRepsTab />}
@@ -178,13 +191,7 @@ function AdminPage() {
             "Tek tıkla onay / reddet + not bırakma",
           ]} />
         )}
-        {tab === "approvals" && (
-          <ComingSoon tab="approvals" phase="Faz 3 · Onay Motoru" bullets={[
-            "Yeni firma, kredi limiti, özel indirim onayları",
-            "Yüksek tutarlı teklif ve sipariş onayları",
-            "Kredi limiti aşan sipariş onayları",
-          ]} />
-        )}
+        {tab === "approvals" && <ApprovalCenter />}
         {tab === "notifications" && (
           <ComingSoon tab="notifications" phase="Faz 5 · Bildirim Merkezi" bullets={[
             "Sistem içi bildirim akışı ve okundu takibi",
