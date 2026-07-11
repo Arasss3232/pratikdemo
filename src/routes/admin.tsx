@@ -34,7 +34,7 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","services","references","certificates","team","testimonials",
+  "settings","brochures","services","references","certificates","team","testimonials",
   "faqs","blog","blogcats","jobs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
@@ -162,6 +162,7 @@ function AdminPage() {
         {tab !== "dashboard" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <DashboardHost onNavigate={setTab} />}
         {tab === "settings" && <SiteSettingsForm />}
+        {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
         {tab === "quotes" && <QuotesTab />}
         {tab === "users" && <UsersTab currentUserId={user.id} />}
