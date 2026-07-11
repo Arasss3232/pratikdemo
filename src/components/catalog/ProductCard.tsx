@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { BRAND_LOGOS, productSrcSet, type Product } from "../../data/catalog";
 import { Icon } from "../site-shell";
 import { buttonStyles } from "../../lib/button-styles";
+import { addProductToQuoteCart } from "../../lib/quote-cart";
 
 function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "list" }) {
   const isList = view === "list";
@@ -73,6 +74,7 @@ function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "li
           </Link>
           <Link
             to="/teklif-sepeti"
+            onClick={() => addProductToQuoteCart(p)}
             className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}
             aria-label={`${p.name} için teklif al`}
           >

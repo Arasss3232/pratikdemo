@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BRAND_LOGOS, PRODUCTS, productSrcSet } from "../data/catalog";
 import { buttonStyles } from "../lib/button-styles";
+import { addProductToQuoteCart } from "../lib/quote-cart";
 import { Icon, PagePlaceholder, SiteShell } from "../components/site-shell";
 
 export const Route = createFileRoute("/urun-detay/$sku")({
@@ -82,7 +83,11 @@ function ProductDetailPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link to="/teklif-sepeti" className={buttonStyles({ variant: "primary", className: "w-full sm:w-auto" })}>
+              <Link
+                to="/teklif-sepeti"
+                onClick={() => addProductToQuoteCart(product)}
+                className={buttonStyles({ variant: "primary", className: "w-full sm:w-auto" })}
+              >
                 <Icon name="request_quote" className="text-[18px]" />
                 Teklif Sepetine Ekle
               </Link>

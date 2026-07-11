@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CatalogToolbar } from "../components/catalog/CatalogToolbar";
 import type { ActiveCatalogFilter, CatalogSort, CatalogView } from "../components/catalog/CatalogToolbar";
 import { CategoryCta } from "../components/catalog/CategoryCta";
@@ -14,6 +14,7 @@ import { HERO_BG, PRODUCTS } from "../data/catalog";
 const CATEGORY_TITLE = "Elektrikli El Aletleri";
 const CATEGORY_DESC =
   "Zorlu endüstriyel koşullara dayanıklı, yüksek performanslı ve uzun ömürlü profesyonel elektrikli el aletleri. Matkaplardan taşlama makinelerine kadar geniş ürün yelpazesiyle projelerinize güç katın.";
+const PRODUCTS_PER_PAGE = 2;
 
 const BRAND_LABELS: Record<(typeof PRODUCTS)[number]["brand"], string> = {
   bosch: "Bosch Professional",
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
     ],
     links: [
       { rel: "canonical", href: "/urunler/elektrikli-el-aletleri" },
-      { rel: "preload", as: "image", href: HERO_BG, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: HERO_BG, fetchPriority: "high" },
     ],
     scripts: [
       {
@@ -105,6 +106,7 @@ function ElectricToolsPage() {
   const [brandSearch, setBrandSearch] = useState("");
   const [sort, setSort] = useState<CatalogSort>("recommended");
   const [view, setView] = useState<CatalogView>("grid");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const toggleValue = (value: string, setter: (next: string[]) => void, current: string[]) => {
     setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
@@ -133,6 +135,16 @@ function ElectricToolsPage() {
     ...selectedBrands.map((label) => ({ id: `brand:${label}`, label: `Marka: ${label}` })),
     ...selectedApplications.map((label) => ({ id: `application:${label}`, label: `Uygulama: ${label}` })),
   ];
+
+  const pageCount = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const displayedProducts = filteredProducts.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE,
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedApplications, selectedBrands, selectedSubcategories, sort, view]);
 
   const clearFilters = () => {
     setSelectedSubcategories([]);
@@ -183,7 +195,7 @@ function ElectricToolsPage() {
                 onRemoveFilter={removeFilter}
               />
               <div className={view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "grid grid-cols-1 gap-4"}>
-                {filteredProducts.map((p) => (
+                  {displayedProducts.map((p) => (
                   <ProductCard key={p.sku} p={p} view={view} />
                 ))}
               </div>
@@ -192,7 +204,14 @@ function ElectricToolsPage() {
                   Bu filtrelerle eşleşen ürün bulunamadı. Filtreleri temizleyerek tekrar deneyin.
                 </div>
               )}
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                pageCount={pageCount}
+                onPageChange={(page) => {
+                  setCurrentPage(page);
+                  document.getElementById("catalog-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              />
             </div>
           </div>
         </div>
