@@ -5,7 +5,7 @@ import { ACTION_REGISTRY, type ActionType } from "./ai-assistant-registry";
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 const MAX_MSG_LEN = 4000;
-const MAX_HISTORY = 16;
+const MAX_HISTORY = 30;
 const RATE_PER_HOUR = 60;
 
 type AnyObj = Record<string, any>;
