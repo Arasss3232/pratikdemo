@@ -6,7 +6,6 @@ import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
-import { PublicBrandLockup } from "./PublicBrandLockup";
 
 function BrandWordmark({
   logoUrl,
@@ -18,11 +17,12 @@ function BrandWordmark({
   size?: "md" | "lg";
 }) {
   const src = logoUrl || pratikLogo.url;
+  const height = size === "lg" ? "h-11 md:h-12" : "h-9 md:h-10";
   return (
     <img
       alt={companyName || "Pratik"}
       src={src}
-      className={size === "lg" ? "h-12 w-auto object-contain" : "h-10 md:h-11 w-auto object-contain"}
+      className={`${height} w-auto object-contain block rounded-md`}
       decoding="async"
     />
   );
@@ -247,11 +247,10 @@ export function SiteHeader() {
             className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
             aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
           >
-            <PublicBrandLockup
+            <BrandWordmark
               logoUrl={settings.mobile_logo_url || settings.logo_url}
               companyName={settings.company_name}
-              size={scrolled ? "sm" : "md"}
-              tone="dark"
+              size={scrolled ? "md" : "lg"}
             />
           </Link>
 
@@ -443,11 +442,10 @@ export function SiteHeader() {
               style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
             >
               <Link to="/" onClick={() => setMenuOpen(false)} aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
-                <PublicBrandLockup
+                <BrandWordmark
                   logoUrl={settings.mobile_logo_url || settings.logo_url}
                   companyName={settings.company_name}
-                  size="sm"
-                  tone="dark"
+                  size="md"
                 />
               </Link>
               <button
