@@ -1452,6 +1452,7 @@ export function FaqsTab() {
       table="faqs"
       quickAddKey="faqs"
       title="Sık Sorulan Sorular"
+      extraRowActions={[askAiAction("faq.update")]}
       orderBy="display_order"
       ascending
       fields={[
@@ -1495,6 +1496,7 @@ export function BlogPostsTab() {
       table="blog_posts"
       quickAddKey="blog"
       title="Blog Yazıları"
+      extraRowActions={[askAiAction("blog.update")]}
       orderBy="published_at"
       fields={[
         { name: "slug", label: "Slug", required: true },
