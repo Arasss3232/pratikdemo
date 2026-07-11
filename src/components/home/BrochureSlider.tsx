@@ -139,18 +139,18 @@ function Overlay({ b }: { b: Brochure }) {
           </span>
         ) : null}
         <h2
-          className="font-black leading-[0.95] tracking-tight text-[clamp(1.75rem,4.2vw,3.75rem)]"
+          className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-3"
           style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
         >
           {b.title}
         </h2>
         {b.subtitle ? (
-          <p className="text-lg md:text-xl font-medium" style={{ color: subColor }}>
+          <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
             {b.subtitle}
           </p>
         ) : null}
         {b.description ? (
-          <p className="text-sm md:text-base max-w-xl leading-relaxed" style={{ color: subColor }}>
+          <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
             {b.description}
           </p>
         ) : null}
