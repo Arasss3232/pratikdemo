@@ -387,6 +387,57 @@ export const aiSendMessage = createServerFn({ method: "POST" })
     const reply: string = String(ai.reply ?? "").slice(0, 4000) ||
       "Yardımcı olabileceğim başka bir şey var mı?";
 
+    // Extract conversational metadata (response_type, options, follow_ups, clarify, warnings, confidence)
+    const assistantMeta: AnyObj = {};
+    const RT_ALLOWED = new Set([
+      "info", "recommendation", "options", "content_draft",
+      "design", "audit", "warning", "clarify", "proposal",
+    ]);
+    if (typeof ai.response_type === "string" && RT_ALLOWED.has(ai.response_type)) {
+      assistantMeta.response_type = ai.response_type;
+    }
+    if (ai.confidence === "low" || ai.confidence === "medium" || ai.confidence === "high") {
+      assistantMeta.confidence = ai.confidence;
+    }
+    if (Array.isArray(ai.options)) {
+      const opts = ai.options
+        .slice(0, 3)
+        .map((o: AnyObj) => ({
+          name: String(o?.name ?? "").slice(0, 80),
+          description: String(o?.description ?? "").slice(0, 300),
+          advantage: String(o?.advantage ?? "").slice(0, 240),
+          tradeoff: String(o?.tradeoff ?? "").slice(0, 240),
+          use_case: String(o?.use_case ?? "").slice(0, 240),
+        }))
+        .filter((o: AnyObj) => o.name && o.description);
+      if (opts.length) assistantMeta.options = opts;
+    }
+    if (Array.isArray(ai.follow_ups)) {
+      const fu = ai.follow_ups
+        .map((f: any) => String(f ?? "").trim())
+        .filter(Boolean)
+        .slice(0, 4)
+        .map((s: string) => s.slice(0, 60));
+      if (fu.length) assistantMeta.follow_ups = fu;
+    }
+    if (Array.isArray(ai.warnings)) {
+      const w = ai.warnings
+        .map((x: any) => String(x ?? "").trim())
+        .filter(Boolean)
+        .slice(0, 3)
+        .map((s: string) => s.slice(0, 240));
+      if (w.length) assistantMeta.warnings = w;
+    }
+    if (ai.clarify && typeof ai.clarify === "object" && ai.clarify.question) {
+      const choices = Array.isArray(ai.clarify.choices)
+        ? ai.clarify.choices.map((c: any) => String(c ?? "").slice(0, 60)).filter(Boolean).slice(0, 5)
+        : [];
+      assistantMeta.clarify = {
+        question: String(ai.clarify.question).slice(0, 240),
+        choices,
+      };
+    }
+
     let proposalId: string | null = null;
     let proposalRow: AnyObj | null = null;
 
@@ -427,6 +478,7 @@ export const aiSendMessage = createServerFn({ method: "POST" })
         conversation_id: data.conversationId,
         role: "assistant",
         content: reply,
+        metadata: assistantMeta,
         proposal_id: proposalId,
       })
       .select("id, role, content, metadata, proposal_id, created_at")
