@@ -1,8 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "../components/site-shell";
-import { buttonStyles } from "../lib/button-styles";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { GenericCrud, type CrudField, type CrudColumn } from "../components/admin/GenericCrud";
@@ -10,6 +9,7 @@ import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
 import { PageHeader } from "../components/admin/PageHeader";
+import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 
@@ -33,19 +33,6 @@ export const Route = createFileRoute("/admin")({
 });
 
 type Tab = AdminTab;
-
-type Product = {
-  id: string;
-  sku: string;
-  name: string;
-  brand: string;
-  category: string;
-  description: string | null;
-  image_url: string | null;
-  price: number | null;
-  is_active: boolean;
-  specs: Record<string, unknown>;
-};
 
 type QuoteRequest = {
   id: string;
@@ -118,7 +105,7 @@ function AdminPage() {
           <p className="text-sm" style={{ color: "var(--admin-text-2)" }}>
             Bu sayfayı görüntülemek için yönetici yetkiniz olmalı. Yetki için sistem sorumlunuzla iletişime geçin.
           </p>
-          <Link to="/" className={buttonStyles({ variant: "primary", size: "sm" })}>
+          <Link to="/" className="admin-btn admin-btn-primary admin-btn-sm">
             Ana sayfaya dön
           </Link>
         </div>
