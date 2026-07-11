@@ -284,7 +284,9 @@ function QuotesTab() {
           className="flex items-center gap-2 h-10 px-3 rounded-xl sm:w-72"
           style={{ background: "var(--admin-surface-2)", border: "1px solid var(--admin-border)" }}
         >
-          <Icon name="search" className="text-[18px]" style={{ color: "var(--admin-text-mute)" }} />
+          <span style={{ color: "var(--admin-text-mute)" }}>
+            <Icon name="search" className="text-[18px]" />
+          </span>
           <input
             type="search"
             value={query}
