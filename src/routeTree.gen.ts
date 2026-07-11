@@ -40,6 +40,7 @@ import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
 import { Route as PortalUrunlerRouteImport } from './routes/portal.urunler'
 import { Route as PortalTekliflerimRouteImport } from './routes/portal.tekliflerim'
 import { Route as PortalTeklifAlRouteImport } from './routes/portal.teklif-al'
+import { Route as PortalHizliSiparisRouteImport } from './routes/portal.hizli-siparis'
 import { Route as KariyerSlugRouteImport } from './routes/kariyer.$slug'
 import { Route as HizmetlerSlugRouteImport } from './routes/hizmetler.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -203,6 +204,11 @@ const PortalTeklifAlRoute = PortalTeklifAlRouteImport.update({
   path: '/teklif-al',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalHizliSiparisRoute = PortalHizliSiparisRouteImport.update({
+  id: '/hizli-siparis',
+  path: '/hizli-siparis',
+  getParentRoute: () => PortalRoute,
+} as any)
 const KariyerSlugRoute = KariyerSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/hizmetler/$slug': typeof HizmetlerSlugRoute
   '/kariyer/$slug': typeof KariyerSlugRoute
+  '/portal/hizli-siparis': typeof PortalHizliSiparisRoute
   '/portal/teklif-al': typeof PortalTeklifAlRoute
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
@@ -362,6 +371,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/hizli-siparis'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/hizli-siparis'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/hizmetler/$slug'
     | '/kariyer/$slug'
+    | '/portal/hizli-siparis'
     | '/portal/teklif-al'
     | '/portal/tekliflerim'
     | '/portal/urunler'
@@ -692,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalTeklifAlRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/hizli-siparis': {
+      id: '/portal/hizli-siparis'
+      path: '/hizli-siparis'
+      fullPath: '/portal/hizli-siparis'
+      preLoaderRoute: typeof PortalHizliSiparisRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/kariyer/$slug': {
       id: '/kariyer/$slug'
       path: '/$slug'
@@ -757,6 +776,7 @@ const KariyerRouteWithChildren =
   KariyerRoute._addFileChildren(KariyerRouteChildren)
 
 interface PortalRouteChildren {
+  PortalHizliSiparisRoute: typeof PortalHizliSiparisRoute
   PortalTeklifAlRoute: typeof PortalTeklifAlRoute
   PortalTekliflerimRoute: typeof PortalTekliflerimRoute
   PortalUrunlerRoute: typeof PortalUrunlerRoute
@@ -764,6 +784,7 @@ interface PortalRouteChildren {
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalHizliSiparisRoute: PortalHizliSiparisRoute,
   PortalTeklifAlRoute: PortalTeklifAlRoute,
   PortalTekliflerimRoute: PortalTekliflerimRoute,
   PortalUrunlerRoute: PortalUrunlerRoute,
