@@ -6,10 +6,56 @@ import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
-const LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBJVJBnu0BLWG7iyyazFpPt8YOm9fdpRNuJ8XdtGUj0Q_PDfAxCwRPq_5cxeOP-ojfJTaxziV1qQ_xbLr9bQiocUT6afPXyAYd9vkb6OVXCPGB2uCqnbBnuad6WQGuJ2rTqoWLPrkWECkB7jgp8zXDdApWW8Lxe8X78wrIlLydLrOQPFJ5ODCdsP1wTtSD9fiNs23wJ_b--Wpdj1FckmPJ3a-n1N0Zvg4Y-bn90rbAV6zG6OZVTb3KpTtW4-JaHz3pAeg";
-const FOOTER_LOGO_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCbDq0vERbuBQdplgYRumJoOnWe12cbW670-pZusxuQqXz1j9tHKlNvmmHcVVfe8TxuQkBrM_JttsIA93nURyWU1tcjTXK46gR995CqStTHtI05nSFCf_S96HD-i23PLyvtlZ0oTmUM9cVVtpto7QuQYvG2qIqO6rsfC0cQ7aepU3OHS2mE7OmRPv1kRhFxEyT18aU1d5i9mJNoQdxRJ1QQR21qBi2jv1ZyDHqEztehLIuHqW3X2viIRAUMJcLszA6kBw";
+function BrandWordmark({
+  logoUrl,
+  companyName,
+  size = "md",
+}: {
+  logoUrl?: string | null;
+  companyName?: string | null;
+  size?: "md" | "lg";
+}) {
+  if (logoUrl) {
+    return (
+      <img
+        alt={companyName || "Pratik"}
+        src={logoUrl}
+        className={size === "lg" ? "h-12 w-auto object-contain" : "h-9 md:h-10 w-auto object-contain"}
+        decoding="async"
+      />
+    );
+  }
+  const name = (companyName || "Pratik").trim();
+  const parts = name.split(/\s+/);
+  const head = parts[0] ?? name;
+  const tail = parts.slice(1).join(" ");
+  const headSize = size === "lg" ? "text-[30px]" : "text-[22px] md:text-[26px]";
+  return (
+    <span
+      className={`inline-flex items-baseline gap-2 leading-none text-white ${headSize}`}
+      style={{
+        fontFamily: "var(--font-display)",
+        fontWeight: 700,
+        letterSpacing: "0.02em",
+        textTransform: "uppercase",
+      }}
+    >
+      <span
+        aria-hidden
+        className="inline-block"
+        style={{
+          width: "8px",
+          height: size === "lg" ? "28px" : "22px",
+          backgroundColor: "var(--public-yellow-500)",
+        }}
+      />
+      <span>{head}</span>
+      {tail && (
+        <span style={{ color: "var(--public-yellow-500)", fontWeight: 600 }}>{tail}</span>
+      )}
+    </span>
+  );
+}
 
 function IconBase({
   name,
@@ -141,15 +187,8 @@ export function SiteHeader() {
           style={{ height: scrolled ? "64px" : "84px" }}
         >
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group" aria-label="Pratik ana sayfa">
-            <img
-              alt="Pratik"
-              src={LOGO_URL}
-              width={132}
-              height={44}
-              className="h-9 md:h-10 w-auto object-contain brightness-0 invert"
-              decoding="async"
-            />
+          <Link to="/" className="flex items-center gap-3 group" aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
+            <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} />
           </Link>
 
           {/* Center nav — desktop */}
