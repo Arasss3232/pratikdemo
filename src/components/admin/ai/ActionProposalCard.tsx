@@ -47,9 +47,29 @@ export function ActionProposalCard({ proposal, onApprove, onReject, onUndo }: Pr
       );
       if (!ok) return;
     }
+    if (busy) return;
+    setBusy(true);
     try {
-      await guard(() => onApprove(proposal.id, false), "Değişiklik uygulandı.");
-    } catch {}
+      await onApprove(proposal.id, false);
+      toast.success("Değişiklik uygulandı.");
+    } catch (e: any) {
+      const msg = String(e?.message ?? "İşlem başarısız oldu.");
+      if (msg.includes("değişmiş")) {
+        const ok = window.confirm(`${msg}\n\nGerçek değeri önerilenle değiştirmek için "Tamam"a basın.`);
+        if (ok) {
+          try {
+            await onApprove(proposal.id, true);
+            toast.success("Değişiklik uygulandı.");
+          } catch (e2: any) {
+            toast.error(e2?.message ?? "İşlem başarısız oldu.");
+          }
+        }
+      } else {
+        toast.error(msg);
+      }
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function handleUndo() {
