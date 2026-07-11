@@ -1274,7 +1274,7 @@ export function QuoteCTA() {
                   />
                 </label>
                 <label className="flex items-start gap-3 text-white/80 text-[13.5px]">
-                  <input type="checkbox" name="kvkk" required className="mt-1" style={{ accentColor: "#F5C400" }} />
+                  <input type="checkbox" name="kvkk" required className="mt-1" style={{ accentColor: "var(--public-yellow-500)" }} />
                   <span>
                     Kişisel verilerimin{" "}
                     <Link to="/kvkk" className="underline hover:text-white" style={{ color: YELLOW }}>
