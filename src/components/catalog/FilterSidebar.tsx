@@ -2,7 +2,35 @@ import type { ReactNode } from "react";
 import { APPLICATIONS, BRANDS, SUBCATEGORIES } from "../../data/catalog";
 import { Icon } from "../site-shell";
 
-export function FilterSidebar() {
+type FilterSidebarProps = {
+  selectedSubcategories: string[];
+  selectedBrands: string[];
+  selectedApplications: string[];
+  brandSearch: string;
+  onToggleSubcategory: (label: string) => void;
+  onToggleBrand: (label: string) => void;
+  onToggleApplication: (label: string) => void;
+  onBrandSearchChange: (value: string) => void;
+  onClear: () => void;
+};
+
+export function FilterSidebar({
+  selectedSubcategories,
+  selectedBrands,
+  selectedApplications,
+  brandSearch,
+  onToggleSubcategory,
+  onToggleBrand,
+  onToggleApplication,
+  onBrandSearchChange,
+  onClear,
+}: FilterSidebarProps) {
+  const visibleBrands = BRANDS.filter((brand) =>
+    brand.toLocaleLowerCase("tr").includes(brandSearch.toLocaleLowerCase("tr")),
+  );
+  const hasFilters =
+    selectedSubcategories.length > 0 || selectedBrands.length > 0 || selectedApplications.length > 0 || brandSearch.length > 0;
+
   return (
     <aside className="w-full lg:w-64 flex-shrink-0">
       <details className="filter-panel group bg-surface-container-lowest border border-outline-variant rounded-lg lg:sticky lg:top-[140px]" open>
@@ -14,8 +42,13 @@ export function FilterSidebar() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="text-primary text-label-bold font-label-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded"
-              onClick={(e) => e.preventDefault()}
+              className="text-primary text-label-bold font-label-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded disabled:text-on-surface-variant disabled:no-underline disabled:cursor-not-allowed"
+              disabled={!hasFilters}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClear();
+              }}
             >
               Temizle
             </button>
@@ -32,7 +65,11 @@ export function FilterSidebar() {
           <ul className="space-y-2">
             {SUBCATEGORIES.map((label) => (
               <li key={label}>
-                <CheckboxRow label={label} />
+                <CheckboxRow
+                  checked={selectedSubcategories.includes(label)}
+                  label={label}
+                  onChange={() => onToggleSubcategory(label)}
+                />
               </li>
             ))}
           </ul>
@@ -53,14 +90,19 @@ export function FilterSidebar() {
               className="w-full pl-8 pr-2 py-1.5 bg-surface-container-low border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-sm font-body-sm h-8"
               placeholder="Marka ara..."
               type="search"
+              value={brandSearch}
+              onChange={(e) => onBrandSearchChange(e.target.value)}
             />
           </div>
           <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
-            {BRANDS.map((b) => (
+            {visibleBrands.map((b) => (
               <li key={b}>
-                <CheckboxRow label={b} />
+                <CheckboxRow checked={selectedBrands.includes(b)} label={b} onChange={() => onToggleBrand(b)} />
               </li>
             ))}
+            {visibleBrands.length === 0 && (
+              <li className="text-body-sm font-body-sm text-on-surface-variant">Marka bulunamadı.</li>
+            )}
           </ul>
         </FilterGroup>
 
@@ -70,12 +112,13 @@ export function FilterSidebar() {
           </h3>
           <div className="flex flex-wrap gap-2">
             {APPLICATIONS.map((a) => {
-              const active = a === "Metal";
+              const active = selectedApplications.includes(a);
               return (
                 <button
                   key={a}
                   type="button"
                   aria-pressed={active}
+                  onClick={() => onToggleApplication(a)}
                   className={
                     active
                       ? "min-h-9 px-3 py-1 border border-primary bg-primary-container text-on-primary-container rounded text-body-sm font-body-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
@@ -105,12 +148,14 @@ function FilterGroup({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-function CheckboxRow({ label }: { label: string }) {
+function CheckboxRow({ checked, label, onChange }: { checked: boolean; label: string; onChange: () => void }) {
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
       <input
         className="h-4 w-4 text-primary border-outline rounded focus:ring-primary focus:ring-offset-0 bg-surface"
         type="checkbox"
+        checked={checked}
+        onChange={onChange}
       />
       <span className="text-body-sm font-body-sm text-on-background group-hover:text-primary transition-colors">
         {label}

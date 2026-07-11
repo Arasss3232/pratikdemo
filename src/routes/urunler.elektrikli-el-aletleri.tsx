@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { CatalogToolbar } from "../components/catalog/CatalogToolbar";
+import type { ActiveCatalogFilter, CatalogSort, CatalogView } from "../components/catalog/CatalogToolbar";
 import { CategoryCta } from "../components/catalog/CategoryCta";
 import { CategoryHero } from "../components/catalog/CategoryHero";
 import { FeaturedBrands } from "../components/catalog/FeaturedBrands";
@@ -12,6 +14,14 @@ import { HERO_BG, PRODUCTS } from "../data/catalog";
 const CATEGORY_TITLE = "Elektrikli El Aletleri";
 const CATEGORY_DESC =
   "Zorlu endüstriyel koşullara dayanıklı, yüksek performanslı ve uzun ömürlü profesyonel elektrikli el aletleri. Matkaplardan taşlama makinelerine kadar geniş ürün yelpazesiyle projelerinize güç katın.";
+const PRODUCTS_PER_PAGE = 2;
+
+const BRAND_LABELS: Record<(typeof PRODUCTS)[number]["brand"], string> = {
+  bosch: "Bosch Professional",
+  makita: "Makita",
+  dewalt: "DeWalt",
+  hilti: "Hilti",
+};
 
 export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
   head: () => ({
@@ -38,7 +48,7 @@ export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
     ],
     links: [
       { rel: "canonical", href: "/urunler/elektrikli-el-aletleri" },
-      { rel: "preload", as: "image", href: HERO_BG, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: HERO_BG, fetchPriority: "high" },
     ],
     scripts: [
       {
@@ -90,6 +100,67 @@ export const Route = createFileRoute("/urunler/elektrikli-el-aletleri")({
 });
 
 function ElectricToolsPage() {
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<string[]>(["Metal"]);
+  const [brandSearch, setBrandSearch] = useState("");
+  const [sort, setSort] = useState<CatalogSort>("recommended");
+  const [view, setView] = useState<CatalogView>("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const toggleValue = (value: string, setter: (next: string[]) => void, current: string[]) => {
+    setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  };
+
+  const filteredProducts = useMemo(() => {
+    const matches = PRODUCTS.filter((product) => {
+      const brandMatches = selectedBrands.length === 0 || selectedBrands.includes(BRAND_LABELS[product.brand]);
+      const subcategoryMatches =
+        selectedSubcategories.length === 0 || selectedSubcategories.some((category) => productMatchesSubcategory(product.name, category));
+      const applicationMatches =
+        selectedApplications.length === 0 || selectedApplications.some((application) => productMatchesApplication(product.name, application));
+      return brandMatches && subcategoryMatches && applicationMatches;
+    });
+
+    return [...matches].sort((a, b) => {
+      if (sort === "name-asc") return a.name.localeCompare(b.name, "tr");
+      if (sort === "name-desc") return b.name.localeCompare(a.name, "tr");
+      if (sort === "sku") return a.sku.localeCompare(b.sku, "tr");
+      return PRODUCTS.indexOf(a) - PRODUCTS.indexOf(b);
+    });
+  }, [selectedApplications, selectedBrands, selectedSubcategories, sort]);
+
+  const activeFilters: ActiveCatalogFilter[] = [
+    ...selectedSubcategories.map((label) => ({ id: `subcategory:${label}`, label })),
+    ...selectedBrands.map((label) => ({ id: `brand:${label}`, label: `Marka: ${label}` })),
+    ...selectedApplications.map((label) => ({ id: `application:${label}`, label: `Uygulama: ${label}` })),
+  ];
+
+  const pageCount = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const displayedProducts = filteredProducts.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE,
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedApplications, selectedBrands, selectedSubcategories, sort, view]);
+
+  const clearFilters = () => {
+    setSelectedSubcategories([]);
+    setSelectedBrands([]);
+    setSelectedApplications([]);
+    setBrandSearch("");
+  };
+
+  const removeFilter = (id: string) => {
+    const [type, ...valueParts] = id.split(":");
+    const value = valueParts.join(":");
+    if (type === "subcategory") setSelectedSubcategories((items) => items.filter((item) => item !== value));
+    if (type === "brand") setSelectedBrands((items) => items.filter((item) => item !== value));
+    if (type === "application") setSelectedApplications((items) => items.filter((item) => item !== value));
+  };
+
   return (
     <SiteShell>
       <>
@@ -102,15 +173,45 @@ function ElectricToolsPage() {
 
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
           <div className="flex flex-col lg:flex-row gap-gutter">
-            <FilterSidebar />
-            <div className="flex-grow flex flex-col">
-              <CatalogToolbar />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {PRODUCTS.map((p) => (
-                  <ProductCard key={p.sku} p={p} />
+            <FilterSidebar
+              selectedSubcategories={selectedSubcategories}
+              selectedBrands={selectedBrands}
+              selectedApplications={selectedApplications}
+              brandSearch={brandSearch}
+              onToggleSubcategory={(label) => toggleValue(label, setSelectedSubcategories, selectedSubcategories)}
+              onToggleBrand={(label) => toggleValue(label, setSelectedBrands, selectedBrands)}
+              onToggleApplication={(label) => toggleValue(label, setSelectedApplications, selectedApplications)}
+              onBrandSearchChange={setBrandSearch}
+              onClear={clearFilters}
+            />
+            <div id="catalog-results" className="flex-grow flex flex-col scroll-mt-28">
+              <CatalogToolbar
+                count={filteredProducts.length}
+                sort={sort}
+                view={view}
+                activeFilters={activeFilters}
+                onSortChange={setSort}
+                onViewChange={setView}
+                onRemoveFilter={removeFilter}
+              />
+              <div className={view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "grid grid-cols-1 gap-4"}>
+                  {displayedProducts.map((p) => (
+                  <ProductCard key={p.sku} p={p} view={view} />
                 ))}
               </div>
-              <Pagination />
+              {filteredProducts.length === 0 && (
+                <div className="border border-outline-variant bg-surface-container-lowest rounded p-8 text-center text-on-surface-variant">
+                  Bu filtrelerle eşleşen ürün bulunamadı. Filtreleri temizleyerek tekrar deneyin.
+                </div>
+              )}
+              <Pagination
+                currentPage={currentPage}
+                pageCount={pageCount}
+                onPageChange={(page) => {
+                  setCurrentPage(page);
+                  document.getElementById("catalog-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              />
             </div>
           </div>
         </div>
@@ -120,4 +221,24 @@ function ElectricToolsPage() {
       </>
     </SiteShell>
   );
+}
+
+function productMatchesSubcategory(productName: string, category: string) {
+  const name = productName.toLocaleLowerCase("tr");
+  const normalizedCategory = category.toLocaleLowerCase("tr");
+  if (normalizedCategory.includes("matkap")) return name.includes("matkap");
+  if (normalizedCategory.includes("vidalama")) return name.includes("vidalama");
+  if (normalizedCategory.includes("taşlama")) return name.includes("taşlama");
+  if (normalizedCategory.includes("kırıcı")) return name.includes("kırıcı") || name.includes("delici");
+  if (normalizedCategory.includes("testere")) return name.includes("testere");
+  return true;
+}
+
+function productMatchesApplication(productName: string, application: string) {
+  const name = productName.toLocaleLowerCase("tr");
+  if (application === "Ahşap") return name.includes("matkap") || name.includes("vidalama");
+  if (application === "Metal") return name.includes("taşlama") || name.includes("matkap") || name.includes("vidalama") || name.includes("delici");
+  if (application === "Beton") return name.includes("kırıcı") || name.includes("delici") || name.includes("matkap");
+  if (application === "Montaj") return name.includes("vidalama") || name.includes("matkap");
+  return true;
 }

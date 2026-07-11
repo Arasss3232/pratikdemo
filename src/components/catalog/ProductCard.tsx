@@ -1,11 +1,19 @@
 import { memo } from "react";
+import { Link } from "@tanstack/react-router";
 import { BRAND_LOGOS, productSrcSet, type Product } from "../../data/catalog";
 import { Icon } from "../site-shell";
 import { buttonStyles } from "../../lib/button-styles";
+import { addProductToQuoteCart } from "../../lib/quote-cart";
 
-function ProductCardBase({ p }: { p: Product }) {
+function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "list" }) {
+  const isList = view === "list";
+
   return (
-    <article className="group bg-surface-container-lowest border border-outline-variant rounded hover:border-primary transition-colors duration-300 flex flex-col relative overflow-hidden">
+    <article
+      className={`group bg-surface-container-lowest border border-outline-variant rounded hover:border-primary transition-colors duration-300 flex relative overflow-hidden ${
+        isList ? "flex-col sm:flex-row" : "flex-col"
+      }`}
+    >
       <div
         className={`absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold uppercase rounded z-10 tracking-wider ${
           p.stock === "in"
@@ -26,7 +34,7 @@ function ProductCardBase({ p }: { p: Product }) {
           decoding="async"
         />
       </div>
-      <div className="h-48 bg-surface-container-low flex items-center justify-center p-4 relative">
+      <div className={`${isList ? "h-48 sm:h-auto sm:w-56" : "h-48"} bg-surface-container-low flex items-center justify-center p-4 relative flex-shrink-0`}>
         <img
           alt={p.productAlt}
           className="max-h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
@@ -54,15 +62,25 @@ function ProductCardBase({ p }: { p: Product }) {
             </li>
           ))}
         </ul>
-        <div className="mt-auto pt-2 border-t border-outline-variant flex flex-col gap-2">
-          <button className={buttonStyles({ variant: "outline-dark", size: "sm", className: "w-full px-3" })}>
+        <div className={`mt-auto pt-2 border-t border-outline-variant flex gap-2 ${isList ? "flex-col sm:flex-row" : "flex-col"}`}>
+          <Link
+            to="/urun-detay/$sku"
+            params={{ sku: p.sku }}
+            className={buttonStyles({ variant: "outline-dark", size: "sm", className: "w-full px-3" })}
+            aria-label={`${p.name} detaylarını incele`}
+          >
             <Icon name="visibility" className="text-[16px]" />
             Detayları İncele
-          </button>
-          <button className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}>
+          </Link>
+          <Link
+            to="/teklif-sepeti"
+            onClick={() => addProductToQuoteCart(p)}
+            className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}
+            aria-label={`${p.name} için teklif al`}
+          >
             <Icon name="request_quote" className="text-[16px]" />
             Teklif Al
-          </button>
+          </Link>
         </div>
       </div>
     </article>
