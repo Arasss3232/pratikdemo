@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import { Icon } from "../site-shell";
-import { buttonStyles } from "../../lib/button-styles";
 
 type ConfirmOpts = {
   title: string;
@@ -55,34 +54,47 @@ export function ConfirmDialogHost() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/50 grid place-items-center p-4"
+      className="admin-scope fixed inset-0 z-[100] grid place-items-center p-4"
+      style={{ background: "rgba(8,24,44,0.55)", backdropFilter: "blur(2px)" }}
       role="dialog"
       aria-modal="true"
       onClick={() => close(false)}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-surface-container-lowest rounded-lg max-w-md w-full p-6 shadow-xl flex flex-col gap-4"
+        className="max-w-md w-full rounded-2xl p-6 flex flex-col gap-4"
+        style={{
+          background: "var(--admin-surface)",
+          border: "1px solid var(--admin-border)",
+          boxShadow: "var(--admin-shadow-3)",
+        }}
       >
         <div className="flex items-start gap-3">
           <div
-            className={`h-10 w-10 rounded-full grid place-items-center shrink-0 ${
-              state.destructive ? "bg-error/10 text-error" : "bg-primary/10 text-primary"
-            }`}
+            className="h-11 w-11 rounded-xl grid place-items-center shrink-0"
+            style={
+              state.destructive
+                ? { background: "var(--admin-danger-soft)", color: "var(--admin-danger)" }
+                : { background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" }
+            }
           >
             <Icon name={state.destructive ? "warning" : "help"} className="text-[22px]" />
           </div>
           <div className="min-w-0">
-            <h3 className="font-label-bold text-body-md">{state.title}</h3>
+            <h3 className="text-[16px] font-semibold" style={{ color: "var(--admin-text)" }}>
+              {state.title}
+            </h3>
             {state.description && (
-              <p className="mt-1 text-body-sm text-on-surface-variant">{state.description}</p>
+              <p className="mt-1 text-[13px]" style={{ color: "var(--admin-text-2)" }}>
+                {state.description}
+              </p>
             )}
           </div>
         </div>
         <div className="flex justify-end gap-2">
           <button
             onClick={() => close(false)}
-            className={buttonStyles({ variant: "outline-dark", size: "sm" })}
+            className="admin-btn admin-btn-ghost admin-btn-sm"
           >
             {state.cancelLabel ?? "İptal"}
           </button>
@@ -90,8 +102,8 @@ export function ConfirmDialogHost() {
             onClick={() => close(true)}
             className={
               state.destructive
-                ? "inline-flex items-center gap-1 h-9 px-4 rounded-md bg-error text-on-error text-body-sm font-label-bold hover:opacity-90"
-                : buttonStyles({ variant: "primary", size: "sm" })
+                ? "admin-btn admin-btn-danger admin-btn-sm"
+                : "admin-btn admin-btn-primary admin-btn-sm"
             }
           >
             {state.confirmLabel ?? "Onayla"}
