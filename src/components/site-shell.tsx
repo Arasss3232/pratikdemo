@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useRef, useState, type ReactNode } from "react";
 import { NAV_LINKS } from "../data/nav";
 import { PageHero } from "./marketing/PageHero";
 import { buttonStyles } from "../lib/button-styles";
