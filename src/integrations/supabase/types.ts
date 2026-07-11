@@ -930,7 +930,34 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      address_type: "billing" | "shipping"
+      app_role:
+        | "admin"
+        | "user"
+        | "super_admin"
+        | "general_manager"
+        | "sales_manager"
+        | "sales_rep"
+        | "finance"
+        | "warehouse"
+        | "operations"
+        | "content_editor"
+        | "report_viewer"
+      company_account_status: "active" | "suspended" | "closed" | "pending"
+      company_approval_status: "pending" | "approved" | "rejected"
+      company_role:
+        | "company_admin"
+        | "purchasing"
+        | "order_creator"
+        | "finance_viewer"
+        | "viewer"
+      company_type:
+        | "corporate"
+        | "dealer"
+        | "distributor"
+        | "branch"
+        | "end_customer"
+      risk_status: "low" | "medium" | "high" | "blocked"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1058,7 +1085,37 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      address_type: ["billing", "shipping"],
+      app_role: [
+        "admin",
+        "user",
+        "super_admin",
+        "general_manager",
+        "sales_manager",
+        "sales_rep",
+        "finance",
+        "warehouse",
+        "operations",
+        "content_editor",
+        "report_viewer",
+      ],
+      company_account_status: ["active", "suspended", "closed", "pending"],
+      company_approval_status: ["pending", "approved", "rejected"],
+      company_role: [
+        "company_admin",
+        "purchasing",
+        "order_creator",
+        "finance_viewer",
+        "viewer",
+      ],
+      company_type: [
+        "corporate",
+        "dealer",
+        "distributor",
+        "branch",
+        "end_customer",
+      ],
+      risk_status: ["low", "medium", "high", "blocked"],
     },
   },
 } as const
