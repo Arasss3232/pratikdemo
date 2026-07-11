@@ -30,6 +30,7 @@ import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunle
 import { Route as UrunlerElAletleriRouteImport } from './routes/urunler.el-aletleri'
 import { Route as UrunlerBaglantiElemanlariRouteImport } from './routes/urunler.baglanti-elemanlari'
 import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
+import { Route as UrunlerElektrikliElAletleriSkuRouteImport } from './routes/urunler.elektrikli-el-aletleri.$sku'
 
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
@@ -139,6 +140,12 @@ const UrunDetaySkuRoute = UrunDetaySkuRouteImport.update({
   path: '/urun-detay/$sku',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UrunlerElektrikliElAletleriSkuRoute =
+  UrunlerElektrikliElAletleriSkuRouteImport.update({
+    id: '/$sku',
+    path: '/$sku',
+    getParentRoute: () => UrunlerElektrikliElAletleriRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -158,10 +165,11 @@ export interface FileRoutesByFullPath {
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -181,10 +189,11 @@ export interface FileRoutesByTo {
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -205,10 +214,11 @@ export interface FileRoutesById {
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
   '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
   '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRoute
+  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
   '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
   '/urunler/kkd': typeof UrunlerKkdRoute
   '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
+  '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -257,6 +268,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/urunler/elektrikli-el-aletleri/$sku'
   id:
     | '__root__'
     | '/'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
     | '/urunler/endustriyel-makineler'
     | '/urunler/kkd'
     | '/urunler/sarf-malzemeleri'
+    | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -449,13 +462,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UrunDetaySkuRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/urunler/elektrikli-el-aletleri/$sku': {
+      id: '/urunler/elektrikli-el-aletleri/$sku'
+      path: '/$sku'
+      fullPath: '/urunler/elektrikli-el-aletleri/$sku'
+      preLoaderRoute: typeof UrunlerElektrikliElAletleriSkuRouteImport
+      parentRoute: typeof UrunlerElektrikliElAletleriRoute
+    }
   }
 }
+
+interface UrunlerElektrikliElAletleriRouteChildren {
+  UrunlerElektrikliElAletleriSkuRoute: typeof UrunlerElektrikliElAletleriSkuRoute
+}
+
+const UrunlerElektrikliElAletleriRouteChildren: UrunlerElektrikliElAletleriRouteChildren =
+  {
+    UrunlerElektrikliElAletleriSkuRoute: UrunlerElektrikliElAletleriSkuRoute,
+  }
+
+const UrunlerElektrikliElAletleriRouteWithChildren =
+  UrunlerElektrikliElAletleriRoute._addFileChildren(
+    UrunlerElektrikliElAletleriRouteChildren,
+  )
 
 interface UrunlerRouteChildren {
   UrunlerBaglantiElemanlariRoute: typeof UrunlerBaglantiElemanlariRoute
   UrunlerElAletleriRoute: typeof UrunlerElAletleriRoute
-  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRoute
+  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRouteWithChildren
   UrunlerEndustriyelMakinelerRoute: typeof UrunlerEndustriyelMakinelerRoute
   UrunlerKkdRoute: typeof UrunlerKkdRoute
   UrunlerSarfMalzemeleriRoute: typeof UrunlerSarfMalzemeleriRoute
@@ -464,7 +498,8 @@ interface UrunlerRouteChildren {
 const UrunlerRouteChildren: UrunlerRouteChildren = {
   UrunlerBaglantiElemanlariRoute: UrunlerBaglantiElemanlariRoute,
   UrunlerElAletleriRoute: UrunlerElAletleriRoute,
-  UrunlerElektrikliElAletleriRoute: UrunlerElektrikliElAletleriRoute,
+  UrunlerElektrikliElAletleriRoute:
+    UrunlerElektrikliElAletleriRouteWithChildren,
   UrunlerEndustriyelMakinelerRoute: UrunlerEndustriyelMakinelerRoute,
   UrunlerKkdRoute: UrunlerKkdRoute,
   UrunlerSarfMalzemeleriRoute: UrunlerSarfMalzemeleriRoute,
@@ -493,13 +528,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
