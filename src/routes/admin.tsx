@@ -12,11 +12,28 @@ import { PageHeader } from "../components/admin/PageHeader";
 import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
+import { ComingSoon } from "../components/admin/ComingSoon";
 
 const TAB_KEYS: AdminTab[] = [
-  "dashboard","settings","products","services","references","brands",
-  "certificates","team","testimonials","faqs","blog","blogcats","jobs",
-  "applications","messages","quotes","users",
+  // Ana Yönetim
+  "dashboard","myTasks","approvals","notifications",
+  // Müşteri Yönetimi
+  "companies","dealers","companyUsers","customerGroups","applications","salesReps",
+  // Satış
+  "quotations","orders","quickOrder","carts","opportunities","discountApprovals",
+  // Ürün ve Fiyat
+  "products","categories","brands","priceLists","specialPrices","discounts","stock",
+  // Finans
+  "accounts","creditLimits","dueTracking","payments","statements","risk",
+  // Operasyon
+  "warehouse","shipments","deliveries","returns","documents",
+  // Raporlar
+  "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
+  // Site Yönetimi
+  "settings","services","references","certificates","team","testimonials",
+  "faqs","blog","blogcats","jobs","messages","quotes",
+  // Sistem
+  "users","roles","workflows","integrations","activityLogs","security","backup",
 ];
 
 export const Route = createFileRoute("/admin")({
@@ -147,6 +164,204 @@ function AdminPage() {
         {tab === "jobs" && <JobsTab />}
         {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
+        {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
+        {tab === "companies" && <CompaniesTab />}
+        {tab === "dealers" && <DealersTab />}
+        {tab === "customerGroups" && <CustomerGroupsTab />}
+        {tab === "salesReps" && <SalesRepsTab />}
+        {tab === "companyUsers" && <CompanyUsersTab />}
+        {/* ============ Faz 2+ modülleri için yol haritası ============ */}
+        {tab === "myTasks" && (
+          <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
+            "Onay adımlarında size atanan iş kalemleri",
+            "Süre aşımı ve hatırlatmalar",
+            "Tek tıkla onay / reddet + not bırakma",
+          ]} />
+        )}
+        {tab === "approvals" && (
+          <ComingSoon tab="approvals" phase="Faz 3 · Onay Motoru" bullets={[
+            "Yeni firma, kredi limiti, özel indirim onayları",
+            "Yüksek tutarlı teklif ve sipariş onayları",
+            "Kredi limiti aşan sipariş onayları",
+          ]} />
+        )}
+        {tab === "notifications" && (
+          <ComingSoon tab="notifications" phase="Faz 5 · Bildirim Merkezi" bullets={[
+            "Sistem içi bildirim akışı ve okundu takibi",
+            "E-posta ve WhatsApp entegrasyonu",
+            "Rol bazlı bildirim tercihleri",
+          ]} />
+        )}
+        {tab === "quotations" && (
+          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[
+            "Çok kalemli teklif oluşturma, iskonto ve KDV",
+            "Revizyon takibi ve PDF çıktı",
+            "Teklifi tek tıkla siparişe dönüştürme",
+          ]} />
+        )}
+        {tab === "orders" && (
+          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={[
+            "Sipariş durum akışı: Onay → Hazırlık → Sevkiyat → Teslim",
+            "Kısmi sevkiyat ve iade süreçleri",
+            "Satış temsilcisi ve depo görevleri",
+          ]} />
+        )}
+        {tab === "quickOrder" && (
+          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={[
+            "SKU ile çoklu satır girişi",
+            "Firma seçildiğinde otomatik fiyat & stok kontrolü",
+          ]} />
+        )}
+        {tab === "carts" && (
+          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={[
+            "Firmaların açık sepetlerini görüntüleme",
+            "Portal üzerinden gelen taleplere anında müdahale",
+          ]} />
+        )}
+        {tab === "opportunities" && (
+          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={[
+            "Aktif fırsatlar ve tahmini kapanış tarihleri",
+            "Satış temsilcisi bazlı pipeline raporu",
+          ]} />
+        )}
+        {tab === "discountApprovals" && (
+          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={[
+            "Standart dışı indirim talepleri",
+            "Fiyat override kayıtları",
+          ]} />
+        )}
+        {tab === "categories" && (
+          <ComingSoon tab="categories" phase="Faz 2 · Ürün Kataloğu" bullets={[
+            "Kategori ve alt kategori ağacı",
+            "Mevcut ürünlerin normalize edilmesi",
+          ]} />
+        )}
+        {tab === "priceLists" && (
+          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
+            "Kademeli fiyatlandırma",
+          ]} />
+        )}
+        {tab === "specialPrices" && (
+          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Firma × ürün özel fiyatları",
+            "Sözleşme fiyatları ve geçerlilik tarihleri",
+          ]} />
+        )}
+        {tab === "discounts" && (
+          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+            "Kampanya, kategori ve ürün bazlı kurallar",
+            "Tarih aralıklı kampanyalar",
+          ]} />
+        )}
+        {tab === "stock" && (
+          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={[
+            "Depo × ürün stok haritası",
+            "Mevcut / rezerve / gelen stok",
+          ]} />
+        )}
+        {tab === "accounts" && (
+          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={[
+            "Firma bazlı cari hesap özeti",
+            "Açık faturalar ve tahsilatlar",
+          ]} />
+        )}
+        {tab === "creditLimits" && (
+          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={[
+            "Kredi limiti değişiklik geçmişi",
+            "Onay akışına bağlı limit güncelleme",
+          ]} />
+        )}
+        {tab === "dueTracking" && (
+          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={[
+            "Yaklaşan vadeler ve otomatik uyarılar",
+            "Geciken tahsilat raporu",
+          ]} />
+        )}
+        {tab === "payments" && (
+          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={[
+            "Tahsilat kayıtları",
+            "Fatura eşleştirmesi",
+          ]} />
+        )}
+        {tab === "statements" && (
+          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={[
+            "PDF ekstre çıktısı",
+            "Firma paylaşımı için imzalı bağlantı",
+          ]} />
+        )}
+        {tab === "risk" && (
+          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={[
+            "Risk skoru ve engelli hesaplar",
+            "Vadesi geçmiş bakiye yaşlandırma",
+          ]} />
+        )}
+        {tab === "warehouse" && (
+          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={[
+            "Depo tanımları ve sorumlu kullanıcılar",
+            "Depolar arası transfer",
+          ]} />
+        )}
+        {tab === "shipments" && (
+          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={[
+            "Sevkiyat oluşturma ve kargo bilgisi",
+            "Kısmi sevkiyat desteği",
+          ]} />
+        )}
+        {tab === "deliveries" && (
+          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={[
+            "Teslimat belgeleri ve tesellüm",
+          ]} />
+        )}
+        {tab === "returns" && (
+          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={[
+            "İade talepleri ve nedenleri",
+            "Stok ve cari düzeltmeleri",
+          ]} />
+        )}
+        {tab === "documents" && (
+          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={[
+            "Sözleşmeler, faturalar ve teknik belgeler için ortak depo",
+            "Rol bazlı erişim kontrolü",
+          ]} />
+        )}
+        {tab === "reportSales" && <ComingSoon tab="reportSales" phase="Faz 5 · Raporlar" />}
+        {tab === "reportQuotes" && <ComingSoon tab="reportQuotes" phase="Faz 5 · Raporlar" />}
+        {tab === "reportOrders" && <ComingSoon tab="reportOrders" phase="Faz 5 · Raporlar" />}
+        {tab === "reportCustomers" && <ComingSoon tab="reportCustomers" phase="Faz 5 · Raporlar" />}
+        {tab === "reportProducts" && <ComingSoon tab="reportProducts" phase="Faz 5 · Raporlar" />}
+        {tab === "reportFinance" && <ComingSoon tab="reportFinance" phase="Faz 5 · Raporlar" />}
+        {tab === "roles" && (
+          <ComingSoon tab="roles" phase="Faz 1 · Sistem" bullets={[
+            "Dahili ve firma rolleri artık veritabanında tanımlı",
+            "Kullanıcı ekranı üzerinden rol atanabilir",
+          ]} />
+        )}
+        {tab === "workflows" && (
+          <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
+        )}
+        {tab === "integrations" && (
+          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={[
+            "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
+          ]} />
+        )}
+        {tab === "activityLogs" && (
+          <ComingSoon tab="activityLogs" phase="Faz 5 · Denetim" bullets={[
+            "Tüm mutasyonların otomatik kaydı",
+            "Rol bazlı görüntüleme",
+          ]} />
+        )}
+        {tab === "security" && (
+          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
+            "Oturum ve başarısız giriş takibi",
+            "Şifre politikası",
+          ]} />
+        )}
+        {tab === "backup" && (
+          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={[
+            "Yedekleme durumu ve geri yükleme",
+          ]} />
+        )}
       </AdminShell>
       <ConfirmDialogHost />
     </>
