@@ -256,7 +256,7 @@ function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: bool
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
       aria-hidden={!active}
       // Keep inactive slide contents out of the tab order for keyboard users.
-      {...(!active ? { inert: "" as unknown as boolean } : {})}
+      {...(!active ? { inert: true } : {})}
     >
       {imgFailed ? (
         <div
