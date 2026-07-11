@@ -178,96 +178,83 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
   }
 
   return (
-    <div className="admin-scope flex flex-col gap-6 p-4 md:p-6">
-      {/* Üst şerit */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2" style={{ color: "var(--admin-text-mute)" }}>
-            <Icon name="auto_awesome" className="text-[18px]" />
-            <span className="text-[12px] uppercase tracking-wider font-semibold">Yapay Zekâ Kontrol Merkezi</span>
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold mt-1" style={{ color: "var(--admin-text)" }}>
-            Bugün web sitenizde ne yapmak istersiniz?
-          </h1>
-          <p className="text-sm mt-1" style={{ color: "var(--admin-text-2)" }}>
-            Sitenizin tamamını buradan yönetin. Yapay Zekâ her değişikliği önce taslak olarak hazırlar; siz onaylamadan yayınlanmaz.
-          </p>
+    <div className="admin-scope flex flex-col gap-6 p-4 md:p-6 max-w-[1100px] mx-auto w-full">
+      {/* Kompakt üst şerit */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-2 min-w-0" style={{ color: "var(--admin-text-mute)" }}>
+          <Icon name="auto_awesome" className="text-[16px]" />
+          <span className="text-[11px] uppercase tracking-wider font-semibold truncate">Yapay Zekâ Kontrol Merkezi</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <ModeToggle mode={mode} onChange={setMode} />
-          <button
-            className="admin-btn admin-btn-sm"
-            onClick={handleAudit}
-            disabled={auditRunning}
-            title="Site içeriğini eksik görsel, SEO ve tutarlılık için tarar."
-          >
-            <Icon name="health_and_safety" className="text-[16px]" />
-            {auditRunning ? "Taranıyor…" : "Siteyi Tara"}
-          </button>
         </div>
       </div>
 
-      {/* Zekâ şeridi */}
-      <IntelligenceBar data={data} onNavigate={onNavigate} />
-
-      {/* Akıllı komut alanı */}
-      <section
-        className="rounded-2xl p-4 md:p-5 border"
-        style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
-      >
-        <label className="flex flex-col gap-2">
-          <span className="text-[13px] font-semibold" style={{ color: "var(--admin-text)" }}>
-            Yapay Zekâ Asistanına ne yapmak istediğinizi yazın
-          </span>
-          <div className="flex flex-col md:flex-row gap-2">
-            <textarea
-              rows={2}
-              value={command}
-              onChange={(e) => setCommand(e.target.value)}
-              placeholder="Ana sayfayı düzenle, yeni ürün ekle, eksikleri bul veya yapmak istediğiniz işlemi yazın..."
-              className="admin-input flex-1 resize-y"
-              style={{ minHeight: 60 }}
-            />
-            <div className="flex md:flex-col gap-2">
+      {/* HERO — AI input ana odak */}
+      <section className="flex flex-col gap-4">
+        <div className="text-center">
+          <h1 className="text-2xl md:text-4xl font-bold" style={{ color: "var(--admin-text)" }}>
+            Bugün ne yapmak istersiniz?
+          </h1>
+          <p className="text-sm mt-2" style={{ color: "var(--admin-text-2)" }}>
+            Türkçe yazın, önce taslak hazırlansın. Siz onaylamadan hiçbir değişiklik yayına alınmaz.
+          </p>
+        </div>
+        <div
+          className="rounded-2xl border p-3 md:p-4 shadow-sm"
+          style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+        >
+          <textarea
+            rows={3}
+            value={command}
+            onChange={(e) => setCommand(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                void handleSendCommand();
+              }
+            }}
+            placeholder="Örn: Ana sayfayı sadeleştir, ürün açıklamasını yeniden yaz, mobilde taşan yerleri bul…"
+            className="admin-input w-full resize-none border-0 focus:ring-0 text-base"
+            style={{ minHeight: 84, background: "transparent" }}
+            aria-label="Yapay Zekâ komutu"
+          />
+          <div className="flex items-center justify-between gap-2 flex-wrap pt-2 border-t" style={{ borderColor: "var(--admin-border)" }}>
+            <div className="flex flex-wrap gap-1.5">
+              {SUGGESTED_PROMPTS.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setCommand(p)}
+                  className="text-[12px] px-2.5 py-1 rounded-full border"
+                  style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 ml-auto">
+              <button
+                className="admin-btn admin-btn-sm"
+                onClick={() => onNavigate("aiHistory")}
+                title="Geçmiş görüşmeler ve değişiklikler"
+              >
+                <Icon name="history" className="text-[16px]" />
+                <span className="hidden sm:inline">Geçmiş</span>
+              </button>
               <button className="admin-btn admin-btn-primary" onClick={handleSendCommand} disabled={!command.trim()}>
                 <Icon name="send" className="text-[16px]" />
                 Gönder
               </button>
-              <button className="admin-btn admin-btn-sm" onClick={() => setCommand("")} disabled={!command} title="Metni temizle">
-                <Icon name="close" className="text-[16px]" />
-                Temizle
-              </button>
-              <button className="admin-btn admin-btn-sm" onClick={() => onNavigate("aiAssistant")}>
-                <Icon name="chat" className="text-[16px]" />
-                Asistanı Aç
-              </button>
             </div>
           </div>
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {SUGGESTED_PROMPTS.map((p) => (
-              <button
-                key={p}
-                onClick={() => setCommand(p)}
-                className="text-[12px] px-2.5 py-1 rounded-full border"
-                style={{ background: "var(--admin-yellow-soft)", borderColor: "var(--admin-yellow-border)", color: "var(--admin-navy)" }}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-          {mode === "easy" && (
-            <span className="text-[12px]" style={{ color: "var(--admin-text-mute)" }}>
-              İpucu: Doğal Türkçe kullanabilirsiniz. En güvenli seçeneği öneririz ve tüm değişiklikler onayınıza sunulur.
-            </span>
-          )}
-        </label>
+        </div>
       </section>
 
-      {/* Görev kartları */}
+      {/* Hızlı işlemler — easy'de 6, gelişmişte tümü */}
       <section>
-        <SectionHeader icon="rocket_launch" title="Hızlı işlemler" subtitle="En sık yapılan işlere tek tıkla başlayın." />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-3">
-          {TASK_CARDS.map((c) => (
+        <SectionHeader icon="rocket_launch" title="Hızlı işlemler" subtitle="Ne yapmak istediğinize karar veremediyseniz buradan başlayın." />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 mt-3">
+          {TASK_CARDS.filter((c) => mode === "advanced" || EASY_TASK_KEYS.has(c.key)).map((c) => (
             <button
               key={c.key}
               onClick={() => {
@@ -285,7 +272,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
                 >
                   <Icon name={c.icon} className="text-[20px]" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-[14px] font-semibold" style={{ color: "var(--admin-text)" }}>{c.title}</div>
                   <div className="text-[12px] mt-0.5" style={{ color: "var(--admin-text-2)" }}>{c.hint}</div>
                 </div>
@@ -295,27 +282,49 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
         </div>
       </section>
 
-      {/* Site Haritası */}
-      <section>
-        <SectionHeader icon="map" title="Site haritası" subtitle="Bir bölüme tıklayın: doğrudan düzenleyin veya Yapay Zekâ'ya sorun." />
-        <SiteMapGrid onEdit={(t: AdminTab) => onNavigate(t)} onAsk={(label: string) => { setCommand(`${label} bölümünü düzenle`); }} />
-      </section>
+      {/* Mini sağlık şeridi — her modda tek satır */}
+      <MiniHealthStrip data={data} auditRunning={auditRunning} onAudit={handleAudit} onNavigate={onNavigate} />
 
-      {/* İki kolonlu: sağlık + öneriler */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <section>
-          <SectionHeader icon="monitor_heart" title="Site sağlık özeti" subtitle="Sitenizin genel durumuna hızlı bir bakış." />
-          <HealthSummary loading={loading} error={error} data={data} onNavigate={onNavigate} />
-        </section>
-        <section>
-          <SectionHeader
-            icon="tips_and_updates"
-            title="Yapay Zekâ önerileri"
-            subtitle={mode === "easy" ? "Sitenizde iyileştirebileceğimiz noktalar." : "Site taramasından çıkan aksiyon önerileri."}
-          />
-          <Recommendations grouped={grouped} onHandle={handleFinding} onNavigate={onNavigate} />
-        </section>
-      </div>
+      {/* Detaylar — easy'de kapalı, advanced'da açık accordion */}
+      <Details summary="Site sağlığı ve öneriler" defaultOpen={mode === "advanced"}>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <section>
+            <SectionHeader icon="monitor_heart" title="Site sağlık özeti" subtitle="Sitenizin genel durumuna hızlı bir bakış." />
+            <HealthSummary loading={loading} error={error} data={data} onNavigate={onNavigate} />
+          </section>
+          <section>
+            <SectionHeader
+              icon="tips_and_updates"
+              title="Yapay Zekâ önerileri"
+              subtitle={mode === "easy" ? "Sitenizde iyileştirebileceğimiz noktalar." : "Site taramasından çıkan aksiyon önerileri."}
+            />
+            <Recommendations grouped={grouped} onHandle={handleFinding} onNavigate={onNavigate} />
+          </section>
+        </div>
+      </Details>
+
+      <Details summary="Bekleyen değişiklikler ve görevler" defaultOpen={false}>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <section>
+            <SectionHeader icon="fact_check" title="Bekleyen AI değişiklikleri" subtitle="Onayınızı bekleyen taslak değişiklikler." />
+            <PendingChanges items={data?.pendingChanges ?? []} onOpen={() => onNavigate("aiHistory")} />
+          </section>
+          <section>
+            <SectionHeader icon="task_alt" title="Görev kuyruğu" subtitle="Sizin için not aldığımız işler." />
+            <TaskQueue items={tasks} onComplete={handleCompleteTask} />
+          </section>
+        </div>
+      </Details>
+
+      {mode === "advanced" && (
+        <Details summary="Site haritası" defaultOpen={false}>
+          <SiteMapGrid onEdit={(t: AdminTab) => onNavigate(t)} onAsk={(label: string) => { setCommand(`${label} bölümünü düzenle`); }} />
+        </Details>
+      )}
+
+      <Details summary="Son AI etkinlikleri" defaultOpen={false}>
+        <RecentActivity items={data?.recentActivity ?? []} onOpen={() => onNavigate("aiHistory")} />
+      </Details>
 
       {workflow && (
         <GuidedWorkflow
@@ -335,24 +344,74 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           }}
         />
       )}
+    </div>
+  );
+}
 
-      {/* Bekleyen değişiklikler + görevler */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <section>
-          <SectionHeader icon="fact_check" title="Bekleyen AI değişiklikleri" subtitle="Onayınızı bekleyen taslak değişiklikler." />
-          <PendingChanges items={data?.pendingChanges ?? []} onOpen={() => onNavigate("aiHistory")} />
-        </section>
-        <section>
-          <SectionHeader icon="task_alt" title="Görev kuyruğu" subtitle="Sizin için not aldığımız işler." />
-          <TaskQueue items={tasks} onComplete={handleCompleteTask} />
-        </section>
+function Details({ summary, defaultOpen, children }: { summary: string; defaultOpen?: boolean; children: React.ReactNode }) {
+  return (
+    <details
+      className="rounded-xl border overflow-hidden"
+      style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+      {...(defaultOpen ? { open: true } : {})}
+    >
+      <summary
+        className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer select-none list-none"
+        style={{ color: "var(--admin-text)" }}
+      >
+        <span className="text-[13px] font-semibold">{summary}</span>
+        <Icon name="expand_more" className="text-[18px]" style={{ color: "var(--admin-text-mute)" }} />
+      </summary>
+      <div className="p-4 border-t" style={{ borderColor: "var(--admin-border)" }}>
+        {children}
       </div>
+    </details>
+  );
+}
 
-      {/* Son etkinlik */}
-      <section>
-        <SectionHeader icon="history" title="Son AI etkinlikleri" subtitle="Yapay Zekâ'nın son işlemleri." />
-        <RecentActivity items={data?.recentActivity ?? []} onOpen={() => onNavigate("aiHistory")} />
-      </section>
+function MiniHealthStrip({
+  data, auditRunning, onAudit, onNavigate,
+}: {
+  data: Snapshot | null;
+  auditRunning: boolean;
+  onAudit: () => void;
+  onNavigate: (t: AdminTab) => void;
+}) {
+  const c = data?.counts ?? {} as Record<string, number>;
+  const score = data?.healthScore ?? 0;
+  const scoreColor = score >= 85 ? "#059669" : score >= 65 ? "#EA580C" : "#DC2626";
+  const chips: { label: string; value: number | string; icon: string; tab?: AdminTab; tone?: string }[] = [
+    { label: "Sağlık", value: score, icon: "monitor_heart", tone: scoreColor },
+    { label: "Bekleyen AI", value: c.pendingProposals ?? 0, icon: "approval", tab: "aiHistory" },
+    { label: "Yeni mesaj", value: c.newMessages ?? 0, icon: "mark_email_unread", tab: "messages" },
+    { label: "Bekleyen teklif", value: c.pendingQuotes ?? 0, icon: "request_quote", tab: "quotes" },
+  ];
+  return (
+    <div
+      className="rounded-xl border px-3 py-2 flex items-center gap-2 overflow-x-auto"
+      style={{ background: "var(--admin-surface)", borderColor: "var(--admin-border)" }}
+    >
+      {chips.map((ch) => (
+        <button
+          key={ch.label}
+          onClick={() => ch.tab && onNavigate(ch.tab)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] shrink-0"
+          style={{ background: "var(--admin-surface-2)", color: "var(--admin-text)" }}
+        >
+          <Icon name={ch.icon} className="text-[14px]" style={{ color: ch.tone ?? "var(--admin-navy)" }} />
+          <span className="font-semibold">{ch.value}</span>
+          <span style={{ color: "var(--admin-text-2)" }}>{ch.label}</span>
+        </button>
+      ))}
+      <button
+        className="admin-btn admin-btn-xs ml-auto shrink-0"
+        onClick={onAudit}
+        disabled={auditRunning}
+        title="Site içeriğini eksik görsel, SEO ve tutarlılık için tarar."
+      >
+        <Icon name="health_and_safety" className="text-[14px]" />
+        {auditRunning ? "Taranıyor…" : "Siteyi Tara"}
+      </button>
     </div>
   );
 }
