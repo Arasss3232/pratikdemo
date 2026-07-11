@@ -5,7 +5,6 @@ import { CategoryExplorer } from "../components/home/CategoryExplorer";
 import {
   BrandStrip,
   FeaturedProducts,
-  HomeUtilityStrip,
   InsightsPreview,
   MobileContactBar,
   ProcessTimeline,
@@ -45,7 +44,6 @@ function Home() {
   return (
     <SiteShell>
       <>
-        <HomeUtilityStrip />
         <HomeHero />
         <CategoryExplorer />
         <ValueProps />
