@@ -383,11 +383,92 @@ function BrochuresTab() {
     <GenericCrud
       table="homepage_brochures"
       quickAddKey="brochures"
-      title="Anasayfa Broşürleri"
-      description="Anasayfanın üst kısmında dönen tanıtım broşürlerini yönetin. Sıralama, yayın tarihi ve cihaza özel görseller destekler."
+      title="Broşür ve Slider Yönetimi"
+      description="Ana sayfada otomatik olarak gösterilen tanıtım broşürlerini buradan ekleyebilir, düzenleyebilir ve sıralayabilirsiniz. Değişiklikler kaydedildiği an ana sayfada yayınlanır."
       orderBy="display_order"
       ascending={true}
       defaults={{ is_active: true, overlay_style: "left-navy", text_theme: "light", display_order: 0 }}
+      extraRowActions={[
+        {
+          key: "preview",
+          label: "Önizle",
+          icon: "open_in_new",
+          onRun: () => {
+            window.open("/", "_blank", "noopener,noreferrer");
+          },
+        },
+        {
+          key: "toggle",
+          label: "Yayın Durumu",
+          icon: "toggle_on",
+          tone: "success",
+          onRun: async (row, { refresh }) => {
+            const next = !row.is_active;
+            const { error } = await supabase
+              .from("homepage_brochures")
+              .update({ is_active: next })
+              .eq("id", row.id);
+            if (error) return toast.error("Güncellenemedi", { description: error.message });
+            toast.success(next ? "Broşür yayınlandı" : "Broşür pasif hale getirildi");
+            refresh();
+          },
+        },
+        {
+          key: "up",
+          label: "Yukarı",
+          icon: "arrow_upward",
+          onRun: async (row, { refresh }) => {
+            const current = Number(row.display_order ?? 0);
+            const { error } = await supabase
+              .from("homepage_brochures")
+              .update({ display_order: Math.max(0, current - 1) })
+              .eq("id", row.id);
+            if (error) return toast.error("Sıralama güncellenemedi", { description: error.message });
+            toast.success("Sıralama güncellendi");
+            refresh();
+          },
+        },
+        {
+          key: "down",
+          label: "Aşağı",
+          icon: "arrow_downward",
+          onRun: async (row, { refresh }) => {
+            const current = Number(row.display_order ?? 0);
+            const { error } = await supabase
+              .from("homepage_brochures")
+              .update({ display_order: current + 1 })
+              .eq("id", row.id);
+            if (error) return toast.error("Sıralama güncellenemedi", { description: error.message });
+            toast.success("Sıralama güncellendi");
+            refresh();
+          },
+        },
+        {
+          key: "duplicate",
+          label: "Kopyala",
+          icon: "content_copy",
+          onRun: async (row, { refresh }) => {
+            const {
+              id: _id, created_at: _c, updated_at: _u,
+              ...rest
+            } = row as Record<string, unknown> & { id: string };
+            void _id; void _c; void _u;
+            const copy = {
+              ...rest,
+              title: `${row.title ?? "Broşür"} (Kopya)`,
+              is_active: false,
+              start_at: null,
+              end_at: null,
+            };
+            const { error } = await supabase
+              .from("homepage_brochures")
+              .insert(copy as never);
+            if (error) return toast.error("Kopyalanamadı", { description: error.message });
+            toast.success("Broşür kopyalandı (taslak)");
+            refresh();
+          },
+        },
+      ]}
       fields={[
         { name: "title", label: "Başlık", required: true, help: "Slaytın büyük başlığı" },
         { name: "eyebrow", label: "Üst Etiket", help: "Örn: YENİ · KAMPANYA · 2025 KATALOĞU" },
