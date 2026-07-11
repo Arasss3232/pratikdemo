@@ -106,7 +106,9 @@ export function AdminShell({
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
               }}
             >
-              <Icon name="search" className="text-[18px] shrink-0" style={{ color: "var(--admin-text-mute)" }} />
+              <span className="shrink-0" style={{ color: "var(--admin-text-mute)" }}>
+                <Icon name="search" className="text-[18px]" />
+              </span>
               <input
                 type="search"
                 placeholder="Ara: sayfa, ürün, mesaj…"
@@ -156,7 +158,9 @@ export function AdminShell({
                         }}
                         className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-[var(--admin-yellow-soft)]"
                       >
-                        <Icon name={q.icon} className="text-[18px]" style={{ color: "var(--admin-navy)" }} />
+                        <span style={{ color: "var(--admin-navy)" }}>
+                          <Icon name={q.icon} className="text-[18px]" />
+                        </span>
                         {q.label}
                       </button>
                     ))}
@@ -217,7 +221,9 @@ export function AdminShell({
                       target="_blank"
                       className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-[var(--admin-surface-2)]"
                     >
-                      <Icon name="open_in_new" className="text-[18px]" style={{ color: "var(--admin-text-2)" }} />
+                      <span style={{ color: "var(--admin-text-2)" }}>
+                        <Icon name="open_in_new" className="text-[18px]" />
+                      </span>
                       Siteyi aç
                     </Link>
                     <button
