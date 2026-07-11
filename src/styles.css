@@ -558,6 +558,13 @@
 }
 .admin-scope ::selection { background: var(--admin-yellow-soft); color: var(--admin-text); }
 
+/* Keep admin panel typography on Inter regardless of global heading font */
+.admin-scope, .admin-scope h1, .admin-scope h2, .admin-scope h3,
+.admin-scope h4, .admin-scope h5, .admin-scope h6 {
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
 /* Custom scrollbar for the brand sidebar */
 .admin-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.14) transparent; }
 .admin-sidebar-scroll::-webkit-scrollbar { width: 6px; }
