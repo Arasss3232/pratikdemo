@@ -11,7 +11,7 @@ export const Route = createFileRoute("/teklif")({
   validateSearch: (s: Record<string, unknown>) => ({
     category: typeof s.category === "string" ? s.category : undefined,
     categoryId: typeof s.categoryId === "string" ? s.categoryId : undefined,
-  }),
+  }) as { category?: string; categoryId?: string },
   head: () => ({
     meta: [
       { title: "Teklif Al — Endüstriyel Alım | Pratik" },
