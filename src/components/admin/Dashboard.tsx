@@ -121,11 +121,13 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   ];
 
   const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
-    { key: "quotes", label: "Teklif Talebi", icon: "request_quote", value: stats.quotesNew, hint: "Yeni talepler" },
-    { key: "messages", label: "İletişim Mesajı", icon: "mail", value: stats.messagesNew, hint: "Yeni mesajlar" },
-    { key: "categories", label: "Aktif Kategori", icon: "category", value: stats.categories },
-    { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
-    
+    { key: "quotes", label: "Toplam Teklif Talebi", icon: "request_quote", value: stats.quotesNew, hint: "Yeni talepler" },
+    { key: "messages", label: "Yeni İletişim Mesajları", icon: "mail", value: stats.messagesNew, hint: "Bekleyen mesajlar" },
+    { key: "categories", label: "Aktif Kategori Sayısı", icon: "category", value: stats.categories },
+    { key: "catalogs", label: "Aktif Katalog Sayısı", icon: "menu_book", value: stats.catalogs },
+    { key: "brands", label: "Aktif Bayilik Sayısı", icon: "workspace_premium", value: stats.refs },
+    { key: "notifications", label: "Okunmamış Bildirimler", icon: "notifications", value: 0 },
+    { key: "myTasks", label: "Geciken Görevler", icon: "task_alt", value: 0 },
   ];
 
   return (
@@ -308,7 +310,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
             <button
               key={q.key + q.label}
               onClick={() => {
-                onNavigate(q.key);
+                onNavigate(q.key as any);
                 setTimeout(() => window.dispatchEvent(new CustomEvent("admin:quick-add", { detail: { tab: q.key } })), 60);
               }}
               className="group flex flex-col items-start gap-2 p-3.5 rounded-xl text-left transition-all hover:-translate-y-0.5"
@@ -413,6 +415,43 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
           }))}
           onOpen={() => onNavigate("quotes")}
         />
+      </div>
+      
+      {/* Quick actions & Workflow */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4">
+        <section className="admin-card p-5">
+          <h2 className="text-[16px] font-semibold mb-4">Hızlı Aksiyonlar</h2>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => onNavigate("categories")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="add" /> Yeni Kategori</button>
+            <button onClick={() => onNavigate("catalogs")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="add" /> Yeni Katalog</button>
+            <button onClick={() => onNavigate("brands")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="add" /> Yeni Bayilik</button>
+            <button onClick={() => onNavigate("quotes")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="visibility" /> Teklif Talepleri</button>
+            <button onClick={() => onNavigate("messages")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="visibility" /> Mesajları Gör</button>
+            <button onClick={() => onNavigate("slider")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="slideshow" /> Slider Yönetimi</button>
+            <button onClick={() => onNavigate("content")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="edit_note" /> Site İçeriği</button>
+            <button onClick={() => onNavigate("seo")} className="admin-btn admin-btn-outline admin-btn-sm"><Icon name="trending_up" /> SEO Yönetimi</button>
+          </div>
+        </section>
+
+        <section className="admin-card p-5 lg:w-80">
+          <h2 className="text-[16px] font-semibold mb-4">Görev & Onay</h2>
+          <div className="space-y-3">
+            <button onClick={() => onNavigate("myTasks")} className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 transition">
+              <div className="flex items-center gap-3">
+                <Icon name="task_alt" className="text-blue-600" />
+                <span className="text-sm font-medium">Bekleyen Görevlerim</span>
+              </div>
+              <span className="text-xs font-bold text-blue-600">0</span>
+            </button>
+            <button onClick={() => onNavigate("approvals")} className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 transition">
+              <div className="flex items-center gap-3">
+                <Icon name="approval" className="text-orange-600" />
+                <span className="text-sm font-medium">Onay Bekleyenler</span>
+              </div>
+              <span className="text-xs font-bold text-orange-600">0</span>
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

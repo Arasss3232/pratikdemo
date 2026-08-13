@@ -15,18 +15,19 @@ type NavItemType = {
 
 const NAV_ITEMS: NavItemType[] = [
   { id: "global_settings", label: "Genel İçerikler", icon: "settings", category: "Global", component: "settings" },
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "menu", category: "Global", component: "nav" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
   { id: "footer", label: "Footer", icon: "view_agenda", category: "Global", component: "nav" },
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "menu", category: "Global", component: "nav" },
+  
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },
-  { id: "hero_slider", label: "Hero Slider", icon: "slideshow", category: "Sayfalar", component: "content" },
   { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content" },
-  { id: "/urunler", label: "Ürün Kategorileri", icon: "category", category: "Sayfalar", component: "content" },
-  { id: "/kataloglar", label: "Kataloglarımız", icon: "menu_book", category: "Sayfalar", component: "content" },
-  { id: "/bayiliklerimiz", label: "Bayiliklerimiz", icon: "workspace_premium", category: "Sayfalar", component: "content" },
-  { id: "/teklif", label: "Teklif Talep", icon: "request_quote", category: "Sayfalar", component: "content" },
-  { id: "/iletisim", label: "İletişim", icon: "contact_support", category: "Sayfalar", component: "content" },
+  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content" },
+  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", component: "content" },
+  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Sayfalar", component: "content" },
+  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Sayfalar", component: "content" },
+  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", component: "content" },
   { id: "/kvkk", label: "Yasal Sayfalar", icon: "gavel", category: "Sayfalar", component: "content" },
+  
   { id: "/sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
   { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
 ];

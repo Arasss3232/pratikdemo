@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -6,25 +6,27 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { ContentManagement } from "@/components/admin/content/ContentManagement";
 import { SeoShell, type SeoSubTab } from "@/components/admin/seo/SeoShell";
 import { SeoGeneralSettings } from "@/components/admin/seo/SeoGeneralSettings";
+import { SeoDashboard } from "@/components/admin/seo/SeoDashboard";
+import { SeoPageManagement } from "@/components/admin/seo/SeoPageManagement";
+import { SeoSitemap } from "@/components/admin/seo/SeoSitemap";
+import { SeoRobots } from "@/components/admin/seo/SeoRobots";
+import { SeoSearchConsole } from "@/components/admin/seo/SeoSearchConsole";
+import { SeoAnalytics } from "@/components/admin/seo/SeoAnalytics";
+import { SeoTagManager } from "@/components/admin/seo/SeoTagManager";
+import { SeoRedirects } from "@/components/admin/seo/SeoRedirects";
+import { SeoSchema } from "@/components/admin/seo/SeoSchema";
+import { SeoSocial } from "@/components/admin/seo/SeoSocial";
+import { SeoFavicon } from "@/components/admin/seo/SeoFavicon";
+import { SeoTools } from "@/components/admin/seo/SeoTools";
+import { Dashboard } from "@/components/admin/Dashboard";
+import { UserManagement } from "@/components/admin/UserManagement";
+import { RolesTab } from "@/components/admin/RolesTab";
+import { AuditLogsTab } from "@/components/admin/AuditLogsTab";
+import { TasksTab } from "@/components/admin/TasksTab";
+import { ApprovalsTab } from "@/components/admin/ApprovalsTab";
+import { NotificationsTab } from "@/components/admin/NotificationsTab";
+import { GenericCrud } from "@/components/admin/GenericCrud";
 import type { AdminTab } from "@/components/admin/nav";
-
-const TAB_KEYS: AdminTab[] = [
-  "dashboard", "content", "categories", "catalogs", 
-  "messages", "seo", "myTasks", "notifications", 
-  "roles"
-];
-
-function PlaceholderModule({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="p-12 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center text-center bg-white/50">
-      <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
-        <span className="material-symbols-rounded text-slate-400 text-3xl">construction</span>
-      </div>
-      <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
-      <p className="text-slate-500 max-w-sm">{description}</p>
-    </div>
-  );
-}
 
 function AdminPage() {
   const search = Route.useSearch();
@@ -32,6 +34,7 @@ function AdminPage() {
   const seoTab = (search.seoTab as SeoSubTab) || "dashboard";
   const navigate = useNavigate({ from: Route.fullPath });
   const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,6 +42,7 @@ function AdminPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user?.email) {
         setUserEmail(session.user.email);
+        setUserId(session.user.id);
       }
       setLoading(false);
     }
@@ -46,8 +50,9 @@ function AdminPage() {
   }, []);
 
   const handleTabChange = (newTab: AdminTab) => {
+    // Clear sub-tab parameters when switching main tabs
     navigate({ 
-      search: (prev: any) => ({ ...prev, tab: newTab }),
+      search: { tab: newTab },
       replace: true 
     });
   };
@@ -73,101 +78,189 @@ function AdminPage() {
       onQuickAdd={handleQuickAdd}
     >
       <div className="space-y-6">
-        {tab === "dashboard" && (
-          <>
-            <PageHeader 
-              tab="dashboard"
-              title="Genel Bakış" 
-              description="Sitenizin genel durumu, öncelikleriniz ve son hareketler." 
-            />
-            <PlaceholderModule title="Dashboard Paneli" description="İstatistikler ve özet veriler yakında burada olacak." />
-          </>
-        )}
+        {tab === "dashboard" && <Dashboard onNavigate={handleTabChange} />}
         
         {tab === "content" && <ContentManagement />}
         
         {tab === "categories" && (
-          <>
-            <PageHeader 
-              tab="categories"
-              title="Kategori Yönetimi" 
-              description="Ürün kategorileri ve alt kategoriler." 
-            />
-            <PlaceholderModule title="Kategori Yönetimi" description="Ürün kategorilerini ve hiyerarşiyi buradan yönetebileceksiniz." />
-          </>
+          <GenericCrud
+            table="product_categories"
+            title="Kategori Yönetimi"
+            description="Ürün grupları ve teklif kategorilerini yönetin."
+            fields={[
+              { name: "name", label: "Kategori Adı", type: "text", required: true },
+              { name: "description", label: "Açıklama", type: "textarea" },
+              { name: "image_url", label: "Kategori Görseli", type: "file" },
+              { name: "image_alt", label: "Görsel Alt Etiketi (SEO)", type: "text" },
+              { name: "display_order", label: "Sıralama", type: "number" },
+              { name: "is_active", label: "Aktif", type: "checkbox" },
+            ]}
+            columns={[
+              { key: "name", label: "Kategori" },
+              { key: "display_order", label: "Sıra" },
+              { key: "is_active", label: "Durum", render: (r) => r.is_active ? "Aktif" : "Pasif" },
+            ]}
+          />
         )}
         
         {tab === "catalogs" && (
-          <>
-            <PageHeader 
-              tab="catalogs"
-              title="Katalog Yönetimi" 
-              description="Dijital ürün kataloglarını (PDF) buradan yönetin." 
-            />
-            <PlaceholderModule title="Katalog Yönetimi" description="PDF katalog yükleme ve listeleme modülü." />
-          </>
+          <GenericCrud
+            table="catalogs"
+            title="Katalog Yönetimi"
+            description="Dijital PDF kataloglarını yönetin."
+            fields={[
+              { name: "title", label: "Katalog Başlığı", type: "text", required: true },
+              { name: "description", label: "Açıklama", type: "textarea" },
+              { name: "pdf_url", label: "PDF Dosyası", type: "file" },
+              { name: "cover_image", label: "Kapak Görseli", type: "file" },
+              { name: "year", label: "Yıl", type: "number" },
+              { name: "display_order", label: "Sıralama", type: "number" },
+            ]}
+            columns={[
+              { key: "title", label: "Katalog" },
+              { key: "year", label: "Yıl" },
+            ]}
+          />
+        )}
+
+        {tab === "brands" && (
+          <GenericCrud
+            table="brands"
+            title="Bayilik Yönetimi"
+            description="Yetkili bayisi olunan markaları yönetin."
+            fields={[
+              { name: "name", label: "Marka Adı", type: "text", required: true },
+              { name: "description", label: "Açıklama", type: "textarea" },
+              { name: "logo_url", label: "Logo", type: "file" },
+              { name: "website_url", label: "Web Sitesi", type: "url" },
+              { name: "display_order", label: "Sıralama", type: "number" },
+            ]}
+            columns={[
+              { key: "name", label: "Marka" },
+              { key: "website_url", label: "Web Sitesi" },
+            ]}
+          />
+        )}
+
+        {tab === "slider" && (
+          <GenericCrud
+            table="hero_slides"
+            title="Slider Yönetimi"
+            description="Ana sayfa hero slider içeriklerini yönetin."
+            fields={[
+              { name: "heading", label: "Başlık", type: "text", required: true },
+              { name: "subheading", label: "Alt Başlık", type: "text" },
+              { name: "description", label: "Açıklama", type: "textarea" },
+              { name: "image_url", label: "Görsel (Masaüstü)", type: "file" },
+              { name: "mobile_image_url", label: "Görsel (Mobil)", type: "file" },
+              { name: "button_text", label: "Buton Metni", type: "text" },
+              { name: "button_link", label: "Buton Linki", type: "text" },
+              { name: "display_order", label: "Sıralama", type: "number" },
+            ]}
+            columns={[
+              { key: "heading", label: "Başlık" },
+              { key: "display_order", label: "Sıra" },
+            ]}
+          />
         )}
         
         {tab === "messages" && (
-          <>
-            <PageHeader 
-              tab="messages"
-              title="İletişim Mesajları" 
-              description="Web sitenizden gelen iletişim mesajları." 
-            />
-            <PlaceholderModule title="Gelen Mesajlar" description="Müşterilerden gelen tüm talepler burada listelenecek." />
-          </>
+          <GenericCrud
+            table="contact_messages"
+            title="İletişim Mesajları"
+            description="Web sitesinden gelen iletişim mesajlarını inceleyin."
+            allowCreate={false}
+            fields={[
+              { name: "name", label: "Gönderen", type: "text" },
+              { name: "email", label: "E-posta", type: "text" },
+              { name: "subject", label: "Konu", type: "text" },
+              { name: "message", label: "Mesaj", type: "textarea" },
+              { name: "status", label: "Durum", type: "select", options: [
+                { value: "new", label: "Yeni" },
+                { value: "read", label: "Okundu" },
+                { value: "replied", label: "Yanıtlandı" },
+              ]},
+            ]}
+            columns={[
+              { key: "name", label: "Gönderen" },
+              { key: "subject", label: "Konu" },
+              { key: "created_at", label: "Tarih", render: (r) => new Date(r.created_at as string).toLocaleDateString("tr-TR") },
+            ]}
+          />
+        )}
+
+        {tab === "quotes" && (
+          <GenericCrud
+            table="quote_requests"
+            title="Teklif Talepleri"
+            description="Web sitesinden gelen teklif taleplerini yönetin."
+            allowCreate={false}
+            fields={[
+              { name: "contact_name", label: "İlgili Kişi", type: "text" },
+              { name: "company", label: "Firma", type: "text" },
+              { name: "email", label: "E-posta", type: "text" },
+              { name: "phone", label: "Telefon", type: "text" },
+              { name: "message", label: "Talep Detayı", type: "textarea" },
+              { name: "status", label: "Durum", type: "select", options: [
+                { value: "new", label: "Yeni" },
+                { value: "processing", label: "İşleniyor" },
+                { value: "completed", label: "Tamamlandı" },
+              ]},
+            ]}
+            columns={[
+              { key: "contact_name", label: "Kişi" },
+              { key: "company", label: "Firma" },
+              { key: "created_at", label: "Tarih", render: (r) => new Date(r.created_at as string).toLocaleDateString("tr-TR") },
+            ]}
+          />
         )}
         
         {tab === "seo" && (
-          <>
-            <PageHeader 
-              tab="seo"
-              title="SEO ve Analitik" 
-              description="Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi." 
-            />
-            <SeoShell currentTab={seoTab} onTabChange={handleSeoTabChange}>
-              {seoTab === "dashboard" && <PlaceholderModule title="SEO Kontrol Paneli" description="SEO performans özeti." />}
-              {seoTab === "general" && <SeoGeneralSettings />}
-              {/* Fallback for other SEO tabs */}
-              {!["dashboard", "general"].includes(seoTab) && (
-                <PlaceholderModule title="Modül Hazırlanıyor" description={`${seoTab} modülü yakında aktif edilecek.`} />
-              )}
-            </SeoShell>
-          </>
+          <SeoShell currentTab={seoTab} onTabChange={handleSeoTabChange}>
+            {seoTab === "dashboard" && <SeoDashboard onNavigate={(t, st) => navigate({ search: { tab: t, seoTab: st } })} />}
+            {seoTab === "general" && <SeoGeneralSettings />}
+            {seoTab === "pages" && <SeoPageManagement />}
+            {seoTab === "sitemap" && <SeoSitemap />}
+            {seoTab === "robots" && <SeoRobots />}
+            {seoTab === "search-console" && <SeoSearchConsole />}
+            {seoTab === "analytics" && <SeoAnalytics />}
+            {seoTab === "tag-manager" && <SeoTagManager />}
+            {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "schema" && <SeoSchema />}
+            {seoTab === "social" && <SeoSocial />}
+            {seoTab === "favicon" && <SeoFavicon />}
+            {seoTab === "audit" && <SeoTools />}
+          </SeoShell>
         )}
         
-        {tab === "myTasks" && (
-          <>
-            <PageHeader 
-              tab="myTasks"
-              title="Görevlerim" 
-              description="Size atanmış görevler, hatırlatmalar ve süresi yaklaşan işler." 
-            />
-            <PlaceholderModule title="Görevlerim" description="İş takip ve atama modülü." />
-          </>
-        )}
+        {tab === "myTasks" && <TasksTab />}
+        {tab === "approvals" && <ApprovalsTab />}
+        {tab === "notifications" && <NotificationsTab />}
         
-        {tab === "notifications" && (
-          <>
-            <PageHeader 
-              tab="notifications"
-              title="Bildirimler" 
-              description="Sistemden gelen tüm bildirimler ve önemli uyarılar." 
-            />
-            <PlaceholderModule title="Bildirim Merkezi" description="Sistem içi uyarılar ve bildirimler." />
-          </>
-        )}
+        {tab === "users" && <UserManagement currentUserId={userId} />}
+        {tab === "roles" && <RolesTab />}
+        {tab === "activityLogs" && <AuditLogsTab />}
         
-        {tab === "roles" && (
-          <>
-            <PageHeader 
-              tab="roles"
-              title="Roller ve Yetkiler" 
-              description="Sistem rolleri, izin matrisi ve dahili roller." 
-            />
-            <PlaceholderModule title="Rol ve Yetki Yönetimi" description="Kullanıcı bazlı yetkilendirme ayarları." />
-          </>
+        {tab === "settings" && (
+          <div className="admin-card p-8">
+             <h2 className="text-xl font-bold mb-4">Site Ayarları</h2>
+             <p className="text-muted-foreground">Genel site yapılandırması CMS içerisindeki "Genel İçerikler" bölümüne taşınmıştır.</p>
+             <button 
+              onClick={() => handleTabChange("content")}
+              className="mt-4 admin-btn admin-btn-primary"
+             >
+               CMS'e Git
+             </button>
+          </div>
+        )}
+
+        {tab === "media" && (
+          <div className="admin-card p-12 text-center text-muted-foreground">
+            <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4 mx-auto">
+              <span className="material-symbols-rounded text-slate-400 text-3xl">image</span>
+            </div>
+            <p>Medya kütüphanesi yakında aktif edilecek.</p>
+          </div>
         )}
       </div>
     </AdminShell>
@@ -200,19 +293,9 @@ export const Route = createFileRoute("/admin")({
   validateSearch: (s: Record<string, unknown>): { 
     tab?: string; 
     seoTab?: string; 
-    aiAction?: string; 
-    aiTarget?: string; 
-    aiPrompt?: string;
-    categoryId?: string;
-    category?: string;
   } => ({
     tab: s.tab as string,
     seoTab: s.seoTab as string,
-    aiAction: s.aiAction as string,
-    aiTarget: s.aiTarget as string,
-    aiPrompt: s.aiPrompt as string,
-    categoryId: s.categoryId as string,
-    category: s.category as string,
   }),
   component: AdminPage,
 });

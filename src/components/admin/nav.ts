@@ -1,77 +1,28 @@
 import type { ComponentType } from "react";
 
 export type AdminTab =
-  // Ana Yönetim
+  // ANA YÖNETİM
   | "dashboard"
   | "myTasks"
   | "approvals"
   | "notifications"
-  // Müşteri Yönetimi
-  | "companies"
-  | "dealers"
-  | "companyUsers"
-  | "customerGroups"
-  | "applications"
-  | "salesReps"
-  // Satış
-  | "quotations"
-  | "orders"
-  | "quickOrder"
-  | "carts"
-  | "opportunities"
-  | "discountApprovals"
-  // Ürün ve Fiyat
-  | "products"
+  // İÇERİK YÖNETİMİ
   | "categories"
-  | "brands"
-  | "priceLists"
-  | "specialPrices"
-  | "discounts"
-  | "stock"
-  // Finans
-  | "accounts"
-  | "creditLimits"
-  | "dueTracking"
-  | "payments"
-  | "statements"
-  | "risk"
-  // Operasyon
-  | "warehouse"
-  | "shipments"
-  | "deliveries"
-  | "returns"
-  | "documents"
-  // Raporlar
-  | "reportSales"
-  | "reportQuotes"
-  | "reportOrders"
-  | "reportCustomers"
-  | "reportProducts"
-  | "reportFinance"
-  // Site Yönetimi
-  | "settings"
-  | "brochures"
   | "catalogs"
-  | "content"
-
-  
-  
-  | "faqs"
-  | "blog"
-  | "blogcats"
-  | "jobs"
-  | "messages"
+  | "brands"
+  | "slider"
+  | "media"
+  // İŞLEMLER
   | "quotes"
-  // SEO Yönetimi
+  | "messages"
+  // KURUMSAL VE SİTE
+  | "content"
   | "seo"
-  // Sistem
+  | "settings"
+  // SİSTEM
   | "users"
   | "roles"
-  | "workflows"
-  | "integrations"
-  | "activityLogs"
-  | "security"
-  | "backup";
+  | "activityLogs";
 
 export type AdminNavItem = {
   key: AdminTab;
@@ -87,44 +38,45 @@ export type AdminNavGroup = {
 
 export const ADMIN_NAV: AdminNavGroup[] = [
   {
-    title: "Ana Yönetim",
+    title: "ANA YÖNETİM",
     items: [
-      { key: "dashboard", label: "Genel Bakış", icon: "dashboard", description: "Site yönetim paneli genel görünümü" },
+      { key: "dashboard", label: "Genel Bakış", icon: "dashboard", description: "Dashboard ve özet veriler" },
       { key: "myTasks", label: "Görevlerim", icon: "task_alt", description: "Size atanmış görevler" },
-      { key: "approvals", label: "Onay Bekleyenler", icon: "approval", description: "Onayınızı bekleyen işlemler" },
+      { key: "approvals", label: "Onay Bekleyenler", icon: "approval", description: "Onay bekleyen işlemler" },
       { key: "notifications", label: "Bildirimler", icon: "notifications", description: "Sistem bildirimleri" },
     ],
   },
   {
-    title: "İçerik Yönetimi",
+    title: "İÇERİK YÖNETİMİ",
     items: [
-      { key: "categories", label: "Kategori Yönetimi", icon: "category", description: "Ürün grupları ve teklif kategorileri" },
-      { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları (PDF)" },
-      { key: "brands", label: "Bayilik Yönetimi", icon: "workspace_premium", description: "Yetkili bayisi olunan markalar" },
+      { key: "categories", label: "Kategori Yönetimi", icon: "category", description: "Ürün kategorileri" },
+      { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "PDF kataloglar" },
+      { key: "brands", label: "Bayilik Yönetimi", icon: "workspace_premium", description: "Bayilik ve markalar" },
+      { key: "slider", label: "Slider Yönetimi", icon: "slideshow", description: "Ana sayfa slider yönetimi" },
+      { key: "media", label: "Medya Yönetimi", icon: "image", description: "Medya kütüphanesi" },
     ],
   },
   {
-    title: "İşlemler",
+    title: "İŞLEMLER",
     items: [
-      { key: "quotes", label: "Teklif Talepleri", icon: "mail_outline", description: "Web sitesinden gelen yeni talepler" },
+      { key: "quotes", label: "Teklif Talepleri", icon: "request_quote", description: "Gelen teklif talepleri" },
       { key: "messages", label: "İletişim Mesajları", icon: "mail", description: "İletişim formu mesajları" },
     ],
   },
   {
-    title: "Kurumsal & Site",
+    title: "KURUMSAL VE SİTE",
     items: [
-      { key: "content", label: "Site İçerik Yönetimi", icon: "edit_note", description: "Sitedeki tüm metin ve görsellerin yönetimi" },
-      { key: "seo", label: "SEO Yönetimi", icon: "trending_up", description: "Arama motoru optimizasyonu ve site kimliği" },
-      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site ve iletişim bilgileri" },
+      { key: "content", label: "Site İçerik Yönetimi", icon: "edit_note", description: "Sayfa içerikleri ve metinler" },
+      { key: "seo", label: "SEO Yönetimi", icon: "trending_up", description: "Arama motoru ayarları" },
+      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site yapılandırması" },
     ],
   },
-
   {
-    title: "Sistem",
+    title: "SİSTEM",
     items: [
-      { key: "users", label: "Kullanıcılar", icon: "manage_accounts" },
-      { key: "roles", label: "Roller ve Yetkiler", icon: "admin_panel_settings" },
-      { key: "activityLogs", label: "İşlem Geçmişi", icon: "history" },
+      { key: "users", label: "Kullanıcılar", icon: "manage_accounts", description: "Admin kullanıcıları" },
+      { key: "roles", label: "Roller ve Yetkiler", icon: "admin_panel_settings", description: "Yetkilendirme yönetimi" },
+      { key: "activityLogs", label: "İşlem Geçmişi", icon: "history", description: "Sistem günlükleri" },
     ],
   },
 ];

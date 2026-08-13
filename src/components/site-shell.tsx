@@ -316,9 +316,6 @@ export function SiteHeader() {
                 search={{
                   tab: "dashboard",
                   seoTab: "dashboard",
-                  aiAction: undefined,
-                  aiTarget: undefined,
-                  aiPrompt: undefined,
                 }}
                 className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
                 aria-label="Yönetim paneli"
@@ -633,14 +630,11 @@ export function SiteHeader() {
                 </Link>
                 {isAdmin ? (
                   <Link
-                    to="/admin"
-                    search={{
-                      tab: "dashboard",
-                      seoTab: "dashboard",
-                      aiAction: undefined,
-                      aiTarget: undefined,
-                      aiPrompt: undefined,
-                    }}
+                          to="/admin"
+                          search={{
+                            tab: "dashboard",
+                            seoTab: "dashboard",
+                          }}
                     onClick={() => setMenuOpen(false)}
                     className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
                   >
