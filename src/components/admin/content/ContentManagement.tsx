@@ -82,6 +82,27 @@ function NavItem({ active, icon, label, onClick }: { active: boolean; icon: stri
 }
 
 function GeneralSettings() {
+  const { data: settings, refetch } = useQuery({
+    queryKey: ["site-settings-cms"],
+    queryFn: async () => {
+      const { data } = await supabase.from("site_settings").select("*").single();
+      return data;
+    }
+  });
+
+  const updateSetting = async (field: string, value: string) => {
+    const { error } = await supabase
+      .from("site_settings")
+      .update({ [field]: value })
+      .eq("id", settings?.id);
+    
+    if (error) {
+      console.error("Update error:", error);
+    } else {
+      refetch();
+    }
+  };
+
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <section className="space-y-4">
@@ -90,12 +111,12 @@ function GeneralSettings() {
           Şirket Bilgileri
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputGroup label="Şirket Adı" value="Pratik Tedarik Yapı" />
-          <InputGroup label="Kısa Tanıtım" value="Endüstriyel Alım ve Tedarik Çözümleri" />
-          <InputGroup label="Telefon" value="+90 262 123 45 67" />
-          <InputGroup label="WhatsApp" value="+90 532 123 45 67" />
+          <InputGroup label="Şirket Adı" value={settings?.company_name || ""} onChange={(v) => updateSetting("company_name", v)} />
+          <InputGroup label="Kısa Tanıtım" value={settings?.description || ""} onChange={(v) => updateSetting("description", v)} />
+          <InputGroup label="Telefon" value={settings?.phone || ""} onChange={(v) => updateSetting("phone", v)} />
+          <InputGroup label="WhatsApp" value={settings?.whatsapp || ""} onChange={(v) => updateSetting("whatsapp", v)} />
           <div className="md:col-span-2">
-            <InputGroup label="Adres" value="Gebze Organize Sanayi Bölgesi, No: 123, Gebze/Kocaeli" type="textarea" />
+            <InputGroup label="Adres" value={settings?.address || ""} type="textarea" onChange={(v) => updateSetting("address", v)} />
           </div>
         </div>
       </section>
@@ -106,15 +127,41 @@ function GeneralSettings() {
           Çalışma Saatleri
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputGroup label="Hafta İçi" value="09:00 - 18:00" />
-          <InputGroup label="Cumartesi" value="09:00 - 13:00" />
+          <InputGroup label="Çalışma Saatleri Metni" value={settings?.working_hours || ""} onChange={(v) => updateSetting("working_hours", v)} />
         </div>
       </section>
     </div>
   );
 }
 
+
 function HomeSettings() {
+  const { data: page } = useQuery({
+    queryKey: ["cms-page", "/"],
+    queryFn: async () => {
+      const { data } = await supabase.from("site_pages").select("*").eq("route", "/").single();
+      return data;
+    }
+  });
+
+  const { data: sections, refetch } = useQuery({
+    queryKey: ["cms-sections", page?.id],
+    enabled: !!page?.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("page_sections")
+        .select(`
+          *,
+          section_content (*)
+        `)
+        .eq("page_id", page!.id)
+        .order("display_order");
+      return data;
+    }
+  });
+
+  const [editingSection, setEditingSection] = useState<any>(null);
+
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="flex items-center justify-between mb-4">
@@ -129,19 +176,82 @@ function HomeSettings() {
       </div>
 
       <div className="space-y-4">
-        <SectionRow label="Hero Slider (Broşürler)" status="Yayında" type="Slider" />
-        <SectionRow label="Giriş Metni (HomeHero)" status="Yayında" type="Text" />
-        <SectionRow label="Ürün Kategori Kaşifi" status="Yayında" type="Grid" />
-        <SectionRow label="Kurumsal Değerler" status="Yayında" type="Features" />
-        <SectionRow label="Sektörel Çözümler" status="Yayında" type="Tabs" />
+        {sections?.map((s: any) => (
+          <SectionRow 
+            key={s.id} 
+            label={s.internal_label} 
+            status={s.is_active ? "Yayında" : "Taslak"} 
+            type={s.section_type} 
+            onClick={() => setEditingSection(s)}
+          />
+        ))}
+        {(!sections || sections.length === 0) && (
+          <p className="text-white/40 text-center py-8">Henüz bölüm eklenmemiş.</p>
+        )}
       </div>
+
+      {editingSection && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[var(--admin-surface)] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+            <div className="p-6 border-b border-white/10 flex items-center justify-between">
+              <h3 className="text-xl font-bold">{editingSection.internal_label} - Düzenle</h3>
+              <button onClick={() => setEditingSection(null)} className="h-8 w-8 rounded-lg hover:bg-white/10 flex items-center justify-center">
+                <Icon name="close" />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto space-y-6">
+              {editingSection.section_content?.map((field: any) => (
+                <div key={field.id} className="space-y-2">
+                  <label className="text-xs font-bold text-white/40 uppercase tracking-wider">{field.label || field.field_key}</label>
+                  {field.field_type === 'text' ? (
+                    <textarea 
+                      className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg p-4 text-sm focus:outline-none focus:border-[var(--admin-yellow)]/50 min-h-[100px]"
+                      defaultValue={field.value_text}
+                      onBlur={async (e) => {
+                        await supabase
+                          .from("section_content")
+                          .update({ value_text: e.target.value })
+                          .eq("id", field.id);
+                        refetch();
+                      }}
+                    />
+                  ) : (
+                    <input 
+                      className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg h-11 px-4 text-sm focus:outline-none focus:border-[var(--admin-yellow)]/50"
+                      defaultValue={field.link_url || field.media_url || field.value_text}
+                      onBlur={async (e) => {
+                        const update: any = {};
+                        if (field.field_type === 'url') update.link_url = e.target.value;
+                        else if (field.field_type === 'image') update.media_url = e.target.value;
+                        else update.value_text = e.target.value;
+                        
+                        await supabase
+                          .from("section_content")
+                          .update(update)
+                          .eq("id", field.id);
+                        refetch();
+                      }}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="p-6 border-t border-white/10 bg-white/5 flex justify-end">
+              <button onClick={() => setEditingSection(null)} className="admin-btn-accent px-6 h-10 font-bold">
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function SectionRow({ label, status, type }: { label: string; status: string; type: string }) {
+function SectionRow({ label, status, type, onClick }: { label: string; status: string; type: string; onClick: () => void }) {
   return (
     <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--admin-navy-deep)]/40 border border-white/5 hover:border-[var(--admin-yellow)]/30 transition-all group">
+
       <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center text-white/40 group-hover:text-[var(--admin-yellow)] transition-colors">
         <Icon name="drag_indicator" className="cursor-move" />
       </div>
@@ -156,15 +266,16 @@ function SectionRow({ label, status, type }: { label: string; status: string; ty
         <button className="h-8 w-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/60">
           <Icon name="visibility" className="text-[18px]" />
         </button>
-        <button className="h-8 w-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/60">
+        <button onClick={onClick} className="h-8 w-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/60">
           <Icon name="edit" className="text-[18px]" />
         </button>
       </div>
+
     </div>
   );
 }
 
-function InputGroup({ label, value, type = "text" }: { label: string; value: string; type?: "text" | "textarea" }) {
+function InputGroup({ label, value, type = "text", onChange }: { label: string; value: string; type?: "text" | "textarea"; onChange: (v: string) => void }) {
   return (
     <div className="space-y-1.5">
       <label className="text-xs font-semibold text-white/40 uppercase tracking-wider">{label}</label>
@@ -172,13 +283,16 @@ function InputGroup({ label, value, type = "text" }: { label: string; value: str
         <input 
           className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg h-11 px-4 text-sm focus:outline-none focus:border-[var(--admin-yellow)]/50 transition-all"
           defaultValue={value}
+          onBlur={(e) => onChange(e.target.value)}
         />
       ) : (
         <textarea 
           className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg min-h-[100px] p-4 text-sm focus:outline-none focus:border-[var(--admin-yellow)]/50 transition-all"
           defaultValue={value}
+          onBlur={(e) => onChange(e.target.value)}
         />
       )}
     </div>
   );
 }
+
