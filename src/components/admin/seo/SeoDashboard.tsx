@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Icon } from "../../site-shell";
 
+export function SeoDashboard({ onNavigate }: { onNavigate: (t: any) => void }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
