@@ -66,8 +66,8 @@ function GirisPage() {
   return (
     <SiteShell>
       <PageHero
-        title="Bayi ve Kurumsal Giriş"
-        description="Hesap sistemimiz yakında aktif olacak. Şu an için satış ekibimizle iletişime geçerek bayi hesabınızı oluşturabilirsiniz."
+        title="Yönetim Girişi"
+        description="Bu alan sadece yetkili personel erişimine özeldir."
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Giriş" }]}
       />
       <div className="max-w-md mx-auto px-margin-mobile md:px-margin-desktop py-16">
@@ -153,9 +153,6 @@ function GirisPage() {
             >
               {busy ? "Lütfen bekleyin…" : mode === "signin" ? "Giriş Yap" : "Hesap Oluştur"}
             </button>
-            <p className="text-body-sm text-on-surface-variant text-center">
-              İlk kaydolan kullanıcı otomatik olarak admin yetkisi alır.
-            </p>
           </form>
         )}
       </div>
