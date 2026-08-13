@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { Icon } from "../../site-shell";
 
-export function SeoDashboard({ onNavigate }: { onNavigate: (t: any) => void }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
