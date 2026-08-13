@@ -7,16 +7,16 @@ import { PageHero } from "../components/marketing/PageHero";
 export const Route = createFileRoute("/bayiliklerimiz")({
   head: () => ({
     meta: [
-      { title: "Yetkili Distribütör Markalar — Pratik" },
-      { name: "description", content: "Bosch, Makita, DeWalt, Hilti, Milwaukee ve daha fazlası — Pratik güvencesiyle sunulan profesyonel endüstriyel donanım markaları." },
-      { property: "og:title", content: "Yetkili Distribütör Markalar — Pratik" },
-      { property: "og:description", content: "Dünyanın önde gelen endüstriyel donanım markalarının orijinal, garantili ürünleri Pratik'te." },
-      { property: "og:url", content: "/markalar" },
+      { title: "Bayiliklerimiz — Pratik" },
+      { name: "description", content: "Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin." },
+      { property: "og:title", content: "Bayiliklerimiz — Pratik" },
+      { property: "og:description", content: "Dünyanın önde gelen endüstriyel donanım markalarının yetkili bayilikleri Pratik'te." },
+      { property: "og:url", content: "/bayiliklerimiz" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "/markalar" }],
+    links: [{ rel: "canonical", href: "/bayiliklerimiz" }],
   }),
-  component: MarkalarPage,
+  component: BayiliklerimizPage,
 });
 
 function BayiliklerimizPage() {
@@ -39,6 +39,10 @@ function BayiliklerimizPage() {
                 <div key={i} className="aspect-video bg-surface-container-low border border-outline-variant" />
               ))}
             </div>
+          ) : brands.length === 0 ? (
+            <div className="py-20 text-center text-on-surface-variant">
+              Henüz görüntülenecek aktif bayilik bulunmuyor.
+            </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-gutter">
               {brands.map((brand) => (
@@ -60,7 +64,7 @@ function BayiliklerimizPage() {
         </div>
       </section>
 
-      {/* Brand Detail Modal */}
+      {/* Dealership Detail Modal */}
       {selectedBrand && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
@@ -76,6 +80,7 @@ function BayiliklerimizPage() {
               <button 
                 onClick={() => setSelectedBrand(null)}
                 className="absolute top-4 right-4 text-outline hover:text-on-surface-variant transition-colors"
+                aria-label="Kapat"
               >
                 <span className="material-symbols-outlined text-[24px]">close</span>
               </button>
