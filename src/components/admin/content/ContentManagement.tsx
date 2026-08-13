@@ -321,7 +321,7 @@ function PageContentEditor({ route, onDirty, onSaved }: { route: string; onDirty
   if (!page) return <div className="text-white/40">Sayfa kaydı bulunamadı.</div>;
 
   const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media') => {
-    setLocalSections(prev => prev.map(s => {
+    setLocalSections(prev => (prev as any[]).map(s => {
       if (s.id !== sectionId) return s;
       return {
         ...s,
