@@ -1,17 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const baseUrl = url.origin;
+        
+        // Settings'den site_url'i al
+        const { data: settings } = await supabase
+          .from("site_settings")
+          .select("site_url, is_indexing_enabled")
+          .eq("id", true)
+          .single();
+        
+        const baseUrl = settings?.site_url || url.origin;
+        const isIndexing = settings?.is_indexing_enabled !== false;
         
         const content = [
           "User-agent: *",
-          "Allow: /",
+          isIndexing ? "Allow: /" : "Disallow: /",
           "Disallow: /admin",
-          "Disallow: /auth",
+          "Disallow: /giris",
           "",
           `Sitemap: ${baseUrl}/sitemap.xml`
         ].join("\n");

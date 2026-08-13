@@ -1233,6 +1233,60 @@ export type Database = {
         }
         Relationships: []
       }
+      page_seo: {
+        Row: {
+          canonical_url: string | null
+          description: string | null
+          id: string
+          no_follow: boolean | null
+          no_index: boolean | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          route_path: string
+          schema_type: string | null
+          sitemap_changefreq: string | null
+          sitemap_include: boolean | null
+          sitemap_priority: number | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          description?: string | null
+          id?: string
+          no_follow?: boolean | null
+          no_index?: boolean | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          route_path: string
+          schema_type?: string | null
+          sitemap_changefreq?: string | null
+          sitemap_include?: boolean | null
+          sitemap_priority?: number | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          description?: string | null
+          id?: string
+          no_follow?: boolean | null
+          no_index?: boolean | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          route_path?: string
+          schema_type?: string | null
+          sitemap_changefreq?: string | null
+          sitemap_include?: boolean | null
+          sitemap_priority?: number | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       portal_announcements: {
         Row: {
           audience: string
@@ -1534,6 +1588,69 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_audit_results: {
+        Row: {
+          affected_route: string | null
+          check_type: string
+          created_at: string | null
+          id: string
+          message: string
+          status: string
+          suggestion: string | null
+        }
+        Insert: {
+          affected_route?: string | null
+          check_type: string
+          created_at?: string | null
+          id?: string
+          message: string
+          status: string
+          suggestion?: string | null
+        }
+        Update: {
+          affected_route?: string | null
+          check_type?: string
+          created_at?: string | null
+          id?: string
+          message?: string
+          status?: string
+          suggestion?: string | null
+        }
+        Relationships: []
+      }
+      seo_redirects: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          source_path: string
+          status_code: number | null
+          target_path: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          source_path: string
+          status_code?: number | null
+          target_path: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          source_path?: string
+          status_code?: number | null
+          target_path?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       service_images: {
         Row: {
           alt: string | null
@@ -1627,8 +1744,11 @@ export type Database = {
           email: string | null
           favicon_url: string | null
           footer_text: string | null
+          ga4_active: boolean | null
           google_analytics_id: string | null
           google_search_console: string | null
+          google_tag_manager_id: string | null
+          gtm_active: boolean | null
           hero_cta_primary_text: string | null
           hero_cta_primary_url: string | null
           hero_cta_secondary_text: string | null
@@ -1638,14 +1758,19 @@ export type Database = {
           hero_title: string | null
           hero_video_url: string | null
           id: boolean
+          is_indexing_enabled: boolean | null
           kvkk_text: string | null
           logo_url: string | null
           map_embed: string | null
           map_url: string | null
           meta_pixel_id: string | null
           mobile_logo_url: string | null
+          og_image_default: string | null
           phone: string | null
           privacy_policy: string | null
+          schema_active: boolean | null
+          search_console_method: string | null
+          site_url: string | null
           social_facebook: string | null
           social_instagram: string | null
           social_linkedin: string | null
@@ -1653,6 +1778,8 @@ export type Database = {
           social_youtube: string | null
           tagline: string | null
           terms: string | null
+          title_suffix: string | null
+          twitter_image_default: string | null
           updated_at: string
           whatsapp: string | null
           working_hours: string | null
@@ -1666,8 +1793,11 @@ export type Database = {
           email?: string | null
           favicon_url?: string | null
           footer_text?: string | null
+          ga4_active?: boolean | null
           google_analytics_id?: string | null
           google_search_console?: string | null
+          google_tag_manager_id?: string | null
+          gtm_active?: boolean | null
           hero_cta_primary_text?: string | null
           hero_cta_primary_url?: string | null
           hero_cta_secondary_text?: string | null
@@ -1677,14 +1807,19 @@ export type Database = {
           hero_title?: string | null
           hero_video_url?: string | null
           id?: boolean
+          is_indexing_enabled?: boolean | null
           kvkk_text?: string | null
           logo_url?: string | null
           map_embed?: string | null
           map_url?: string | null
           meta_pixel_id?: string | null
           mobile_logo_url?: string | null
+          og_image_default?: string | null
           phone?: string | null
           privacy_policy?: string | null
+          schema_active?: boolean | null
+          search_console_method?: string | null
+          site_url?: string | null
           social_facebook?: string | null
           social_instagram?: string | null
           social_linkedin?: string | null
@@ -1692,6 +1827,8 @@ export type Database = {
           social_youtube?: string | null
           tagline?: string | null
           terms?: string | null
+          title_suffix?: string | null
+          twitter_image_default?: string | null
           updated_at?: string
           whatsapp?: string | null
           working_hours?: string | null
@@ -1705,8 +1842,11 @@ export type Database = {
           email?: string | null
           favicon_url?: string | null
           footer_text?: string | null
+          ga4_active?: boolean | null
           google_analytics_id?: string | null
           google_search_console?: string | null
+          google_tag_manager_id?: string | null
+          gtm_active?: boolean | null
           hero_cta_primary_text?: string | null
           hero_cta_primary_url?: string | null
           hero_cta_secondary_text?: string | null
@@ -1716,14 +1856,19 @@ export type Database = {
           hero_title?: string | null
           hero_video_url?: string | null
           id?: boolean
+          is_indexing_enabled?: boolean | null
           kvkk_text?: string | null
           logo_url?: string | null
           map_embed?: string | null
           map_url?: string | null
           meta_pixel_id?: string | null
           mobile_logo_url?: string | null
+          og_image_default?: string | null
           phone?: string | null
           privacy_policy?: string | null
+          schema_active?: boolean | null
+          search_console_method?: string | null
+          site_url?: string | null
           social_facebook?: string | null
           social_instagram?: string | null
           social_linkedin?: string | null
@@ -1731,6 +1876,8 @@ export type Database = {
           social_youtube?: string | null
           tagline?: string | null
           terms?: string | null
+          title_suffix?: string | null
+          twitter_image_default?: string | null
           updated_at?: string
           whatsapp?: string | null
           working_hours?: string | null

@@ -13,7 +13,21 @@ import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
-import { ControlCenter } from "../components/admin/control-center/ControlCenter";
+import { SeoShell, type SeoSubTab } from "../components/admin/seo/SeoShell";
+import { SeoDashboard } from "../components/admin/seo/SeoDashboard";
+import { SeoGeneralSettings } from "../components/admin/seo/SeoGeneralSettings";
+import { SeoPageManagement } from "../components/admin/seo/SeoPageManagement";
+import { SeoSearchConsole } from "../components/admin/seo/SeoSearchConsole";
+import { SeoTools } from "../components/admin/seo/SeoTools";
+import { SeoRedirects } from "../components/admin/seo/SeoRedirects";
+import { SeoSitemap } from "../components/admin/seo/SeoSitemap";
+import { SeoRobots } from "../components/admin/seo/SeoRobots";
+import { SeoAnalytics } from "../components/admin/seo/SeoAnalytics";
+import { SeoTagManager } from "../components/admin/seo/SeoTagManager";
+import { SeoSchema } from "../components/admin/seo/SeoSchema";
+import { SeoSocial } from "../components/admin/seo/SeoSocial";
+import { SeoFavicon } from "../components/admin/seo/SeoFavicon";
+
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
@@ -46,11 +60,18 @@ export const Route = createFileRoute("/admin")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { 
+    tab?: AdminTab; 
+    seoTab?: SeoSubTab; 
+    aiAction?: string; 
+    aiTarget?: string; 
+    aiPrompt?: string 
+  } => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
-    aiAction: typeof s.aiAction === "string" ? (s.aiAction as string) : undefined,
-    aiTarget: typeof s.aiTarget === "string" ? (s.aiTarget as string) : undefined,
-    aiPrompt: typeof s.aiPrompt === "string" ? (s.aiPrompt as string) : undefined,
+    seoTab: (s.seoTab as SeoSubTab) || "dashboard",
+    aiAction: s.aiAction as string,
+    aiTarget: s.aiTarget as string,
+    aiPrompt: s.aiPrompt as string,
   }),
   component: AdminPage,
 });
@@ -91,14 +112,16 @@ function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const { tab } = search;
+  const tab = search.tab || "dashboard";
+  const seoTab = search.seoTab || "dashboard";
 
-  function setTab(t: Tab) {
+  function setTab(t: AdminTab) {
     navigate({
       to: "/admin",
-      search: (prev) => ({
+      search: (prev: any) => ({
         ...prev,
         tab: t,
+        seoTab: t === "seo" ? "dashboard" : undefined,
         aiAction: undefined,
         aiTarget: undefined,
         aiPrompt: undefined,
@@ -175,7 +198,33 @@ function AdminPage() {
       >
         {tab !== "dashboard" && tab !== "seo" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
-        {tab === "seo" && <ControlCenter onNavigate={setTab} />}
+        {tab === "seo" && (
+          <SeoShell 
+            currentTab={seoTab} 
+            onTabChange={(st) => navigate({ 
+              to: "/admin",
+              search: (prev: any) => ({ ...prev, seoTab: st }) 
+            })}
+          >
+            {seoTab === "dashboard" && <SeoDashboard onNavigate={setTab} />}
+            {seoTab === "general" && <SeoGeneralSettings />}
+            {seoTab === "pages" && <SeoPageManagement />}
+            {seoTab === "search-console" && <SeoSearchConsole />}
+            {seoTab === "sitemap" && <SeoSitemap />}
+            {seoTab === "robots" && <SeoRobots />}
+            {seoTab === "audit" && <SeoTools />}
+            {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "analytics" && <SeoAnalytics />}
+            {seoTab === "tag-manager" && <SeoTagManager />}
+            {seoTab === "schema" && <SeoSchema />}
+            {seoTab === "social" && <SeoSocial />}
+            {seoTab === "favicon" && <SeoFavicon />}
+            {/* placeholders for others to be implemented */}
+            {false && (
+              <ComingSoon tab="seo" phase={`SEO Modülü: ${seoTab}`} />
+            )}
+          </SeoShell>
+        )}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}

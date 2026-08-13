@@ -308,6 +308,7 @@ export function SiteHeader() {
                 to="/admin"
                 search={{
                   tab: "dashboard",
+                  seoTab: "dashboard",
                   aiAction: undefined,
                   aiTarget: undefined,
                   aiPrompt: undefined,
@@ -628,6 +629,7 @@ export function SiteHeader() {
                     to="/admin"
                     search={{
                       tab: "dashboard",
+                      seoTab: "dashboard",
                       aiAction: undefined,
                       aiTarget: undefined,
                       aiPrompt: undefined,
