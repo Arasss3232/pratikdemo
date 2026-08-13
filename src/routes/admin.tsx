@@ -106,7 +106,7 @@ function AdminPage() {
   }
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/admin/login" });
+    if (!loading && !user) navigate({ to: "/giris" });
   }, [loading, user, navigate]);
 
   if (loading) {
