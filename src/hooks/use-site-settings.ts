@@ -64,24 +64,31 @@ export async function fetchSiteSettings(forceRefresh = false): Promise<SiteSetti
 
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(cache);
-  const [loading, setLoading] = useState(!cache);
 
   const refresh = useCallback(async () => {
-    setLoading(true);
     const data = await fetchSiteSettings(true);
     setSettings(data);
-    setLoading(false);
+    return data;
   }, []);
 
   useEffect(() => {
     if (!cache) {
-      refresh();
+      fetchSiteSettings().then(setSettings);
     }
-  }, [refresh]);
+  }, []);
 
-  return {
-    settings: settings ?? {},
-    loading,
-    refresh
-  };
+  // Return the settings object with a non-enumerable refresh function
+  // to avoid breaking existing destructuring if possible, but actually
+  // most code uses it as `const settings = useSiteSettings()` then `settings.prop`.
+  const result = settings ? { ...settings } : ({} as SiteSettings);
+  
+  // Attach refresh to the object
+  Object.defineProperty(result, 'refresh', {
+    value: refresh,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  });
+
+  return result as SiteSettings & { refresh: () => Promise<SiteSettings> };
 }
