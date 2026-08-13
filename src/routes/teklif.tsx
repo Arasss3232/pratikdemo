@@ -5,7 +5,7 @@ import { SiteShell } from "../components/site-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { buttonStyles } from "@/lib/button-styles";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-import { SUBCATEGORIES, BRANDS, APPLICATIONS } from "@/data/catalog";
+import { SUBCATEGORIES, BRANDS, APPLICATIONS, CATEGORIES_DATA } from "@/data/catalog";
 
 export const Route = createFileRoute("/teklif")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -50,8 +50,21 @@ function TeklifPage() {
   const email = settings.email ?? "";
   const whatsapp = settings.whatsapp ?? phone;
 
-  const [lines, setLines] = useState<LineItem[]>([
-    { id: uid(), category: search.category || "", brand: "", quantity: "1", notes: "" },
+  const verifiedCategory = useMemo(() => {
+    if (!search.categoryId) return null;
+    const cat = CATEGORIES_DATA.find(c => c.id === search.categoryId);
+    if (!cat || !cat.active) return null;
+    return cat;
+  }, [search.categoryId]);
+
+  const [lines, setLines] = useState<LineItem[]>(() => [
+    { 
+      id: uid(), 
+      category: verifiedCategory ? verifiedCategory.title : (search.category || ""), 
+      brand: "", 
+      quantity: "1", 
+      notes: "" 
+    },
   ]);
   const [state, setState] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -86,12 +99,16 @@ function TeklifPage() {
     }
     const cleanLines = lines
       .filter((l) => l.category.trim() || l.notes.trim())
-      .map((l) => ({
-        category: l.category.trim(),
-        brand: l.brand.trim() || null,
-        quantity: Number(l.quantity) || 1,
-        notes: l.notes.trim() || null,
-      }));
+      .map((l) => {
+        const cat = CATEGORIES_DATA.find(cd => cd.title === l.category.trim() && cd.active);
+        return {
+          category: l.category.trim(),
+          category_id: cat?.id || null,
+          brand: l.brand.trim() || null,
+          quantity: Number(l.quantity) || 1,
+          notes: l.notes.trim() || null,
+        };
+      });
     if (cleanLines.length === 0) {
       setErrors({ lines: "En az bir ürün satırı ekleyin" });
       return;
@@ -188,6 +205,12 @@ function TeklifPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
               {/* Form */}
               <form onSubmit={onSubmit} noValidate className="lg:col-span-8 space-y-10" aria-label="Teklif formu">
+                {search.categoryId && !verifiedCategory && (
+                  <div className="p-4 bg-secondary/10 border border-secondary text-secondary text-sm flex items-center gap-3">
+                    <Icon name="warning" />
+                    <span>Geçersiz veya pasif bir kategori seçildi. Lütfen listeden aktif bir kategori seçiniz.</span>
+                  </div>
+                )}
                 {/* Line items */}
                 <fieldset className="border border-outline-variant bg-white p-6 md:p-8">
                   <legend className="px-2 hp-mono text-[11px] uppercase tracking-widest text-primary">01 · Ürün Listesi</legend>
