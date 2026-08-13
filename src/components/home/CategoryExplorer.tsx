@@ -1,92 +1,32 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
+import { useCategories, type Category } from "@/hooks/use-categories";
 
-type Category = {
-  index: string;
-  title: string;
-  slug: string;
-  to: string;
-  desc: string;
-  count: string;
-  image: string;
-  sub: string[];
-};
-
-import { CATEGORIES_DATA } from "@/data/catalog";
-
-const CATEGORIES: readonly Category[] = [
-  {
-    index: "01",
-    title: "Elektrikli El Aletleri",
-    slug: "elektrikli-el-aletleri",
-    to: "/teklif",
-    desc: "Bosch Professional, Makita, DeWalt ve Hilti çözümleriyle matkap, taşlama, vidalama ve kırıcı delici sınıfının profesyonel makineleri.",
-    count: "340+ ürün",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBkYboXopVvcxWg-DRjx8QKXsPsV-SvF39Nx2M64xck0BTyy9IP2pQfMIWu7o6ZB7dWFnVewW31xrHHu5x5dcbPDMh65Bf84inqdw-kSZW7lOwwKW6oGZXQvuPA1Kq1jDQxUAmgoqUCbxb8g38N9WUfjru8h-kV-7FyiiKzHgb0jDpuPp-9fNTY5jYWrH619cD7-urKnAMcV930fhjZJfgWus1kNCvVmhqiTiPilZ-UG8ov2xTu2jZw=w800",
-    sub: ["Matkap", "Taşlama", "Vidalama"],
-  },
-  {
-    index: "02",
-    title: "El Aletleri",
-    slug: "el-aletleri",
-    to: "/teklif",
-    desc: "Anahtar takımları, tornavidalar, pense grupları, ölçüm aletleri; atölye ve saha kullanımına uygun profesyonel el aletleri.",
-    count: "520+ ürün",
-    image:
-      "https://images.unsplash.com/photo-1581147036324-c47a03a81d48?auto=format&fit=crop&w=800&q=80",
-    sub: ["Anahtar Takımları", "Tornavida", "Pense"],
-  },
-  {
-    index: "03",
-    title: "Bağlantı Elemanları",
-    slug: "baglanti-elemanlari",
-    to: "/teklif",
-    desc: "Cıvata, somun, pul, dübel ve özel bağlantı çözümleri; DIN/ISO standartlarında geniş stok ve özel imalat.",
-    count: "1.200+ ürün",
-    image:
-      "https://images.unsplash.com/photo-1609205807107-e8ec2120f9de?auto=format&fit=crop&w=800&q=80",
-    sub: ["Cıvata", "Somun", "Dübel"],
-  },
-  {
-    index: "04",
-    title: "Kişisel Koruyucu Donanım",
-    slug: "kkd",
-    to: "/teklif",
-    desc: "CE sertifikalı iş güvenliği ekipmanları; baret, gözlük, kulak koruyucu, eldiven ve iş ayakkabıları.",
-    count: "180+ ürün",
-    image:
-      "https://images.unsplash.com/photo-1618568949779-05df34c1b02e?auto=format&fit=crop&w=800&q=80",
-    sub: ["Baret", "Eldiven", "İş Ayakkabısı"],
-  },
-  {
-    index: "05",
-    title: "Endüstriyel Makineler",
-    slug: "endustriyel-makineler",
-    to: "/teklif",
-    desc: "Kompresör, jeneratör, kaynak makinesi ve atölye ekipmanları; sanayi tesisi standartlarına uygun ekipmanlar.",
-    count: "95+ ürün",
-    image:
-      "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
-    sub: ["Kompresör", "Jeneratör", "Kaynak"],
-  },
-  {
-    index: "06",
-    title: "Sarf Malzemeleri",
-    slug: "sarf-malzemeleri",
-    to: "/teklif",
-    desc: "Kesme diskleri, taşlama diskleri, matkap uçları ve yüksek dönüşümlü sarf ürünleri.",
-    count: "760+ ürün",
-    image:
-      "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=800&q=80",
-    sub: ["Kesme Diski", "Matkap Ucu", "Testere"],
-  },
-];
 
 export function CategoryExplorer() {
+  const { data: dbCategories, isLoading } = useCategories();
   const [active, setActive] = useState(0);
-  const cat = CATEGORIES[active];
+
+  const categories = dbCategories?.map((c, i) => ({
+    index: String(i + 1).padStart(2, "0"),
+    title: c.title,
+    slug: c.slug,
+    to: "/teklif",
+    desc: c.description || "Profesyonel endüstriyel çözümler.",
+    count: "Geniş ürün yelpazesi",
+    image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
+    sub: [],
+    id: c.id
+  })) || [];
+
+  const cat = categories[active];
+
+  if (isLoading || categories.length === 0) {
+    if (isLoading) return <div className="py-20 text-center text-white/50">Yükleniyor...</div>;
+    return null;
+  }
+
 
   // Keyboard: arrow keys move through list
   useEffect(() => {
@@ -95,10 +35,11 @@ export function CategoryExplorer() {
       if (!t?.closest?.("[data-category-tablist]")) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((i) => (i + 1) % CATEGORIES.length);
+        setActive((i) => (i + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((i) => (i - 1 + CATEGORIES.length) % CATEGORIES.length);
+        setActive((i) => (i - -1 + categories.length) % categories.length);
+
       }
     };
     window.addEventListener("keydown", onKey);
@@ -142,7 +83,8 @@ export function CategoryExplorer() {
             className="col-span-5 lg:col-span-5 flex flex-col"
             style={{ borderTop: "1px solid var(--public-navy-border)" }}
           >
-            {CATEGORIES.map((c, i) => {
+            {categories.map((c, i) => {
+
               const isActive = i === active;
               return (
                 <li key={c.slug}>
@@ -262,7 +204,8 @@ export function CategoryExplorer() {
               </div>
               <Link
                 to={cat.to}
-                search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }}
+                search={{ categoryId: cat.id }}
+
                 className="pub-btn pub-btn-primary pub-btn-sm mt-6"
               >
                 Kategoriyi İncele
@@ -275,7 +218,8 @@ export function CategoryExplorer() {
         {/* Mobile: horizontal chip nav + selected panel */}
         <div className="md:hidden">
           <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
-            {CATEGORIES.map((c, i) => {
+            {categories.map((c, i) => {
+
               const isActive = i === active;
               return (
                 <button
@@ -325,7 +269,7 @@ export function CategoryExplorer() {
                 {cat.title}
               </h3>
               <p className="mt-3 text-white/75 text-[14px] leading-relaxed">{cat.desc}</p>
-              <Link to={cat.to} search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
+              <Link to={cat.to} search={{ categoryId: cat.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
                 Kategoriyi İncele
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>

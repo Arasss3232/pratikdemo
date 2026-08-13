@@ -182,6 +182,8 @@ function AdminPage() {
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
+        {tab === "categories" && <CategoriesTab />}
+
         {tab === "quotes" && <QuotesTab />}
         {tab === "users" && <UsersTab currentUserId={user.id} />}
         {tab === "catalogs" && <CatalogsTab />}
@@ -263,12 +265,7 @@ function AdminPage() {
             "Fiyat override kayıtları",
           ]} />
         )}
-        {tab === "categories" && (
-          <ComingSoon tab="categories" phase="Faz 2 · Ürün Kataloğu" bullets={[
-            "Kategori ve alt kategori ağacı",
-            "Mevcut ürünlerin normalize edilmesi",
-          ]} />
-        )}
+        {tab === "categories" && <CategoriesTab />}
         {tab === "priceLists" && (
           <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[
             "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
@@ -637,6 +634,41 @@ function ProductsTab() {
     />
   );
 }
+
+function CategoriesTab() {
+  return (
+    <GenericCrud
+      table="product_categories"
+      quickAddKey="categories"
+      title="Ürün Kategorileri"
+      description="Web sitesinde gösterilen ürün gruplarını buradan yönetebilirsiniz. Sıralama (Sıra) alanı ana sayfadaki görünüm sırasını belirler."
+      orderBy="display_order"
+      ascending={true}
+      fields={[
+        { name: "title", label: "Kategori Adı", required: true },
+        { name: "slug", label: "URL Slug", required: true, help: "Örn: elektrikli-el-aletleri (benzersiz olmalı)" },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "icon", label: "İkon (Material Symbol)", help: "Örn: hardware, build, settings" },
+        { name: "image_url", label: "Görsel URL (Ana Sayfa için)", type: "url" },
+        { name: "display_order", label: "Sıra", type: "number", help: "Küçük değer önce gösterilir" },
+        { name: "is_active", label: "Aktif", type: "checkbox" },
+      ]}
+      columns={[
+        { key: "display_order", label: "Sıra", render: (r) => (
+          <span className="font-mono text-[12px]">{String(r.display_order ?? 0)}</span>
+        ) },
+        { key: "title", label: "Kategori Adı", render: (r) => <span className="font-medium">{String(r.title)}</span> },
+        { key: "slug", label: "Slug" },
+        { key: "is_active", label: "Durum", render: (r) => (
+          <StatusBadge tone={r.is_active ? "success" : "neutral"}>
+            {r.is_active ? "Aktif" : "Pasif"}
+          </StatusBadge>
+        ) },
+      ]}
+    />
+  );
+}
+
 
 // ================================================================
 // B2B Çekirdek Modülleri (Faz 1)

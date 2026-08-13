@@ -2,7 +2,8 @@ import { createFileRoute, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { SiteShell } from "../components/site-shell";
 import { PageHero } from "../components/marketing/PageHero";
 import { CategoryCard } from "../components/marketing/CategoryCard";
-import { CATEGORIES_DATA } from "@/data/catalog";
+import { useCategories } from "@/hooks/use-categories";
+
 
 export const Route = createFileRoute("/urunler")({
   head: () => ({
@@ -88,8 +89,10 @@ const CATEGORIES = [
 function UrunlerLayout() {
   const matchRoute = useMatchRoute();
   const isIndex = matchRoute({ to: "/urunler" });
+  const { data: categories, isLoading } = useCategories();
   
   if (!isIndex) return <Outlet />;
+
   
   return (
     <SiteShell>
@@ -101,16 +104,24 @@ function UrunlerLayout() {
         />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {CATEGORIES.map((c) => (
-              <CategoryCard 
-                key={c.title} 
-                {...c} 
-                search={{ 
-                  categoryId: CATEGORIES_DATA.find(cd => cd.title === c.category)?.id 
-                }} 
-              />
-            ))}
+            {isLoading ? (
+              <div className="col-span-full py-20 text-center text-on-surface-variant/50">Kategoriler yükleniyor...</div>
+            ) : (
+              categories?.map((c) => (
+                <CategoryCard 
+                  key={c.id} 
+                  title={c.title}
+                  desc={c.description || "Profesyonel endüstriyel çözümler."}
+                  icon={c.icon || "hardware"}
+                  to="/teklif"
+                  search={{ 
+                    categoryId: c.id
+                  }} 
+                />
+              ))
+            )}
           </div>
+
         </div>
       </>
     </SiteShell>

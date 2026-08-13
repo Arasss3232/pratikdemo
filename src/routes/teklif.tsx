@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { SiteShell, Icon } from "../components/site-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { buttonStyles } from "@/lib/button-styles";
 import { useSiteSettings } from "@/hooks/use-site-settings";
-import { SUBCATEGORIES, BRANDS, APPLICATIONS, CATEGORIES_DATA } from "@/data/catalog";
+import { useCategories } from "@/hooks/use-categories";
+import { SUBCATEGORIES, BRANDS, APPLICATIONS } from "@/data/catalog";
+
 
 export const Route = createFileRoute("/teklif")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -50,23 +52,34 @@ function TeklifPage() {
   const email = settings.email ?? "";
   const whatsapp = settings.whatsapp ?? phone;
 
-  const verifiedCategory = useMemo(() => {
-    if (!search.categoryId) return null;
-    const cat = CATEGORIES_DATA.find(c => c.id === search.categoryId);
-    if (!cat || !cat.active) return null;
-    return cat;
-  }, [search.categoryId]);
+  const { data: categories, isLoading: catsLoading } = useCategories(true);
 
-  const [lines, setLines] = useState<LineItem[]>(() => [
-    { 
-      id: uid(), 
-      category: verifiedCategory ? verifiedCategory.title : (search.category || ""), 
-      brand: "", 
-      quantity: "1", 
-      notes: "" 
-    },
-  ]);
+  const verifiedCategory = useMemo(() => {
+    if (!search.categoryId || !categories) return null;
+    const cat = categories.find(c => c.id === search.categoryId);
+    if (!cat || !cat.is_active) return null;
+    return cat;
+  }, [search.categoryId, categories]);
+
+  const [lines, setLines] = useState<LineItem[]>([]);
   const [state, setState] = useState<"idle" | "loading" | "ok" | "err">("idle");
+
+  // Sync lines when verifiedCategory is found or loading ends
+  useEffect(() => {
+    if (catsLoading) return;
+    if (lines.length === 0) {
+      setLines([
+        { 
+          id: uid(), 
+          category: verifiedCategory ? verifiedCategory.title : (search.category || ""), 
+          brand: "", 
+          quantity: "1", 
+          notes: "" 
+        },
+      ]);
+    }
+  }, [verifiedCategory, catsLoading]);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errMsg, setErrMsg] = useState<string>("");
 
@@ -97,24 +110,39 @@ function TeklifPage() {
       setErrors(errs);
       return;
     }
-    const cleanLines = lines
-      .filter((l) => l.category.trim() || l.notes.trim())
-      .map((l) => {
-        const cat = CATEGORIES_DATA.find(cd => cd.title === l.category.trim() && cd.active);
-        return {
-          category: l.category.trim(),
-          category_id: cat?.id || null,
-          brand: l.brand.trim() || null,
-          quantity: Number(l.quantity) || 1,
-          notes: l.notes.trim() || null,
-        };
-      });
+    setState("loading");
+
+    // Fetch fresh validation from DB to ensure it's still active
+    const lineValidation = await Promise.all(
+      lines
+        .filter((l) => l.category.trim() || l.notes.trim())
+        .map(async (l) => {
+          const { data: dbCat } = await supabase
+            .from("product_categories")
+            .select("id, title, is_active")
+            .eq("title", l.category.trim())
+            .eq("is_active", true)
+            .maybeSingle();
+
+          return {
+            category: dbCat ? dbCat.title : l.category.trim(),
+            category_id: dbCat ? dbCat.id : null,
+            brand: l.brand.trim() || null,
+            quantity: Number(l.quantity) || 1,
+            notes: l.notes.trim() || null,
+            isValid: !!dbCat || !l.category.trim(), // Valid if matched or if it's just a general note (though we prefer matching)
+          };
+        })
+    );
+
+    const cleanLines = lineValidation.map(({ isValid, ...rest }) => rest);
+
     if (cleanLines.length === 0) {
       setErrors({ lines: "En az bir ürün satırı ekleyin" });
+      setState("idle");
       return;
     }
-    setErrors({});
-    setState("loading");
+
 
     const payload = {
       contact_name: parsed.data.name,
@@ -205,12 +233,13 @@ function TeklifPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
               {/* Form */}
               <form onSubmit={onSubmit} noValidate className="lg:col-span-8 space-y-10" aria-label="Teklif formu">
-                {search.categoryId && !verifiedCategory && (
+                {search.categoryId && !catsLoading && !verifiedCategory && (
                   <div className="p-4 bg-secondary/10 border border-secondary text-secondary text-sm flex items-center gap-3">
                     <Icon name="warning" />
                     <span>Geçersiz veya pasif bir kategori seçildi. Lütfen listeden aktif bir kategori seçiniz.</span>
                   </div>
                 )}
+
                 {/* Line items */}
                 <fieldset className="border border-outline-variant bg-white p-6 md:p-8">
                   <legend className="px-2 hp-mono text-[11px] uppercase tracking-widest text-primary">01 · Ürün Listesi</legend>
@@ -248,9 +277,10 @@ function TeklifPage() {
                               className="w-full border border-outline focus:border-primary focus:outline-none px-3 py-2.5 text-body-md bg-white"
                             />
                             <datalist id={`cats-${line.id}`}>
-                              {CATEGORY_OPTIONS.map((c) => <option key={c} value={c} />)}
+                              {categories?.map((c) => <option key={c.id} value={c.title} />)}
                               {APPLICATIONS.map((a) => <option key={a} value={a} />)}
                             </datalist>
+
                           </label>
                           <label className="md:col-span-4 flex flex-col gap-1.5">
                             <span className="text-label-md font-label-md">Marka (ops.)</span>

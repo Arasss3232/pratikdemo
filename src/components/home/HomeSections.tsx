@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
-import { FEATURED_LOGOS, CATEGORIES_DATA } from "@/data/catalog";
+import { FEATURED_LOGOS } from "@/data/catalog";
+import { useCategories } from "@/hooks/use-categories";
 import {
   useHomeBrands,
   useHomeReferences,
@@ -249,6 +250,7 @@ export function SectorGrid() {
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
     },
   ];
+  const { data: categories = [] } = useCategories();
   const [active, setActive] = useState(0);
   const cur = sectors[active];
 
@@ -350,7 +352,7 @@ export function SectorGrid() {
                   <Link
                     key={g.label}
                     to="/teklif"
-                    search={{ categoryId: CATEGORIES_DATA.find(cd => cd.slug === g.slug)?.id }}
+                    search={{ categoryId: categories.find((cd: any) => cd.slug === g.slug)?.id }}
                     className="pub-mono px-3 py-1.5 transition-colors"
                     style={{ color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
                   >
