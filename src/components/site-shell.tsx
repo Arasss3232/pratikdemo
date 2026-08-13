@@ -258,44 +258,49 @@ export function SiteHeader() {
             onMouseLeave={closeMega}
             role="menu"
           >
-            <div className="max-w-max-width mx-auto px-margin-desktop py-10 grid grid-cols-[240px_1fr] gap-12">
-              <div>
-                <span className="pub-marker mb-4">02 / Ürün Grupları</span>
-                <h3 className="pub-h3 mt-4 mb-4 text-white">
-                  Tedarik zincirinizin her katmanı için.
-                </h3>
-                <p className="text-[14px] text-white/70 leading-relaxed mb-5">
-                  Ürün gruplarını inceleyerek ihtiyacınız olan kategoriler için hızlı teklif isteyin.
-                </p>
+            <div className="max-w-max-width mx-auto px-margin-desktop py-10">
+              <div className="flex items-center justify-between mb-8 pb-4 border-bottom border-white/10">
+                <div className="flex items-center gap-3">
+                  <span className="pub-marker">Ürün Kategorileri</span>
+                  <span className="text-white/40 text-[14px]">|</span>
+                  <span className="text-white/60 text-[14px]">
+                    İhtiyacınız olan ürün grubu için hızlı teklif isteyin.
+                  </span>
+                </div>
                 <Link
                   to="/urunler"
                   onClick={() => setMegaOpen(false)}
-                  className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] hover:opacity-80"
-                  style={{ color: "var(--public-yellow-500)" }}
+                  className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] hover:text-[var(--public-yellow-500)] transition-colors"
                 >
-                  Tüm ürün gruplarını gör
+                  Tüm Kategorileri Gör
                   <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                 </Link>
               </div>
-              <ul className="grid grid-cols-2 gap-x-6 gap-y-1" role="none">
-                {PRODUCT_GROUPS.map((g) => (
-                  <li key={g.to} role="none">
+              
+              <ul className="grid grid-cols-3 gap-x-8 gap-y-2" role="none">
+                {categories.map((cat) => (
+                  <li key={cat.id} role="none">
                     <Link
-                      to={g.to}
+                      to="/teklif"
+                      search={{ categoryId: cat.id, category: cat.title }}
                       role="menuitem"
                       onClick={() => setMegaOpen(false)}
-                      className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
+                      className="group flex items-center justify-between py-3 px-4 rounded-sm hover:bg-white/5 transition-colors border-b border-white/5"
                     >
-                      <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
-                      <span className="flex-1 min-w-0">
-                        <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
-                          {g.title}
+                      <span className="flex items-center gap-3">
+                        {cat.icon && (
+                          <Icon 
+                            name={cat.icon} 
+                            className="text-[20px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors" 
+                          />
+                        )}
+                        <span className="text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
+                          {cat.title}
                         </span>
-                        <span className="block text-[13px] text-white/60 mt-0.5">{g.desc}</span>
                       </span>
                       <Icon
-                        name="north_east"
-                        className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
+                        name="chevron_right"
+                        className="text-[16px] text-white/20 group-hover:text-[var(--public-yellow-500)] transition-colors"
                         aria-hidden="true"
                       />
                     </Link>
