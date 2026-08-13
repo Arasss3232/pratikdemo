@@ -105,7 +105,8 @@ function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const { tab, seoTab } = search;
+  const tab = search.tab || "dashboard";
+  const seoTab = search.seoTab || "dashboard";
 
   function setTab(t: Tab) {
     navigate({
