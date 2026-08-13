@@ -8,6 +8,9 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 import { SUBCATEGORIES, BRANDS, APPLICATIONS } from "@/data/catalog";
 
 export const Route = createFileRoute("/teklif")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    category: typeof s.category === "string" ? s.category : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Teklif Al — Endüstriyel Alım | Pratik" },
@@ -40,13 +43,14 @@ const contactSchema = z.object({
 });
 
 function TeklifPage() {
+  const search = Route.useSearch();
   const settings = useSiteSettings();
   const phone = settings.phone ?? "";
   const email = settings.email ?? "";
   const whatsapp = settings.whatsapp ?? phone;
 
   const [lines, setLines] = useState<LineItem[]>([
-    { id: uid(), category: "", brand: "", quantity: "1", notes: "" },
+    { id: uid(), category: search.category || "", brand: "", quantity: "1", notes: "" },
   ]);
   const [state, setState] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});

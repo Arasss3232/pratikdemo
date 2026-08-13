@@ -47,12 +47,12 @@ export const Icon = memo(IconBase);
 
 // Product taxonomy shown in mega-menu and mobile drawer.
 const PRODUCT_GROUPS = [
-  { code: "01", to: "/urunler/elektrikli-el-aletleri", title: "Elektrikli El Aletleri", desc: "Matkap, taşlama, vidalama, kırıcı." },
-  { code: "02", to: "/urunler/el-aletleri", title: "El Aletleri", desc: "Anahtar takımları, tornavida, pense." },
-  { code: "03", to: "/urunler/baglanti-elemanlari", title: "Bağlantı Elemanları", desc: "Cıvata, somun, pul, özel bağlantı." },
-  { code: "04", to: "/urunler/kkd", title: "Kişisel Koruyucu Donanım", desc: "İş güvenliği ekipmanları." },
-  { code: "05", to: "/urunler/endustriyel-makineler", title: "Endüstriyel Makineler", desc: "Kompresör, jeneratör, atölye." },
-  { code: "06", to: "/urunler/sarf-malzemeleri", title: "Sarf Malzemeleri", desc: "Kesme, taşlama diski, sarf." },
+  { code: "01", to: "/urunler", title: "Elektrikli El Aletleri", desc: "Matkap, taşlama, vidalama, kırıcı." },
+  { code: "02", to: "/urunler", title: "El Aletleri", desc: "Anahtar takımları, tornavida, pense." },
+  { code: "03", to: "/urunler", title: "Bağlantı Elemanları", desc: "Cıvata, somun, pul, özel bağlantı." },
+  { code: "04", to: "/urunler", title: "Kişisel Koruyucu Donanım", desc: "İş güvenliği ekipmanları." },
+  { code: "05", to: "/urunler", title: "Endüstriyel Makineler", desc: "Kompresör, jeneratör, atölye." },
+  { code: "06", to: "/urunler", title: "Sarf Malzemeleri", desc: "Kesme, taşlama diski, sarf." },
 ] as const;
 
 export function SiteHeader() {
