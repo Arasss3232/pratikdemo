@@ -2,6 +2,12 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* A4 Aspect Ratio for Catalog Covers */
+@utility aspect-a4 {
+  aspect-ratio: 1 / 1.4142;
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
