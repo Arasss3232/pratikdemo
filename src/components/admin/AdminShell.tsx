@@ -13,7 +13,7 @@ const THEME_KEY = "admin_theme";
 const QUICK_ADD_ITEMS: { key: AdminTab; label: string; icon: string; hint: string }[] = [
   { key: "categories", label: "Yeni Kategori", icon: "category", hint: "Ürün grubu ekle" },
   { key: "catalogs", label: "Yeni Katalog", icon: "menu_book", hint: "Dijital PDF yükle" },
-  { key: "brands", label: "Yeni Bayilik", icon: "workspace_premium", hint: "Bayilik bilgisi ekle" },
+  
   { key: "messages", label: "Mesaj Yanıtla", icon: "mail", hint: "Gelen kutusu" },
 ];
 

@@ -45,8 +45,6 @@ const DESCRIPTIONS: Partial<Record<AdminTab, string>> = {
   catalogs: "Ürün gruplarınıza ait dijital PDF kataloglarını buradan yönetin.",
   references: "Tamamlanan projeleriniz ve referans müşterileriniz.",
   brands: "Ana sayfada gösterilen marka logoları.",
-  certificates: "Kurumsal sertifikalarınızı ve belgelerinizi yönetin.",
-  team: "Ekip üyelerinizi ve görev tanımlarını buradan yönetin.",
   testimonials: "Müşteri yorumları ve puanlar.",
   faqs: "Sık sorulan sorular. Kategoriye göre gruplandırabilirsiniz.",
   applications: "Kariyer sayfanızdan gelen iş başvuruları.",
