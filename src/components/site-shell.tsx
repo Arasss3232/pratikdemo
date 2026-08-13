@@ -179,6 +179,7 @@ export function SiteHeader() {
             )}
             <Link
               to="/teklif"
+              search={{ category: "Genel" }}
               className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
               style={{ color: "var(--public-yellow-500)" }}
             >
@@ -227,7 +228,7 @@ export function SiteHeader() {
                 WhatsApp
               </a>
             )}
-            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+            <Link to="/teklif" search={{ category: "Genel" }} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
@@ -329,6 +330,7 @@ export function SiteHeader() {
             <span className="hidden lg:inline-flex ml-2">
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 className="pub-btn pub-btn-primary pub-btn-sm"
               >
                 Teklif Talep Et

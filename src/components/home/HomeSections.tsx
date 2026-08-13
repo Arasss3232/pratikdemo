@@ -400,8 +400,8 @@ export function FeaturedProducts() {
             <span className="pub-tick-bl" aria-hidden />
             <span className="pub-tick-br" aria-hidden />
             <Link
-              to="/urunler/elektrikli-el-aletleri/$sku"
-              params={{ sku: hero.sku }}
+              to="/teklif"
+              search={{ category: hero.name }}
               aria-label={hero.name}
               className="absolute inset-0 z-[1] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)]"
             />
