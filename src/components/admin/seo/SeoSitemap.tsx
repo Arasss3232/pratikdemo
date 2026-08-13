@@ -51,7 +51,7 @@ export function SeoSitemap() {
       {isInvalidUrl && (
         <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50/10 border border-amber-200/50">
           <Icon name="warning" className="text-amber-500 shrink-0" />
-          <div className="text-sm text-amber-800">
+          <div className="text-sm text-amber-500">
             <h4 className="font-bold">Önce gerçek alan adını girin</h4>
             <p className="mt-1 opacity-90">
               Sitemap üretilmesi için "Genel SEO Ayarları" bölümünden sitenizin gerçek üretim (production) URL'sini tanımlamanız gerekir. 

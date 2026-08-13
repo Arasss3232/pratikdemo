@@ -85,18 +85,18 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
             Kritik SEO Uyarıları
           </div>
           <div className="p-6 space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-red-50 border border-red-100">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-red-50/10 border border-red-200/30">
               <span className="material-symbols-outlined text-red-500">priority_high</span>
               <div>
-                <h4 className="font-bold text-red-900 text-sm">Favicon Kaynağı Eksik</h4>
-                <p className="text-xs text-red-700 mt-1">Siteniz için henüz bir favicon yapılandırılmamış.</p>
+                <h4 className="font-bold text-red-500 text-sm">Favicon Kaynağı Eksik</h4>
+                <p className="text-xs text-red-400 mt-1">Siteniz için henüz bir favicon yapılandırılmamış.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50 border border-amber-100">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50/10 border border-amber-200/30">
               <span className="material-symbols-outlined text-amber-500">info</span>
               <div>
-                <h4 className="font-bold text-amber-900 text-sm">GSC Doğrulanmamış</h4>
-                <p className="text-xs text-amber-700 mt-1">Google Search Console meta etiketi eklenmiş ancak henüz doğrulanmamış.</p>
+                <h4 className="font-bold text-amber-500 text-sm">GSC Doğrulanmamış</h4>
+                <p className="text-xs text-amber-400 mt-1">Google Search Console meta etiketi eklenmiş ancak henüz doğrulanmamış.</p>
               </div>
             </div>
           </div>
