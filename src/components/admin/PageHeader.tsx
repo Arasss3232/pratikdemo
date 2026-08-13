@@ -59,6 +59,7 @@ const DESCRIPTIONS: Partial<Record<AdminTab, string>> = {
   activityLogs: "Sistem üzerindeki tüm değişiklik ve erişim kayıtları.",
   security: "Oturum, şifre politikası ve güvenlik olayları.",
   backup: "Yedekleme durumu ve veri geri yükleme.",
+  seo: "Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi.",
 };
 
 export function PageHeader({
