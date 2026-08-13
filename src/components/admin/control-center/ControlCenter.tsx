@@ -3,10 +3,10 @@ import { Icon } from "../../site-shell";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "../PageHeader";
-import { SeoDashboard } from "./SeoDashboard";
-import { SeoGeneralSettings } from "./SeoGeneralSettings";
-import { SeoPageManagement } from "./SeoPageManagement";
-import { SeoTools } from "./SeoTools";
+import { SeoDashboard } from "../seo/SeoDashboard";
+import { SeoGeneralSettings } from "../seo/SeoGeneralSettings";
+import { SeoPageManagement } from "../seo/SeoPageManagement";
+import { SeoTools } from "../seo/SeoTools";
 
 export function ControlCenter({ onNavigate }: { onNavigate: (t: any) => void }) {
   const [activeTab, setActiveTab] = useState<"overview" | "general" | "pages" | "tools">("overview");
