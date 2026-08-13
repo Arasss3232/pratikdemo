@@ -7,13 +7,11 @@ import {
   BrandStrip,
   ContactInfo,
   FeaturedProducts,
-  InsightsPreview,
   MobileContactBar,
   ProcessTimeline,
   QuoteCTA,
   SectorGrid,
   SelectedReferences,
-  ServicesStrip,
   ValueProps,
   WhyChoose,
 } from "../components/home/HomeSections";
