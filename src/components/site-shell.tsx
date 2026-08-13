@@ -332,7 +332,6 @@ export function SiteHeader() {
                 to="/teklif"
                 search={{ category: "Genel" }}
                 className="pub-btn pub-btn-primary pub-btn-sm"
-                search={{ category: "Genel" }}
               >
                 Teklif Talep Et
                 <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
