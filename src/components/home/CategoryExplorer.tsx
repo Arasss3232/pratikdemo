@@ -13,12 +13,14 @@ type Category = {
   sub: string[];
 };
 
+import { CATEGORIES_DATA } from "@/data/catalog";
+
 const CATEGORIES: readonly Category[] = [
   {
     index: "01",
     title: "Elektrikli El Aletleri",
     slug: "elektrikli-el-aletleri",
-    to: "/urunler/elektrikli-el-aletleri",
+    to: "/teklif",
     desc: "Bosch Professional, Makita, DeWalt ve Hilti çözümleriyle matkap, taşlama, vidalama ve kırıcı delici sınıfının profesyonel makineleri.",
     count: "340+ ürün",
     image:
@@ -29,7 +31,7 @@ const CATEGORIES: readonly Category[] = [
     index: "02",
     title: "El Aletleri",
     slug: "el-aletleri",
-    to: "/urunler/el-aletleri",
+    to: "/teklif",
     desc: "Anahtar takımları, tornavidalar, pense grupları, ölçüm aletleri; atölye ve saha kullanımına uygun profesyonel el aletleri.",
     count: "520+ ürün",
     image:
@@ -40,7 +42,7 @@ const CATEGORIES: readonly Category[] = [
     index: "03",
     title: "Bağlantı Elemanları",
     slug: "baglanti-elemanlari",
-    to: "/urunler/baglanti-elemanlari",
+    to: "/teklif",
     desc: "Cıvata, somun, pul, dübel ve özel bağlantı çözümleri; DIN/ISO standartlarında geniş stok ve özel imalat.",
     count: "1.200+ ürün",
     image:
@@ -51,7 +53,7 @@ const CATEGORIES: readonly Category[] = [
     index: "04",
     title: "Kişisel Koruyucu Donanım",
     slug: "kkd",
-    to: "/urunler/kkd",
+    to: "/teklif",
     desc: "CE sertifikalı iş güvenliği ekipmanları; baret, gözlük, kulak koruyucu, eldiven ve iş ayakkabıları.",
     count: "180+ ürün",
     image:
@@ -62,7 +64,7 @@ const CATEGORIES: readonly Category[] = [
     index: "05",
     title: "Endüstriyel Makineler",
     slug: "endustriyel-makineler",
-    to: "/urunler/endustriyel-makineler",
+    to: "/teklif",
     desc: "Kompresör, jeneratör, kaynak makinesi ve atölye ekipmanları; sanayi tesisi standartlarına uygun ekipmanlar.",
     count: "95+ ürün",
     image:
@@ -73,7 +75,7 @@ const CATEGORIES: readonly Category[] = [
     index: "06",
     title: "Sarf Malzemeleri",
     slug: "sarf-malzemeleri",
-    to: "/urunler/sarf-malzemeleri",
+    to: "/teklif",
     desc: "Kesme diskleri, taşlama diskleri, matkap uçları ve yüksek dönüşümlü sarf ürünleri.",
     count: "760+ ürün",
     image:
@@ -260,6 +262,7 @@ export function CategoryExplorer() {
               </div>
               <Link
                 to={cat.to}
+                search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }}
                 className="pub-btn pub-btn-primary pub-btn-sm mt-6"
               >
                 Kategoriyi İncele
@@ -322,7 +325,7 @@ export function CategoryExplorer() {
                 {cat.title}
               </h3>
               <p className="mt-3 text-white/75 text-[14px] leading-relaxed">{cat.desc}</p>
-              <Link to={cat.to} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
+              <Link to={cat.to} search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
                 Kategoriyi İncele
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>

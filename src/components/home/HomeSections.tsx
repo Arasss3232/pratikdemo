@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
-import { FEATURED_LOGOS } from "@/data/catalog";
+import { FEATURED_LOGOS, CATEGORIES_DATA } from "@/data/catalog";
 import {
   useHomeBrands,
   useHomeReferences,
@@ -209,9 +209,9 @@ export function SectorGrid() {
       t: "Sanayi ve Üretim",
       d: "Üretim tesisleri için elektrikli el aletleri, bağlantı elemanları ve endüstriyel makine grupları.",
       groups: [
-        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
-        { label: "Bağlantı Elemanları", to: "/urunler/baglanti-elemanlari" },
-        { label: "Endüstriyel Makineler", to: "/urunler/endustriyel-makineler" },
+        { label: "Elektrikli El Aletleri", slug: "elektrikli-el-aletleri" },
+        { label: "Bağlantı Elemanları", slug: "baglanti-elemanlari" },
+        { label: "Endüstriyel Makineler", slug: "endustriyel-makineler" },
       ],
       image: "https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=1600&q=80",
     },
@@ -220,9 +220,9 @@ export function SectorGrid() {
       t: "İnşaat ve Şantiye",
       d: "Şantiye ekipmanları, kırıcı-delici sistemler ve saha güvenliği için kişisel koruyucu donanım.",
       groups: [
-        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
-        { label: "Kişisel Koruyucu Donanım", to: "/urunler/kkd" },
-        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
+        { label: "Elektrikli El Aletleri", slug: "elektrikli-el-aletleri" },
+        { label: "Kişisel Koruyucu Donanım", slug: "kkd" },
+        { label: "Sarf Malzemeleri", slug: "sarf-malzemeleri" },
       ],
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80",
     },
@@ -231,9 +231,9 @@ export function SectorGrid() {
       t: "Otomotiv ve Teknik Servis",
       d: "OEM üretim hattı, servis atölyeleri ve bakım ekipleri için hassas el aletleri ve ölçüm çözümleri.",
       groups: [
-        { label: "El Aletleri", to: "/urunler/el-aletleri" },
-        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
-        { label: "Endüstriyel Makineler", to: "/urunler/endustriyel-makineler" },
+        { label: "El Aletleri", slug: "el-aletleri" },
+        { label: "Sarf Malzemeleri", slug: "sarf-malzemeleri" },
+        { label: "Endüstriyel Makineler", slug: "endustriyel-makineler" },
       ],
       image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1600&q=80",
     },
@@ -242,9 +242,9 @@ export function SectorGrid() {
       t: "Mobilya ve Ahşap İşleme",
       d: "Ahşap işleme atölyeleri için testere, zımpara, yüzey işleme ekipmanları ve tamamlayıcı sarflar.",
       groups: [
-        { label: "Elektrikli El Aletleri", to: "/urunler/elektrikli-el-aletleri" },
-        { label: "El Aletleri", to: "/urunler/el-aletleri" },
-        { label: "Sarf Malzemeleri", to: "/urunler/sarf-malzemeleri" },
+        { label: "Elektrikli El Aletleri", slug: "elektrikli-el-aletleri" },
+        { label: "El Aletleri", slug: "el-aletleri" },
+        { label: "Sarf Malzemeleri", slug: "sarf-malzemeleri" },
       ],
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
     },
@@ -349,7 +349,8 @@ export function SectorGrid() {
                 {cur.groups.map((g) => (
                   <Link
                     key={g.label}
-                    to={g.to}
+                    to="/teklif"
+                    search={{ categoryId: CATEGORIES_DATA.find(cd => cd.slug === g.slug)?.id }}
                     className="pub-mono px-3 py-1.5 transition-colors"
                     style={{ color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
                   >
@@ -1151,7 +1152,7 @@ export function MobileContactBar() {
         <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Link
             to="/teklif"
-            search={{ category: "Genel" }}
+            search={{ categoryId: undefined, category: "Genel" }}
             onClick={() => setOpen(false)}
             className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
             style={{ backgroundColor: YELLOW, color: NAVY_950 }}

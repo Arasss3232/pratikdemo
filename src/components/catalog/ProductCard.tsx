@@ -64,7 +64,7 @@ function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "li
         <div className={`mt-auto pt-2 border-t border-outline-variant flex gap-2 ${isList ? "flex-col sm:flex-row" : "flex-col"}`}>
           <Link
             to="/teklif"
-            search={{ category: p.name }}
+            search={{ categoryId: undefined, category: p.name }}
             className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}
             aria-label={`${p.name} için teklif al`}
           >
