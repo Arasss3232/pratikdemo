@@ -108,10 +108,10 @@ export function SectionHead(props: {
  * ===================================================================== */
 export function ValueProps() {
   const capabilities = [
-    { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle ilk turda doğru ürünü öneriyoruz." },
-    { k: "02", t: "Kurumsal Tedarik", d: "Sipariş, fatura, sevkiyat ve garanti tek muhatap üzerinden yürütülür." },
-    { k: "03", t: "Geniş Ürün Grubu", d: "Elektrikli el aletlerinden bağlantı elemanlarına altı ana grup." },
-    { k: "04", t: "Satış Sonrası İletişim", d: "Teslimat sonrası da ulaşılabilir tek muhataplı destek." },
+    { k: "01", t: "Uzman Yönlendirme", d: "İhtiyacınıza en uygun ürün grubunu belirlemek için teknik destek sunuyoruz." },
+    { k: "02", t: "Kurumsal Süreç", d: "Tekliften teslimata tüm aşamalar şeffaf ve kurumsal standartlarda yürütülür." },
+    { k: "03", t: "Geniş Tedarik Ağı", d: "Dünya markalarının yetkili kanalları üzerinden güvenilir ürün temini sağlıyoruz." },
+    { k: "04", t: "Kesintisiz Destek", d: "Satış öncesi ve sonrası süreçte uzman ekibimize her an ulaşabilirsiniz." },
   ];
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
@@ -125,7 +125,7 @@ export function ValueProps() {
               Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
             </>
           }
-          subtitle="Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Hızlı sevkiyat kadar doğru ürün, doğru marka ve doğru teknik yönlendirme sunuyoruz."
+          subtitle="Sanayi tesislerine, şantiyelere ve üretim hatlarına yönelik profesyonel donanım tedariki. İhtiyacınız olan ürün grubunu seçin, uzman ekibimiz size özel teklifi hazırlasın."
         />
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
@@ -151,7 +151,7 @@ export function ValueProps() {
               style={{ backgroundColor: "rgba(6,20,38,0.85)", borderTop: `2px solid ${YELLOW}` }}
             >
               <span className="pub-mono" style={{ color: YELLOW }}>OPS · 12</span>
-              <span className="text-white/85 text-[13px]">Kurumsal tedarik hattı — tek muhatap, tek fatura akışı</span>
+              <span className="text-white/85 text-[13px]">Kurumsal çözüm ortağınız — talebinizi iletin, teklifinizi hazırlayalım</span>
             </div>
           </div>
 

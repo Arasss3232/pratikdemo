@@ -31,7 +31,7 @@ export const SITEMAP_ENTRIES: readonly SitemapEntry[] = [
   { path: "/kataloglar", changefreq: "weekly", priority: "0.8" },
   { path: "/bayiliklerimiz", changefreq: "monthly", priority: "0.8" },
   
-  { path: "/teklif", changefreq: "monthly", priority: "0.8" },
+  { path: "/teklif", changefreq: "monthly", priority: "1.0" },
   { path: "/iletisim", changefreq: "yearly", priority: "0.6" },
   { path: "/kvkk", changefreq: "yearly", priority: "0.3" },
 ];

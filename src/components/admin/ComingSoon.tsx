@@ -43,7 +43,7 @@ export function ComingSoon({
             {item?.label ?? "Modül"} — Yol Haritasında
           </h2>
           <p className="text-[14px] mt-1" style={{ color: "var(--admin-text-2)" }}>
-            Bu modül B2B dönüşüm planınızın onaylanan fazlarında geliştirilecek. Şu anda
+            Bu modül sitenizin ilerideki yönetim planları kapsamında geliştirilecek. Şu anda
             veri şeması, yetki kuralları ve navigasyon iskeleti hazırlanmıştır.
           </p>
         </div>

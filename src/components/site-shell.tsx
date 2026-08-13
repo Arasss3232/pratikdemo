@@ -179,11 +179,10 @@ export function SiteHeader() {
             )}
             <Link
               to="/teklif"
-              search={{ categoryId: undefined, category: "Genel" }}
               className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
               style={{ color: "var(--public-yellow-500)" }}
             >
-              Teklif
+              Teklif Al
               <Icon name="arrow_forward" className="text-[13px]" aria-hidden="true" />
             </Link>
           </div>
@@ -228,7 +227,7 @@ export function SiteHeader() {
                 WhatsApp
               </a>
             )}
-            <Link to="/teklif" search={{ categoryId: undefined, category: "Genel" }} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
@@ -320,22 +319,15 @@ export function SiteHeader() {
                 <Icon name="admin_panel_settings" aria-hidden="true" />
               </Link>
             )}
-            <Link
-              to="/giris"
-              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
-              aria-label="Bayi girişi"
-            >
-              <Icon name="account_circle" aria-hidden="true" />
-            </Link>
             <span className="hidden lg:inline-flex ml-2">
-              <Link
-                to="/teklif"
-                search={{ categoryId: undefined, category: "Genel" }}
-                className="pub-btn pub-btn-primary pub-btn-sm"
-              >
-                Teklif Talep Et
-                <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-              </Link>
+            <Link
+              to="/teklif"
+              search={{ categoryId: undefined, category: "Genel" }}
+              className="pub-btn pub-btn-primary pub-btn-sm"
+            >
+              Teklif Talep Et
+              <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
+            </Link>
             </span>
             <button
               ref={menuBtnRef}
@@ -678,7 +670,6 @@ export function SiteFooter() {
     { to: "/kurumsal", label: "Hakkımızda" },
     { to: "/kataloglar", label: "Kataloglarımız" },
     { to: "/bayiliklerimiz", label: "Bayiliklerimiz" },
-    { to: "/markalar", label: "Markalar" },
     { to: "/iletisim", label: "İletişim" },
   ] as const;
   const legalLinks = [

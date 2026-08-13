@@ -28,28 +28,20 @@ type Quote = {
 };
 
 type LoadedStats = {
-  products: number;
   catalogs: number;
   quotesNew: number;
   messagesNew: number;
-  blogPublished: number;
-  blogDrafts: number;
-  jobsOpen: number;
-  applicationsNew: number;
   refs: number;
+  categories: number;
   lastUpdated: string | null;
 };
 
 const initialStats: LoadedStats = {
-  products: 0,
   catalogs: 0,
   quotesNew: 0,
   messagesNew: 0,
-  blogPublished: 0,
-  blogDrafts: 0,
-  jobsOpen: 0,
-  applicationsNew: 0,
   refs: 0,
+  categories: 0,
   lastUpdated: null,
 };
 
@@ -68,16 +60,13 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [cats, qNew, msgNew, blogP, blogD, jobsP, apps, refs, lastUpd] = await Promise.all([
+      const [cats, qNew, msgNew, refs, catsCount, lastUpd] = await Promise.all([
         supabase.from("catalogs" as any).select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
-        supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
-        supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", false),
-        supabase.from("job_posts").select("*", { count: "exact", head: true }).eq("published", true),
-        supabase.from("job_applications").select("*", { count: "exact", head: true }).eq("status", "new"),
-        supabase.from("project_references").select("*", { count: "exact", head: true }),
-        supabase.from("blog_posts").select("updated_at").order("updated_at", { ascending: false }).limit(1),
+        supabase.from("brands").select("*", { count: "exact", head: true }),
+        supabase.from("product_categories").select("*", { count: "exact", head: true }),
+        supabase.from("quote_requests").select("updated_at").order("updated_at", { ascending: false }).limit(1),
       ]);
       const [recentMsg, recentQ] = await Promise.all([
         supabase.from("contact_messages").select("id,name,subject,status,created_at").order("created_at", { ascending: false }).limit(5),
@@ -85,15 +74,11 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       ]);
       if (!alive) return;
       setStats({
-        products: 0,
         catalogs: cats.count ?? 0,
         quotesNew: qNew.count ?? 0,
         messagesNew: msgNew.count ?? 0,
-        blogPublished: blogP.count ?? 0,
-        blogDrafts: blogD.count ?? 0,
-        jobsOpen: jobsP.count ?? 0,
-        applicationsNew: apps.count ?? 0,
         refs: refs.count ?? 0,
+        categories: catsCount.count ?? 0,
         lastUpdated: (lastUpd.data?.[0] as { updated_at?: string } | undefined)?.updated_at ?? null,
       });
       setMessages((recentMsg.data as Message[]) ?? []);
@@ -120,9 +105,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setup = useMemo(
     () => [
       { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
+      { label: "En az bir kategori ekle", done: stats.categories > 0, tab: "categories" as AdminTab, icon: "category" },
       { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
-      
-      { label: "İlk referansı ekle", done: stats.refs > 0, tab: "references" as AdminTab, icon: "workspace_premium" },
+      { label: "En az bir bayilik ekle", done: stats.refs > 0, tab: "brands" as AdminTab, icon: "workspace_premium" },
     ],
     [stats],
   );
@@ -130,17 +115,17 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setupPct = Math.round((setupDone / setup.length) * 100);
 
   const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
-    
+    { key: "categories", label: "Kategori Ekle", icon: "category", desc: "Yeni ürün grubu" },
     { key: "catalogs", label: "Katalog Ekle", icon: "menu_book", desc: "Yeni PDF kataloğu" },
-    { key: "references", label: "Referans Ekle", icon: "workspace_premium", desc: "Yeni proje" },
+    { key: "brands", label: "Bayilik Ekle", icon: "workspace_premium", desc: "Yeni marka" },
   ];
 
   const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
-    { key: "messages", label: "Yeni Mesaj", icon: "mail", value: stats.messagesNew, hint: "Yanıt bekliyor" },
-    { key: "quotes", label: "Bekleyen Teklif", icon: "request_quote", value: stats.quotesNew, hint: "İnceleme sırasında" },
-    
+    { key: "quotes", label: "Teklif Talebi", icon: "request_quote", value: stats.quotesNew, hint: "Yeni talepler" },
+    { key: "messages", label: "İletişim Mesajı", icon: "mail", value: stats.messagesNew, hint: "Yeni mesajlar" },
+    { key: "categories", label: "Aktif Kategori", icon: "category", value: stats.categories },
     { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
-    { key: "references", label: "Referans Projesi", icon: "workspace_premium", value: stats.refs },
+    { key: "brands", label: "Aktif Bayilik", icon: "workspace_premium", value: stats.refs },
   ];
 
   return (

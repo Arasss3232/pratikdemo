@@ -8,10 +8,6 @@ import { GenericCrud, type CrudField, type CrudColumn } from "../components/admi
 import { SiteSettingsForm } from "../components/admin/SiteSettingsForm";
 import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
-import { RoleDashboard } from "../components/admin/b2b/RoleDashboard";
-import { CompaniesWorkspace } from "../components/admin/b2b/CompaniesWorkspace";
-import { ApprovalCenter } from "../components/admin/b2b/ApprovalCenter";
-import { useB2BContext } from "@/hooks/use-b2b-context";
 import { PageHeader } from "../components/admin/PageHeader";
 import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
@@ -64,12 +60,7 @@ export const Route = createFileRoute("/admin")({
 type Tab = AdminTab;
 
 function DashboardHost({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
-  const ctx = useB2BContext();
-  if (ctx.loading) {
-    return <div className="p-6 text-[13px]" style={{ color: "var(--admin-text-mute)" }}>Panel yükleniyor…</div>;
-  }
-  if (!ctx.userId) return <Dashboard onNavigate={onNavigate} />;
-  return <RoleDashboard ctx={ctx} onNavigate={onNavigate} />;
+  return <Dashboard onNavigate={onNavigate} />;
 }
 
 type QuoteRequest = {
@@ -204,13 +195,6 @@ function AdminPage() {
           />
         )}
         {tab === "aiHistory" && <AIHistoryPanel />}
-        {/* ============ B2B çekirdek modülleri (Faz 1) ============ */}
-        {tab === "companies" && <CompaniesWorkspace />}
-        {tab === "dealers" && <DealersTab />}
-        {tab === "customerGroups" && <CustomerGroupsTab />}
-        {tab === "salesReps" && <SalesRepsTab />}
-        {tab === "companyUsers" && <CompanyUsersTab />}
-        {/* ============ Faz 2+ modülleri için yol haritası ============ */}
         {tab === "myTasks" && (
           <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
             "Onay adımlarında size atanan iş kalemleri",
@@ -218,7 +202,7 @@ function AdminPage() {
             "Tek tıkla onay / reddet + not bırakma",
           ]} />
         )}
-        {tab === "approvals" && <ApprovalCenter />}
+        {tab === "approvals" && <ComingSoon tab="approvals" phase="Sistem Onayları" />}
         {tab === "notifications" && (
           <ComingSoon tab="notifications" phase="Faz 5 · Bildirim Merkezi" bullets={[
             "Sistem içi bildirim akışı ve okundu takibi",
