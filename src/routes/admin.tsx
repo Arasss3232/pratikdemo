@@ -27,10 +27,10 @@ function PlaceholderModule({ title, description }: { title: string; description:
 }
 
 function AdminPage() {
-  const search = Route.useSearch() as any;
-  const tab = search.tab || "dashboard";
-  const seoTab = search.seoTab || "dashboard";
-  const navigate = useNavigate();
+  const search = Route.useSearch();
+  const tab = (search.tab as AdminTab) || "dashboard";
+  const seoTab = (search.seoTab as SeoSubTab) || "dashboard";
+  const navigate = useNavigate({ from: Route.fullPath });
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -46,11 +46,17 @@ function AdminPage() {
   }, []);
 
   const handleTabChange = (newTab: AdminTab) => {
-    navigate({ search: (prev: any) => ({ ...prev, tab: newTab }) });
+    navigate({ 
+      search: (prev: any) => ({ ...prev, tab: newTab }),
+      replace: true 
+    });
   };
 
   const handleSeoTabChange = (newSeoTab: SeoSubTab) => {
-    navigate({ search: (prev: any) => ({ ...prev, seoTab: newSeoTab }) });
+    navigate({ 
+      search: (prev: any) => ({ ...prev, seoTab: newSeoTab }),
+      replace: true
+    });
   };
 
   const handleQuickAdd = (type: AdminTab) => {
@@ -61,7 +67,7 @@ function AdminPage() {
 
   return (
     <AdminShell 
-      tab={tab as AdminTab} 
+      tab={tab} 
       onTabChange={handleTabChange} 
       userEmail={userEmail}
       onQuickAdd={handleQuickAdd}
@@ -85,7 +91,7 @@ function AdminPage() {
             <PageHeader 
               tab="categories"
               title="Kategori Yönetimi" 
-              description="Ürün grupları ve teklif kategorileri." 
+              description="Ürün kategorileri ve alt kategoriler." 
             />
             <PlaceholderModule title="Kategori Yönetimi" description="Ürün kategorilerini ve hiyerarşiyi buradan yönetebileceksiniz." />
           </>
@@ -120,7 +126,7 @@ function AdminPage() {
               title="SEO ve Analitik" 
               description="Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi." 
             />
-            <SeoShell currentTab={seoTab as SeoSubTab} onTabChange={handleSeoTabChange}>
+            <SeoShell currentTab={seoTab} onTabChange={handleSeoTabChange}>
               {seoTab === "dashboard" && <PlaceholderModule title="SEO Kontrol Paneli" description="SEO performans özeti." />}
               {seoTab === "general" && <SeoGeneralSettings />}
               {/* Fallback for other SEO tabs */}
@@ -192,17 +198,21 @@ export const Route = createFileRoute("/admin")({
     ],
   }),
   validateSearch: (s: Record<string, unknown>): { 
-    tab?: AdminTab; 
-    seoTab?: SeoSubTab; 
+    tab?: string; 
+    seoTab?: string; 
     aiAction?: string; 
     aiTarget?: string; 
-    aiPrompt?: string 
+    aiPrompt?: string;
+    categoryId?: string;
+    category?: string;
   } => ({
-    tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
-    seoTab: (s.seoTab as SeoSubTab) || "dashboard",
+    tab: s.tab as string,
+    seoTab: s.seoTab as string,
     aiAction: s.aiAction as string,
     aiTarget: s.aiTarget as string,
     aiPrompt: s.aiPrompt as string,
+    categoryId: s.categoryId as string,
+    category: s.category as string,
   }),
   component: AdminPage,
 });
