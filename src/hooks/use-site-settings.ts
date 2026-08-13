@@ -48,7 +48,7 @@ export type SiteSettings = {
   agency_attribution_url?: string | null;
 };
 
-};
+
 
 
 let cache: SiteSettings | null = null;
