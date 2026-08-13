@@ -267,8 +267,6 @@ function AdminPage() {
         )}
         {tab === "categories" && <CategoriesTab />}
         {tab === "priceLists" && (
-
-        {tab === "priceLists" && (
           <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[
             "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
             "Kademeli fiyatlandırma",
