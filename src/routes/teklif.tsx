@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { SiteShell } from "../components/site-shell";
+import { SiteShell, Icon } from "../components/site-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { buttonStyles } from "@/lib/button-styles";
 import { useSiteSettings } from "@/hooks/use-site-settings";
