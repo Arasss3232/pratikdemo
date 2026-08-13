@@ -45,7 +45,7 @@ function MarkalarPage() {
                 <button
                   key={brand.id}
                   onClick={() => setSelectedBrand(brand)}
-                  className="group relative bg-white border border-outline-variant p-8 flex items-center justify-center aspect-video hover:border-primary hover:shadow-lg transition-all"
+                  className="brand-card group relative bg-white border border-outline-variant p-8 flex items-center justify-center aspect-video hover:border-primary hover:shadow-lg transition-all"
                 >
                   <img
                     src={brand.logo_url}
