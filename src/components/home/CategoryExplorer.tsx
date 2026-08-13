@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { useCategories, type Category } from "@/hooks/use-categories";
@@ -8,17 +8,19 @@ export function CategoryExplorer() {
   const { categories: dbCategories, isLoading } = useCategories();
   const [active, setActive] = useState(0);
 
-  const categories = dbCategories?.map((c: Category, i: number) => ({
-    index: String(i + 1).padStart(2, "0"),
-    title: c.title,
-    slug: c.slug,
-    to: "/teklif",
-    desc: c.description || "Profesyonel endüstriyel çözümler.",
-    count: "Geniş ürün yelpazesi",
-    image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
-    sub: [],
-    id: c.id
-  })) || [];
+  const categories = useMemo(() => {
+    return dbCategories?.map((c: Category, i: number) => ({
+      index: String(i + 1).padStart(2, "0"),
+      title: c.title,
+      slug: c.slug,
+      to: "/teklif",
+      desc: c.description || "Profesyonel endüstriyel çözümler.",
+      count: "Geniş ürün yelpazesi",
+      image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
+      sub: [],
+      id: c.id
+    })) || [];
+  }, [dbCategories]);
 
   // Keyboard: arrow keys move through list
   useEffect(() => {
