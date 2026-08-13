@@ -26,8 +26,8 @@ const SEO_NAV = [
   { id: "dashboard", label: "Kontrol Paneli", icon: "dashboard" },
   { id: "general", label: "Genel SEO Ayarları", icon: "settings" },
   { id: "pages", label: "Sayfa SEO Yönetimi", icon: "description" },
-  { id: "sitemap", label: "XML Sitemap", icon: "sitemap" },
-  { id: "robots", label: "Robots.txt Kuralları", icon: "robot" },
+  { id: "sitemap", label: "XML Sitemap", icon: "account_tree" },
+  { id: "robots", label: "Robots.txt Kuralları", icon: "smart_toy" },
   { id: "search-console", label: "Google Search Console", icon: "verified" },
   { id: "analytics", label: "Google Analytics 4", icon: "analytics" },
   { id: "tag-manager", label: "Google Tag Manager", icon: "code" },
@@ -35,8 +35,9 @@ const SEO_NAV = [
   { id: "schema", label: "Schema Yapılandırılmış Veri", icon: "schema" },
   { id: "social", label: "Sosyal Medya & OG", icon: "share" },
   { id: "favicon", label: "Favicon & Site Kimliği", icon: "image" },
-  { id: "audit", label: "SEO Denetimi", icon: "search_check" },
+  { id: "audit", label: "SEO Denetimi", icon: "find_in_page" },
 ];
+
 
 export function SeoShell({ currentTab, onTabChange, children }: SeoShellProps) {
   return (
