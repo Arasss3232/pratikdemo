@@ -411,20 +411,22 @@ export function SiteHeader() {
                             <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                           </Link>
                         </li>
-                        {PRODUCT_GROUPS.map((g) => (
-                          <li key={g.to}>
+                        {categories.map((cat) => (
+                          <li key={cat.id}>
                             <Link
-                              to={g.to}
+                              to="/teklif"
+                              search={{ categoryId: cat.id, category: cat.title }}
                               onClick={() => setMenuOpen(false)}
                               className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
                             >
-                              <span
-                                className="font-mono text-[11px] tabular-nums w-6 shrink-0"
-                                style={{ color: "var(--public-yellow-500)" }}
-                              >
-                                {g.code}
-                              </span>
-                              <span className="min-w-0">{g.title}</span>
+                              {cat.icon && (
+                                <Icon 
+                                  name={cat.icon} 
+                                  className="text-[18px] w-6 shrink-0" 
+                                  style={{ color: "var(--public-yellow-500)" }} 
+                                />
+                              )}
+                              <span className="min-w-0">{cat.title}</span>
                             </Link>
                           </li>
                         ))}
