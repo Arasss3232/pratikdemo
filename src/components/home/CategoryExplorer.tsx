@@ -190,7 +190,7 @@ export function CategoryExplorer() {
                 {cat.desc}
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {cat.sub.map((s) => (
+                {cat.sub?.map((s: any) => (
                   <span
                     key={s}
                     className="pub-mono px-3 py-1.5"
