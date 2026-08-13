@@ -8,7 +8,9 @@ export type Category = {
   description: string | null;
   icon: string | null;
   image_url: string | null;
+  image_alt: string | null;
   display_order: number;
+
   is_active: boolean;
 };
 
