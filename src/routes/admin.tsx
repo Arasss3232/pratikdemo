@@ -844,7 +844,8 @@ function QuotesTab() {
       .select("*")
       .order("created_at", { ascending: false });
     if (error) setError(error.message);
-    else setItems((data as QuoteRequest[]) ?? []);
+    else setItems((data as any[]) ?? []);
+
     setLoading(false);
   }
   useEffect(() => { refresh(); }, []);
