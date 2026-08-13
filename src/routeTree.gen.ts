@@ -10,8 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UrunlerRouteImport } from './routes/urunler'
-import { Route as TeknikDestekRouteImport } from './routes/teknik-destek'
-import { Route as TeklifSepetiRouteImport } from './routes/teklif-sepeti'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
@@ -28,12 +26,6 @@ import { Route as BayiliklerimizRouteImport } from './routes/bayiliklerimiz'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
-import { Route as UrunlerSarfMalzemeleriRouteImport } from './routes/urunler.sarf-malzemeleri'
-import { Route as UrunlerKkdRouteImport } from './routes/urunler.kkd'
-import { Route as UrunlerEndustriyelMakinelerRouteImport } from './routes/urunler.endustriyel-makineler'
-import { Route as UrunlerElektrikliElAletleriRouteImport } from './routes/urunler.elektrikli-el-aletleri'
-import { Route as UrunlerElAletleriRouteImport } from './routes/urunler.el-aletleri'
-import { Route as UrunlerBaglantiElemanlariRouteImport } from './routes/urunler.baglanti-elemanlari'
 import { Route as UrunDetaySkuRouteImport } from './routes/urun-detay.$sku'
 import { Route as PortalUrunlerRouteImport } from './routes/portal.urunler'
 import { Route as PortalTekliflerimRouteImport } from './routes/portal.tekliflerim'
@@ -47,16 +39,6 @@ import { Route as UrunlerElektrikliElAletleriSkuRouteImport } from './routes/uru
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
   path: '/urunler',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeknikDestekRoute = TeknikDestekRouteImport.update({
-  id: '/teknik-destek',
-  path: '/teknik-destek',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeklifSepetiRoute = TeklifSepetiRouteImport.update({
-  id: '/teklif-sepeti',
-  path: '/teklif-sepeti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeklifRoute = TeklifRouteImport.update({
@@ -139,39 +121,6 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
-const UrunlerSarfMalzemeleriRoute = UrunlerSarfMalzemeleriRouteImport.update({
-  id: '/sarf-malzemeleri',
-  path: '/sarf-malzemeleri',
-  getParentRoute: () => UrunlerRoute,
-} as any)
-const UrunlerKkdRoute = UrunlerKkdRouteImport.update({
-  id: '/kkd',
-  path: '/kkd',
-  getParentRoute: () => UrunlerRoute,
-} as any)
-const UrunlerEndustriyelMakinelerRoute =
-  UrunlerEndustriyelMakinelerRouteImport.update({
-    id: '/endustriyel-makineler',
-    path: '/endustriyel-makineler',
-    getParentRoute: () => UrunlerRoute,
-  } as any)
-const UrunlerElektrikliElAletleriRoute =
-  UrunlerElektrikliElAletleriRouteImport.update({
-    id: '/elektrikli-el-aletleri',
-    path: '/elektrikli-el-aletleri',
-    getParentRoute: () => UrunlerRoute,
-  } as any)
-const UrunlerElAletleriRoute = UrunlerElAletleriRouteImport.update({
-  id: '/el-aletleri',
-  path: '/el-aletleri',
-  getParentRoute: () => UrunlerRoute,
-} as any)
-const UrunlerBaglantiElemanlariRoute =
-  UrunlerBaglantiElemanlariRouteImport.update({
-    id: '/baglanti-elemanlari',
-    path: '/baglanti-elemanlari',
-    getParentRoute: () => UrunlerRoute,
-  } as any)
 const UrunDetaySkuRoute = UrunDetaySkuRouteImport.update({
   id: '/urun-detay/$sku',
   path: '/urun-detay/$sku',
@@ -214,9 +163,9 @@ const PortalFinansRoute = PortalFinansRouteImport.update({
 } as any)
 const UrunlerElektrikliElAletleriSkuRoute =
   UrunlerElektrikliElAletleriSkuRouteImport.update({
-    id: '/$sku',
-    path: '/$sku',
-    getParentRoute: () => UrunlerElektrikliElAletleriRoute,
+    id: '/elektrikli-el-aletleri/$sku',
+    path: '/elektrikli-el-aletleri/$sku',
+    getParentRoute: () => UrunlerRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -235,8 +184,6 @@ export interface FileRoutesByFullPath {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
-  '/teklif-sepeti': typeof TeklifSepetiRoute
-  '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/portal/finans': typeof PortalFinansRoute
   '/portal/hesap': typeof PortalHesapRoute
@@ -246,12 +193,6 @@ export interface FileRoutesByFullPath {
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
-  '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
-  '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
-  '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
-  '/urunler/kkd': typeof UrunlerKkdRoute
-  '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
   '/portal/': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
@@ -270,8 +211,6 @@ export interface FileRoutesByTo {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
-  '/teklif-sepeti': typeof TeklifSepetiRoute
-  '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/portal/finans': typeof PortalFinansRoute
   '/portal/hesap': typeof PortalHesapRoute
@@ -281,12 +220,6 @@ export interface FileRoutesByTo {
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
-  '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
-  '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
-  '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
-  '/urunler/kkd': typeof UrunlerKkdRoute
-  '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
   '/portal': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
@@ -307,8 +240,6 @@ export interface FileRoutesById {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
-  '/teklif-sepeti': typeof TeklifSepetiRoute
-  '/teknik-destek': typeof TeknikDestekRoute
   '/urunler': typeof UrunlerRouteWithChildren
   '/portal/finans': typeof PortalFinansRoute
   '/portal/hesap': typeof PortalHesapRoute
@@ -318,12 +249,6 @@ export interface FileRoutesById {
   '/portal/tekliflerim': typeof PortalTekliflerimRoute
   '/portal/urunler': typeof PortalUrunlerRoute
   '/urun-detay/$sku': typeof UrunDetaySkuRoute
-  '/urunler/baglanti-elemanlari': typeof UrunlerBaglantiElemanlariRoute
-  '/urunler/el-aletleri': typeof UrunlerElAletleriRoute
-  '/urunler/elektrikli-el-aletleri': typeof UrunlerElektrikliElAletleriRouteWithChildren
-  '/urunler/endustriyel-makineler': typeof UrunlerEndustriyelMakinelerRoute
-  '/urunler/kkd': typeof UrunlerKkdRoute
-  '/urunler/sarf-malzemeleri': typeof UrunlerSarfMalzemeleriRoute
   '/portal/': typeof PortalIndexRoute
   '/urunler/elektrikli-el-aletleri/$sku': typeof UrunlerElektrikliElAletleriSkuRoute
 }
@@ -345,8 +270,6 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
-    | '/teklif-sepeti'
-    | '/teknik-destek'
     | '/urunler'
     | '/portal/finans'
     | '/portal/hesap'
@@ -356,12 +279,6 @@ export interface FileRouteTypes {
     | '/portal/tekliflerim'
     | '/portal/urunler'
     | '/urun-detay/$sku'
-    | '/urunler/baglanti-elemanlari'
-    | '/urunler/el-aletleri'
-    | '/urunler/elektrikli-el-aletleri'
-    | '/urunler/endustriyel-makineler'
-    | '/urunler/kkd'
-    | '/urunler/sarf-malzemeleri'
     | '/portal/'
     | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesByTo: FileRoutesByTo
@@ -380,8 +297,6 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
-    | '/teklif-sepeti'
-    | '/teknik-destek'
     | '/urunler'
     | '/portal/finans'
     | '/portal/hesap'
@@ -391,12 +306,6 @@ export interface FileRouteTypes {
     | '/portal/tekliflerim'
     | '/portal/urunler'
     | '/urun-detay/$sku'
-    | '/urunler/baglanti-elemanlari'
-    | '/urunler/el-aletleri'
-    | '/urunler/elektrikli-el-aletleri'
-    | '/urunler/endustriyel-makineler'
-    | '/urunler/kkd'
-    | '/urunler/sarf-malzemeleri'
     | '/portal'
     | '/urunler/elektrikli-el-aletleri/$sku'
   id:
@@ -416,8 +325,6 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
-    | '/teklif-sepeti'
-    | '/teknik-destek'
     | '/urunler'
     | '/portal/finans'
     | '/portal/hesap'
@@ -427,12 +334,6 @@ export interface FileRouteTypes {
     | '/portal/tekliflerim'
     | '/portal/urunler'
     | '/urun-detay/$sku'
-    | '/urunler/baglanti-elemanlari'
-    | '/urunler/el-aletleri'
-    | '/urunler/elektrikli-el-aletleri'
-    | '/urunler/endustriyel-makineler'
-    | '/urunler/kkd'
-    | '/urunler/sarf-malzemeleri'
     | '/portal/'
     | '/urunler/elektrikli-el-aletleri/$sku'
   fileRoutesById: FileRoutesById
@@ -453,8 +354,6 @@ export interface RootRouteChildren {
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
-  TeklifSepetiRoute: typeof TeklifSepetiRoute
-  TeknikDestekRoute: typeof TeknikDestekRoute
   UrunlerRoute: typeof UrunlerRouteWithChildren
   UrunDetaySkuRoute: typeof UrunDetaySkuRoute
 }
@@ -466,20 +365,6 @@ declare module '@tanstack/react-router' {
       path: '/urunler'
       fullPath: '/urunler'
       preLoaderRoute: typeof UrunlerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teknik-destek': {
-      id: '/teknik-destek'
-      path: '/teknik-destek'
-      fullPath: '/teknik-destek'
-      preLoaderRoute: typeof TeknikDestekRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teklif-sepeti': {
-      id: '/teklif-sepeti'
-      path: '/teklif-sepeti'
-      fullPath: '/teklif-sepeti'
-      preLoaderRoute: typeof TeklifSepetiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teklif': {
@@ -594,48 +479,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
-    '/urunler/sarf-malzemeleri': {
-      id: '/urunler/sarf-malzemeleri'
-      path: '/sarf-malzemeleri'
-      fullPath: '/urunler/sarf-malzemeleri'
-      preLoaderRoute: typeof UrunlerSarfMalzemeleriRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
-    '/urunler/kkd': {
-      id: '/urunler/kkd'
-      path: '/kkd'
-      fullPath: '/urunler/kkd'
-      preLoaderRoute: typeof UrunlerKkdRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
-    '/urunler/endustriyel-makineler': {
-      id: '/urunler/endustriyel-makineler'
-      path: '/endustriyel-makineler'
-      fullPath: '/urunler/endustriyel-makineler'
-      preLoaderRoute: typeof UrunlerEndustriyelMakinelerRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
-    '/urunler/elektrikli-el-aletleri': {
-      id: '/urunler/elektrikli-el-aletleri'
-      path: '/elektrikli-el-aletleri'
-      fullPath: '/urunler/elektrikli-el-aletleri'
-      preLoaderRoute: typeof UrunlerElektrikliElAletleriRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
-    '/urunler/el-aletleri': {
-      id: '/urunler/el-aletleri'
-      path: '/el-aletleri'
-      fullPath: '/urunler/el-aletleri'
-      preLoaderRoute: typeof UrunlerElAletleriRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
-    '/urunler/baglanti-elemanlari': {
-      id: '/urunler/baglanti-elemanlari'
-      path: '/baglanti-elemanlari'
-      fullPath: '/urunler/baglanti-elemanlari'
-      preLoaderRoute: typeof UrunlerBaglantiElemanlariRouteImport
-      parentRoute: typeof UrunlerRoute
-    }
     '/urun-detay/$sku': {
       id: '/urun-detay/$sku'
       path: '/urun-detay/$sku'
@@ -694,10 +537,10 @@ declare module '@tanstack/react-router' {
     }
     '/urunler/elektrikli-el-aletleri/$sku': {
       id: '/urunler/elektrikli-el-aletleri/$sku'
-      path: '/$sku'
+      path: '/elektrikli-el-aletleri/$sku'
       fullPath: '/urunler/elektrikli-el-aletleri/$sku'
       preLoaderRoute: typeof UrunlerElektrikliElAletleriSkuRouteImport
-      parentRoute: typeof UrunlerElektrikliElAletleriRoute
+      parentRoute: typeof UrunlerRoute
     }
   }
 }
@@ -727,37 +570,12 @@ const PortalRouteChildren: PortalRouteChildren = {
 const PortalRouteWithChildren =
   PortalRoute._addFileChildren(PortalRouteChildren)
 
-interface UrunlerElektrikliElAletleriRouteChildren {
+interface UrunlerRouteChildren {
   UrunlerElektrikliElAletleriSkuRoute: typeof UrunlerElektrikliElAletleriSkuRoute
 }
 
-const UrunlerElektrikliElAletleriRouteChildren: UrunlerElektrikliElAletleriRouteChildren =
-  {
-    UrunlerElektrikliElAletleriSkuRoute: UrunlerElektrikliElAletleriSkuRoute,
-  }
-
-const UrunlerElektrikliElAletleriRouteWithChildren =
-  UrunlerElektrikliElAletleriRoute._addFileChildren(
-    UrunlerElektrikliElAletleriRouteChildren,
-  )
-
-interface UrunlerRouteChildren {
-  UrunlerBaglantiElemanlariRoute: typeof UrunlerBaglantiElemanlariRoute
-  UrunlerElAletleriRoute: typeof UrunlerElAletleriRoute
-  UrunlerElektrikliElAletleriRoute: typeof UrunlerElektrikliElAletleriRouteWithChildren
-  UrunlerEndustriyelMakinelerRoute: typeof UrunlerEndustriyelMakinelerRoute
-  UrunlerKkdRoute: typeof UrunlerKkdRoute
-  UrunlerSarfMalzemeleriRoute: typeof UrunlerSarfMalzemeleriRoute
-}
-
 const UrunlerRouteChildren: UrunlerRouteChildren = {
-  UrunlerBaglantiElemanlariRoute: UrunlerBaglantiElemanlariRoute,
-  UrunlerElAletleriRoute: UrunlerElAletleriRoute,
-  UrunlerElektrikliElAletleriRoute:
-    UrunlerElektrikliElAletleriRouteWithChildren,
-  UrunlerEndustriyelMakinelerRoute: UrunlerEndustriyelMakinelerRoute,
-  UrunlerKkdRoute: UrunlerKkdRoute,
-  UrunlerSarfMalzemeleriRoute: UrunlerSarfMalzemeleriRoute,
+  UrunlerElektrikliElAletleriSkuRoute: UrunlerElektrikliElAletleriSkuRoute,
 }
 
 const UrunlerRouteWithChildren =
@@ -779,8 +597,6 @@ const rootRouteChildren: RootRouteChildren = {
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
-  TeklifSepetiRoute: TeklifSepetiRoute,
-  TeknikDestekRoute: TeknikDestekRoute,
   UrunlerRoute: UrunlerRouteWithChildren,
   UrunDetaySkuRoute: UrunDetaySkuRoute,
 }
