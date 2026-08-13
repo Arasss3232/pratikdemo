@@ -73,7 +73,7 @@ export function SiteHeader() {
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
-  const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
+  const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
 
 
   useEffect(() => {
