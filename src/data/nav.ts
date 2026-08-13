@@ -3,10 +3,11 @@
 export type NavLink = { label: string; to: string };
 
 export const NAV_LINKS: readonly NavLink[] = [
+  { label: "Ana Sayfa", to: "/" },
   { label: "Kurumsal", to: "/hakkimizda" },
   { label: "Ürünler", to: "/urunler" },
+  { label: "Kataloglarımız", to: "/kataloglar" },
   { label: "Bayiliklerimiz", to: "/bayiliklerimiz" },
-  { label: "Kataloglar", to: "/kataloglar" },
   { label: "İletişim", to: "/iletisim" },
 ];
 
