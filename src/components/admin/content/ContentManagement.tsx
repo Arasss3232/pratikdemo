@@ -125,7 +125,7 @@ function GeneralSettings({ onDirty, onSaved }: { onDirty: () => void; onSaved: (
 
   const updateMutation = useMutation({
     mutationFn: async (newSettings: any) => {
-      const { error } = await supabase.from("site_settings").update(newSettings).eq("id", settings.id);
+      const { error } = await supabase.from("site_settings").update(newSettings).eq("id", (settings as any).id);
       if (error) throw error;
     },
     onSuccess: () => {
