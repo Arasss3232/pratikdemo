@@ -153,8 +153,9 @@ function GeneralSettings({ onDirty, onSaved }: { onDirty: () => void; onSaved: (
           <p className="text-white/50">Tüm sayfalarda geçerli temel bilgiler</p>
         </div>
         <button 
-          onClick={() => updateMutation.mutate(localSettings)}
-          disabled={updateMutation.isPending}
+          onClick={() => settings && updateMutation.mutate(localSettings)}
+          disabled={updateMutation.isPending || !settings}
+
           className="h-11 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-xl font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20 disabled:opacity-50"
         >
           {updateMutation.isPending ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
