@@ -38,15 +38,11 @@ type LoadedStats = {
 };
 
 const initialStats: LoadedStats = {
-  products: 0,
   catalogs: 0,
   quotesNew: 0,
   messagesNew: 0,
-  blogPublished: 0,
-  blogDrafts: 0,
-  jobsOpen: 0,
-  applicationsNew: 0,
   refs: 0,
+  categories: 0,
   lastUpdated: null,
 };
 
@@ -110,9 +106,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setup = useMemo(
     () => [
       { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
+      { label: "En az bir kategori ekle", done: stats.categories > 0, tab: "categories" as AdminTab, icon: "category" },
       { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
-      
-      { label: "İlk referansı ekle", done: stats.refs > 0, tab: "references" as AdminTab, icon: "workspace_premium" },
+      { label: "En az bir bayilik ekle", done: stats.refs > 0, tab: "brands" as AdminTab, icon: "workspace_premium" },
     ],
     [stats],
   );
@@ -120,9 +116,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setupPct = Math.round((setupDone / setup.length) * 100);
 
   const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
-    
+    { key: "categories", label: "Kategori Ekle", icon: "category", desc: "Yeni ürün grubu" },
     { key: "catalogs", label: "Katalog Ekle", icon: "menu_book", desc: "Yeni PDF kataloğu" },
-    { key: "references", label: "Referans Ekle", icon: "workspace_premium", desc: "Yeni proje" },
+    { key: "brands", label: "Bayilik Ekle", icon: "workspace_premium", desc: "Yeni marka" },
   ];
 
   const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
