@@ -990,7 +990,7 @@ export function QuoteCTA() {
             <div className="mt-8 flex flex-col">
               {phone && (
                 <a
-                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  href={`tel:${phone.replace(/\s+/g, "").replace(/\+/, "")}`}
                   className="flex items-center gap-4 py-4 text-white hover:text-[color:var(--public-yellow-500)] transition-colors"
                   style={{ borderTop: `1px solid ${NAVY_BORDER}` }}
                 >
@@ -1313,7 +1313,7 @@ export function MobileContactBar() {
           )}
           {phone && (
             <a
-              href={`tel:${phone.replace(/\s+/g, "")}`}
+              href={`tel:${phone.replace(/\s+/g, "").replace(/\+/, "")}`}
               aria-label="Telefonla ara"
               className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
               style={{ backgroundColor: NAVY_900, color: "#fff", border: `1px solid ${NAVY_BORDER}` }}
