@@ -369,7 +369,7 @@ export function SiteHeader() {
                   Tedarik zincirinizin her katmanı için.
                 </h3>
                 <p className="text-[14px] text-white/70 leading-relaxed mb-5">
-                  Yetkili distribütör kanalları ve doğrudan üretici tedariğiyle tek noktadan sipariş.
+                  Ürün gruplarını inceleyerek ihtiyacınız olan kategoriler için hızlı teklif isteyin.
                 </p>
                 <Link
                   to="/urunler"

@@ -55,7 +55,7 @@ function UrunlerLayout() {
       <>
         <PageHero
           title={hero.title?.value_text || "Ürün Kategorileri"}
-          description={hero.description?.value_text || "20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar."}
+          description={hero.description?.value_text || "20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürün grubu için uzman ekibimizden kurumsal teklif alabilirsiniz."}
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürün Kategorileri" }]}
         />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
