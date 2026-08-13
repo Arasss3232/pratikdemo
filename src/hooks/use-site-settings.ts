@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export type SiteSettings = {
@@ -30,14 +30,27 @@ export type SiteSettings = {
   favicon_url?: string | null;
   google_search_console?: string | null;
   google_analytics_id?: string | null;
+  // SEO fields
+  site_url?: string | null;
+  title_suffix?: string | null;
+  og_image_default?: string | null;
+  twitter_image_default?: string | null;
+  google_tag_manager_id?: string | null;
+  search_console_method?: string | null;
+  is_indexing_enabled?: boolean;
+  gtm_active?: boolean;
+  ga4_active?: boolean;
+  ga4_id?: string | null;
+  schema_active?: boolean;
 };
 
 let cache: SiteSettings | null = null;
 let inflight: Promise<SiteSettings> | null = null;
 
-export async function fetchSiteSettings(): Promise<SiteSettings> {
-  if (cache) return cache;
-  if (inflight) return inflight;
+export async function fetchSiteSettings(forceRefresh = false): Promise<SiteSettings> {
+  if (cache && !forceRefresh) return cache;
+  if (inflight && !forceRefresh) return inflight;
+  
   inflight = (async () => {
     const { data } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
     const result: SiteSettings = (data as unknown as SiteSettings) ?? {};
@@ -45,13 +58,30 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
     inflight = null;
     return result;
   })();
+  
   return inflight;
 }
 
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(cache);
-  useEffect(() => {
-    if (!cache) fetchSiteSettings().then(setSettings);
+  const [loading, setLoading] = useState(!cache);
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    const data = await fetchSiteSettings(true);
+    setSettings(data);
+    setLoading(false);
   }, []);
-  return settings ?? {};
+
+  useEffect(() => {
+    if (!cache) {
+      refresh();
+    }
+  }, [refresh]);
+
+  return {
+    settings: settings ?? {},
+    loading,
+    refresh
+  };
 }
