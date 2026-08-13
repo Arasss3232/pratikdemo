@@ -172,20 +172,20 @@ function Overlay({ b }: { b: Brochure }) {
 
   const panelBg =
     b.overlay_style === "left-navy"
-      ? "linear-gradient(90deg, rgba(6,20,38,0.92) 0%, rgba(6,20,38,0.78) 65%, rgba(6,20,38,0) 100%)"
+      ? "linear-gradient(90deg, rgba(6,20,38,0.95) 0%, rgba(6,20,38,0.85) 50%, rgba(6,20,38,0) 100%)"
       : b.overlay_style === "right-navy"
-      ? "linear-gradient(270deg, rgba(6,20,38,0.92) 0%, rgba(6,20,38,0.78) 65%, rgba(6,20,38,0) 100%)"
+      ? "linear-gradient(270deg, rgba(6,20,38,0.95) 0%, rgba(6,20,38,0.85) 50%, rgba(6,20,38,0) 100%)"
       : b.overlay_style === "center-navy"
-      ? "linear-gradient(180deg, rgba(6,20,38,0.55) 0%, rgba(6,20,38,0.35) 45%, rgba(6,20,38,0.65) 100%)"
+      ? "linear-gradient(180deg, rgba(6,20,38,0.6) 0%, rgba(6,20,38,0.4) 50%, rgba(6,20,38,0.7) 100%)"
       : b.overlay_style === "bottom-gradient"
-      ? "linear-gradient(180deg, rgba(6,20,38,0) 0%, rgba(6,20,38,0.85) 65%, rgba(6,20,38,0.95) 100%)"
-      : "linear-gradient(90deg, rgba(6,20,38,0.7) 0%, rgba(6,20,38,0.15) 100%)";
+      ? "linear-gradient(180deg, rgba(6,20,38,0) 0%, rgba(6,20,38,0.85) 60%, rgba(6,20,38,0.95) 100%)"
+      : "linear-gradient(90deg, rgba(6,20,38,0.8) 0%, rgba(6,20,38,0.2) 100%)";
 
   return (
     <div
-      className={`absolute inset-0 flex flex-col justify-center gap-5 p-6 sm:p-10 md:p-14 ${alignment} ${panelPos}`}
+      className={`absolute inset-0 flex flex-col justify-center gap-5 p-6 sm:p-10 md:p-14 z-10 ${alignment} ${panelPos}`}
       style={{
-        background: `${panelBg}, linear-gradient(180deg, rgba(6,20,38,0.35) 0%, rgba(6,20,38,0.15) 100%)`,
+        background: panelBg,
       }}
     >
       <div className="max-w-2xl flex flex-col gap-4 md:gap-5" style={{ color: textColor }}>
@@ -252,7 +252,7 @@ function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: bool
   const [imgFailed, setImgFailed] = useState(false);
   return (
     <div
-      className="absolute inset-0 transition-opacity duration-700 ease-out"
+      className="absolute inset-0 transition-opacity duration-700 ease-out overflow-hidden"
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
       aria-hidden={!active}
       // Keep inactive slide contents out of the tab order for keyboard users.
@@ -278,7 +278,7 @@ function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: bool
           <img
             src={b.image_desktop}
             alt={b.image_alt || b.title}
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             loading={eager ? "eager" : "lazy"}
             fetchPriority={eager ? "high" : "low"}
             decoding="async"
@@ -417,10 +417,9 @@ export function BrochureSlider() {
       aria-roledescription="carousel"
       aria-label="Öne çıkan kampanyalar"
       tabIndex={0}
-      className="relative w-full overflow-hidden outline-none"
+      className="relative w-full overflow-hidden outline-none bg-[#061426]"
       style={{
-        background: "#061426",
-        height: "clamp(360px, 46vw, 620px)",
+        height: "clamp(520px, 46vw, 680px)",
       }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
