@@ -27,9 +27,9 @@ const TAB_KEYS: AdminTab[] = [
   // Müşteri Yönetimi
   "companies","dealers","companyUsers","customerGroups","applications","salesReps",
   // Satış
-  "quotations","orders","quickOrder","carts","opportunities","discountApprovals",
+  "quotations","orders","quickOrder","opportunities","discountApprovals",
   // Ürün ve Fiyat
-  "products","categories","brands","priceLists","specialPrices","discounts","stock",
+  "categories","brands","priceLists","specialPrices","discounts","stock",
   // Finans
   "accounts","creditLimits","dueTracking","payments","statements","risk",
   // Operasyon
