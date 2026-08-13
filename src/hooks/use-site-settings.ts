@@ -28,6 +28,8 @@ export type SiteSettings = {
   logo_url?: string | null;
   mobile_logo_url?: string | null;
   favicon_url?: string | null;
+  google_search_console?: string | null;
+  google_analytics_id?: string | null;
 };
 
 let cache: SiteSettings | null = null;
