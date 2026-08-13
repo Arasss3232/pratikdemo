@@ -38,7 +38,7 @@ const contactSchema = z.object({
 
 function TeklifPage() {
   const search = Route.useSearch();
-  const settings = useSiteSettings();
+  const { settings } = useSiteSettings();
   const { categories, isLoading: catsLoading } = useCategories(true);
   const [state, setState] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});

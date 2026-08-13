@@ -2,27 +2,29 @@ import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-ro
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { DashboardOverview } from "@/components/admin/DashboardOverview";
-import { ContentManagement } from "@/components/admin/content/ContentManagement";
-import { CategoryManagement } from "@/components/admin/catalog/CategoryManagement";
-import { CatalogManagement } from "@/components/admin/catalog/CatalogManagement";
-import { DealershipManagement } from "@/components/admin/dealership/DealershipManagement";
-import { MessageManagement } from "@/components/admin/messages/MessageManagement";
-import { SeoShell } from "@/components/admin/seo/SeoShell";
-import { TaskManagement } from "@/components/admin/tasks/TaskManagement";
-import { ApprovalManagement } from "@/components/admin/approvals/ApprovalManagement";
-import { NotificationCenter } from "@/components/admin/notifications/NotificationCenter";
-import { HistoryManagement } from "@/components/admin/history/HistoryManagement";
-import { RoleManagement } from "@/components/admin/roles/RoleManagement";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { ContentManagement } from "@/components/admin/content/ContentManagement";
+import { SeoShell } from "@/components/admin/seo/SeoShell";
 import type { AdminTab } from "@/components/admin/nav";
 import type { SeoSubTab } from "@/components/admin/seo/SeoShell";
 
 const TAB_KEYS: AdminTab[] = [
-  "dashboard", "content", "categories", "catalogs", "dealerships", 
-  "messages", "seo", "tasks", "approvals", "notifications", 
-  "history", "roles"
+  "dashboard", "content", "categories", "catalogs", 
+  "messages", "seo", "myTasks", "notifications", 
+  "roles"
 ];
+
+function PlaceholderModule({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="p-12 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center text-center bg-white/50">
+      <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+        <span className="material-symbols-rounded text-slate-400 text-3xl">construction</span>
+      </div>
+      <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
+      <p className="text-slate-500 max-w-sm">{description}</p>
+    </div>
+  );
+}
 
 function AdminPage() {
   const { tab = "dashboard", seoTab = "dashboard" } = Route.useSearch();
@@ -59,96 +61,93 @@ function AdminPage() {
       onQuickAdd={handleQuickAdd}
     >
       <div className="space-y-6">
-        {tab === "dashboard" && <DashboardOverview />}
+        {tab === "dashboard" && (
+          <>
+            <PageHeader 
+              tab="dashboard"
+              title="Genel Bakış" 
+              description="Sistemdeki güncel durum, bekleyen talepler ve hızlı istatistikler." 
+            />
+            <PlaceholderModule title="Dashboard Paneli" description="İstatistikler ve özet veriler yakında burada olacak." />
+          </>
+        )}
+        
         {tab === "content" && <ContentManagement />}
+        
         {tab === "categories" && (
           <>
             <PageHeader 
+              tab="categories"
               title="Kategori Yönetimi" 
               description="Ürün gruplarını, görsellerini ve SEO ayarlarını yönetin." 
             />
-            <CategoryManagement />
+            <PlaceholderModule title="Kategori Yönetimi" description="Ürün kategorilerini ve hiyerarşiyi buradan yönetebileceksiniz." />
           </>
         )}
+        
         {tab === "catalogs" && (
           <>
             <PageHeader 
+              tab="catalogs"
               title="Katalog Yönetimi" 
               description="Dijital ürün kataloglarını ve PDF dosyalarını yönetin." 
             />
-            <CatalogManagement />
+            <PlaceholderModule title="Katalog Yönetimi" description="PDF katalog yükleme ve listeleme modülü." />
           </>
         )}
-        {tab === "dealerships" && (
-          <>
-            <PageHeader 
-              title="Bayilik Yönetimi" 
-              description="Sistemdeki markaları ve bayilik bilgilerini güncelleyin." 
-            />
-            <DealershipManagement />
-          </>
-        )}
+        
         {tab === "messages" && (
           <>
             <PageHeader 
+              tab="messages"
               title="Gelen Mesajlar" 
               description="Teklif talepleri ve iletişim formu mesajlarını yönetin." 
             />
-            <MessageManagement />
+            <PlaceholderModule title="Gelen Mesajlar" description="Müşterilerden gelen tüm talepler burada listelenecek." />
           </>
         )}
+        
         {tab === "seo" && (
           <>
             <PageHeader 
+              tab="seo"
               title="SEO ve Analitik" 
               description="Site geneli SEO ayarlarını, meta verileri ve takip kodlarını yönetin." 
             />
             <SeoShell activeTab={seoTab as SeoSubTab} />
           </>
         )}
-        {tab === "tasks" && (
+        
+        {tab === "myTasks" && (
           <>
             <PageHeader 
+              tab="myTasks"
               title="Görev Takibi" 
               description="Yönetim ekibi için dahili görevleri ve iş listelerini yönetin." 
             />
-            <TaskManagement />
+            <PlaceholderModule title="Görevlerim" description="İş takip ve atama modülü." />
           </>
         )}
-        {tab === "approvals" && (
-          <>
-            <PageHeader 
-              title="Onay Merkezi" 
-              description="Bekleyen içerik değişikliklerini ve sistem onaylarını kontrol edin." 
-            />
-            <ApprovalManagement />
-          </>
-        )}
+        
         {tab === "notifications" && (
           <>
             <PageHeader 
+              tab="notifications"
               title="Bildirimler" 
               description="Sistem bildirimlerini ve kullanıcı duyurularını görüntüleyin." 
             />
-            <NotificationCenter />
+            <PlaceholderModule title="Bildirim Merkezi" description="Sistem içi uyarılar ve bildirimler." />
           </>
         )}
-        {tab === "history" && (
-          <>
-            <PageHeader 
-              title="İşlem Geçmişi" 
-              description="Sistemde yapılan tüm değişikliklerin loglarını inceleyin." 
-            />
-            <HistoryManagement />
-          </>
-        )}
+        
         {tab === "roles" && (
           <>
             <PageHeader 
+              tab="roles"
               title="Roller ve Yetkiler" 
               description="Yönetici rolleri ve erişim yetkilerini yapılandırın." 
             />
-            <RoleManagement />
+            <PlaceholderModule title="Rol ve Yetki Yönetimi" description="Kullanıcı bazlı yetkilendirme ayarları." />
           </>
         )}
       </div>

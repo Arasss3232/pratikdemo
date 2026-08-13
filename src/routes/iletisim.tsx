@@ -34,7 +34,7 @@ export const Route = createFileRoute("/iletisim")({
 });
 
 function IletisimPage() {
-  const s = useSiteSettings();
+  const { settings: s } = useSiteSettings();
   const { sections } = usePageContent("/iletisim");
   const hero = sections["hero"]?.content || {};
   
