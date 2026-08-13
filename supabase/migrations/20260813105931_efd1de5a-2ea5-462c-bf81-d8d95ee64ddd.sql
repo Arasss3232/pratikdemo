@@ -1,0 +1,1 @@
+UPDATE public.site_settings SET google_search_console = NULL WHERE google_search_console = 'seo-verification-test-2026';
