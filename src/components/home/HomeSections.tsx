@@ -156,7 +156,7 @@ export function ValueProps() {
 
           <div className="lg:col-span-5 relative" style={{ backgroundColor: "#F2F5F8", color: NAVY_950 }}>
             <div className="p-8 md:p-10 flex flex-col gap-6 h-full">
-              <span className="pub-marker pub-marker-dark">HAKKIMIZDA</span>
+              <span className="pub-marker pub-marker-dark">02 / Hakkımızda</span>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
