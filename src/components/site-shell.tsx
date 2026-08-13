@@ -270,9 +270,9 @@ export function SiteHeader() {
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
             {navLinks.map((l) =>
-              l.to === "/urunler" || l.label.includes("Ürün") ? (
+              l.to === "/urunler" ? (
                 <div
-                  key={l.to}
+                  key="desktop-products"
                   className="relative"
                   onMouseEnter={openMega}
                   onMouseLeave={closeMega}
