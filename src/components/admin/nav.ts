@@ -21,7 +21,6 @@ export type AdminTab =
   | "opportunities"
   | "discountApprovals"
   // Ürün ve Fiyat
-  | "products"
   | "categories"
   | "brands"
   | "priceLists"
@@ -48,7 +47,7 @@ export type AdminTab =
   | "reportCustomers"
   | "reportProducts"
   | "reportFinance"
-  // Site Yönetimi (mevcut CMS modülleri)
+  // Site Yönetimi
   | "settings"
   | "brochures"
   | "catalogs"
@@ -57,11 +56,10 @@ export type AdminTab =
   | "team"
   | "testimonials"
   | "faqs"
-  | "blog"
-  | "blogcats"
-  | "jobs"
   | "messages"
   | "quotes"
+  // SEO Yönetimi
+  | "seo"
   // Sistem
   | "users"
   | "roles"
@@ -69,10 +67,7 @@ export type AdminTab =
   | "integrations"
   | "activityLogs"
   | "security"
-  | "backup"
-  // Akıllı Araçlar
-  | "aiAssistant"
-  | "aiHistory";
+  | "backup";
 
 export type AdminNavItem = {
   key: AdminTab;
@@ -90,7 +85,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "Ana Yönetim",
     items: [
-      { key: "dashboard", label: "Yapay Zekâ Kontrol Merkezi", icon: "auto_awesome", description: "Site kontrol merkezi ve AI asistanı" },
+      { key: "dashboard", label: "Genel Bakış", icon: "dashboard", description: "Site yönetim paneli genel görünümü" },
       { key: "myTasks", label: "Görevlerim", icon: "task_alt", description: "Size atanmış görevler" },
       { key: "approvals", label: "Onay Bekleyenler", icon: "approval", description: "Onayınızı bekleyen işlemler" },
       { key: "notifications", label: "Bildirimler", icon: "notifications", description: "Sistem bildirimleri" },
@@ -112,23 +107,18 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     ],
   },
   {
-    title: "Yayın Yönetimi",
+    title: "Dijital Varlıklar",
     items: [
       { key: "brochures", label: "Slider Yönetimi", icon: "view_carousel", description: "Anasayfa tanıtım slaytları" },
-      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site ve iletişim bilgileri" },
-      { key: "team", label: "Kurumsal İçerik", icon: "business", description: "Hakkımızda ve kurumsal sayfalar" },
+      { key: "catalogs", label: "Katalog Dosyaları", icon: "folder_zip", description: "İndirilebilir dosyalar" },
     ],
   },
   {
-    title: "Site Yönetimi",
+    title: "Kurumsal & Site",
     items: [
-      { key: "settings", label: "Site Ayarları", icon: "settings" },
-      { key: "brochures", label: "Broşür ve Slider Yönetimi", icon: "view_carousel", description: "Anasayfa broşür slaytları" },
-      { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları" },
-      
-      { key: "certificates", label: "Sertifikalar", icon: "verified" },
-      { key: "messages", label: "Gelen Mesajlar", icon: "mail" },
-      { key: "quotes", label: "Web Teklif Talepleri", icon: "mail_outline" },
+      { key: "seo", label: "SEO Yönetimi", icon: "trending_up", description: "Arama motoru optimizasyonu ve site kimliği" },
+      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site ve iletişim bilgileri" },
+      { key: "team", label: "Kurumsal İçerik", icon: "business", description: "Hakkımızda ve kurumsal sayfalar" },
     ],
   },
   {
@@ -136,17 +126,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { key: "users", label: "Kullanıcılar", icon: "manage_accounts" },
       { key: "roles", label: "Roller ve Yetkiler", icon: "admin_panel_settings" },
-      { key: "workflows", label: "Onay Akışları", icon: "account_tree" },
-      { key: "integrations", label: "Entegrasyonlar", icon: "hub" },
       { key: "activityLogs", label: "İşlem Geçmişi", icon: "history" },
-      { key: "security", label: "Güvenlik", icon: "shield" },
-      { key: "backup", label: "Yedekleme", icon: "cloud_upload" },
-    ],
-  },
-  {
-    title: "Akıllı Araçlar",
-    items: [
-      { key: "aiAssistant", label: "Yapay Zekâ Site Asistanı", icon: "smart_toy", description: "Sohbetle site içeriğini yönetin" },
     ],
   },
 ];
@@ -161,6 +141,4 @@ export function findNavGroup(tab: AdminTab): AdminNavGroup | undefined {
   return ADMIN_NAV.find((g) => g.items.some((i) => i.key === tab));
 }
 
-// Marker to keep unused import from tree-shaking away — allows consumers to
-// type check components lazily via ComponentType if needed later.
 export type _AdminAny = ComponentType<unknown>;
