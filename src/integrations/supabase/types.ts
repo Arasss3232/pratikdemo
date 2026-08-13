@@ -1463,6 +1463,7 @@ export type Database = {
           is_active: boolean
           is_external: boolean
           label: string
+          menu_type: string
           mobile_visibility: boolean
           parent_id: string | null
           route: string
@@ -1476,6 +1477,7 @@ export type Database = {
           is_active?: boolean
           is_external?: boolean
           label: string
+          menu_type?: string
           mobile_visibility?: boolean
           parent_id?: string | null
           route: string
@@ -1489,6 +1491,7 @@ export type Database = {
           is_active?: boolean
           is_external?: boolean
           label?: string
+          menu_type?: string
           mobile_visibility?: boolean
           parent_id?: string | null
           route?: string
