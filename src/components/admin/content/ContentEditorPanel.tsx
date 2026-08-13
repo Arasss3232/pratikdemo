@@ -112,7 +112,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
         </div>
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => navigate({ search: (prev) => ({ ...prev, tab: 'seo', seoTab: 'pages' }) } as any)}
+            onClick={() => navigate({ search: (prev: any) => ({ ...prev, tab: 'seo', seoTab: 'pages' }) } as any)}
             className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
           >
             <Globe size={16} />

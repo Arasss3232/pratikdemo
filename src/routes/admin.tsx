@@ -144,22 +144,25 @@ function AdminPage() {
 
         {tab === "slider" && (
           <GenericCrud
-            table="hero_slides"
+            table="homepage_brochures"
             title="Slider Yönetimi"
-            description="Ana sayfa hero slider içeriklerini yönetin."
+            description="Ana sayfa kampanya slider içeriklerini yönetin."
             fields={[
-              { name: "heading", label: "Başlık", type: "text", required: true },
-              { name: "subheading", label: "Alt Başlık", type: "text" },
+              { name: "title", label: "Başlık", type: "text", required: true },
+              { name: "eyebrow", label: "Üst Başlık", type: "text" },
+              { name: "subtitle", label: "Alt Başlık", type: "text" },
               { name: "description", label: "Açıklama", type: "textarea" },
-              { name: "image_url", label: "Görsel (Masaüstü)", type: "file" },
-              { name: "mobile_image_url", label: "Görsel (Mobil)", type: "file" },
-              { name: "button_text", label: "Buton Metni", type: "text" },
-              { name: "button_link", label: "Buton Linki", type: "text" },
+              { name: "image_desktop", label: "Görsel (Masaüstü)", type: "file" },
+              { name: "image_mobile", label: "Görsel (Mobil)", type: "file" },
+              { name: "primary_cta_label", label: "Buton Metni", type: "text" },
+              { name: "primary_cta_href", label: "Buton Linki", type: "text" },
               { name: "display_order", label: "Sıralama", type: "number" },
+              { name: "is_active", label: "Aktif", type: "checkbox" },
             ]}
             columns={[
-              { key: "heading", label: "Başlık" },
+              { key: "title", label: "Başlık" },
               { key: "display_order", label: "Sıra" },
+              { key: "is_active", label: "Durum", render: (r) => r.is_active ? "Aktif" : "Pasif" },
             ]}
           />
         )}
