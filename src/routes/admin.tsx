@@ -257,106 +257,106 @@ function AdminPage() {
         {tab === "approvals" && <ApprovalsTab />}
         {tab === "notifications" && <NotificationsTab />}
         {tab === "quotations" && (
-          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={undefined /*
+          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[ /*
             "Çok kalemli teklif oluşturma, iskonto ve KDV",
             "Revizyon takibi ve PDF çıktı",
             "Teklifi tek tıkla siparişe dönüştürme",
           ]} />
         )}
         {tab === "orders" && (
-          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={undefined /*
+          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={[ /*
             "Sipariş durum akışı: Onay → Hazırlık → Sevkiyat → Teslim",
             "Kısmi sevkiyat ve iade süreçleri",
             "Satış temsilcisi ve depo görevleri",
           ]} />
         )}
         {tab === "quickOrder" && (
-          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={undefined /*
+          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={[ /*
             "SKU ile çoklu satır girişi",
             "Firma seçildiğinde otomatik fiyat & stok kontrolü",
           ]} />
         )}
         {tab === "carts" && (
-          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={undefined /*
+          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={[ /*
             "Firmaların açık sepetlerini görüntüleme",
             "Portal üzerinden gelen taleplere anında müdahale",
           ]} />
         )}
         {tab === "opportunities" && (
-          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={undefined /*
+          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={[ /*
             "Aktif fırsatlar ve tahmini kapanış tarihleri",
             "Satış temsilcisi bazlı pipeline raporu",
           ]} />
         )}
         {tab === "discountApprovals" && (
-          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={undefined /*
+          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={[ /*
             "Standart dışı indirim talepleri",
             "Fiyat override kayıtları",
           ]} />
         )}
         {tab === "categories" && <CategoriesTab />}
         {tab === "priceLists" && (
-          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
+          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[ /*
             "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
             "Kademeli fiyatlandırma",
           ]} />
         )}
         {tab === "specialPrices" && (
-          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
+          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={[ /*
             "Firma × ürün özel fiyatları",
             "Sözleşme fiyatları ve geçerlilik tarihleri",
           ]} />
         )}
         {tab === "discounts" && (
-          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
+          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={[ /*
             "Kampanya, kategori ve ürün bazlı kurallar",
             "Tarih aralıklı kampanyalar",
           ]} />
         )}
         {tab === "stock" && (
-          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={undefined /*
+          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={[ /*
             "Depo × ürün stok haritası",
             "Mevcut / rezerve / gelen stok",
           ]} />
         )}
         {tab === "accounts" && (
-          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={[ /*
             "Firma bazlı cari hesap özeti",
             "Açık faturalar ve tahsilatlar",
           ]} />
         )}
         {tab === "creditLimits" && (
-          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={[ /*
             "Kredi limiti değişiklik geçmişi",
             "Onay akışına bağlı limit güncelleme",
           ]} />
         )}
         {tab === "dueTracking" && (
-          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={[ /*
             "Yaklaşan vadeler ve otomatik uyarılar",
             "Geciken tahsilat raporu",
           ]} />
         )}
         {tab === "payments" && (
-          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={[ /*
             "Tahsilat kayıtları",
             "Fatura eşleştirmesi",
           ]} />
         )}
         {tab === "statements" && (
-          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={[ /*
             "PDF ekstre çıktısı",
             "Firma paylaşımı için imzalı bağlantı",
           ]} />
         )}
         {tab === "risk" && (
-          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={undefined /*
+          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={[ /*
             "Risk skoru ve engelli hesaplar",
             "Vadesi geçmiş bakiye yaşlandırma",
           ]} />
         )}
         {tab === "warehouse" && (
-          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={undefined /*
+          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={[ /*
             "Depo tanımları ve sorumlu kullanıcılar",
             "Depolar arası transfer",
           ]} />
