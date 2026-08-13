@@ -2,14 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell } from "../components/site-shell";
 import { PageHero } from "../components/marketing/PageHero";
 import { usePageContent } from "@/hooks/use-page-content";
+import { 
+  CorporateIntroduction, 
+  MissionVision, 
+  CorporateValues, 
+  WorkingProcess, 
+  CorporateAdvantages, 
+  CorporateCTA,
+  ContactStrip
+} from "../components/corporate/CorporateSections";
+import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/kurumsal")({
   head: () => ({
     meta: [
-      { title: "Kurumsal — Pratik Endüstriyel Hakkında" },
-      { name: "description", content: "Pratik Endüstriyel: 25 yılı aşkın deneyim, güvenilir tedarik ağı ve uzman ekibimizle sanayinin çözüm ortağı." },
-      { property: "og:title", content: "Kurumsal — Pratik Endüstriyel Hakkında" },
-      { property: "og:description", content: "Misyonumuz, ekibimiz ve değerlerimizle sanayinin çözüm ortağı." },
+      { title: "Kurumsal — Pratik Tedarik Yapı" },
+      { name: "description", content: "Endüstriyel tedarikte güvenilir çözüm ortağınız. Pratik Tedarik Yapı olarak kurumsal değerlerimiz, misyonumuz ve çalışma prensiplerimizle yanınızdayız." },
+      { property: "og:title", content: "Kurumsal — Pratik Tedarik Yapı" },
+      { property: "og:description", content: "Sanayinin çözüm ortağı: Misyonumuz, vizyonumuz ve kurumsal değerlerimiz." },
       { property: "og:url", content: "/kurumsal" },
       { property: "og:type", content: "website" },
     ],
@@ -20,7 +30,7 @@ export const Route = createFileRoute("/kurumsal")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "AboutPage",
-          name: "Pratik Endüstriyel Hakkında",
+          name: "Pratik Tedarik Yapı Kurumsal",
           url: "/kurumsal",
         }),
       },
@@ -30,25 +40,45 @@ export const Route = createFileRoute("/kurumsal")({
 });
 
 function KurumsalPage() {
-  const { sections } = usePageContent("/kurumsal");
-  const hero = sections["hero"]?.content || {};
-  const intro = sections["intro"]?.content || {};
+  const { sections, loading } = usePageContent("/kurumsal");
+
+  if (loading) {
+    return (
+      <SiteShell>
+        <div className="min-h-[60vh] flex flex-col items-center justify-center text-navy-900/40">
+          <Loader2 className="animate-spin mb-4" size={40} />
+          <p className="font-medium">Kurumsal bilgiler yükleniyor...</p>
+        </div>
+      </SiteShell>
+    );
+  }
+
+  const hero = sections["hero"];
+  const introduction = sections["introduction"];
+  const missionVision = sections["mission_vision"];
+  const values = sections["values"];
+  const process = sections["process"];
+  const advantages = sections["advantages"];
+  const cta = sections["cta"];
 
   return (
     <SiteShell>
-      <PageHero
-        title={hero.title?.value_text || "Kurumsal"}
-        description={hero.description?.value_text || "Endüstriyel donanım tedarikinde güvenilir çözüm ortağı olarak hikâyemizi ve değerlerimizi keşfedin."}
-        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
-      />
-      
-      {intro.content?.value_text && (
-        <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
-          <div className="prose prose-slate max-w-none prose-lg">
-            <div dangerouslySetInnerHTML={{ __html: intro.content.value_text }} />
-          </div>
-        </div>
+      {hero && (
+        <PageHero
+          title={hero.content.title?.value_text || "Kurumsal"}
+          description={hero.content.description?.value_text}
+          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
+        />
       )}
+      
+      {introduction && <CorporateIntroduction section={introduction} />}
+      {missionVision && <MissionVision section={missionVision} />}
+      {values && <CorporateValues section={values} />}
+      {process && <WorkingProcess section={process} />}
+      {advantages && <CorporateAdvantages section={advantages} />}
+      {cta && <CorporateCTA section={cta} />}
+      
+      <ContactStrip />
     </SiteShell>
   );
 }
