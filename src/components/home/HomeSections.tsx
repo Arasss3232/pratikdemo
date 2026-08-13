@@ -4,10 +4,8 @@ import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
 import { PRODUCTS, FEATURED_LOGOS } from "@/data/catalog";
 import {
-  useHomeBlog,
   useHomeBrands,
   useHomeReferences,
-  useHomeServices,
   useHomeSettings,
 } from "@/hooks/use-home-data";
 import { supabase } from "@/integrations/supabase/client";
@@ -603,70 +601,6 @@ export function WhyChoose() {
   );
 }
 
-/* =====================================================================
- * 07 — Services (deep navy editorial)
- * ===================================================================== */
-export function ServicesStrip() {
-  const { data } = useHomeServices();
-  if (!data || data.length === 0) return null;
-  return (
-    <section
-      className="relative overflow-hidden"
-      style={{ backgroundColor: NAVY_900, color: "#fff" }}
-    >
-      <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
-      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
-        <PubHead
-          index="07"
-          eyebrow="Hizmetlerimiz"
-          title={
-            <>
-              Ürün tedariki + <span style={{ color: YELLOW }}>süreç yönetimi</span>.
-            </>
-          }
-          subtitle="Kurulum, teknik destek ve tedarik yönetimi hizmetlerimizle projelerinizi baştan sona destekliyoruz."
-          action={{ label: "Tüm Hizmetler", to: "/hizmetler" }}
-        />
-        <ul className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ backgroundColor: NAVY_BORDER }}>
-          {data.map((svc, i) => (
-            <li key={svc.id} style={{ backgroundColor: NAVY_900 }}>
-              <Link
-                to="/hizmetler/$slug"
-                params={{ slug: svc.slug }}
-                className="group p-8 flex flex-col gap-5 h-full transition-colors hover:bg-[color:var(--public-navy-800)]"
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className="inline-flex items-center justify-center w-12 h-12"
-                    style={{ backgroundColor: NAVY_800, color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
-                  >
-                    <Icon name={svc.icon || "engineering"} className="text-[24px]" />
-                  </span>
-                  <span className="pub-mono" style={{ color: "rgba(255,255,255,0.4)" }}>0{i + 1}</span>
-                </div>
-                <h3
-                  className="text-[22px] leading-snug text-white"
-                  style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
-                >
-                  {svc.title}
-                </h3>
-                {svc.excerpt && (
-                  <p className="text-white/70 text-[14px] leading-relaxed line-clamp-3">{svc.excerpt}</p>
-                )}
-                <span
-                  className="mt-auto pub-mono flex items-center gap-2"
-                  style={{ color: YELLOW }}
-                >
-                  Detay <Icon name="arrow_forward" className="text-[14px]" aria-hidden />
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
 
 /* =====================================================================
  * 08 — Brands (deep navy logo grid)
@@ -778,7 +712,7 @@ export function SelectedReferences() {
             </>
           }
           subtitle="Birlikte çalıştığımız sanayi, inşaat ve teknik servis kuruluşları ile taşıdığımız ürün derinliği."
-          action={data && data.length > 0 ? { label: "Tüm Referanslar", to: "/referanslar" } : undefined}
+          action={data && data.length > 0 ? { label: "Tüm Bayilikler", to: "/bayiliklerimiz" } : undefined}
         />
 
         <div
@@ -819,7 +753,7 @@ export function SelectedReferences() {
                     className="absolute top-4 left-4 pub-mono px-3 py-1.5"
                     style={{ backgroundColor: YELLOW, color: NAVY_950 }}
                   >
-                    01 · Referans
+                    01 · Bayilik
                   </span>
                 </div>
               )}
@@ -850,7 +784,7 @@ export function SelectedReferences() {
                   )}
                   <div className="p-5 md:p-6 flex flex-col gap-2 flex-1">
                     <span className="pub-mono" style={{ color: YELLOW }}>
-                      0{i + 2} · {r.category || "Referans"}
+                      0{i + 2} · {r.category || "Bayilik"}
                     </span>
                     <h3
                       className="text-[17px] leading-snug text-white"
@@ -948,108 +882,6 @@ export function ProcessTimeline() {
   );
 }
 
-/* =====================================================================
- * 11 — Knowledge / Blog (warm-light editorial framed by navy)
- * ===================================================================== */
-export function InsightsPreview() {
-  const { data } = useHomeBlog();
-  if (!data || data.length === 0) return null;
-  const [feat, ...rest] = data;
-  return (
-    <section className="relative" style={{ backgroundColor: NAVY_950, padding: "48px 0" }}>
-      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
-        <div
-          className="relative pub-ticks p-8 md:p-12"
-          style={{ backgroundColor: "#F2F5F8", border: `1px solid ${NAVY_BORDER}`, color: NAVY_950 }}
-        >
-          <span className="pub-tick-bl" aria-hidden />
-          <span className="pub-tick-br" aria-hidden />
-          <PubHead
-            index="11"
-            eyebrow="Bilgi Merkezi"
-            title={<>Sektörel içerik ve <span style={{ color: NAVY_900 }}>uygulama önerileri</span>.</>}
-            subtitle="Ürün seçimi, uygulama önerileri ve sektörel içerikler."
-            action={{ label: "Tüm Yazıları Gör", to: "/blog" }}
-            tone="light"
-          />
-
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-            {feat && (
-              <Link
-                to="/blog/$slug"
-                params={{ slug: feat.slug }}
-                className="lg:col-span-7 group flex flex-col overflow-hidden pub-ticks"
-                style={{ border: `1px solid ${NAVY_900}`, backgroundColor: "#FFFFFF" }}
-              >
-                <span className="pub-tick-bl" aria-hidden />
-                <span className="pub-tick-br" aria-hidden />
-                {feat.cover_url && (
-                  <div className="aspect-[16/10] overflow-hidden" style={{ backgroundColor: "#DBE2EB" }}>
-                    <img
-                      src={feat.cover_url}
-                      alt={feat.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                )}
-                <div className="p-6 md:p-8 flex flex-col gap-3">
-                  {feat.published_at && (
-                    <span className="pub-mono" style={{ color: NAVY_900 }}>
-                      {new Date(feat.published_at).toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" })}
-                    </span>
-                  )}
-                  <h3
-                    className="text-[24px] md:text-[30px] leading-tight"
-                    style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: NAVY_950 }}
-                  >
-                    {feat.title}
-                  </h3>
-                  {feat.excerpt && (
-                    <p className="text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
-                      {feat.excerpt}
-                    </p>
-                  )}
-                </div>
-              </Link>
-            )}
-            <ul className="lg:col-span-5 flex flex-col gap-6">
-              {rest.slice(0, 2).map((p) => (
-                <li key={p.id}>
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: p.slug }}
-                    className="flex md:h-full overflow-hidden"
-                    style={{ border: `1px solid ${NAVY_900}`, backgroundColor: "#FFFFFF" }}
-                  >
-                    {p.cover_url && (
-                      <div className="w-2/5 shrink-0" style={{ backgroundColor: "#DBE2EB" }}>
-                        <img src={p.cover_url} alt={p.title} loading="lazy" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                    <div className="p-5 flex flex-col gap-2 flex-1">
-                      {p.published_at && (
-                        <span className="pub-mono" style={{ color: NAVY_900 }}>
-                          {new Date(p.published_at).toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" })}
-                        </span>
-                      )}
-                      <h3
-                        className="text-[17px] leading-snug"
-                        style={{ fontFamily: "var(--font-display)", fontWeight: 600, color: NAVY_950 }}
-                      >
-                        {p.title}
-                      </h3>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* =====================================================================
  * 12 — Quotation & Contact (deepest navy conversion section)

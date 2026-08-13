@@ -680,11 +680,10 @@ export function SiteFooter() {
   const productCols = PRODUCT_GROUPS;
   const corporateLinks = [
     { to: "/kurumsal", label: "Hakkımızda" },
-    { to: "/hizmetler", label: "Hizmetlerimiz" },
-    { to: "/referanslar", label: "Referanslar" },
+    { to: "/kataloglar", label: "Kataloglarımız" },
+    { to: "/bayiliklerimiz", label: "Bayiliklerimiz" },
     { to: "/markalar", label: "Markalar" },
-    { to: "/blog", label: "Bilgi Merkezi" },
-    { to: "/kariyer", label: "Kariyer" },
+    { to: "/iletisim", label: "İletişim" },
   ] as const;
   const legalLinks = [
     { to: "/kvkk", label: "KVKK ve Gizlilik" },

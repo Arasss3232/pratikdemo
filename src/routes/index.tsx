@@ -52,11 +52,9 @@ function Home() {
         <SectorGrid />
         <FeaturedProducts />
         <WhyChoose />
-        <ServicesStrip />
         <BrandStrip />
         <SelectedReferences />
         <ProcessTimeline />
-        <InsightsPreview />
         <QuoteCTA />
         <ContactInfo />
         <MobileContactBar />
