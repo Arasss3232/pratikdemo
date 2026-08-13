@@ -53,12 +53,18 @@ export const Route = createFileRoute("/admin")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { 
+    tab?: AdminTab; 
+    seoTab?: SeoSubTab; 
+    aiAction?: string; 
+    aiTarget?: string; 
+    aiPrompt?: string 
+  } => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
-    seoTab: s.seoTab as SeoSubTab | undefined,
-    aiAction: typeof s.aiAction === "string" ? (s.aiAction as string) : undefined,
-    aiTarget: typeof s.aiTarget === "string" ? (s.aiTarget as string) : undefined,
-    aiPrompt: typeof s.aiPrompt === "string" ? (s.aiPrompt as string) : undefined,
+    seoTab: s.seoTab as SeoSubTab,
+    aiAction: s.aiAction as string,
+    aiTarget: s.aiTarget as string,
+    aiPrompt: s.aiPrompt as string,
   }),
   component: AdminPage,
 });
