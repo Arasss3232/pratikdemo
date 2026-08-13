@@ -30,7 +30,9 @@ export function usePageContent(route: string) {
           .select("id")
           .eq("route", route)
           .eq("status", "published")
+          .limit(1)
           .maybeSingle();
+
 
         if (!page) {
           setLoading(false);

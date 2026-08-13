@@ -11,7 +11,9 @@ export const Route = createFileRoute("/robots.txt")({
           .from("site_settings")
           .select("site_url, is_indexing_enabled, robots_txt")
           .eq("id", true)
+          .limit(1)
           .single();
+
         
         const s = settings as any;
         

@@ -59,7 +59,8 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
   if (inflight) return inflight;
   
   inflight = (async () => {
-    const { data } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
+    const { data } = await supabase.from("site_settings").select("*").eq("id", true).limit(1).maybeSingle();
+
     const result: SiteSettings = (data as unknown as SiteSettings) ?? {};
     cache = result;
     inflight = null;
