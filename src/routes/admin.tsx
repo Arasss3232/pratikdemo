@@ -37,8 +37,8 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","brochures","services","references","certificates","team","testimonials",
-  "faqs","blog","blogcats","jobs","messages","quotes",
+  "settings","brochures","catalogs","references","certificates","team","testimonials",
+  "faqs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
   // Akıllı Araçlar
@@ -98,7 +98,16 @@ function AdminPage() {
   const { tab } = search;
 
   function setTab(t: Tab) {
-    navigate({ to: "/admin", search: { tab: t } });
+    navigate({
+      to: "/admin",
+      search: (prev) => ({
+        ...prev,
+        tab: t,
+        aiAction: undefined,
+        aiTarget: undefined,
+        aiPrompt: undefined,
+      }),
+    });
   }
 
   useEffect(() => {
@@ -175,17 +184,13 @@ function AdminPage() {
         {tab === "products" && <ProductsTab />}
         {tab === "quotes" && <QuotesTab />}
         {tab === "users" && <UsersTab currentUserId={user.id} />}
-        {tab === "services" && <ServicesTab />}
+        {tab === "catalogs" && <CatalogsTab />}
         {tab === "references" && <ReferencesTab />}
         {tab === "brands" && <BrandsTab />}
         {tab === "certificates" && <CertificatesTab />}
         {tab === "team" && <TeamTab />}
         {tab === "testimonials" && <TestimonialsTab />}
         {tab === "faqs" && <FaqsTab />}
-        {tab === "blogcats" && <BlogCategoriesTab />}
-        {tab === "blog" && <BlogPostsTab />}
-        {tab === "jobs" && <JobsTab />}
-        {tab === "applications" && <ApplicationsTab />}
         {tab === "messages" && <MessagesTab />}
         {tab === "aiAssistant" && (
           <AIAssistantWorkspace
@@ -1300,29 +1305,27 @@ function pubCol(): CrudColumn {
   return { key: "published", label: "Yayında", render: (r) => (r.published ? "✓" : "—") };
 }
 
-export function ServicesTab() {
+export function CatalogsTab() {
   return (
     <GenericCrud
-      table="services"
-      quickAddKey="services"
-      title="Hizmetler"
-      extraRowActions={[askAiAction("update_service_content")]}
+      table="catalogs"
+      quickAddKey="catalogs"
+      title="Katalog Yönetimi"
       orderBy="display_order"
       ascending
       fields={[
-        { name: "slug", label: "Slug (URL)", required: true, help: "Örn: kurumsal-tedarik" },
-        { name: "title", label: "Başlık", required: true },
-        { name: "excerpt", label: "Kısa Özet", type: "textarea" },
-        { name: "body", label: "İçerik", type: "textarea" },
-        { name: "cover_url", label: "Kapak Görsel URL", type: "url" },
-        { name: "icon", label: "İkon (Material Symbols)", help: "Örn: engineering, build, shield" },
+        { name: "title", label: "Katalog Başlığı", required: true },
+        { name: "year", label: "Yıl", placeholder: "2024" },
+        { name: "pages", label: "Sayfa Sayısı", placeholder: "120 Sayfa" },
+        { name: "file_size", label: "Dosya Boyutu", placeholder: "24 MB" },
+        { name: "cover_url", label: "Kapak Görseli", type: "file", help: "A4 formatında görsel yükleyin" },
+        { name: "pdf_url", label: "PDF Dosyası", type: "file", help: "PDF formatında dosya yükleyin" },
         ORDER_FIELD,
         PUBLISHED_FIELD,
       ]}
       columns={[
         { key: "title", label: "Başlık" },
-        { key: "slug", label: "Slug" },
-        { key: "display_order", label: "Sıra" },
+        { key: "year", label: "Yıl" },
         pubCol(),
       ]}
     />
@@ -1334,26 +1337,22 @@ export function ReferencesTab() {
     <GenericCrud
       table="project_references"
       quickAddKey="references"
-      title="Referanslar"
+      title="Bayiliklerimiz Yönetimi"
       orderBy="display_order"
       ascending
       fields={[
         { name: "slug", label: "Slug", required: true },
-        { name: "title", label: "Başlık", required: true },
-        { name: "client_name", label: "Müşteri" },
-        { name: "category", label: "Sektör" },
-        { name: "cover_url", label: "Kapak Görsel URL", type: "url" },
-        { name: "logo_url", label: "Logo URL", type: "url" },
-        { name: "description", label: "Açıklama", type: "textarea" },
-        { name: "project_date", label: "Proje Tarihi", type: "date" },
-        { name: "website_url", label: "Website", type: "url" },
+        { name: "title", label: "Marka/Bayilik Adı", required: true },
+        { name: "client_name", label: "Kısa Açıklama" },
+        { name: "category", label: "Kategori" },
+        { name: "cover_url", label: "Logo URL", type: "url" },
+        { name: "website_url", label: "Web Sitesi URL", type: "url" },
         ORDER_FIELD,
         PUBLISHED_FIELD,
       ]}
       columns={[
         { key: "title", label: "Başlık" },
-        { key: "client_name", label: "Müşteri" },
-        { key: "category", label: "Sektör" },
+        { key: "category", label: "Kategori" },
         pubCol(),
       ]}
     />
@@ -1468,120 +1467,6 @@ export function FaqsTab() {
   );
 }
 
-export function BlogCategoriesTab() {
-  return (
-    <GenericCrud
-      table="blog_categories"
-      quickAddKey="blogcats"
-      title="Blog Kategorileri"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "slug", label: "Slug", required: true },
-        { name: "name", label: "Ad", required: true },
-        { name: "description", label: "Açıklama", type: "textarea" },
-        ORDER_FIELD,
-      ]}
-      columns={[{ key: "name", label: "Ad" }, { key: "slug", label: "Slug" }]}
-    />
-  );
-}
-
-export function BlogPostsTab() {
-  const [cats, setCats] = useState<{ id: string; name: string }[]>([]);
-  useEffect(() => {
-    supabase.from("blog_categories").select("id,name").order("name").then(({ data }) => setCats(data ?? []));
-  }, []);
-  return (
-    <GenericCrud
-      table="blog_posts"
-      quickAddKey="blog"
-      title="Blog Yazıları"
-      extraRowActions={[askAiAction("update_blog_content")]}
-      orderBy="published_at"
-      fields={[
-        { name: "slug", label: "Slug", required: true },
-        { name: "title", label: "Başlık", required: true },
-        { name: "excerpt", label: "Özet", type: "textarea" },
-        { name: "body", label: "İçerik (HTML)", type: "richtext", help: "HTML etiketleri kullanabilirsiniz (<h2>, <p>, <ul>, <li>)" },
-        { name: "cover_url", label: "Kapak Görsel URL", type: "url" },
-        { name: "category_id", label: "Kategori", type: "select", options: cats.map((c) => ({ value: c.id, label: c.name })) },
-        { name: "author", label: "Yazar" },
-        { name: "published_at", label: "Yayın Tarihi", type: "date" },
-        { name: "seo_title", label: "SEO Başlık" },
-        { name: "seo_description", label: "SEO Açıklama", type: "textarea" },
-        { name: "featured", label: "Öne Çıkan", type: "checkbox" },
-        PUBLISHED_FIELD,
-      ]}
-      columns={[
-        { key: "title", label: "Başlık" },
-        { key: "author", label: "Yazar" },
-        { key: "published_at", label: "Tarih", render: (r) => (r.published_at ? new Date(String(r.published_at)).toLocaleDateString("tr-TR") : "—") },
-        pubCol(),
-      ]}
-    />
-  );
-}
-
-export function JobsTab() {
-  return (
-    <GenericCrud
-      table="job_posts"
-      quickAddKey="jobs"
-      title="Açık Pozisyonlar"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "slug", label: "Slug", required: true },
-        { name: "title", label: "Pozisyon", required: true },
-        { name: "department", label: "Departman" },
-        { name: "location", label: "Konum" },
-        { name: "employment_type", label: "İstihdam Tipi" },
-        { name: "summary", label: "Özet", type: "textarea" },
-        { name: "body", label: "Detay (HTML)", type: "richtext" },
-        ORDER_FIELD,
-        PUBLISHED_FIELD,
-      ]}
-      columns={[
-        { key: "title", label: "Pozisyon" },
-        { key: "department", label: "Departman" },
-        { key: "location", label: "Konum" },
-        pubCol(),
-      ]}
-    />
-  );
-}
-
-export function ApplicationsTab() {
-  return (
-    <GenericCrud
-      table="job_applications"
-      title="İş Başvuruları"
-      allowCreate={false}
-      fields={[
-        { name: "name", label: "Ad Soyad" },
-        { name: "email", label: "E-posta" },
-        { name: "phone", label: "Telefon" },
-        { name: "cv_url", label: "CV Linki", type: "url" },
-        { name: "cover_letter", label: "Ön Yazı", type: "textarea" },
-        { name: "status", label: "Durum", type: "select", options: [
-          { value: "new", label: "Yeni" },
-          { value: "reviewing", label: "İnceleniyor" },
-          { value: "interviewed", label: "Görüşüldü" },
-          { value: "hired", label: "İşe Alındı" },
-          { value: "rejected", label: "Reddedildi" },
-        ] },
-        { name: "admin_notes", label: "Notlar", type: "textarea" },
-      ]}
-      columns={[
-        { key: "name", label: "Ad" },
-        { key: "email", label: "E-posta" },
-        { key: "status", label: "Durum" },
-        { key: "created_at", label: "Tarih", render: (r) => new Date(String(r.created_at)).toLocaleString("tr-TR") },
-      ]}
-    />
-  );
-}
 
 export function MessagesTab() {
   return (

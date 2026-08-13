@@ -110,7 +110,6 @@ function IletisimPage() {
             <option value="Satış">Satış</option>
             <option value="Teknik Destek">Teknik Destek</option>
             <option value="Kurumsal">Kurumsal</option>
-            <option value="Kariyer">Kariyer</option>
             <option value="Diğer">Diğer</option>
           </select>
           <input placeholder="Konu" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="border border-outline-variant rounded px-3 py-2 sm:col-span-2" />

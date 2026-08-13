@@ -51,7 +51,7 @@ export type AdminTab =
   // Site Yönetimi (mevcut CMS modülleri)
   | "settings"
   | "brochures"
-  | "services"
+  | "catalogs"
   | "references"
   | "certificates"
   | "team"
@@ -167,15 +167,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { key: "settings", label: "Site Ayarları", icon: "settings" },
       { key: "brochures", label: "Broşür ve Slider Yönetimi", icon: "view_carousel", description: "Anasayfa broşür slaytları" },
-      { key: "services", label: "Hizmetler", icon: "handyman" },
-      { key: "references", label: "Referanslar", icon: "workspace_premium" },
+      { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları" },
+      { key: "references", label: "Bayiliklerimiz Yönetimi", icon: "workspace_premium" },
       { key: "certificates", label: "Sertifikalar", icon: "verified" },
       { key: "team", label: "Ekip", icon: "group" },
       { key: "testimonials", label: "Müşteri Yorumları", icon: "reviews" },
       { key: "faqs", label: "SSS", icon: "quiz" },
-      { key: "blog", label: "Blog Yazıları", icon: "article" },
-      { key: "blogcats", label: "Blog Kategorileri", icon: "bookmarks" },
-      { key: "jobs", label: "İş İlanları", icon: "work" },
       { key: "messages", label: "Gelen Mesajlar", icon: "mail" },
       { key: "quotes", label: "Web Teklif Talepleri", icon: "mail_outline" },
     ],

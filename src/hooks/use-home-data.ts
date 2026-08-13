@@ -44,21 +44,6 @@ export function useHomeSettings() {
   });
 }
 
-export function useHomeServices() {
-  return useQuery<HomeService[]>({
-    queryKey: ["home", "services"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("services")
-        .select("id, slug, title, excerpt, icon, cover_url")
-        .eq("published", true)
-        .order("display_order", { ascending: true })
-        .limit(6);
-      return (data ?? []) as HomeService[];
-    },
-    staleTime: 60_000,
-  });
-}
 
 export function useHomeBrands() {
   return useQuery<HomeBrand[]>({
@@ -87,22 +72,6 @@ export function useHomeReferences() {
         .order("display_order", { ascending: true })
         .limit(3);
       return (data ?? []) as HomeReference[];
-    },
-    staleTime: 60_000,
-  });
-}
-
-export function useHomeBlog() {
-  return useQuery<HomeBlogPost[]>({
-    queryKey: ["home", "blog"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("blog_posts")
-        .select("id, slug, title, excerpt, cover_url, published_at")
-        .eq("published", true)
-        .order("published_at", { ascending: false, nullsFirst: false })
-        .limit(3);
-      return (data ?? []) as HomeBlogPost[];
     },
     staleTime: 60_000,
   });

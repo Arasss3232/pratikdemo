@@ -7,13 +7,11 @@ import {
   BrandStrip,
   ContactInfo,
   FeaturedProducts,
-  InsightsPreview,
   MobileContactBar,
   ProcessTimeline,
   QuoteCTA,
   SectorGrid,
   SelectedReferences,
-  ServicesStrip,
   ValueProps,
   WhyChoose,
 } from "../components/home/HomeSections";
@@ -52,11 +50,9 @@ function Home() {
         <SectorGrid />
         <FeaturedProducts />
         <WhyChoose />
-        <ServicesStrip />
         <BrandStrip />
         <SelectedReferences />
         <ProcessTimeline />
-        <InsightsPreview />
         <QuoteCTA />
         <ContactInfo />
         <MobileContactBar />

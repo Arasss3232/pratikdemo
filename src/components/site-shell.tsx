@@ -306,6 +306,12 @@ export function SiteHeader() {
             {isAdmin && (
               <Link
                 to="/admin"
+                search={{
+                  tab: "dashboard",
+                  aiAction: undefined,
+                  aiTarget: undefined,
+                  aiPrompt: undefined,
+                }}
                 className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
                 aria-label="Yönetim paneli"
                 title="Yönetim"
@@ -632,6 +638,12 @@ export function SiteHeader() {
                 {isAdmin ? (
                   <Link
                     to="/admin"
+                    search={{
+                      tab: "dashboard",
+                      aiAction: undefined,
+                      aiTarget: undefined,
+                      aiPrompt: undefined,
+                    }}
                     onClick={() => setMenuOpen(false)}
                     className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
                   >
@@ -668,11 +680,10 @@ export function SiteFooter() {
   const productCols = PRODUCT_GROUPS;
   const corporateLinks = [
     { to: "/kurumsal", label: "Hakkımızda" },
-    { to: "/hizmetler", label: "Hizmetlerimiz" },
-    { to: "/referanslar", label: "Referanslar" },
+    { to: "/kataloglar", label: "Kataloglarımız" },
+    { to: "/bayiliklerimiz", label: "Bayiliklerimiz" },
     { to: "/markalar", label: "Markalar" },
-    { to: "/blog", label: "Bilgi Merkezi" },
-    { to: "/kariyer", label: "Kariyer" },
+    { to: "/iletisim", label: "İletişim" },
   ] as const;
   const legalLinks = [
     { to: "/kvkk", label: "KVKK ve Gizlilik" },

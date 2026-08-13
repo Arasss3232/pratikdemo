@@ -29,7 +29,7 @@ type Quote = {
 
 type LoadedStats = {
   products: number;
-  services: number;
+  catalogs: number;
   quotesNew: number;
   messagesNew: number;
   blogPublished: number;
@@ -42,7 +42,7 @@ type LoadedStats = {
 
 const initialStats: LoadedStats = {
   products: 0,
-  services: 0,
+  catalogs: 0,
   quotesNew: 0,
   messagesNew: 0,
   blogPublished: 0,
@@ -68,9 +68,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [prod, srv, qNew, msgNew, blogP, blogD, jobsP, apps, refs, lastUpd] = await Promise.all([
+      const [prod, cats, qNew, msgNew, blogP, blogD, jobsP, apps, refs, lastUpd] = await Promise.all([
         supabase.from("products").select("*", { count: "exact", head: true }),
-        supabase.from("services").select("*", { count: "exact", head: true }),
+        supabase.from("catalogs" as any).select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
@@ -87,7 +87,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       if (!alive) return;
       setStats({
         products: prod.count ?? 0,
-        services: srv.count ?? 0,
+        catalogs: cats.count ?? 0,
         quotesNew: qNew.count ?? 0,
         messagesNew: msgNew.count ?? 0,
         blogPublished: blogP.count ?? 0,
@@ -117,8 +117,8 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       list.push({ icon: "assignment_ind", label: "Yeni iş başvurusu", value: `${stats.applicationsNew} adet`, tone: "info", tab: "applications" });
     if (stats.blogDrafts > 0)
       list.push({ icon: "edit_note", label: "Yayınlanmayı bekleyen yazı", value: `${stats.blogDrafts} taslak`, tone: "info", tab: "blog" });
-    if (stats.services === 0)
-      list.push({ icon: "handyman", label: "Henüz hizmet eklenmedi", value: "İlk hizmeti ekleyin", tone: "danger", tab: "services" });
+    if (stats.catalogs === 0)
+      list.push({ icon: "menu_book", label: "Henüz katalog eklenmedi", value: "İlk kataloğu yükleyin", tone: "danger", tab: "catalogs" });
     if (stats.products === 0)
       list.push({ icon: "inventory_2", label: "Henüz ürün eklenmedi", value: "İlk ürünü ekleyin", tone: "danger", tab: "products" });
     return list.slice(0, 4);
@@ -127,7 +127,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setup = useMemo(
     () => [
       { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
-      { label: "En az bir hizmet ekle", done: stats.services > 0, tab: "services" as AdminTab, icon: "handyman" },
+      { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
       { label: "En az bir ürün ekle", done: stats.products > 0, tab: "products" as AdminTab, icon: "inventory_2" },
       { label: "İlk blog yazısını yayınla", done: stats.blogPublished > 0, tab: "blog" as AdminTab, icon: "article" },
       { label: "İlk referansı ekle", done: stats.refs > 0, tab: "references" as AdminTab, icon: "workspace_premium" },
@@ -139,7 +139,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
 
   const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
     { key: "products", label: "Ürün Ekle", icon: "inventory_2", desc: "Kataloğa yeni ürün" },
-    { key: "services", label: "Hizmet Ekle", icon: "handyman", desc: "Hizmet sayfası oluştur" },
+    { key: "catalogs", label: "Katalog Ekle", icon: "menu_book", desc: "Yeni PDF kataloğu" },
     { key: "blog", label: "Haber Ekle", icon: "article", desc: "Blog / duyuru yazısı" },
     { key: "references", label: "Referans Ekle", icon: "workspace_premium", desc: "Yeni proje" },
     { key: "team", label: "Ekip Üyesi Ekle", icon: "groups", desc: "Yeni personel" },
@@ -152,7 +152,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     { key: "blog", label: "Yayında İçerik", icon: "article", value: stats.blogPublished, hint: "Blog / haber" },
     { key: "blog", label: "Taslak İçerik", icon: "edit_note", value: stats.blogDrafts, hint: "Henüz yayınlanmadı" },
     { key: "products", label: "Toplam Ürün", icon: "inventory_2", value: stats.products },
-    { key: "services", label: "Toplam Hizmet", icon: "handyman", value: stats.services },
+    { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
     { key: "references", label: "Referans Projesi", icon: "workspace_premium", value: stats.refs },
   ];
 

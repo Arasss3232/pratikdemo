@@ -87,7 +87,9 @@ const CATEGORIES = [
 function UrunlerLayout() {
   const matchRoute = useMatchRoute();
   const isIndex = matchRoute({ to: "/urunler" });
+  
   if (!isIndex) return <Outlet />;
+  
   return (
     <SiteShell>
       <>
