@@ -194,7 +194,10 @@ function AdminPage() {
         {tab === "seo" && (
           <SeoShell 
             currentTab={seoTab} 
-            onTabChange={(st) => navigate({ search: (prev) => ({ ...prev, seoTab: st }) })}
+            onTabChange={(st) => navigate({ 
+              to: "/admin",
+              search: (prev: any) => ({ ...prev, seoTab: st }) 
+            })}
           >
             {seoTab === "dashboard" && <SeoDashboard onNavigate={setTab} />}
             {seoTab === "general" && <SeoGeneralSettings />}
