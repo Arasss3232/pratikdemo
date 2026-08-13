@@ -402,13 +402,13 @@ function AdminPage() {
         )}
         {tab === "activityLogs" && <AuditLogsTab />}
         {tab === "security" && (
-          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={undefined /*
+          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
             "Oturum ve başarısız giriş takibi",
             "Şifre politikası",
           ]} />
         )}
         {tab === "backup" && (
-          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={undefined /*
+          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={[
             "Yedekleme durumu ve geri yükleme",
           ]} />
         )}
