@@ -788,21 +788,6 @@ export function SelectedReferences() {
     </section>
   );
 }
-                      style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
-                    >
-                      {r.title}
-                    </h3>
-                    {r.client_name && <p className="text-white/60 text-[13.5px]">{r.client_name}</p>}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
 
 /* =====================================================================
  * 10 — Supply Process (main navy, technical timeline)
