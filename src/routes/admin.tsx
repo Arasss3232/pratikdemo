@@ -396,7 +396,7 @@ function AdminPage() {
           <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
         )}
         {tab === "integrations" && (
-          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={undefined /*
+          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={[
             "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
           ]} />
         )}
