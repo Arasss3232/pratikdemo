@@ -11,10 +11,10 @@ export function NavigationPanel({ type }: { type: string }) {
   const { data: navItems, isLoading } = useQuery({
     queryKey: ["navigation", type],
     queryFn: async () => {
-      // Temporarily removing menu_type filter to fix build until migration adds it
       const { data, error } = await supabase
         .from("navigation_items")
         .select("*")
+        .eq("menu_type", type)
         .order("display_order");
       
       if (error) {
