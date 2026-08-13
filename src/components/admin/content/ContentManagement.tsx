@@ -141,9 +141,10 @@ function GeneralSettings({ onDirty, onSaved }: { onDirty: () => void; onSaved: (
   if (isLoading || !localSettings) return <div className="flex items-center gap-3 text-white/40"><Loader2 className="animate-spin" /> Yükleniyor...</div>;
 
   const handleChange = (field: string, value: any) => {
-    setLocalSettings(prev => ({ ...prev, [field]: value }));
+    setLocalSettings((prev: any) => ({ ...prev, [field]: value }));
     onDirty();
   };
+
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
