@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { ContentManagement } from "@/components/admin/content/ContentManagement";
-import { SeoShell } from "@/components/admin/seo/SeoShell";
+import { SeoShell, type SeoSubTab } from "@/components/admin/seo/SeoShell";
+import { SeoGeneralSettings } from "@/components/admin/seo/SeoGeneralSettings";
 import type { AdminTab } from "@/components/admin/nav";
-import type { SeoSubTab } from "@/components/admin/seo/SeoShell";
 
 const TAB_KEYS: AdminTab[] = [
   "dashboard", "content", "categories", "catalogs", 
@@ -27,7 +27,7 @@ function PlaceholderModule({ title, description }: { title: string; description:
 }
 
 function AdminPage() {
-  const search = Route.useSearch();
+  const search = Route.useSearch() as any;
   const tab = search.tab || "dashboard";
   const seoTab = search.seoTab || "dashboard";
   const navigate = useNavigate();
@@ -47,6 +47,10 @@ function AdminPage() {
 
   const handleTabChange = (newTab: AdminTab) => {
     navigate({ search: (prev: any) => ({ ...prev, tab: newTab }) });
+  };
+
+  const handleSeoTabChange = (newSeoTab: SeoSubTab) => {
+    navigate({ search: (prev: any) => ({ ...prev, seoTab: newSeoTab }) });
   };
 
   const handleQuickAdd = (type: AdminTab) => {
@@ -116,7 +120,14 @@ function AdminPage() {
               title="SEO ve Analitik" 
               description="Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi." 
             />
-            <SeoShell />
+            <SeoShell currentTab={seoTab as SeoSubTab} onTabChange={handleSeoTabChange}>
+              {seoTab === "dashboard" && <PlaceholderModule title="SEO Kontrol Paneli" description="SEO performans özeti." />}
+              {seoTab === "general" && <SeoGeneralSettings />}
+              {/* Fallback for other SEO tabs */}
+              {!["dashboard", "general"].includes(seoTab) && (
+                <PlaceholderModule title="Modül Hazırlanıyor" description={`${seoTab} modülü yakında aktif edilecek.`} />
+              )}
+            </SeoShell>
           </>
         )}
         
