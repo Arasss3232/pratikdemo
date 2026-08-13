@@ -1,25 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
-import { SITEMAP_ENTRIES } from "../data/nav";
-
-// Handled dynamically in handler
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const url = new URL(request.url);
-        const baseUrl = url.origin;
-        const urls = SITEMAP_ENTRIES.map((e) =>
+        
+        // Settings'den site_url'i al
+        const { data: settings } = await supabase
+          .from("site_settings")
+          .select("site_url")
+          .eq("id", true)
+          .single();
+        
+        const baseUrl = settings?.site_url || url.origin;
+        
+        // page_seo tablosundan sitemap'e dahil edilecek sayfaları al
+        const { data: pages } = await supabase
+          .from("page_seo")
+          .select("*")
+          .eq("in_sitemap", true)
+          .eq("is_indexed", true);
+
+        const urls = (pages || []).map((page) =>
           [
             `  <url>`,
-            `    <loc>\${baseUrl}\${e.path}</loc>`,
-            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-            e.priority ? `    <priority>${e.priority}</priority>` : null,
+            `    <loc>${baseUrl}${page.page_path}</loc>`,
+            page.change_frequency ? `    <changefreq>${page.change_frequency}</changefreq>` : null,
+            page.sitemap_priority ? `    <priority>${page.sitemap_priority}</priority>` : null,
             `  </url>`,
           ]
             .filter(Boolean)
-            .join("\n"),
+            .join("\n")
         );
 
         const xml = [
