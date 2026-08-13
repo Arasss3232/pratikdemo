@@ -97,67 +97,26 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     ],
   },
   {
-    title: "Müşteri Yönetimi",
+    title: "İçerik Yönetimi",
     items: [
-      { key: "companies", label: "Firmalar", icon: "domain" },
-      { key: "dealers", label: "Bayiler", icon: "storefront" },
-      { key: "companyUsers", label: "Firma Kullanıcıları", icon: "supervised_user_circle" },
-      { key: "customerGroups", label: "Müşteri Grupları", icon: "groups" },
+      { key: "categories", label: "Kategori Yönetimi", icon: "category", description: "Ürün grupları ve teklif kategorileri" },
+      { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları (PDF)" },
+      { key: "brands", label: "Bayilik Yönetimi", icon: "workspace_premium", description: "Yetkili bayisi olunan markalar" },
     ],
   },
   {
-    title: "Satış",
+    title: "İşlemler",
     items: [
-      { key: "quotations", label: "Teklifler", icon: "request_quote" },
-      { key: "orders", label: "Siparişler", icon: "shopping_bag" },
-      { key: "quickOrder", label: "Hızlı Sipariş", icon: "bolt" },
-      
-      { key: "opportunities", label: "Satış Fırsatları", icon: "trending_up" },
-      { key: "discountApprovals", label: "İndirim Onayları", icon: "percent" },
+      { key: "quotes", label: "Teklif Talepleri", icon: "mail_outline", description: "Web sitesinden gelen yeni talepler" },
+      { key: "messages", label: "İletişim Mesajları", icon: "mail", description: "İletişim formu mesajları" },
     ],
   },
   {
-    title: "Ürün ve Fiyat",
+    title: "Yayın Yönetimi",
     items: [
-      
-      { key: "categories", label: "Kategoriler", icon: "category" },
-      { key: "brands", label: "Bayilik Yönetimi", icon: "workspace_premium" },
-      { key: "priceLists", label: "Fiyat Listeleri", icon: "price_change" },
-      { key: "specialPrices", label: "Özel Fiyatlar", icon: "local_offer" },
-      { key: "discounts", label: "İskontolar", icon: "discount" },
-      { key: "stock", label: "Stok Durumu", icon: "inventory" },
-    ],
-  },
-  {
-    title: "Finans",
-    items: [
-      { key: "accounts", label: "Cari Hesaplar", icon: "account_balance" },
-      { key: "creditLimits", label: "Kredi Limitleri", icon: "credit_score" },
-      { key: "dueTracking", label: "Vade Takibi", icon: "event" },
-      { key: "payments", label: "Ödemeler", icon: "payments" },
-      { key: "statements", label: "Ekstreler", icon: "receipt_long" },
-      { key: "risk", label: "Risk Raporları", icon: "warning" },
-    ],
-  },
-  {
-    title: "Operasyon",
-    items: [
-      { key: "warehouse", label: "Depo", icon: "warehouse" },
-      { key: "shipments", label: "Sevkiyatlar", icon: "local_shipping" },
-      { key: "deliveries", label: "Teslimatlar", icon: "done_all" },
-      { key: "returns", label: "İadeler", icon: "assignment_return" },
-      { key: "documents", label: "Belgeler", icon: "folder" },
-    ],
-  },
-  {
-    title: "Raporlar",
-    items: [
-      { key: "reportSales", label: "Satış Raporları", icon: "bar_chart" },
-      { key: "reportQuotes", label: "Teklif Raporları", icon: "insights" },
-      { key: "reportOrders", label: "Sipariş Raporları", icon: "query_stats" },
-      { key: "reportCustomers", label: "Müşteri Raporları", icon: "diversity_3" },
-      { key: "reportProducts", label: "Ürün Raporları", icon: "monitoring" },
-      { key: "reportFinance", label: "Finans Raporları", icon: "leaderboard" },
+      { key: "brochures", label: "Slider Yönetimi", icon: "view_carousel", description: "Anasayfa tanıtım slaytları" },
+      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site ve iletişim bilgileri" },
+      { key: "team", label: "Kurumsal İçerik", icon: "business", description: "Hakkımızda ve kurumsal sayfalar" },
     ],
   },
   {

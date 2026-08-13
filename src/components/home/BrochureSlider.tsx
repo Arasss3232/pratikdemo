@@ -71,10 +71,10 @@ function buildFallbackSlides(): Brochure[] {
     {
       id: "fallback-3",
       title: "Kurumsal Teklif ve Bayilik Fırsatları",
-      eyebrow: "B2B",
-      subtitle: "Projelerinize özel fiyat ve teslimat planı",
+      eyebrow: "KURUMSAL",
+      subtitle: "Projelerinize özel ürün grupları ve teklif çalışmaları",
       description:
-        "Kurumsal alım hacimlerinize göre özel iskonto, cari hesap ve dedike müşteri temsilcisi desteği.",
+        "Endüstriyel ihtiyaçlarınız için doğru ürün grubunu seçin, uzman ekibimiz size özel çözüm ve fiyat teklifini hazırlasın.",
       image_desktop: CTA_IMG,
       image_tablet: CTA_IMG,
       image_mobile: CTA_IMG,

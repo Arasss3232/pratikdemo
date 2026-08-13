@@ -320,13 +320,6 @@ export function SiteHeader() {
                 <Icon name="admin_panel_settings" aria-hidden="true" />
               </Link>
             )}
-            <Link
-              to="/giris"
-              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
-              aria-label="Bayi girişi"
-            >
-              <Icon name="account_circle" aria-hidden="true" />
-            </Link>
             <span className="hidden lg:inline-flex ml-2">
               <Link
                 to="/teklif"
