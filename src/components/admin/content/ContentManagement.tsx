@@ -91,11 +91,11 @@ function GeneralSettings() {
   });
 
   const updateSetting = async (field: string, value: string) => {
+    if (!settings) return;
     const { error } = await supabase
       .from("site_settings")
       .update({ [field]: value } as any)
-      .eq("id", settings?.id);
-
+      .match({ company_name: settings.company_name });
     
     if (error) {
       console.error("Update error:", error);
@@ -103,6 +103,7 @@ function GeneralSettings() {
       refetch();
     }
   };
+
 
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
