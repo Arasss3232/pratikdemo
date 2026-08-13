@@ -234,7 +234,9 @@ function AdminPage() {
 
         {tab === "media" && (
           <div className="admin-card p-12 text-center text-muted-foreground">
-            <Icon name="image" className="text-5xl mb-4 opacity-20 mx-auto" />
+            <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4 mx-auto">
+              <span className="material-symbols-rounded text-slate-400 text-3xl">image</span>
+            </div>
             <p>Medya kütüphanesi yakında aktif edilecek.</p>
           </div>
         )}
