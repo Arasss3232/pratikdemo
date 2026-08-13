@@ -362,7 +362,7 @@ function AdminPage() {
           ]} />
         )}
         {tab === "shipments" && (
-          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={undefined /*
+          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={[
             "Sevkiyat oluşturma ve kargo bilgisi",
             "Kısmi sevkiyat desteği",
           ]} />
