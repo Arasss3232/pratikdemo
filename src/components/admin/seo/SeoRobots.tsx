@@ -8,9 +8,17 @@ export function SeoRobots() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // In a real app, we'd fetch this from settings
-    setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
+    async function load() {
+      const { data } = await supabase.from("site_settings").select("robots_txt").eq("id", true).maybeSingle();
+      if (data?.robots_txt) {
+        setContent(data.robots_txt);
+      } else {
+        setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
+      }
+    }
+    load();
   }, []);
+
 
   const handleSave = async () => {
     setLoading(true);
