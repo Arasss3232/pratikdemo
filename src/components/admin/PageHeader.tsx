@@ -43,11 +43,9 @@ const DESCRIPTIONS: Partial<Record<AdminTab, string>> = {
   settings: "Site kimliği, iletişim bilgileri, sosyal medya ve genel ayarlar.",
   products: "Ürün kataloğunuzu buradan yönetin. B2B görünürlük ve fiyat listesi bağlantıları da bu ekrandan.",
   catalogs: "Ürün gruplarınıza ait dijital PDF kataloglarını buradan yönetin.",
-  references: "Tamamlanan projeleriniz ve referans müşterileriniz.",
+  
   brands: "Ana sayfada gösterilen marka logoları.",
-  certificates: "Kurumsal sertifikalarınızı ve belgelerinizi yönetin.",
-  team: "Ekip üyelerinizi ve görev tanımlarını buradan yönetin.",
-  testimonials: "Müşteri yorumları ve puanlar.",
+  
   faqs: "Sık sorulan sorular. Kategoriye göre gruplandırabilirsiniz.",
   applications: "Kariyer sayfanızdan gelen iş başvuruları.",
   messages: "Web sitenizden gelen iletişim mesajları.",

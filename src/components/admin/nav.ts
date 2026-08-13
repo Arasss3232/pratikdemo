@@ -52,10 +52,8 @@ export type AdminTab =
   | "settings"
   | "brochures"
   | "catalogs"
-  | "references"
-  | "certificates"
-  | "team"
-  | "testimonials"
+  
+  
   | "faqs"
   | "blog"
   | "blogcats"
@@ -115,7 +113,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { key: "seo", label: "SEO Yönetimi", icon: "trending_up", description: "Arama motoru optimizasyonu ve site kimliği" },
       { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site ve iletişim bilgileri" },
-      { key: "team", label: "Kurumsal İçerik", icon: "business", description: "Hakkımızda ve kurumsal sayfalar" },
+
     ],
   },
   {
