@@ -35,8 +35,8 @@ const TAB_KEYS: AdminTab[] = [
   "faqs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
-  // Akıllı Araçlar
-  "aiAssistant","aiHistory",
+  // SEO
+  "seo",
 ];
 
 export const Route = createFileRoute("/admin")({
