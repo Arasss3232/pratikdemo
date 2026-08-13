@@ -190,17 +190,6 @@ function AdminPage() {
         {tab === "testimonials" && <TestimonialsTab />}
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
-        {tab === "aiAssistant" && (
-          <AIAssistantWorkspace
-            initialContext={
-              search.aiAction && search.aiTarget
-                ? { actionType: search.aiAction, targetId: search.aiTarget }
-                : null
-            }
-            initialPrompt={search.aiPrompt ?? null}
-          />
-        )}
-        {tab === "aiHistory" && <AIHistoryPanel />}
         {tab === "myTasks" && (
           <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
             "Onay adımlarında size atanan iş kalemleri",
