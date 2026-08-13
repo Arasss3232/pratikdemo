@@ -21,6 +21,7 @@ export type AdminTab =
   | "opportunities"
   | "discountApprovals"
   // Ürün ve Fiyat
+  | "products"
   | "categories"
   | "brands"
   | "priceLists"
@@ -56,6 +57,9 @@ export type AdminTab =
   | "team"
   | "testimonials"
   | "faqs"
+  | "blog"
+  | "blogcats"
+  | "jobs"
   | "messages"
   | "quotes"
   // SEO Yönetimi
@@ -104,13 +108,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { key: "quotes", label: "Teklif Talepleri", icon: "mail_outline", description: "Web sitesinden gelen yeni talepler" },
       { key: "messages", label: "İletişim Mesajları", icon: "mail", description: "İletişim formu mesajları" },
-    ],
-  },
-  {
-    title: "Dijital Varlıklar",
-    items: [
-      { key: "brochures", label: "Slider Yönetimi", icon: "view_carousel", description: "Anasayfa tanıtım slaytları" },
-      { key: "catalogs", label: "Katalog Dosyaları", icon: "folder_zip", description: "İndirilebilir dosyalar" },
     ],
   },
   {
