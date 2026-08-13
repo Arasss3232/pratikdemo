@@ -5,7 +5,9 @@ import { PageHero } from "./marketing/PageHero";
 import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useNavigation } from "@/hooks/use-navigation";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
+
 
 function BrandWordmark({
   logoUrl,
@@ -65,6 +67,9 @@ export function SiteHeader() {
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
   const settings = useSiteSettings();
+  const { items: dynamicNav } = useNavigation();
+  const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -256,7 +261,7 @@ export function SiteHeader() {
 
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
-            {NAV_LINKS.filter((l) => l.to !== "/").map((l) =>
+            {navLinks.filter((l) => l.to !== "/").map((l) =>
               l.to === "/urunler" ? (
                 <div
                   key={l.to}
@@ -456,7 +461,7 @@ export function SiteHeader() {
             <div className="flex-1 overflow-y-auto overscroll-contain">
               <nav className="px-3 py-4" aria-label="Mobil menü">
                 <ul className="flex flex-col">
-                  {NAV_LINKS.filter((l) => l.to !== "/urunler").map((l) => (
+                  {navLinks.filter((l) => l.to !== "/urunler").map((l) => (
                     <li key={l.to}>
                       <Link
                         to={l.to}
@@ -680,7 +685,11 @@ export function SiteFooter() {
     { to: "/iletisim", label: "İletişim" },
   ] as const;
 
+  const { items: dynamicNav } = useNavigation();
+  const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
+
   return (
+
     <footer
       className="text-inverse-on-surface"
       style={{ background: "var(--public-navy-950)", borderTop: "3px solid var(--public-yellow-500)" }}
