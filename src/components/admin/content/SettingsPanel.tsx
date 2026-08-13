@@ -23,7 +23,7 @@ export function SettingsPanel() {
 
   const updateMutation = useMutation({
     mutationFn: async (newSettings: any) => {
-      if (!settings?.id) throw new Error("Settings record not found");
+      if (!settings?.id) throw new Error("Ayarlar kaydı bulunamadı");
       const { error } = await supabase.from("site_settings").update(newSettings).eq("id", settings.id);
       if (error) throw error;
     },
@@ -60,7 +60,6 @@ export function SettingsPanel() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Company Info */}
         <div className="bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4">
             <Building2 className="text-[var(--admin-yellow)]" size={20} />
@@ -72,7 +71,7 @@ export function SettingsPanel() {
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-white/40 uppercase">Şirket Açıklaması</label>
               <textarea 
-                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[100px] text-white"
+                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[100px] text-white outline-none focus:border-[var(--admin-yellow)]/50"
                 value={localSettings.description || ""}
                 onChange={e => handleChange("description", e.target.value)}
               />
@@ -80,7 +79,6 @@ export function SettingsPanel() {
           </div>
         </div>
 
-        {/* Contact Info */}
         <div className="bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4">
             <Phone className="text-[var(--admin-yellow)]" size={20} />
@@ -94,7 +92,6 @@ export function SettingsPanel() {
           </div>
         </div>
 
-        {/* Agency Info */}
         <div className="md:col-span-2 bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4">
             <LinkIcon className="text-[var(--admin-yellow)]" size={20} />
@@ -120,7 +117,6 @@ export function SettingsPanel() {
           </div>
         </div>
 
-        {/* Assets */}
         <div className="md:col-span-2 bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
           <div className="flex items-center gap-3 border-b border-white/5 pb-4">
             <ImageIcon className="text-[var(--admin-yellow)]" size={20} />
