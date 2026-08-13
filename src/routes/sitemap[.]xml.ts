@@ -12,7 +12,9 @@ export const Route = createFileRoute("/sitemap.xml")({
           .from("site_settings")
           .select("site_url")
           .eq("id", true)
+          .limit(1)
           .single();
+
         
         // Eğer site_url girilmemişse, sitemap üretme (güvenlik ve SEO sağlığı için)
         if (!settings?.site_url || settings.site_url.includes('lovable.app')) {
