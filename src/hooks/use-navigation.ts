@@ -20,7 +20,9 @@ export function useNavigation() {
         .eq("is_active", true)
         .order("display_order");
       
-      if (data) setItems(data);
+      if (data && data.length > 0) setItems(data);
+      else setItems([]); // Ensure array state even on empty data
+
       setLoading(false);
     }
     loadNav();

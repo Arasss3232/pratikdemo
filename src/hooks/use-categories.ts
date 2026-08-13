@@ -37,10 +37,12 @@ export function useCategories(includeInactive = false) {
         });
         throw error;
       }
+      if (!data) return [];
       return (data as any[]).map(cat => ({
         ...cat,
         image_alt: cat.image_alt ?? null
       })) as Category[];
+
 
     },
     staleTime: 1000 * 60 * 5,

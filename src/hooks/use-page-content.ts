@@ -57,7 +57,8 @@ export function usePageContent(route: string) {
           .eq("is_active", true)
           .order("display_order");
 
-        if (sectionsData) {
+        if (sectionsData && sectionsData.length > 0) {
+
           const contentMap: Record<string, PageSection> = {};
           sectionsData.forEach((s: any) => {
             const fields: Record<string, ContentField> = {};

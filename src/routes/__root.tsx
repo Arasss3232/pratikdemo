@@ -39,46 +39,54 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
   useEffect(() => {
-    console.error("DEBUG_ERROR_FULL:", {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-      cause: error.cause,
-      pathname: typeof window !== 'undefined' ? window.location.pathname : 'ssr',
-    });
+    // Geliştirme modunda detaylı hata loglaması
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined' && window.location.hostname.includes('lovable')) {
+      console.error("STABILIZATION_DIAGNOSTIC:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause,
+        pathname: typeof window !== 'undefined' ? window.location.pathname : 'ssr',
+        timestamp: new Date().toISOString(),
+      });
+    }
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-[#061426] px-4 font-sans">
+      <div className="max-w-md w-full text-center">
+        <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 text-red-500">
+          <span className="material-symbols-outlined text-4xl">error</span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Bu sayfa yüklenemedi
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Beklenmedik bir hata oluştu. Sayfayı yenilemeyi deneyebilir veya ana sayfaya dönebilirsiniz.
+        <p className="mt-4 text-base leading-relaxed text-slate-400">
+          Beklenmedik bir sorun oluştu. Sayfayı yenileyebilir veya ana sayfaya dönebilirsiniz.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-[#F5C400] px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-[#061426] transition-all hover:bg-[#F5C400]/90 active:scale-95"
           >
             Tekrar Dene
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          <Link
+            to="/"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-white transition-all hover:bg-white/10 active:scale-95"
           >
             Ana Sayfaya Dön
-          </a>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   loader: async () => {
