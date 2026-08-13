@@ -269,59 +269,49 @@ export function SiteHeader() {
 
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
-            {(() => {
-              const uniqueLinks: typeof navLinks[number][] = [];
-              const seen = new Set<string>();
-              navLinks.forEach(l => {
-                if (!seen.has(l.to)) {
-                  seen.add(l.to);
-                  uniqueLinks.push(l);
-                }
-              });
-              return uniqueLinks.map((l) =>
-                l.to === "/urunler" ? (
-                  <div
-                    key="desktop-products"
-                    className="relative"
-                    onMouseEnter={openMega}
-                    onMouseLeave={closeMega}
-                  >
-                    <Link
-                      to={l.to}
-                      onFocus={openMega}
-                      onBlur={closeMega}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
-                      activeProps={{
-                        className:
-                          "inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
-                      }}
-                      aria-expanded={megaOpen}
-                      aria-haspopup="true"
-                    >
-                      {l.label}
-                      <Icon
-                        name="expand_more"
-                        className={`text-[16px] transition-transform ${megaOpen ? "rotate-180" : ""}`}
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  </div>
-                ) : (
+            {navLinks.filter((l, idx) => navLinks.findIndex(nl => nl.to === l.to) === idx).map((l) =>
+              l.to === "/urunler" ? (
+                <div
+                  key="desktop-products"
+                  className="relative"
+                  onMouseEnter={openMega}
+                  onMouseLeave={closeMega}
+                >
                   <Link
-                    key={l.to}
                     to={l.to}
-                    className="px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
-                    activeOptions={{ exact: true }}
+                    onFocus={openMega}
+                    onBlur={closeMega}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
                     activeProps={{
                       className:
-                        "px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
+                        "inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
                     }}
+                    aria-expanded={megaOpen}
+                    aria-haspopup="true"
                   >
                     {l.label}
+                    <Icon
+                      name="expand_more"
+                      className={`text-[16px] transition-transform ${megaOpen ? "rotate-180" : ""}`}
+                      aria-hidden="true"
+                    />
                   </Link>
-                )
-              );
-            })()}
+                </div>
+              ) : (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className="px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
+                  activeOptions={{ exact: true }}
+                  activeProps={{
+                    className:
+                      "px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
+                  }}
+                >
+                  {l.label}
+                </Link>
+              )
+            )}
           </nav>
 
           {/* Right actions */}
