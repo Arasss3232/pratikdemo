@@ -637,7 +637,7 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <h3 className="section-label text-secondary mb-5">Ürün Grupları</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-              {categories.slice(0, 8).map((cat) => (
+              {footerCategories.slice(0, 8).map((cat: any) => (
                 <li key={cat.id}>
                   <Link
                     to="/teklif"
