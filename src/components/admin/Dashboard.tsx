@@ -70,7 +70,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     async function load() {
       const [prod, cats, qNew, msgNew, blogP, blogD, jobsP, apps, refs, lastUpd] = await Promise.all([
         supabase.from("products").select("*", { count: "exact", head: true }),
-        supabase.from("catalogs" as never).select("*", { count: "exact", head: true }),
+        supabase.from("catalogs" as any).select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
