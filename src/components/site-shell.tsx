@@ -269,7 +269,7 @@ export function SiteHeader() {
 
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
-            {navLinks.map((l) =>
+            {navLinks.filter((l, i) => navLinks.findIndex(nl => nl.to === l.to) === i).map((l) =>
               l.to === "/urunler" ? (
                 <div
                   key="desktop-products"
