@@ -250,7 +250,7 @@ export function SectorGrid() {
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
     },
   ];
-  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+  const { categories = [], isLoading: categoriesLoading } = useCategories();
   const [active, setActive] = useState(0);
   const cur = sectors[active];
 

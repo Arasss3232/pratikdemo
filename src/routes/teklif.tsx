@@ -52,11 +52,11 @@ function TeklifPage() {
   const email = settings.email ?? "";
   const whatsapp = settings.whatsapp ?? phone;
 
-  const { data: categories, isLoading: catsLoading } = useCategories(true);
+  const { categories, isLoading: catsLoading } = useCategories(true);
 
   const verifiedCategory = useMemo(() => {
     if (!search.categoryId || !categories) return null;
-    const cat = categories.find(c => c.id === search.categoryId);
+    const cat = categories.find((c: any) => c.id === search.categoryId);
     if (!cat || !cat.is_active) return null;
     return cat;
   }, [search.categoryId, categories]);

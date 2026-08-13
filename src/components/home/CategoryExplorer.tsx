@@ -5,10 +5,10 @@ import { useCategories, type Category } from "@/hooks/use-categories";
 
 
 export function CategoryExplorer() {
-  const { data: dbCategories, isLoading } = useCategories();
+  const { categories: dbCategories, isLoading } = useCategories();
   const [active, setActive] = useState(0);
 
-  const categories = dbCategories?.map((c, i) => ({
+  const categories = dbCategories?.map((c: Category, i: number) => ({
     index: String(i + 1).padStart(2, "0"),
     title: c.title,
     slug: c.slug,
@@ -82,7 +82,7 @@ export function CategoryExplorer() {
             className="col-span-5 lg:col-span-5 flex flex-col"
             style={{ borderTop: "1px solid var(--public-navy-border)" }}
           >
-            {categories.map((c, i) => {
+            {categories.map((c: any, i: number) => {
 
               const isActive = i === active;
               return (
@@ -217,7 +217,7 @@ export function CategoryExplorer() {
         {/* Mobile: horizontal chip nav + selected panel */}
         <div className="md:hidden">
           <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
-            {categories.map((c, i) => {
+            {categories.map((c: any, i: number) => {
 
               const isActive = i === active;
               return (

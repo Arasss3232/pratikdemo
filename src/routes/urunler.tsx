@@ -89,7 +89,7 @@ const CATEGORIES = [
 function UrunlerLayout() {
   const matchRoute = useMatchRoute();
   const isIndex = matchRoute({ to: "/urunler" });
-  const { data: categories, isLoading } = useCategories();
+  const { categories, isLoading } = useCategories();
   
   if (!isIndex) return <Outlet />;
 
@@ -107,7 +107,7 @@ function UrunlerLayout() {
             {isLoading ? (
               <div className="col-span-full py-20 text-center text-on-surface-variant/50">Kategoriler yükleniyor...</div>
             ) : (
-              categories?.map((c) => (
+              categories?.map((c: any) => (
                 <CategoryCard 
                   key={c.id} 
                   title={c.title}
