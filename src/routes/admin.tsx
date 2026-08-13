@@ -22,6 +22,11 @@ import { SeoTools } from "../components/admin/seo/SeoTools";
 import { SeoRedirects } from "../components/admin/seo/SeoRedirects";
 import { SeoSitemap } from "../components/admin/seo/SeoSitemap";
 import { SeoRobots } from "../components/admin/seo/SeoRobots";
+import { SeoAnalytics } from "../components/admin/seo/SeoAnalytics";
+import { SeoTagManager } from "../components/admin/seo/SeoTagManager";
+import { SeoSchema } from "../components/admin/seo/SeoSchema";
+import { SeoSocial } from "../components/admin/seo/SeoSocial";
+import { SeoFavicon } from "../components/admin/seo/SeoFavicon";
 
 
 const TAB_KEYS: AdminTab[] = [
@@ -209,8 +214,13 @@ function AdminPage() {
             {seoTab === "robots" && <SeoRobots />}
             {seoTab === "audit" && <SeoTools />}
             {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "analytics" && <SeoAnalytics />}
+            {seoTab === "tag-manager" && <SeoTagManager />}
+            {seoTab === "schema" && <SeoSchema />}
+            {seoTab === "social" && <SeoSocial />}
+            {seoTab === "favicon" && <SeoFavicon />}
             {/* placeholders for others to be implemented */}
-            {["analytics", "tag-manager", "schema", "social", "favicon"].includes(seoTab) && (
+            {false && (
               <ComingSoon tab="seo" phase={`SEO Modülü: ${seoTab}`} />
             )}
           </SeoShell>
