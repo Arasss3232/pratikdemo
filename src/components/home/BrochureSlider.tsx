@@ -129,9 +129,6 @@ function CtaButton({
       <Icon name="arrow_forward" className="text-[18px]" />
     </>
   );
-  // Use a plain <a> for both internal and external hrefs to avoid TanStack
-  // Router typed-link compile errors on admin-defined dynamic paths. Internal
-  // links still do a normal browser navigation (acceptable for a hero CTA).
   return (
     <a
       href={href}
@@ -146,7 +143,9 @@ function CtaButton({
   );
 }
 
-function Overlay({ b }: { b: Brochure }) {
+function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: boolean }) {
+  const [imgFailed, setImgFailed] = useState(false);
+
   const isDark = b.text_theme === "dark";
   const textColor = isDark ? "#061426" : "#ffffff";
   const subColor = isDark ? "rgba(6,20,38,0.75)" : "rgba(255,255,255,0.82)";
@@ -161,141 +160,128 @@ function Overlay({ b }: { b: Brochure }) {
 
   const panelPos =
     b.overlay_style === "right-navy"
-      ? "md:right-0 md:top-0 md:h-full md:w-[52%] md:pl-16 md:pr-14"
+      ? "md:right-0 md:top-0 md:h-full md:w-[55%] md:pl-16 md:pr-14"
       : b.overlay_style === "left-navy"
-      ? "md:left-0 md:top-0 md:h-full md:w-[52%] md:pl-14 md:pr-16"
+      ? "md:left-0 md:top-0 md:h-full md:w-[55%] md:pl-14 md:pr-16"
       : b.overlay_style === "center-navy"
       ? "md:inset-0"
       : b.overlay_style === "bottom-gradient"
-      ? "md:inset-x-0 md:bottom-0 md:h-[55%]"
-      : "md:left-0 md:top-0 md:h-full md:w-[46%] md:pl-14";
+      ? "md:inset-x-0 md:bottom-0 md:h-full"
+      : "md:left-0 md:top-0 md:h-full md:w-[50%] md:pl-14";
 
   const panelBg =
     b.overlay_style === "left-navy"
-      ? "linear-gradient(90deg, rgba(6,20,38,0.95) 0%, rgba(6,20,38,0.85) 50%, rgba(6,20,38,0) 100%)"
+      ? "linear-gradient(90deg, rgba(6,20,38,0.96) 0%, rgba(6,20,38,0.88) 45%, rgba(6,20,38,0) 100%)"
       : b.overlay_style === "right-navy"
-      ? "linear-gradient(270deg, rgba(6,20,38,0.95) 0%, rgba(6,20,38,0.85) 50%, rgba(6,20,38,0) 100%)"
+      ? "linear-gradient(270deg, rgba(6,20,38,0.96) 0%, rgba(6,20,38,0.88) 45%, rgba(6,20,38,0) 100%)"
       : b.overlay_style === "center-navy"
-      ? "linear-gradient(180deg, rgba(6,20,38,0.6) 0%, rgba(6,20,38,0.4) 50%, rgba(6,20,38,0.7) 100%)"
+      ? "linear-gradient(180deg, rgba(6,20,38,0.65) 0%, rgba(6,20,38,0.45) 50%, rgba(6,20,38,0.75) 100%)"
       : b.overlay_style === "bottom-gradient"
-      ? "linear-gradient(180deg, rgba(6,20,38,0) 0%, rgba(6,20,38,0.85) 60%, rgba(6,20,38,0.95) 100%)"
-      : "linear-gradient(90deg, rgba(6,20,38,0.8) 0%, rgba(6,20,38,0.2) 100%)";
+      ? "linear-gradient(180deg, rgba(6,20,38,0) 0%, rgba(6,20,38,0.88) 60%, rgba(6,20,38,0.98) 100%)"
+      : "linear-gradient(90deg, rgba(6,20,38,0.9) 0%, rgba(6,20,38,0.2) 100%)";
 
   return (
     <div
-      className={`absolute inset-0 flex flex-col justify-center gap-5 p-6 sm:p-10 md:p-14 z-10 ${alignment} ${panelPos}`}
-      style={{
-        background: panelBg,
-      }}
-    >
-      <div className="max-w-2xl flex flex-col gap-4 md:gap-5" style={{ color: textColor }}>
-        {b.eyebrow ? (
-          <span
-            className="inline-flex items-center gap-2 self-start rounded-full px-3 py-1"
-            style={{
-              background: eyebrowBg,
-              color: b.accent_color || "var(--brand-yellow, #F5D311)",
-              border: `1px solid ${b.accent_color || "var(--brand-yellow, #F5D311)"}55`,
-              fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
-              fontWeight: 700,
-              fontSize: 13,
-              letterSpacing: "0.04em",
-              lineHeight: 1.4,
-            }}
-          >
-            <span
-              className="inline-block h-1.5 w-1.5 rounded-full"
-              style={{ background: b.accent_color || "var(--brand-yellow, #F5D311)" }}
-            />
-            {b.eyebrow}
-          </span>
-        ) : null}
-        <h2
-          className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-3"
-          style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
-        >
-          {b.title}
-        </h2>
-        {b.subtitle ? (
-          <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
-            {b.subtitle}
-          </p>
-        ) : null}
-        {b.description ? (
-          <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
-            {b.description}
-          </p>
-        ) : null}
-        <div className="flex flex-wrap gap-3 pt-2">
-          {b.primary_cta_label && b.primary_cta_href ? (
-            <CtaButton
-              label={b.primary_cta_label}
-              href={b.primary_cta_href}
-              variant="primary"
-              accent={b.accent_color}
-            />
-          ) : null}
-          {b.secondary_cta_label && b.secondary_cta_href ? (
-            <CtaButton
-              label={b.secondary_cta_label}
-              href={b.secondary_cta_href}
-              variant="secondary"
-            />
-          ) : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: boolean }) {
-  const [imgFailed, setImgFailed] = useState(false);
-  return (
-    <div
-      className="absolute inset-0 transition-opacity duration-700 ease-out overflow-hidden"
+      className="absolute inset-0 transition-opacity duration-700 ease-out overflow-hidden isolate"
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
       aria-hidden={!active}
-      // Keep inactive slide contents out of the tab order for keyboard users.
       {...(!active ? { inert: true } : {})}
     >
-      {imgFailed ? (
-        <div
-          className="h-full w-full"
-          style={{
-            background:
-              "linear-gradient(135deg, #061426 0%, #0A2342 55%, #0F3460 100%)",
-          }}
-          aria-hidden="true"
-        />
-      ) : (
+      {/* 1. Background Source (Image) */}
+      {!imgFailed ? (
         <picture>
-          {b.image_mobile ? (
-            <source media="(max-width: 640px)" srcSet={b.image_mobile} />
-          ) : null}
-          {b.image_tablet ? (
-            <source media="(max-width: 1024px)" srcSet={b.image_tablet} />
-          ) : null}
+          {b.image_mobile ? <source media="(max-width: 640px)" srcSet={b.image_mobile} /> : null}
+          {b.image_tablet ? <source media="(max-width: 1024px)" srcSet={b.image_tablet} /> : null}
           <img
             src={b.image_desktop}
             alt={b.image_alt || b.title}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 -z-20 h-full w-full object-cover"
             loading={eager ? "eager" : "lazy"}
             fetchPriority={eager ? "high" : "low"}
             decoding="async"
             onError={() => setImgFailed(true)}
           />
         </picture>
+      ) : (
+        <div
+          className="absolute inset-0 -z-20 h-full w-full"
+          style={{ background: "linear-gradient(135deg, #061426 0%, #0A2342 55%, #0F3460 100%)" }}
+          aria-hidden="true"
+        />
       )}
-      {/* Mobile-only scrim so overlay text stays legible on any photo */}
+
+      {/* 2. Overlay Layer */}
       <div
-        className="absolute inset-0 md:hidden"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(6,20,38,0.35) 0%, rgba(6,20,38,0.55) 55%, rgba(6,20,38,0.85) 100%)",
-        }}
+        className={`absolute inset-0 -z-10 ${panelPos}`}
+        style={{ background: panelBg }}
         aria-hidden="true"
       />
-      <Overlay b={b} />
+
+      {/* 3. Mobile Scrim (only if not already covered by overlay sufficiently) */}
+      <div
+        className="absolute inset-0 -z-10 md:hidden bg-linear-to-b from-[#061426]/35 via-[#061426]/55 to-[#061426]/85"
+        aria-hidden="true"
+      />
+
+      {/* 4. Content Wrapper */}
+      <div className={`relative z-10 flex h-full w-full items-center p-6 sm:p-10 md:p-14 ${alignment}`}>
+        <div className="max-w-2xl flex flex-col gap-4 md:gap-5" style={{ color: textColor }}>
+          {b.eyebrow ? (
+            <span
+              className="inline-flex items-center gap-2 self-start rounded-full px-3 py-1"
+              style={{
+                background: eyebrowBg,
+                color: b.accent_color || "var(--brand-yellow, #F5D311)",
+                border: `1px solid ${b.accent_color || "var(--brand-yellow, #F5D311)"}55`,
+                fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
+                fontWeight: 700,
+                fontSize: 13,
+                letterSpacing: "0.04em",
+                lineHeight: 1.4,
+              }}
+            >
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full"
+                style={{ background: b.accent_color || "var(--brand-yellow, #F5D311)" }}
+              />
+              {b.eyebrow}
+            </span>
+          ) : null}
+          <h2
+            className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-3"
+            style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
+          >
+            {b.title}
+          </h2>
+          {b.subtitle ? (
+            <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
+              {b.subtitle}
+            </p>
+          ) : null}
+          {b.description ? (
+            <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
+              {b.description}
+            </p>
+          ) : null}
+          <div className="flex flex-wrap gap-3 pt-2">
+            {b.primary_cta_label && b.primary_cta_href ? (
+              <CtaButton
+                label={b.primary_cta_label}
+                href={b.primary_cta_href}
+                variant="primary"
+                accent={b.accent_color}
+              />
+            ) : null}
+            {b.secondary_cta_label && b.secondary_cta_href ? (
+              <CtaButton
+                label={b.secondary_cta_label}
+                href={b.secondary_cta_href}
+                variant="secondary"
+              />
+            ) : null}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -335,7 +321,6 @@ export function BrochureSlider() {
     };
   }, []);
 
-  // Respect prefers-reduced-motion
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -366,14 +351,12 @@ export function BrochureSlider() {
     };
   }, [index, paused, userPaused, reduceMotion, next, total]);
 
-  // Pause when tab hidden
   useEffect(() => {
     const onVis = () => setPaused(document.hidden);
     document.addEventListener("visibilitychange", onVis);
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  // Keyboard nav when slider focused
   const rootRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = rootRef.current;
@@ -442,7 +425,6 @@ export function BrochureSlider() {
         <Slide key={s.id} b={s} active={i === index} eager={i === 0} />
       ))}
 
-      {/* Accent bottom line */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[3px]"
         style={{
@@ -452,12 +434,10 @@ export function BrochureSlider() {
         }}
       />
 
-      {/* Live region for a11y */}
       <div className="sr-only" aria-live="polite">
         {`${index + 1} / ${total}: ${current.title}`}
       </div>
 
-      {/* Controls */}
       {total > 1 && (
         <>
           <button
@@ -489,7 +469,6 @@ export function BrochureSlider() {
             <Icon name="chevron_right" className="text-[26px]" />
           </button>
 
-          {/* Progress dots */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5">
             {slides.map((s, i) => (
               <button
@@ -522,7 +501,6 @@ export function BrochureSlider() {
             ))}
           </div>
 
-          {/* Play / Pause toggle */}
           <button
             type="button"
             onClick={() => setUserPaused((p) => !p)}
@@ -539,13 +517,12 @@ export function BrochureSlider() {
             <Icon name={userPaused ? "play_arrow" : "pause"} className="text-[22px]" />
           </button>
 
-          {/* Counter */}
           <div
             className="absolute top-5 right-5 hidden md:flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.2em] uppercase"
             style={{
               background: "rgba(6,20,38,0.55)",
               color: "#fff",
-              border: "1px solid rgba(255,255,255,0.2)",
+              border: "1px solid rgba(255,255,255,0.2) ",
               backdropFilter: "blur(6px)",
             }}
           >
