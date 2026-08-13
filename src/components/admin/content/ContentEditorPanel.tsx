@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe } from "lucide-react";
 import { toast } from "sonner";
-import { ImageUploadField } from "../ImageUploadField";
+import { FileUploadField } from "../FileUploadField";
 
 export function ContentEditorPanel({ route }: { route: string }) {
   const queryClient = useQueryClient();
@@ -205,7 +205,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
                     )}
 
                     {field.field_type === 'image' && (
-                      <ImageUploadField 
+                      <FileUploadField 
                         value={field.media_url || ""}
                         onChange={(v) => handleFieldChange(section.id, field.id, v, 'media')}
                         label="Görsel Seç"

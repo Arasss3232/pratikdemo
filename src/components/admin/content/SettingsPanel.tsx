@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Save, Phone, Mail, Clock, Building2, Link as LinkIcon, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
-import { ImageUploadField } from "../ImageUploadField";
+import { FileUploadField } from "../FileUploadField";
 
 export function SettingsPanel() {
   const queryClient = useQueryClient();
