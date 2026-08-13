@@ -10,9 +10,11 @@ export function SeoRobots() {
   useEffect(() => {
     async function load() {
       const { data } = await supabase.from("site_settings").select("robots_txt").eq("id", true).maybeSingle();
-      if (data?.robots_txt) {
-        setContent(data.robots_txt);
+      const s = data as any;
+      if (s?.robots_txt) {
+        setContent(s.robots_txt);
       } else {
+
         setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
       }
     }
