@@ -13,6 +13,7 @@ import { Route as UrunlerRouteImport } from './routes/urunler'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ReferanslarRouteImport } from './routes/referanslar'
 import { Route as MarkalarRouteImport } from './routes/markalar'
 import { Route as KvkkRouteImport } from './routes/kvkk'
@@ -43,6 +44,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SektorelRoute = SektorelRouteImport.update({
   id: '/sektorel',
   path: '/sektorel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReferanslarRoute = ReferanslarRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
   '/referanslar': typeof ReferanslarRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
   '/referanslar': typeof ReferanslarRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/kvkk': typeof KvkkRoute
   '/markalar': typeof MarkalarRoute
   '/referanslar': typeof ReferanslarRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/kvkk'
     | '/markalar'
     | '/referanslar'
+    | '/robots.txt'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/kvkk'
     | '/markalar'
     | '/referanslar'
+    | '/robots.txt'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/kvkk'
     | '/markalar'
     | '/referanslar'
+    | '/robots.txt'
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   KvkkRoute: typeof KvkkRoute
   MarkalarRoute: typeof MarkalarRoute
   ReferanslarRoute: typeof ReferanslarRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       path: '/sektorel'
       fullPath: '/sektorel'
       preLoaderRoute: typeof SektorelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/referanslar': {
@@ -347,6 +367,7 @@ const rootRouteChildren: RootRouteChildren = {
   KvkkRoute: KvkkRoute,
   MarkalarRoute: MarkalarRoute,
   ReferanslarRoute: ReferanslarRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
