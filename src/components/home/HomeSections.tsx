@@ -698,21 +698,21 @@ export function SelectedReferences() {
     { n: "3.000+", l: "SKU" },
     { n: "TR", l: "Tedarik Coğrafyası" },
   ];
-  const [hero, ...rest] = data || [];
+  const items = data || [];
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: NAVY_800, color: "#fff" }}>
       <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
-          index="09"
-          eyebrow="Kurumsal Kayıt"
+          index="08"
+          eyebrow="Bayiliklerimiz"
           title={
             <>
-              Referanslar ve <span style={{ color: YELLOW }}>ürün derinliği</span>.
+              Dünya markalarının <span style={{ color: YELLOW }}>yetkili</span> bayiliği.
             </>
           }
-          subtitle="Birlikte çalıştığımız sanayi, inşaat ve teknik servis kuruluşları ile taşıdığımız ürün derinliği."
-          action={data && data.length > 0 ? { label: "Tüm Bayilikler", to: "/bayiliklerimiz" } : undefined}
+          subtitle="Sanayi ve inşaat sektörünün dev markalarıyla olan iş birliklerimiz sayesinde en güncel ve orijinal ürünleri doğrudan stoktan sunuyoruz."
+          action={items.length > 0 ? { label: "Tüm Bayilikler", to: "/bayiliklerimiz" } : undefined}
         />
 
         <div
@@ -738,56 +738,56 @@ export function SelectedReferences() {
           ))}
         </div>
 
-        {hero && (
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-            <article
-              className="lg:col-span-7 pub-ticks overflow-hidden flex flex-col"
-              style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {items.map((r, i) => (
+            <Link
+              key={r.id}
+              to="/bayiliklerimiz"
+              className="group relative flex flex-col bg-white pub-ticks transition-all hover:shadow-xl hover:-translate-y-1"
+              style={{ border: `1px solid var(--public-border)`, backgroundColor: "#FFF" }}
             >
               <span className="pub-tick-bl" aria-hidden />
               <span className="pub-tick-br" aria-hidden />
-              {hero.cover_url && (
-                <div className="aspect-[16/10] relative overflow-hidden" style={{ backgroundColor: NAVY_700 }}>
-                  <img src={hero.cover_url} alt={hero.title} loading="lazy" className="w-full h-full object-cover" />
-                  <span
-                    className="absolute top-4 left-4 pub-mono px-3 py-1.5"
-                    style={{ backgroundColor: YELLOW, color: NAVY_950 }}
-                  >
-                    01 · Bayilik
-                  </span>
-                </div>
-              )}
-              <div className="p-6 md:p-8 flex flex-col gap-2">
-                {hero.category && (
-                  <span className="pub-mono" style={{ color: YELLOW }}>{hero.category}</span>
-                )}
-                <h3
-                  className="text-[24px] md:text-[30px] leading-tight text-white"
-                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
-                >
-                  {hero.title}
-                </h3>
-                {hero.client_name && <p className="text-white/70 text-[15px]">{hero.client_name}</p>}
+              <div 
+                className="aspect-[4/3] p-8 flex items-center justify-center overflow-hidden border-b"
+                style={{ backgroundColor: "#F9FAFB", borderColor: "#E5E7EB" }}
+              >
+                <img
+                  src={r.cover_url || ""}
+                  alt={r.title}
+                  className="max-w-[80%] max-h-[80%] object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
+                  loading="lazy"
+                />
               </div>
-            </article>
-            <div className="lg:col-span-5 flex flex-col gap-6">
-              {rest.slice(0, 2).map((r, i) => (
-                <article
-                  key={r.id}
-                  className="overflow-hidden flex flex-col md:flex-row"
-                  style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
-                >
-                  {r.cover_url && (
-                    <div className="md:w-2/5 aspect-[16/10] md:aspect-auto" style={{ backgroundColor: NAVY_700 }}>
-                      <img src={r.cover_url} alt={r.title} loading="lazy" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  <div className="p-5 md:p-6 flex flex-col gap-2 flex-1">
-                    <span className="pub-mono" style={{ color: YELLOW }}>
-                      0{i + 2} · {r.category || "Bayilik"}
-                    </span>
-                    <h3
-                      className="text-[17px] leading-snug text-white"
+              <div className="p-6">
+                <span className="pub-mono text-[10px]" style={{ color: "#6B7280" }}>
+                  {r.category || "Bayilik"}
+                </span>
+                <h3 className="mt-2 text-[20px] font-bold text-[#061426] group-hover:text-[#0070B0]">
+                  {r.title}
+                </h3>
+                <p className="mt-2 text-[13px] text-[#4B5563] line-clamp-2 leading-relaxed">
+                  {r.client_name}
+                </p>
+              </div>
+            </Link>
+          ))}
+
+          {items.length === 0 && (
+            <>
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="p-8 bg-white/5 pub-ticks border border-white/10 flex flex-col items-center justify-center text-center aspect-[4/3]">
+                  <Icon name="verified" className="text-[40px] text-white/10 mb-4" />
+                  <p className="text-white/30 text-sm">Veriler yükleniyor...</p>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
                       style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
                     >
                       {r.title}
