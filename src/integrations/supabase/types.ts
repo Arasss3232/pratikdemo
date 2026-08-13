@@ -1745,6 +1745,7 @@ export type Database = {
           favicon_url: string | null
           footer_text: string | null
           ga4_active: boolean | null
+          ga4_id: string | null
           google_analytics_id: string | null
           google_search_console: string | null
           google_tag_manager_id: string | null
@@ -1768,6 +1769,7 @@ export type Database = {
           og_image_default: string | null
           phone: string | null
           privacy_policy: string | null
+          robots_txt: string | null
           schema_active: boolean | null
           search_console_method: string | null
           site_url: string | null
@@ -1794,6 +1796,7 @@ export type Database = {
           favicon_url?: string | null
           footer_text?: string | null
           ga4_active?: boolean | null
+          ga4_id?: string | null
           google_analytics_id?: string | null
           google_search_console?: string | null
           google_tag_manager_id?: string | null
@@ -1817,6 +1820,7 @@ export type Database = {
           og_image_default?: string | null
           phone?: string | null
           privacy_policy?: string | null
+          robots_txt?: string | null
           schema_active?: boolean | null
           search_console_method?: string | null
           site_url?: string | null
@@ -1843,6 +1847,7 @@ export type Database = {
           favicon_url?: string | null
           footer_text?: string | null
           ga4_active?: boolean | null
+          ga4_id?: string | null
           google_analytics_id?: string | null
           google_search_console?: string | null
           google_tag_manager_id?: string | null
@@ -1866,6 +1871,7 @@ export type Database = {
           og_image_default?: string | null
           phone?: string | null
           privacy_policy?: string | null
+          robots_txt?: string | null
           schema_active?: boolean | null
           search_console_method?: string | null
           site_url?: string | null
