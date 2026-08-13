@@ -671,7 +671,6 @@ export function SiteFooter() {
     { to: "/kurumsal", label: "Hakkımızda" },
     { to: "/kataloglar", label: "Kataloglarımız" },
     { to: "/bayiliklerimiz", label: "Bayiliklerimiz" },
-    { to: "/markalar", label: "Markalar" },
     { to: "/iletisim", label: "İletişim" },
   ] as const;
   const legalLinks = [
