@@ -28,7 +28,7 @@ type Quote = {
 };
 
 type LoadedStats = {
-  products: number;
+  catalogs: number;
   catalogs: number;
   quotesNew: number;
   messagesNew: number;
