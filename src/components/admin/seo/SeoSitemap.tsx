@@ -43,14 +43,15 @@ export function SeoSitemap() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="text-xl font-bold">XML Sitemap Yönetimi</h2>
+        <h2 className="text-xl font-bold text-[var(--admin-navy)]">XML Sitemap Yönetimi</h2>
         <p className="text-sm text-muted-foreground">Arama motorları için site haritası yapılandırması.</p>
+
       </div>
 
       {isInvalidUrl && (
-        <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+        <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50/10 border border-amber-200/50">
           <Icon name="warning" className="text-amber-500 shrink-0" />
-          <div className="text-sm text-amber-800">
+          <div className="text-sm text-amber-500">
             <h4 className="font-bold">Önce gerçek alan adını girin</h4>
             <p className="mt-1 opacity-90">
               Sitemap üretilmesi için "Genel SEO Ayarları" bölümünden sitenizin gerçek üretim (production) URL'sini tanımlamanız gerekir. 
@@ -61,30 +62,30 @@ export function SeoSitemap() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border bg-muted/20">
+        <div className="p-4 rounded-xl border bg-[var(--admin-surface-2)]/30">
           <div className="text-xs font-medium text-muted-foreground uppercase">Toplam URL</div>
           <div className="text-2xl font-bold mt-1">{stats.total}</div>
         </div>
-        <div className="p-4 rounded-xl border bg-green-50 border-green-100">
+        <div className="p-4 rounded-xl border border-green-200/50 bg-green-50/10">
           <div className="text-xs font-medium text-green-600 uppercase">Dahil Edilen</div>
           <div className="text-2xl font-bold mt-1 text-green-700">{stats.indexed}</div>
         </div>
-        <div className="p-4 rounded-xl border bg-amber-50 border-amber-100">
+        <div className="p-4 rounded-xl border border-amber-200/50 bg-amber-50/10">
           <div className="text-xs font-medium text-amber-600 uppercase">Hariç Tutulan</div>
           <div className="text-2xl font-bold mt-1 text-amber-700">{stats.excluded}</div>
         </div>
       </div>
 
-      <div className="admin-card overflow-hidden">
-        <div className="p-4 border-b bg-muted/30 font-medium">Sitemap Yapılandırması</div>
+      <div className="admin-card overflow-hidden shadow-sm" style={{ background: "var(--admin-surface)" }}>
+        <div className="p-4 border-b bg-[var(--admin-surface-2)]/30 font-medium text-[var(--admin-navy)]">Sitemap Yapılandırması</div>
         <div className="p-6 space-y-6">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Sitemap URL</label>
+            <label className="text-sm font-medium text-[var(--admin-text)]">Sitemap URL</label>
             <div className="flex gap-2">
               <input 
                 readOnly 
                 value={window.location.origin + "/sitemap.xml"} 
-                className="flex-grow p-2 rounded border bg-muted/30 text-sm font-mono"
+                className="flex-grow p-2 rounded border bg-[var(--admin-surface-2)]/50 text-sm font-mono text-[var(--admin-text)] border-[var(--admin-border)]"
               />
               <button 
                 onClick={() => {
@@ -98,7 +99,7 @@ export function SeoSitemap() {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-[var(--admin-border)]">
             <button 
               onClick={handleGenerate}
               className="px-4 py-2 rounded bg-[var(--admin-yellow)] text-[var(--admin-navy)] font-bold text-sm flex items-center gap-2"
@@ -108,7 +109,7 @@ export function SeoSitemap() {
             </button>
             <button 
               onClick={() => window.open("/sitemap.xml", "_blank")}
-              className="px-4 py-2 rounded border hover:bg-muted transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 rounded border border-[var(--admin-border)] hover:bg-[var(--admin-surface-2)] transition-colors text-sm flex items-center gap-2 text-[var(--admin-text)]"
             >
               <Icon name="visibility" className="text-lg" />
               Görüntüle
@@ -117,9 +118,9 @@ export function SeoSitemap() {
         </div>
       </div>
 
-      <div className="p-4 rounded-lg bg-blue-50 border border-blue-100 flex gap-3">
+      <div className="p-4 rounded-lg bg-blue-50/10 border border-blue-200/30 flex gap-3">
         <Icon name="info" className="text-blue-500" />
-        <div className="text-xs text-blue-800 leading-relaxed">
+        <div className="text-xs text-blue-400 leading-relaxed">
           <strong>İpucu:</strong> Sitemap'e yeni sayfalar eklemek için "Sayfa SEO Yönetimi" sekmesini kullanın. 
           Arama motorları sitemap'i genellikle 24-48 saat içinde tekrar tarar.
         </div>

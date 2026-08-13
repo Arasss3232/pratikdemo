@@ -21,6 +21,7 @@ export function SeoPageManagement() {
         table="page_seo"
         title="Sayfa Listesi"
         description="Public sayfaların SEO yapılandırmalarını buradan güncelleyebilirsiniz."
+        orderBy="updated_at"
         columns={[
           { key: "route_path", label: "Rota" },
           { key: "title", label: "SEO Başlığı" },
@@ -39,6 +40,7 @@ export function SeoPageManagement() {
             render: (row) => row.sitemap_include ? 'Dahil' : 'Hariç'
           }
         ]}
+
         fields={[
           { name: "route_path", label: "Sayfa Yolu (örn: /kurumsal)", type: "text", required: true },
           { name: "title", label: "SEO Başlığı (Meta Title)", type: "text", required: true },

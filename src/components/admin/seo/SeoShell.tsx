@@ -26,8 +26,8 @@ const SEO_NAV = [
   { id: "dashboard", label: "Kontrol Paneli", icon: "dashboard" },
   { id: "general", label: "Genel SEO Ayarları", icon: "settings" },
   { id: "pages", label: "Sayfa SEO Yönetimi", icon: "description" },
-  { id: "sitemap", label: "XML Sitemap", icon: "sitemap" },
-  { id: "robots", label: "Robots.txt Kuralları", icon: "robot" },
+  { id: "sitemap", label: "XML Sitemap", icon: "account_tree" },
+  { id: "robots", label: "Robots.txt Kuralları", icon: "smart_toy" },
   { id: "search-console", label: "Google Search Console", icon: "verified" },
   { id: "analytics", label: "Google Analytics 4", icon: "analytics" },
   { id: "tag-manager", label: "Google Tag Manager", icon: "code" },
@@ -35,8 +35,9 @@ const SEO_NAV = [
   { id: "schema", label: "Schema Yapılandırılmış Veri", icon: "schema" },
   { id: "social", label: "Sosyal Medya & OG", icon: "share" },
   { id: "favicon", label: "Favicon & Site Kimliği", icon: "image" },
-  { id: "audit", label: "SEO Denetimi", icon: "search_check" },
+  { id: "audit", label: "SEO Denetimi", icon: "find_in_page" },
 ];
+
 
 export function SeoShell({ currentTab, onTabChange, children }: SeoShellProps) {
   return (
@@ -57,16 +58,17 @@ export function SeoShell({ currentTab, onTabChange, children }: SeoShellProps) {
                 <button
                   key={item.id}
                   onClick={() => onTabChange(item.id as SeoSubTab)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors text-left w-full ${
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-all text-left w-full group relative ${
                     isActive 
-                      ? "bg-primary/10 text-primary font-bold shadow-sm" 
-                      : "hover:bg-muted text-muted-foreground"
+                      ? "bg-[var(--admin-yellow-soft)] text-[var(--admin-navy)] font-bold shadow-sm" 
+                      : "hover:bg-muted/50 text-muted-foreground"
                   }`}
-                  style={isActive ? { background: "var(--admin-yellow-soft)", color: "var(--admin-navy)" } : {}}
+
                 >
                   <Icon name={item.icon} className="text-lg" />
                   <span>{item.label}</span>
-                  {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-primary" style={{ background: "var(--admin-navy)" }} />}
+                  {isActive && <div className="ml-auto w-1 h-5 rounded-full" style={{ background: "var(--admin-navy)" }} />}
+
                 </button>
               );
             })}

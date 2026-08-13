@@ -13,7 +13,7 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
 
       {/* Sağlık Özeti */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="admin-card p-6 border-l-4 border-l-green-500 bg-white shadow-sm">
+        <div className="admin-card p-6 border-l-4 border-l-green-500 shadow-sm" style={{ background: "var(--admin-surface)" }}>
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Site Durumu</h3>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-green-600">Aktif</span>
@@ -21,7 +21,7 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
           </div>
         </div>
         
-        <div className="admin-card p-6 border-l-4 border-l-blue-500 bg-white shadow-sm">
+        <div className="admin-card p-6 border-l-4 border-l-blue-500 shadow-sm" style={{ background: "var(--admin-surface)" }}>
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">İndeksli Sayfa</h3>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-2xl font-bold">12</span>
@@ -29,7 +29,7 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
           </div>
         </div>
 
-        <div className="admin-card p-6 border-l-4 border-l-[var(--admin-yellow)] bg-white shadow-sm">
+        <div className="admin-card p-6 border-l-4 border-l-[var(--admin-yellow)] shadow-sm" style={{ background: "var(--admin-surface)" }}>
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">SEO Skoru</h3>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-2xl font-bold text-[var(--admin-navy)]">85/100</span>
@@ -39,7 +39,8 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Hızlı İşlemler */}
-        <div className="admin-card bg-white shadow-sm">
+        <div className="admin-card shadow-sm" style={{ background: "var(--admin-surface)" }}>
+
           <div className="p-4 border-b font-bold flex items-center gap-2">
             <span className="material-symbols-outlined text-[var(--admin-navy)]">bolt</span>
             Hızlı SEO İşlemleri
@@ -78,24 +79,24 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) =>
         </div>
 
         {/* SEO Uyarıları */}
-        <div className="admin-card bg-white shadow-sm">
+        <div className="admin-card shadow-sm" style={{ background: "var(--admin-surface)" }}>
           <div className="p-4 border-b font-bold flex items-center gap-2">
             <span className="material-symbols-outlined text-red-500">warning</span>
             Kritik SEO Uyarıları
           </div>
           <div className="p-6 space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-red-50 border border-red-100">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-red-50/10 border border-red-200/30">
               <span className="material-symbols-outlined text-red-500">priority_high</span>
               <div>
-                <h4 className="font-bold text-red-900 text-sm">Favicon Kaynağı Eksik</h4>
-                <p className="text-xs text-red-700 mt-1">Siteniz için henüz bir favicon yapılandırılmamış.</p>
+                <h4 className="font-bold text-red-500 text-sm">Favicon Kaynağı Eksik</h4>
+                <p className="text-xs text-red-400 mt-1">Siteniz için henüz bir favicon yapılandırılmamış.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50 border border-amber-100">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50/10 border border-amber-200/30">
               <span className="material-symbols-outlined text-amber-500">info</span>
               <div>
-                <h4 className="font-bold text-amber-900 text-sm">GSC Doğrulanmamış</h4>
-                <p className="text-xs text-amber-700 mt-1">Google Search Console meta etiketi eklenmiş ancak henüz doğrulanmamış.</p>
+                <h4 className="font-bold text-amber-500 text-sm">GSC Doğrulanmamış</h4>
+                <p className="text-xs text-amber-400 mt-1">Google Search Console meta etiketi eklenmiş ancak henüz doğrulanmamış.</p>
               </div>
             </div>
           </div>
