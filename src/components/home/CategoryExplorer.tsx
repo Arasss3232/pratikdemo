@@ -20,16 +20,9 @@ export function CategoryExplorer() {
     id: c.id
   })) || [];
 
-  const cat = categories[active];
-
-  if (isLoading || categories.length === 0) {
-    if (isLoading) return <div className="py-20 text-center text-white/50">Yükleniyor...</div>;
-    return null;
-  }
-
-
   // Keyboard: arrow keys move through list
   useEffect(() => {
+    if (categories.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t?.closest?.("[data-category-tablist]")) return;
@@ -38,13 +31,19 @@ export function CategoryExplorer() {
         setActive((i) => (i + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((i) => (i - -1 + categories.length) % categories.length);
-
+        setActive((i) => (i - 1 + categories.length) % categories.length);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [categories.length]);
+
+  if (isLoading || categories.length === 0) {
+    if (isLoading) return <div className="py-20 text-center text-white/50">Yükleniyor...</div>;
+    return null;
+  }
+
+  const cat = categories[active];
 
   return (
     <section
