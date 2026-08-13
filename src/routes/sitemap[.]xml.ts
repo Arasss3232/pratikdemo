@@ -7,7 +7,9 @@ import { SITEMAP_ENTRIES } from "../data/nav";
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const url = new URL(request.url);
+        const baseUrl = url.origin;
         const urls = SITEMAP_ENTRIES.map((e) =>
           [
             `  <url>`,
