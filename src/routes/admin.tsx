@@ -108,10 +108,10 @@ function AdminPage() {
   const tab = search.tab || "dashboard";
   const seoTab = search.seoTab || "dashboard";
 
-  function setTab(t: Tab) {
+  function setTab(t: AdminTab) {
     navigate({
       to: "/admin",
-      search: (prev) => ({
+      search: (prev: any) => ({
         ...prev,
         tab: t,
         seoTab: t === "seo" ? "dashboard" : undefined,
