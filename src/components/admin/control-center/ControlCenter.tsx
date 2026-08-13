@@ -81,7 +81,7 @@ const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function Compose
         rows={big ? 3 : 2}
         placeholder={placeholder}
         className="cc-composer-input"
-        aria-label="Yapay Zekâ mesajı"
+        aria-label="Kurumsal mesajı"
       />
       <div className="cc-composer-actions">
         <span className="text-[11.5px]" style={{ color: "var(--admin-text-mute)" }}>Enter ile gönder</span>
