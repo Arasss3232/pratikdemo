@@ -11,13 +11,16 @@ interface ImageUploadFieldProps {
   bucket?: string;
 }
 
+const DEFAULT_BUCKET = "category-images Paco-images-123";
+
 export function ImageUploadField({ 
   label, 
   value, 
   onChange, 
   help, 
-  bucket = "category-images" 
+  bucket = DEFAULT_BUCKET 
 }: ImageUploadFieldProps) {
+
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
