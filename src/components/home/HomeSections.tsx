@@ -526,14 +526,14 @@ export function BrandStrip() {
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
           index="07"
-          eyebrow="Marka Ekosistemi"
+          eyebrow="Bayiliklerimiz"
           title={
             <>
-              Birlikte çalıştığımız <span style={{ color: YELLOW }}>markalar</span>.
+              Yetkili <span style={{ color: YELLOW }}>Bayiliklerimiz</span>.
             </>
           }
-          subtitle="Uluslararası ve yerel üretici markalarla düzenli tedarik hattı yürütüyoruz."
-          action={{ label: "Tüm Markalar", to: "/markalar" }}
+          subtitle="Uluslararası ve yerel üretici markaların yetkili bayisi olarak orijinal ürün tedariki sağlıyoruz."
+          action={{ label: "Tüm Bayilikler", to: "/bayiliklerimiz" }}
         />
         <div
           className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px"
@@ -591,14 +591,14 @@ export function SelectedReferences() {
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
           index="08"
-          eyebrow="Bayiliklerimiz"
+          eyebrow="Güçlü İş Birlikleri"
           title={
             <>
               Dünya markalarının <span style={{ color: YELLOW }}>yetkili</span> bayiliği.
             </>
           }
-          subtitle="Sanayi ve inşaat sektörünün dev markalarıyla olan iş birliklerimiz sayesinde en güncel ve orijinal ürünleri doğrudan stoktan sunuyoruz."
-          action={items.length > 0 ? { label: "Tüm Bayilikler", to: "/bayiliklerimiz" } : undefined}
+          subtitle="Sanayi ve inşaat sektörünün dev markalarıyla olan yetkili bayilik iş birliklerimiz sayesinde en güncel ürünleri doğrudan stoktan sunuyoruz."
+          action={items.length > 0 ? { label: "Tüm Bayiliklerimiz", to: "/bayiliklerimiz" } : undefined}
         />
 
         <div

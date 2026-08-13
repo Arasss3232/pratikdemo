@@ -1,15 +1,17 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { SiteShell } from "../components/site-shell";
+import { useHomeBrands } from "../hooks/use-home-data";
 import { PageHero } from "../components/marketing/PageHero";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/bayiliklerimiz")({
   head: () => ({
     meta: [
-      { title: "Bayiliklerimiz — Pratik Endüstriyel" },
-      { name: "description", content: "Yetkili bayisi olduğumuz dünya çapında profesyonel endüstriyel donanım markaları." },
-      { property: "og:title", content: "Bayiliklerimiz — Pratik Endüstriyel" },
+      { title: "Bayiliklerimiz — Pratik" },
+      { name: "description", content: "Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin." },
+      { property: "og:title", content: "Bayiliklerimiz — Pratik" },
+      { property: "og:description", content: "Dünyanın önde gelen endüstriyel donanım markalarının yetkili bayilikleri Pratik'te." },
+      { property: "og:url", content: "/bayiliklerimiz" },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/bayiliklerimiz" }],
@@ -17,88 +19,114 @@ export const Route = createFileRoute("/bayiliklerimiz")({
   component: BayiliklerimizPage,
 });
 
-type Bayilik = { 
-  id: string; 
-  slug: string; 
-  title: string; 
-  client_name: string | null; 
-  cover_url: string | null; 
-  category: string | null;
-  website_url: string | null;
-};
-
 function BayiliklerimizPage() {
-  const [items, setItems] = useState<Bayilik[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.from("project_references")
-      .select("id, slug, title, client_name, cover_url, category, website_url")
-      .eq("published", true)
-      .order("display_order")
-      .then(({ data }) => {
-        setItems((data as Bayilik[]) ?? []);
-        setLoading(false);
-      });
-  }, []);
+  const { data: brands = [], isLoading } = useHomeBrands();
+  const [selectedBrand, setSelectedBrand] = useState<any>(null);
 
   return (
     <SiteShell>
       <PageHero
         title="Bayiliklerimiz"
-        description="Yetkili bayisi olduğumuz güçlü marka iş birliklerimiz."
+        description="Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin."
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Bayiliklerimiz" }]}
       />
-      <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-2">
-            <span className="pub-marker">YETKİLİ BAYİLİKLER</span>
-            <h2 className="pub-h2 text-public-navy-950">Güçlü Marka İş Birliklerimiz</h2>
-          </div>
-          
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+
+      <section className="py-20 bg-background">
+        <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+          {isLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-gutter animate-pulse">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="aspect-square bg-public-border/30 animate-pulse rounded-sm" />
+                <div key={i} className="aspect-video bg-surface-container-low border border-outline-variant" />
               ))}
             </div>
-          ) : items.length === 0 ? (
-            <div className="py-12 text-center text-public-steel">
-              Henüz bayilik bilgisi eklenmedi.
+          ) : brands.length === 0 ? (
+            <div className="py-20 text-center text-on-surface-variant">
+              Henüz görüntülenecek aktif bayilik bulunmuyor.
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {items.map((item) => (
-                <div 
-                  key={item.id}
-                  className="group relative aspect-square bg-white border border-public-border p-6 flex items-center justify-center transition-all hover:shadow-md hover:border-public-navy-700"
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-gutter">
+              {brands.map((brand) => (
+                <button
+                  key={brand.id}
+                  onClick={() => setSelectedBrand(brand)}
+                  className="brand-card group relative bg-white border border-outline-variant p-8 flex items-center justify-center aspect-video hover:border-primary hover:shadow-lg transition-all"
                 >
-                  {item.cover_url ? (
-                    <img 
-                      src={item.cover_url} 
-                      alt={item.title} 
-                      className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300" 
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="font-bold text-public-navy-900 text-center">{item.title}</span>
-                  )}
-                  
-                  {item.website_url && (
-                    <a 
-                      href={item.website_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute inset-0 z-10"
-                      aria-label={`${item.title} web sitesini ziyaret et`}
-                    />
-                  )}
-                </div>
+                  <img
+                    src={brand.logo_url}
+                    alt={brand.name}
+                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300 pointer-events-none"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                </button>
               ))}
             </div>
           )}
         </div>
-      </div>
+      </section>
+
+      {/* Dealership Detail Modal */}
+      {selectedBrand && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setSelectedBrand(null)}
+          onKeyDown={(e) => e.key === "Escape" && setSelectedBrand(null)}
+          tabIndex={-1}
+        >
+          <div 
+            className="bg-white max-w-lg w-full rounded-sm overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-10 text-center flex flex-col items-center">
+              <button 
+                onClick={() => setSelectedBrand(null)}
+                className="absolute top-4 right-4 text-outline hover:text-on-surface-variant transition-colors"
+                aria-label="Kapat"
+              >
+                <span className="material-symbols-outlined text-[24px]">close</span>
+              </button>
+              
+              <div className="h-24 flex items-center justify-center mb-8">
+                <img
+                  src={selectedBrand.logo_url}
+                  alt={selectedBrand.name}
+                  className="max-h-full object-contain"
+                />
+              </div>
+              
+              <h2 className="hp-h2 mb-4">{selectedBrand.name}</h2>
+              {selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.description}
+                </p>
+              )}
+              {!selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış noktası olarak hizmet vermekteyiz.
+                </p>
+              )}
+              
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <button 
+                  onClick={() => setSelectedBrand(null)}
+                  className="pub-btn pub-btn-outline-dark flex-1"
+                >
+                  Kapat
+                </button>
+                {selectedBrand.website_url && (
+                  <a 
+                    href={selectedBrand.website_url} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pub-btn pub-btn-primary flex-1"
+                  >
+                    Resmî Web Sitesi
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </SiteShell>
   );
 }

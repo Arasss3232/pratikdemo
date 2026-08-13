@@ -37,7 +37,7 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","brochures","catalogs","references","certificates","team","testimonials",
+  "settings","brochures","catalogs","certificates","team","testimonials",
   "faqs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
@@ -187,7 +187,6 @@ function AdminPage() {
         {tab === "quotes" && <QuotesTab />}
         {tab === "users" && <UsersTab currentUserId={user.id} />}
         {tab === "catalogs" && <CatalogsTab />}
-        {tab === "references" && <ReferencesTab />}
         {tab === "brands" && <BrandsTab />}
         {tab === "certificates" && <CertificatesTab />}
         {tab === "team" && <TeamTab />}
@@ -1364,49 +1363,24 @@ export function CatalogsTab() {
   );
 }
 
-export function ReferencesTab() {
-  return (
-    <GenericCrud
-      table="project_references"
-      quickAddKey="references"
-      title="Bayiliklerimiz Yönetimi"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "slug", label: "Slug", required: true },
-        { name: "title", label: "Marka/Bayilik Adı", required: true },
-        { name: "client_name", label: "Kısa Açıklama" },
-        { name: "category", label: "Kategori" },
-        { name: "cover_url", label: "Logo URL", type: "url" },
-        { name: "website_url", label: "Web Sitesi URL", type: "url" },
-        ORDER_FIELD,
-        PUBLISHED_FIELD,
-      ]}
-      columns={[
-        { key: "title", label: "Başlık" },
-        { key: "category", label: "Kategori" },
-        pubCol(),
-      ]}
-    />
-  );
-}
 
 export function BrandsTab() {
   return (
     <GenericCrud
       table="brands"
       quickAddKey="brands"
-      title="Markalar"
+      title="Bayilik Yönetimi"
       orderBy="display_order"
       ascending
       fields={[
-        { name: "name", label: "Marka Adı", required: true },
+        { name: "name", label: "Bayilik/Marka Adı", required: true },
         { name: "logo_url", label: "Logo URL", type: "url" },
-        { name: "website_url", label: "Website", type: "url" },
+        { name: "description", label: "Açıklama", type: "textarea" },
+        { name: "website_url", label: "Resmî Web Sitesi URL", type: "url" },
         ORDER_FIELD,
         PUBLISHED_FIELD,
       ]}
-      columns={[{ key: "name", label: "Marka" }, { key: "display_order", label: "Sıra" }, pubCol()]}
+      columns={[{ key: "name", label: "Bayilik" }, { key: "display_order", label: "Sıra" }, pubCol()]}
     />
   );
 }
