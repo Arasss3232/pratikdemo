@@ -51,8 +51,9 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","brochures","catalogs","testimonials",
+  "settings","brochures","catalogs",
   "faqs","messages","quotes",
+
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
   // SEO
@@ -248,7 +249,7 @@ function AdminPage() {
         {tab === "users" && <UsersTab currentUserId={user.id} />}
         {tab === "catalogs" && <CatalogsTab />}
         {tab === "brands" && <BrandsTab />}
-        {tab === "testimonials" && <TestimonialsTab />}
+        
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
         {tab === "myTasks" && <TasksTab />}
@@ -1380,28 +1381,6 @@ export function BrandsTab() {
 }
 
 
-export function TestimonialsTab() {
-  return (
-    <GenericCrud
-      table="testimonials"
-      quickAddKey="testimonials"
-      title="Müşteri Yorumları"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "name", label: "Ad", required: true },
-        { name: "company", label: "Firma" },
-        { name: "role", label: "Görev" },
-        { name: "quote", label: "Yorum", type: "textarea", required: true },
-        { name: "avatar_url", label: "Avatar URL", type: "url" },
-        { name: "rating", label: "Puan (1-5)", type: "number" },
-        ORDER_FIELD,
-        PUBLISHED_FIELD,
-      ]}
-      columns={[{ key: "name", label: "Ad" }, { key: "company", label: "Firma" }, pubCol()]}
-    />
-  );
-}
 
 export function FaqsTab() {
   return (

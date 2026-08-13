@@ -107,7 +107,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
       { label: "En az bir kategori ekle", done: stats.categories > 0, tab: "categories" as AdminTab, icon: "category" },
       { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
-      { label: "En az bir bayilik ekle", done: stats.refs > 0, tab: "brands" as AdminTab, icon: "workspace_premium" },
+      
     ],
     [stats],
   );
@@ -117,7 +117,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
     { key: "categories", label: "Kategori Ekle", icon: "category", desc: "Yeni ürün grubu" },
     { key: "catalogs", label: "Katalog Ekle", icon: "menu_book", desc: "Yeni PDF kataloğu" },
-    { key: "brands", label: "Bayilik Ekle", icon: "workspace_premium", desc: "Yeni marka" },
+    
   ];
 
   const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
@@ -125,7 +125,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     { key: "messages", label: "İletişim Mesajı", icon: "mail", value: stats.messagesNew, hint: "Yeni mesajlar" },
     { key: "categories", label: "Aktif Kategori", icon: "category", value: stats.categories },
     { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
-    { key: "brands", label: "Aktif Bayilik", icon: "workspace_premium", value: stats.refs },
+    
   ];
 
   return (

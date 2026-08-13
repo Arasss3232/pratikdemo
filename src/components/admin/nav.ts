@@ -52,8 +52,8 @@ export type AdminTab =
   | "settings"
   | "brochures"
   | "catalogs"
-  | "references"
-  | "testimonials"
+  
+  
   | "faqs"
   | "blog"
   | "blogcats"
