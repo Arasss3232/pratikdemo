@@ -49,7 +49,7 @@ export type SiteSettings = {
 };
 
 
-};
+
 
 let cache: SiteSettings | null = null;
 let inflight: Promise<SiteSettings> | null = null;

@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
 import { confirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
+import { ImageUploadField } from "./ImageUploadField";
+
 
 export type CrudField = {
   name: string;
@@ -674,58 +676,15 @@ function FieldRenderer({
   }
   if (field.type === "file") {
     return (
-      <label className="flex flex-col">
-        {labelBlock}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={String(v)}
-            required={field.required}
-            placeholder="Dosya seçin veya URL girin"
-            onChange={(e) => onChange(e.target.value)}
-            className="admin-input flex-1"
-          />
-          <button
-            type="button"
-            className="admin-btn admin-btn-outline shrink-0 h-10"
-            onClick={async () => {
-              const input = document.createElement("input");
-              input.type = "file";
-              input.accept = "application/pdf,image/*";
-              input.onchange = async (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0];
-                if (!file) return;
-                toast.promise(
-                  (async () => {
-                    const ext = file.name.split(".").pop();
-                    const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-                    const { data, error } = await supabase.storage.from("public").upload(path, file);
-                    if (error) throw error;
-                    const { data: { publicUrl } } = supabase.storage.from("public").getPublicUrl(path);
-                    onChange(publicUrl);
-                    return publicUrl;
-                  })(),
-                  {
-                    loading: "Dosya yükleniyor...",
-                    success: "Yüklendi",
-                    error: (err) => `Hata: ${err.message}`,
-                  }
-                );
-              };
-              input.click();
-            }}
-          >
-            <Icon name="upload" className="text-[18px]" />
-          </button>
-        </div>
-        {field.help && (
-          <span className="text-[12px] mt-1" style={{ color: "var(--admin-text-2)" }}>
-            {field.help}
-          </span>
-        )}
-      </label>
+      <ImageUploadField 
+        label={field.label}
+        value={String(v)}
+        help={field.help}
+        onChange={onChange}
+      />
     );
   }
+
   return (
     <label className="flex flex-col">
       {labelBlock}

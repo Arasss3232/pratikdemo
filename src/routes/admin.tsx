@@ -616,7 +616,9 @@ function CategoriesTab() {
         { name: "slug", label: "URL Slug", required: true, help: "Örn: elektrikli-el-aletleri (benzersiz olmalı)" },
         { name: "description", label: "Açıklama", type: "textarea" },
         { name: "icon", label: "İkon (Material Symbol)", help: "Örn: hardware, build, settings" },
-        { name: "image_url", label: "Görsel URL (Ana Sayfa için)", type: "url" },
+        { name: "image_url", label: "Kategori Görseli", type: "file", help: "Önerilen: 1200x900px (4:3)" },
+        { name: "image_alt", label: "Görsel Alternatif Metni", help: "SEO için açıklayıcı metin" },
+
         { name: "display_order", label: "Sıra", type: "number", help: "Küçük değer önce gösterilir" },
         { name: "is_active", label: "Aktif", type: "checkbox" },
       ]}

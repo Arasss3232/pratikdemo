@@ -8,7 +8,9 @@ export type Category = {
   description: string | null;
   icon: string | null;
   image_url: string | null;
+  image_alt: string | null;
   display_order: number;
+
   is_active: boolean;
 };
 
@@ -35,7 +37,11 @@ export function useCategories(includeInactive = false) {
         });
         throw error;
       }
-      return (data as Category[]) || [];
+      return (data as any[]).map(cat => ({
+        ...cat,
+        image_alt: cat.image_alt ?? null
+      })) as Category[];
+
     },
     staleTime: 1000 * 60 * 5,
     retry: 2,

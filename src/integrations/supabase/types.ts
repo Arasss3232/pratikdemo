@@ -1732,6 +1732,7 @@ export type Database = {
           display_order: number | null
           icon: string | null
           id: string
+          image_alt: string | null
           image_url: string | null
           is_active: boolean | null
           slug: string
@@ -1744,6 +1745,7 @@ export type Database = {
           display_order?: number | null
           icon?: string | null
           id?: string
+          image_alt?: string | null
           image_url?: string | null
           is_active?: boolean | null
           slug: string
@@ -1756,6 +1758,7 @@ export type Database = {
           display_order?: number | null
           icon?: string | null
           id?: string
+          image_alt?: string | null
           image_url?: string | null
           is_active?: boolean | null
           slug?: string
