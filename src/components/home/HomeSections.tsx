@@ -639,7 +639,7 @@ export function BrandStrip() {
       <div className="absolute inset-0 pub-blueprint opacity-50 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
-          index="08"
+          index="07"
           eyebrow="Marka Ekosistemi"
           title={
             <>
@@ -1177,7 +1177,7 @@ export function ContactInfo() {
       <div className="absolute inset-0 pub-blueprint opacity-40 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
-          index="13"
+          index="11"
           eyebrow="Konum ve İletişim"
           title={
             <>
