@@ -684,7 +684,7 @@ export function SiteHeader() {
                   className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
                 >
                   <Icon name="account_circle" className="text-[18px]" aria-hidden="true" />
-                  Bayi Girişi
+                  Giriş Yap
                 </Link>
                 {isAdmin ? (
                   <Link
