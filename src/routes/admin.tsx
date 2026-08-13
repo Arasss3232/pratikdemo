@@ -257,129 +257,129 @@ function AdminPage() {
         {tab === "approvals" && <ApprovalsTab />}
         {tab === "notifications" && <NotificationsTab />}
         {tab === "quotations" && (
-          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[
+          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={undefined /*
             "Çok kalemli teklif oluşturma, iskonto ve KDV",
             "Revizyon takibi ve PDF çıktı",
             "Teklifi tek tıkla siparişe dönüştürme",
           ]} />
         )}
         {tab === "orders" && (
-          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={[
+          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={undefined /*
             "Sipariş durum akışı: Onay → Hazırlık → Sevkiyat → Teslim",
             "Kısmi sevkiyat ve iade süreçleri",
             "Satış temsilcisi ve depo görevleri",
           ]} />
         )}
         {tab === "quickOrder" && (
-          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={[
+          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={undefined /*
             "SKU ile çoklu satır girişi",
             "Firma seçildiğinde otomatik fiyat & stok kontrolü",
           ]} />
         )}
         {tab === "carts" && (
-          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={[
+          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={undefined /*
             "Firmaların açık sepetlerini görüntüleme",
             "Portal üzerinden gelen taleplere anında müdahale",
           ]} />
         )}
         {tab === "opportunities" && (
-          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={[
+          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={undefined /*
             "Aktif fırsatlar ve tahmini kapanış tarihleri",
             "Satış temsilcisi bazlı pipeline raporu",
           ]} />
         )}
         {tab === "discountApprovals" && (
-          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={[
+          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={undefined /*
             "Standart dışı indirim talepleri",
             "Fiyat override kayıtları",
           ]} />
         )}
         {tab === "categories" && <CategoriesTab />}
         {tab === "priceLists" && (
-          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
             "Genel, müşteri grubu ve bayi seviyesi fiyat listeleri",
             "Kademeli fiyatlandırma",
           ]} />
         )}
         {tab === "specialPrices" && (
-          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
             "Firma × ürün özel fiyatları",
             "Sözleşme fiyatları ve geçerlilik tarihleri",
           ]} />
         )}
         {tab === "discounts" && (
-          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={[
+          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={undefined /*
             "Kampanya, kategori ve ürün bazlı kurallar",
             "Tarih aralıklı kampanyalar",
           ]} />
         )}
         {tab === "stock" && (
-          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={[
+          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={undefined /*
             "Depo × ürün stok haritası",
             "Mevcut / rezerve / gelen stok",
           ]} />
         )}
         {tab === "accounts" && (
-          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={undefined /*
             "Firma bazlı cari hesap özeti",
             "Açık faturalar ve tahsilatlar",
           ]} />
         )}
         {tab === "creditLimits" && (
-          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={undefined /*
             "Kredi limiti değişiklik geçmişi",
             "Onay akışına bağlı limit güncelleme",
           ]} />
         )}
         {tab === "dueTracking" && (
-          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={undefined /*
             "Yaklaşan vadeler ve otomatik uyarılar",
             "Geciken tahsilat raporu",
           ]} />
         )}
         {tab === "payments" && (
-          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={undefined /*
             "Tahsilat kayıtları",
             "Fatura eşleştirmesi",
           ]} />
         )}
         {tab === "statements" && (
-          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={undefined /*
             "PDF ekstre çıktısı",
             "Firma paylaşımı için imzalı bağlantı",
           ]} />
         )}
         {tab === "risk" && (
-          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={[
+          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={undefined /*
             "Risk skoru ve engelli hesaplar",
             "Vadesi geçmiş bakiye yaşlandırma",
           ]} />
         )}
         {tab === "warehouse" && (
-          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={undefined /*
             "Depo tanımları ve sorumlu kullanıcılar",
             "Depolar arası transfer",
           ]} />
         )}
         {tab === "shipments" && (
-          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={undefined /*
             "Sevkiyat oluşturma ve kargo bilgisi",
             "Kısmi sevkiyat desteği",
           ]} />
         )}
         {tab === "deliveries" && (
-          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={undefined /*
             "Teslimat belgeleri ve tesellüm",
           ]} />
         )}
         {tab === "returns" && (
-          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={undefined /*
             "İade talepleri ve nedenleri",
             "Stok ve cari düzeltmeleri",
           ]} />
         )}
         {tab === "documents" && (
-          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={undefined /*
             "Sözleşmeler, faturalar ve teknik belgeler için ortak depo",
             "Rol bazlı erişim kontrolü",
           ]} />
@@ -396,19 +396,19 @@ function AdminPage() {
           <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
         )}
         {tab === "integrations" && (
-          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={[
+          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={undefined /*
             "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
           ]} />
         )}
         {tab === "activityLogs" && <AuditLogsTab />}
         {tab === "security" && (
-          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
+          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={undefined /*
             "Oturum ve başarısız giriş takibi",
             "Şifre politikası",
           ]} />
         )}
         {tab === "backup" && (
-          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={[
+          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={undefined /*
             "Yedekleme durumu ve geri yükleme",
           ]} />
         )}
