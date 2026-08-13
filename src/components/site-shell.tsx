@@ -615,6 +615,7 @@ export function SiteHeader() {
             >
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 onClick={() => setMenuOpen(false)}
                 className="pub-btn pub-btn-primary w-full min-h-12"
               >
@@ -773,6 +774,7 @@ export function SiteFooter() {
               </ul>
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 className={buttonStyles({
                   variant: "primary",
                   size: "sm",
