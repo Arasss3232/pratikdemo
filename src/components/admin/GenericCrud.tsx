@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
 import { confirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
-import { ImageUploadField } from "./ImageUploadField";
+import { FileUploadField } from "./FileUploadField";
 
 
 export type CrudField = {
@@ -676,7 +676,7 @@ function FieldRenderer({
   }
   if (field.type === "file") {
     return (
-      <ImageUploadField 
+      <FileUploadField 
         label={field.label}
         value={String(v)}
         help={field.help}
@@ -684,6 +684,7 @@ function FieldRenderer({
       />
     );
   }
+
 
   return (
     <label className="flex flex-col">

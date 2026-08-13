@@ -36,6 +36,7 @@ type LoadedStats = {
   lastUpdated: string | null;
   tasksPending: number;
   notificationsUnread: number;
+  approvalsPending: number;
 };
 
 const initialStats: LoadedStats = {
@@ -47,7 +48,9 @@ const initialStats: LoadedStats = {
   lastUpdated: null,
   tasksPending: 0,
   notificationsUnread: 0,
+  approvalsPending: 0,
 };
+
 
 
 export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
