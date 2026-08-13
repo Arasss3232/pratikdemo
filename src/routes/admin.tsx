@@ -174,7 +174,8 @@ function AdminPage() {
         onQuickAdd={handleQuickAdd}
       >
         {tab !== "dashboard" && <PageHeader tab={tab} />}
-        {tab === "dashboard" && <ControlCenter onNavigate={setTab} />}
+        {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
+        {tab === "seo" && <SeoDashboard onNavigate={setTab} />}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
