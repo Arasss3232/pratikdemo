@@ -2257,6 +2257,9 @@ export type Database = {
       site_settings: {
         Row: {
           address: string | null
+          agency_attribution_text: string | null
+          agency_attribution_url: string | null
+          agency_attribution_visible: boolean | null
           company_name: string
           cookie_policy: string | null
           created_at: string
@@ -2308,6 +2311,9 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          agency_attribution_text?: string | null
+          agency_attribution_url?: string | null
+          agency_attribution_visible?: boolean | null
           company_name?: string
           cookie_policy?: string | null
           created_at?: string
@@ -2359,6 +2365,9 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          agency_attribution_text?: string | null
+          agency_attribution_url?: string | null
+          agency_attribution_visible?: boolean | null
           company_name?: string
           cookie_policy?: string | null
           created_at?: string

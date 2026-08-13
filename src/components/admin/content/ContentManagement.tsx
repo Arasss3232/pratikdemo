@@ -92,10 +92,15 @@ function GeneralSettings() {
 
   const updateSetting = async (field: string, value: string) => {
     if (!settings) return;
+    
+    let typedValue: any = value;
+    if (field === 'agency_attribution_visible') typedValue = value === 'true';
+
     const { error } = await supabase
       .from("site_settings")
-      .update({ [field]: value } as any)
+      .update({ [field]: typedValue } as any)
       .match({ company_name: settings.company_name });
+
     
     if (error) {
       console.error("Update error:", error);
@@ -125,6 +130,35 @@ function GeneralSettings() {
 
       <section className="space-y-4">
         <h2 className="text-lg font-bold flex items-center gap-2 border-t border-white/5 pt-8">
+          <Icon name="bottom_panel_open" className="text-[var(--admin-yellow)]" />
+          Footer & Ajans Referansı
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2 flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/10">
+            <input 
+              type="checkbox" 
+              id="agency_visible"
+              checked={settings?.agency_attribution_visible ?? true}
+              onChange={(e) => updateSetting("agency_attribution_visible", e.target.checked.toString())}
+              className="w-4 h-4 rounded border-white/20 bg-white/5 text-[var(--admin-yellow)] focus:ring-[var(--admin-yellow)]"
+            />
+            <label htmlFor="agency_visible" className="text-sm font-medium cursor-pointer">Ajans Referans Linkini Göster</label>
+          </div>
+          <InputGroup 
+            label="Ajans Metni" 
+            value={settings?.agency_attribution_text || ""} 
+            onChange={(v) => updateSetting("agency_attribution_text", v)} 
+          />
+          <InputGroup 
+            label="Ajans URL" 
+            value={settings?.agency_attribution_url || ""} 
+            onChange={(v) => updateSetting("agency_attribution_url", v)} 
+          />
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-bold flex items-center gap-2 border-t border-white/5 pt-8">
           <Icon name="schedule" className="text-[var(--admin-yellow)]" />
           Çalışma Saatleri
         </h2>
@@ -135,6 +169,7 @@ function GeneralSettings() {
     </div>
   );
 }
+
 
 
 function HomeSettings() {
