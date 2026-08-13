@@ -277,7 +277,7 @@ function TeklifPage() {
                               className="w-full border border-outline focus:border-primary focus:outline-none px-3 py-2.5 text-body-md bg-white"
                             />
                             <datalist id={`cats-${line.id}`}>
-                              {categories?.map((c) => <option key={c.id} value={c.title} />)}
+                              {categories?.map((c: any) => <option key={c.id} value={c.title} />)}
                               {APPLICATIONS.map((a) => <option key={a} value={a} />)}
                             </datalist>
 
