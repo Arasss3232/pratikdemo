@@ -9,7 +9,8 @@ export function CategoryExplorer() {
   const [active, setActive] = useState(0);
 
   const categories = useMemo(() => {
-    return dbCategories?.map((c: Category, i: number) => ({
+    if (!dbCategories || dbCategories.length === 0) return [];
+    return dbCategories.map((c: Category, i: number) => ({
       index: String(i + 1).padStart(2, "0"),
       title: c.title,
       slug: c.slug,
@@ -19,7 +20,7 @@ export function CategoryExplorer() {
       image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
       sub: [],
       id: c.id
-    })) || [];
+    }));
   }, [dbCategories]);
 
   // Keyboard: arrow keys move through list
