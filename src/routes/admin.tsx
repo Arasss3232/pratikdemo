@@ -250,6 +250,8 @@ function AdminPage() {
         {tab === "users" && <UsersTab currentUserId={user.id} />}
         {tab === "catalogs" && <CatalogsTab />}
         {tab === "brands" && <BrandsTab />}
+        {tab === "content" && <ContentManagement />}
+
         
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
