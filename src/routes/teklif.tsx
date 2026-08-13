@@ -10,6 +10,7 @@ import { SUBCATEGORIES, BRANDS, APPLICATIONS } from "@/data/catalog";
 export const Route = createFileRoute("/teklif")({
   validateSearch: (s: Record<string, unknown>) => ({
     category: typeof s.category === "string" ? s.category : undefined,
+    categoryId: typeof s.categoryId === "string" ? s.categoryId : undefined,
   }),
   head: () => ({
     meta: [

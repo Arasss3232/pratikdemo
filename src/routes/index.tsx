@@ -1,9 +1,9 @@
-import { CategoryExplorer } from "./components/home/CategoryExplorer";
-import { ValueProps, SectorGrid, WhyChoose, ContactMap } from "./components/home/HomeSections";
-import { SiteShell } from "./components/site-shell";
-import { HomeHero } from "./components/home/HomeHero";
-import { BrandStrip } from "./components/home/HomeSections";
-import { BrochureSlider } from "./components/home/BrochureSlider";
+import { CategoryExplorer } from "@/components/home/CategoryExplorer";
+import { ValueProps, SectorGrid, WhyChoose, ContactMap } from "@/components/home/HomeSections";
+import { SiteShell } from "@/components/site-shell";
+import { HomeHero } from "@/components/home/HomeHero";
+import { BrandStrip } from "@/components/home/HomeSections";
+import { BrochureSlider } from "@/components/home/BrochureSlider";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
