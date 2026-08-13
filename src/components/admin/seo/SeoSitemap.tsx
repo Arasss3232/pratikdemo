@@ -61,7 +61,7 @@ export function SeoSitemap() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border bg-muted/20">
+        <div className="p-4 rounded-xl border bg-[var(--admin-surface-2)]/30">
           <div className="text-xs font-medium text-muted-foreground uppercase">Toplam URL</div>
           <div className="text-2xl font-bold mt-1">{stats.total}</div>
         </div>
