@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon } from "../../site-shell";
 
-export function SeoAudit() {
+export function SeoTools() {
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-xl font-bold">SEO Denetimi</h2>
