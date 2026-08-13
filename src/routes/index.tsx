@@ -1,62 +1,39 @@
+import { CategoryExplorer } from "./components/home/CategoryExplorer";
+import { ValueProps, SectorGrid, WhyChoose, ContactMap } from "./components/home/HomeSections";
+import { SiteShell } from "./components/site-shell";
+import { HomeHero } from "./components/home/HomeHero";
+import { BrandStrip } from "./components/home/HomeSections";
+import { BrochureSlider } from "./components/home/BrochureSlider";
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell } from "../components/site-shell";
-import { HomeHero } from "../components/home/HomeHero";
-import { BrochureSlider } from "../components/home/BrochureSlider";
-import { CategoryExplorer } from "../components/home/CategoryExplorer";
-import {
-  BrandStrip,
-  ContactInfo,
-  FeaturedProducts,
-  MobileContactBar,
-  ProcessTimeline,
-  QuoteCTA,
-  SectorGrid,
-  SelectedReferences,
-  ValueProps,
-  WhyChoose,
-} from "../components/home/HomeSections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Endüstriyel Donanım Tedariki — Pratik" },
-      {
-        name: "description",
-        content:
-          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki, teknik destek ve kurumsal teklif hizmetleri.",
-      },
-      { property: "og:title", content: "Endüstriyel Donanım Tedariki — Pratik" },
-      {
-        property: "og:description",
-        content:
-          "Elektrikli el aletlerinden bağlantı elemanlarına, endüstriyel tesisleriniz ve şantiyeleriniz için profesyonel donanım tedariki ve kurumsal teklif hizmetleri.",
-      },
-      { property: "og:url", content: "/" },
+      { title: "Pratik Tedarik Yapı — Endüstriyel Alım ve Tedarik Çözümleri" },
+      { name: "description", content: "Sanayi, inşaat ve üretim tesisleri için profesyonel donanım tedariki. Elektrikli el aletlerinden bağlantı elemanlarına kurumsal çözümler." },
+      { property: "og:title", content: "Pratik Tedarik Yapı — Endüstriyel Alım ve Tedarik Çözümleri" },
+      { property: "og:description", content: "Sanayi, inşaat ve üretim tesisleri için profesyonel donanım tedariki." },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Home,
+  component: HomePage,
 });
 
-function Home() {
+function HomePage() {
   return (
     <SiteShell>
-      <>
+      <main>
         <BrochureSlider />
         <HomeHero />
+        <BrandStrip />
         <CategoryExplorer />
         <ValueProps />
         <SectorGrid />
-        <FeaturedProducts />
         <WhyChoose />
-        <BrandStrip />
-        <SelectedReferences />
-        <ProcessTimeline />
-        <QuoteCTA />
-        <ContactInfo />
-        <MobileContactBar />
-      </>
+        <ContactMap />
+      </main>
     </SiteShell>
   );
 }
