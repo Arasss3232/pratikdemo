@@ -112,13 +112,17 @@ function AdminPage() {
               { name: "title", label: "Katalog Başlığı", type: "text", required: true },
               { name: "description", label: "Açıklama", type: "textarea" },
               { name: "pdf_url", label: "PDF Dosyası", type: "file" },
-              { name: "cover_image", label: "Kapak Görseli", type: "file" },
-              { name: "year", label: "Yıl", type: "number" },
+              { name: "cover_image_url", label: "Kapak Görseli", type: "file" },
+              { name: "year", label: "Yıl", type: "text" },
+              { name: "pages", label: "Sayfa Sayısı", type: "text" },
+              { name: "file_size", label: "Dosya Boyutu", type: "text" },
               { name: "display_order", label: "Sıralama", type: "number" },
+              { name: "is_active", label: "Aktif", type: "checkbox" },
             ]}
             columns={[
               { key: "title", label: "Katalog" },
               { key: "year", label: "Yıl" },
+              { key: "is_active", label: "Durum", render: (r) => r.is_active ? "Aktif" : "Pasif" },
             ]}
           />
         )}
@@ -274,7 +278,7 @@ function AdminPage() {
             columns={[
               { key: "title", label: "Başlık" },
               { key: "file_type", label: "Tür" },
-              { key: "created_at", label: "Yüklenme", render: (r) => new Date(r.created_at as string).toLocaleDateString("tr-TR") },
+              { key: "created_at", label: "Yüklenme", render: (r) => r.created_at ? new Date(r.created_at as string).toLocaleDateString("tr-TR") : "—" },
             ]}
           />
         )}

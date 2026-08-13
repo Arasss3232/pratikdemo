@@ -788,6 +788,51 @@ export type Database = {
         }
         Relationships: []
       }
+      catalogs: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          file_size: string | null
+          id: string
+          is_active: boolean | null
+          pages: string | null
+          pdf_url: string
+          title: string
+          updated_at: string
+          year: string | null
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          file_size?: string | null
+          id?: string
+          is_active?: boolean | null
+          pages?: string | null
+          pdf_url: string
+          title: string
+          updated_at?: string
+          year?: string | null
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          file_size?: string | null
+          id?: string
+          is_active?: boolean | null
+          pages?: string | null
+          pdf_url?: string
+          title?: string
+          updated_at?: string
+          year?: string | null
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           created_at: string
@@ -1451,6 +1496,39 @@ export type Database = {
           size_bytes?: number | null
           uploaded_by?: string | null
           url?: string
+        }
+        Relationships: []
+      }
+      media_library: {
+        Row: {
+          created_at: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          mime_type: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          file_size?: number | null
+          file_type?: string
+          file_url: string
+          id?: string
+          mime_type?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          mime_type?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
