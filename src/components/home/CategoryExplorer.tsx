@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { useCategories, type Category } from "@/hooks/use-categories";
 
-
 export function CategoryExplorer() {
   const { categories: dbCategories, isLoading } = useCategories();
   const [active, setActive] = useState(0);
@@ -42,8 +41,12 @@ export function CategoryExplorer() {
   }, [categories.length]);
 
   if (isLoading || categories.length === 0) {
-    if (isLoading) return <div className="py-20 text-center text-white/50">Yükleniyor...</div>;
-    return null;
+    return (
+      <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
+        <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" />
+        {isLoading ? <div className="py-20 text-center text-white/50">Yükleniyor...</div> : null}
+      </section>
+    );
   }
 
   const cat = categories[active];
