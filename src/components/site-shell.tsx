@@ -574,7 +574,7 @@ export function SiteFooter() {
   const email = settings.email;
   const hours = settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
 
-  const productCols = PRODUCT_GROUPS;
+  const { categories: footerCategories } = useCategories();
   const corporateLinks = [
     { to: "/kurumsal", label: "Hakkımızda" },
     { to: "/kataloglar", label: "Kataloglarımız" },
