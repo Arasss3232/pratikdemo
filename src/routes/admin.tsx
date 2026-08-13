@@ -204,7 +204,7 @@ function AdminPage() {
         userEmail={user.email ?? ""}
         onQuickAdd={handleQuickAdd}
       >
-        {tab !== "dashboard" && tab !== "seo" && <PageHeader tab={tab} />}
+        {tab !== "dashboard" && tab !== "seo" && tab !== "content" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
         {tab === "seo" && (
           <SeoShell 
@@ -251,8 +251,6 @@ function AdminPage() {
         {tab === "catalogs" && <CatalogsTab />}
         {tab === "brands" && <BrandsTab />}
         {tab === "content" && <ContentManagement />}
-
-        
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
         {tab === "myTasks" && <TasksTab />}

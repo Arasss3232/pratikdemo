@@ -43,7 +43,7 @@ const DESCRIPTIONS: Partial<Record<AdminTab, string>> = {
   settings: "Site kimliği, iletişim bilgileri, sosyal medya ve genel ayarlar.",
   products: "Ürün kataloğunuzu buradan yönetin. B2B görünürlük ve fiyat listesi bağlantıları da bu ekrandan.",
   catalogs: "Ürün gruplarınıza ait dijital PDF kataloglarını buradan yönetin.",
-  
+    content: "Web sitesindeki tüm metin ve görselleri kod yazmadan buradan güncelleyin.",
   brands: "Ana sayfada gösterilen marka logoları.",
   
   faqs: "Sık sorulan sorular. Kategoriye göre gruplandırabilirsiniz.",

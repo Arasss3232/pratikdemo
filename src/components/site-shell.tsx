@@ -169,6 +169,7 @@ export function SiteHeader() {
           ) : (
             <div className="min-h-[28px]" />
           )}
+
           <div className="flex items-center gap-3 shrink-0">
             {waHref && (
               <a
