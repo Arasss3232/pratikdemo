@@ -497,96 +497,102 @@ export function SiteHeader() {
             <div className="flex-1 overflow-y-auto overscroll-contain">
               <nav className="px-3 py-4" aria-label="Mobil menü">
                 <ul className="flex flex-col">
-                  {navLinks.filter((l) => l.to !== "/urunler").map((l) => (
-                    <li key={l.to}>
-                      <Link
-                        to={l.to}
-                        onClick={() => setMenuOpen(false)}
-                        className="group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors relative"
-                        activeOptions={{ exact: true }}
-                        activeProps={{
-                          className:
-                            "group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-[var(--public-yellow-500)] transition-colors relative before:content-[''] before:absolute before:left-0 before:top-3 before:bottom-3 before:w-[3px] before:bg-[var(--public-yellow-500)]",
-                        }}
-                      >
-                        <span>{l.label}</span>
-                        <Icon name="chevron_right" className="text-[20px] text-white/40 group-hover:text-[var(--public-yellow-500)]" aria-hidden="true" />
-                      </Link>
-                      <div className="h-px bg-white/8" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
-                    </li>
-                  ))}
-
-                  {/* Products accordion */}
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => setMobileProductsOpen((v) => !v)}
-                      className="w-full flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors"
-                      aria-expanded={mobileProductsOpen}
-                      aria-controls="mobile-products"
-                    >
-                      Ürün Grupları
-                      <Icon
-                        name="expand_more"
-                        className={`text-[22px] text-white/50 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
-                        aria-hidden="true"
-                      />
-                    </button>
-                    {mobileProductsOpen && (
-                      <ul id="mobile-products" className="pb-2">
-                        <li>
-                          <Link
-                            to="/urunler"
-                            onClick={() => setMenuOpen(false)}
-                            className="flex items-center gap-2 min-h-[44px] px-6 text-[14px] font-semibold"
-                            style={{ color: "var(--public-yellow-500)" }}
+                  {navLinks.map((l, index) => {
+                    if (l.to === "/urunler") {
+                      return (
+                        <li key="products-accordion">
+                          <button
+                            type="button"
+                            onClick={() => setMobileProductsOpen((v) => !v)}
+                            className="w-full flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors"
+                            aria-expanded={mobileProductsOpen}
+                            aria-controls="mobile-products"
                           >
-                            Tüm Ürün Grupları
-                            <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
-                          </Link>
+                            {l.label}
+                            <Icon
+                              name="expand_more"
+                              className={`text-[22px] text-white/50 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`}
+                              aria-hidden="true"
+                            />
+                          </button>
+                          {mobileProductsOpen && (
+                            <ul id="mobile-products" className="pb-2">
+                              <li>
+                                <Link
+                                  to="/urunler"
+                                  onClick={() => setMenuOpen(false)}
+                                  className="flex items-center gap-2 min-h-[44px] px-6 text-[14px] font-semibold"
+                                  style={{ color: "var(--public-yellow-500)" }}
+                                >
+                                  Tüm {l.label}
+                                  <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
+                                </Link>
+                              </li>
+                              {categories.length > 0 ? (
+                                categories.map((cat, idx) => (
+                                  <li key={cat.id}>
+                                    <Link
+                                      to="/teklif"
+                                      search={{ categoryId: cat.id, category: cat.title }}
+                                      onClick={() => setMenuOpen(false)}
+                                      className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
+                                    >
+                                      <span
+                                        className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                        style={{ color: "var(--public-yellow-500)" }}
+                                      >
+                                        {(idx + 1).toString().padStart(2, '0')}
+                                      </span>
+                                      <span className="min-w-0">{cat.title}</span>
+                                    </Link>
+                                  </li>
+                                ))
+                              ) : (
+                                PRODUCT_GROUPS.map((g) => (
+                                  <li key={g.title}>
+                                    <Link
+                                      to={g.to}
+                                      onClick={() => setMenuOpen(false)}
+                                      className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
+                                    >
+                                      <span
+                                        className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                        style={{ color: "var(--public-yellow-500)" }}
+                                      >
+                                        {g.code}
+                                      </span>
+                                      <span className="min-w-0">{g.title}</span>
+                                    </Link>
+                                  </li>
+                                ))
+                              )}
+                            </ul>
+                          )}
+                          <div className="h-px bg-white/8" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
                         </li>
-                        {categories.length > 0 ? (
-                          categories.map((cat, idx) => (
-                            <li key={cat.id}>
-                              <Link
-                                to="/teklif"
-                                search={{ categoryId: cat.id, category: cat.title }}
-                                onClick={() => setMenuOpen(false)}
-                                className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
-                              >
-                                <span
-                                  className="font-mono text-[11px] tabular-nums w-6 shrink-0"
-                                  style={{ color: "var(--public-yellow-500)" }}
-                                >
-                                  {(idx + 1).toString().padStart(2, '0')}
-                                </span>
-                                <span className="min-w-0">{cat.title}</span>
-                              </Link>
-                            </li>
-                          ))
-                        ) : (
-                          PRODUCT_GROUPS.map((g) => (
-                            <li key={g.title}>
-                              <Link
-                                to={g.to}
-                                onClick={() => setMenuOpen(false)}
-                                className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
-                              >
-                                <span
-                                  className="font-mono text-[11px] tabular-nums w-6 shrink-0"
-                                  style={{ color: "var(--public-yellow-500)" }}
-                                >
-                                  {g.code}
-                                </span>
-                                <span className="min-w-0">{g.title}</span>
-                              </Link>
-                            </li>
-                          ))
-                        )}
-                      </ul>
-                    )}
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} />
-                  </li>
+                      );
+                    }
+
+                    return (
+                      <li key={l.to}>
+                        <Link
+                          to={l.to}
+                          onClick={() => setMenuOpen(false)}
+                          className="group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-white/90 hover:text-[var(--public-yellow-500)] transition-colors relative"
+                          activeOptions={{ exact: true }}
+                          activeProps={{
+                            className:
+                              "group flex items-center justify-between min-h-[52px] px-3 text-[17px] font-semibold text-[var(--public-yellow-500)] transition-colors relative before:content-[''] before:absolute before:left-0 before:top-3 before:bottom-3 before:w-[3px] before:bg-[var(--public-yellow-500)]",
+                          }}
+                        >
+                          <span>{l.label}</span>
+                          <Icon name="chevron_right" className="text-[20px] text-white/40 group-hover:text-[var(--public-yellow-500)]" aria-hidden="true" />
+                        </Link>
+                        <div className="h-px bg-white/8" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+                      </li>
+                    );
+                  })}
+
                 </ul>
               </nav>
 
