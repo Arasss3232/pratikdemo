@@ -121,11 +121,13 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   ];
 
   const kpis: { key: AdminTab; label: string; icon: string; value: number; hint?: string }[] = [
-    { key: "quotes", label: "Teklif Talebi", icon: "request_quote", value: stats.quotesNew, hint: "Yeni talepler" },
-    { key: "messages", label: "İletişim Mesajı", icon: "mail", value: stats.messagesNew, hint: "Yeni mesajlar" },
-    { key: "categories", label: "Aktif Kategori", icon: "category", value: stats.categories },
-    { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
-    
+    { key: "quotes", label: "Toplam Teklif Talebi", icon: "request_quote", value: stats.quotesNew, hint: "Yeni talepler" },
+    { key: "messages", label: "Yeni İletişim Mesajları", icon: "mail", value: stats.messagesNew, hint: "Bekleyen mesajlar" },
+    { key: "categories", label: "Aktif Kategori Sayısı", icon: "category", value: stats.categories },
+    { key: "catalogs", label: "Aktif Katalog Sayısı", icon: "menu_book", value: stats.catalogs },
+    { key: "brands", label: "Aktif Bayilik Sayısı", icon: "workspace_premium", value: stats.refs },
+    { key: "notifications", label: "Okunmamış Bildirimler", icon: "notifications", value: 0 },
+    { key: "myTasks", label: "Geciken Görevler", icon: "task_alt", value: 0 },
   ];
 
   return (
