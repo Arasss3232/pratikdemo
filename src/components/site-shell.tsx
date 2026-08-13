@@ -741,6 +741,7 @@ export function SiteFooter() {
   ] as const;
 
   const { items: dynamicNav } = useNavigation();
+  const { categories } = useCategories();
   const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
 
   return (
