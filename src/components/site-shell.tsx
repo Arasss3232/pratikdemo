@@ -637,14 +637,20 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <h3 className="section-label text-secondary mb-5">Ürün Grupları</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-              {productCols.map((g) => (
-                <li key={g.to}>
+              {categories.slice(0, 8).map((cat) => (
+                <li key={cat.id}>
                   <Link
-                    to={g.to}
+                    to="/teklif"
+                    search={{ categoryId: cat.id, category: cat.title }}
                     className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
                   >
-                    <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">{g.code}</span>
-                    <span className="text-[14px]">{g.title}</span>
+                    {cat.icon && (
+                      <Icon 
+                        name={cat.icon} 
+                        className="text-[12px] text-white/40 group-hover:text-secondary" 
+                      />
+                    )}
+                    <span className="text-[14px]">{cat.title}</span>
                   </Link>
                 </li>
               ))}
