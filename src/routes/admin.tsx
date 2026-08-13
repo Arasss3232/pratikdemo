@@ -61,7 +61,7 @@ export const Route = createFileRoute("/admin")({
     aiPrompt?: string 
   } => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
-    seoTab: s.seoTab as SeoSubTab,
+    seoTab: (s.seoTab as SeoSubTab) || "dashboard",
     aiAction: s.aiAction as string,
     aiTarget: s.aiTarget as string,
     aiPrompt: s.aiPrompt as string,
