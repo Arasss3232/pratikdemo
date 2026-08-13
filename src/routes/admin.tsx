@@ -255,13 +255,27 @@ function AdminPage() {
         )}
 
         {tab === "media" && (
-          <div className="admin-card p-12 text-center text-muted-foreground">
-            <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4 mx-auto">
-              <span className="material-symbols-rounded text-slate-400 text-3xl">image</span>
-            </div>
-            <p>Medya kütüphanesi yakında aktif edilecek.</p>
-          </div>
+          <GenericCrud
+            table="media_library"
+            title="Medya Yönetimi"
+            description="Tüm görsel, PDF ve dosya varlıklarını yönetin."
+            fields={[
+              { name: "title", label: "Dosya Adı", type: "text", required: true },
+              { name: "file_url", label: "Dosya Seç", type: "file" },
+              { name: "file_type", label: "Dosya Türü", type: "select", options: [
+                { value: "image", label: "Görsel" },
+                { value: "pdf", label: "PDF" },
+                { value: "other", label: "Diğer" },
+              ]},
+            ]}
+            columns={[
+              { key: "title", label: "Başlık" },
+              { key: "file_type", label: "Tür" },
+              { key: "created_at", label: "Yüklenme", render: (r) => new Date(r.created_at as string).toLocaleDateString("tr-TR") },
+            ]}
+          />
         )}
+
       </div>
     </AdminShell>
   );
