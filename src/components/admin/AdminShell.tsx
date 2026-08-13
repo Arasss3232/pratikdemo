@@ -374,6 +374,7 @@ function CommandTopbar({
   onOpenPalette,
   onOpenNotify,
   notifyOpen,
+  unreadCount,
   onCloseNotify,
   quickOpen,
   onToggleQuick,
