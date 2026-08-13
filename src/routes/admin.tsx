@@ -379,7 +379,7 @@ function AdminPage() {
           ]} />
         )}
         {tab === "documents" && (
-          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={undefined /*
+          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={[
             "Sözleşmeler, faturalar ve teknik belgeler için ortak depo",
             "Rol bazlı erişim kontrolü",
           ]} />
