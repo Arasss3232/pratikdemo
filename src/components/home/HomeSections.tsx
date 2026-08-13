@@ -804,7 +804,7 @@ export function ProcessTimeline() {
       <div className="absolute inset-0 pub-blueprint opacity-50 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
-          index="10"
+          index="09"
           eyebrow="Tedarik Süreci"
           title={
             <>
