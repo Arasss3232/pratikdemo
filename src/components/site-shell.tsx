@@ -6,8 +6,6 @@ import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
-import { useCategories } from "@/hooks/use-categories";
-import { useHydrated } from "@/hooks/use-hydrated";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
 
@@ -60,7 +58,6 @@ const PRODUCT_GROUPS = [
 ] as const;
 
 export function SiteHeader() {
-  const isHydrated = useHydrated();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -72,8 +69,8 @@ export function SiteHeader() {
   const { settings: rawSettings } = useSiteSettings();
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
-  const { categories } = useCategories();
   const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
+
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -81,7 +78,6 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
   useEffect(() => {
     if (!menuOpen) return;
     const prev = document.body.style.overflow;
@@ -108,6 +104,7 @@ export function SiteHeader() {
       }
     };
     window.addEventListener("keydown", onKey);
+    // move focus into the drawer
     const t = window.setTimeout(() => {
       const firstLink = drawerRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])');
       firstLink?.focus();
@@ -116,10 +113,10 @@ export function SiteHeader() {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
       window.clearTimeout(t);
+      // restore focus to trigger
       menuBtnRef.current?.focus();
     };
   }, [menuOpen]);
-
   useEffect(() => {
     if (!megaOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaOpen(false);
@@ -138,51 +135,141 @@ export function SiteHeader() {
 
   const phone = settings.phone;
   const whatsapp = settings.whatsapp;
+
   const waHref = whatsapp ? `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}` : undefined;
   const telHref = phone ? `tel:${phone.replace(/\s/g, "")}` : undefined;
 
   return (
     <>
-    <div 
-      className="w-full bg-[#000F1A] text-white flex items-center justify-center overflow-hidden z-[60]"
-      style={{ height: '18px' }}
-    />
     <header
       className="sticky top-0 z-50 w-full transition-all duration-300 text-white"
       style={{
-        backgroundColor: "var(--public-navy-900)",
-        boxShadow: scrolled ? "0 4px 12px rgba(0,0,0,0.15)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.08)" : "none",
+        backgroundColor: scrolled ? "var(--public-navy-950)" : "var(--public-navy-900)",
+        boxShadow: scrolled ? "0 1px 0 rgba(245,196,0,0.35), 0 12px 28px -20px rgba(0,0,0,0.6)" : "none",
+        borderBottom: scrolled ? "0" : "1px solid rgba(255,255,255,0.06)",
+        paddingTop: "env(safe-area-inset-top)",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)",
         fontFamily: 'var(--font-body, "Manrope", "Segoe UI", Arial, sans-serif)',
       }}
     >
+      {/* Mobile compact utility strip */}
+      <div
+        className="md:hidden"
+        style={{
+          backgroundColor: "var(--public-navy-950)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
+          <div className="flex-1 min-w-0">
+            {phone ? (
+              <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+                <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                <span className="truncate">{phone}</span>
+              </a>
+            ) : (
+              <div className="min-h-[28px]" />
+            )}
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            {waHref && (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp ile yaz"
+                className="inline-flex items-center gap-1 min-h-[28px] font-medium hover:text-white transition-colors"
+              >
+                <Icon name="chat" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                WhatsApp
+              </a>
+            )}
+            <Link
+              to="/teklif"
+              className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
+              style={{ color: "var(--public-yellow-500)" }}
+            >
+              Teklif Al
+              <Icon name="arrow_forward" className="text-[13px]" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Utility strip — desktop only */}
+      <div
+        className="hidden md:block"
+        style={{ backgroundColor: "var(--public-navy-950)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
+          <div className="flex items-center gap-6">
+            {settings.working_hours && (
+              <span className="inline-flex items-center gap-2">
+                <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {settings.working_hours}
+              </span>
+            )}
+            {settings.address && (
+              <span className="inline-flex items-center gap-2">
+                <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {settings.address}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-5">
+            {phone && (
+              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {phone}
+              </a>
+            )}
+            {whatsapp && (
+              <a
+                href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 hover:text-white transition-colors"
+              >
+                <Icon name="chat" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                WhatsApp
+              </a>
+            )}
+            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              Teklif Talep Et
+              <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* Main header row */}
       <div className="max-w-max-width mx-auto px-4 md:px-margin-desktop">
         <div
-          className="flex items-center justify-between gap-6"
-          style={{ height: "74px" }}
+          className="grid grid-cols-[minmax(0,auto)_1fr_auto] items-center gap-3 md:gap-6 transition-[height] duration-300"
+          style={{ height: scrolled ? "58px" : "64px" }}
         >
-          {/* Logo Container */}
+          {/* Logo */}
           <Link
             to="/"
-            className="flex items-center justify-center shrink-0 bg-[#004A7C] rounded-[11px] overflow-hidden"
-            style={{ width: "245px", height: "62px" }}
+            className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
             aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
           >
             <BrandWordmark
-              logoUrl={settings.logo_url}
+              logoUrl={settings.mobile_logo_url || settings.logo_url}
               companyName={settings.company_name}
-              size="lg"
+              size={scrolled ? "md" : "lg"}
             />
           </Link>
 
           {/* Center nav — desktop */}
-          <nav className="hidden lg:flex items-center gap-2" aria-label="Ana menü">
-            {navLinks.map((l) =>
+          <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
+            {navLinks.filter((l) => l.to !== "/").map((l) =>
               l.to === "/urunler" ? (
                 <div
                   key={l.to}
-                  className="relative h-full flex items-center"
+                  className="relative"
                   onMouseEnter={openMega}
                   onMouseLeave={closeMega}
                 >
@@ -190,17 +277,18 @@ export function SiteHeader() {
                     to={l.to}
                     onFocus={openMega}
                     onBlur={closeMega}
-                    className="inline-flex items-center gap-1 px-4 py-2 text-[17px] font-semibold text-white hover:text-[var(--public-yellow-500)] transition-colors relative"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
                     activeProps={{
-                      className: "inline-flex items-center gap-1 px-4 py-2 text-[17px] font-semibold text-[var(--public-yellow-500)] relative",
+                      className:
+                        "inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
                     }}
                     aria-expanded={megaOpen}
                     aria-haspopup="true"
                   >
-                    Ürünler
+                    {l.label}
                     <Icon
                       name="expand_more"
-                      className={`text-[18px] transition-transform ${megaOpen ? "rotate-180" : ""}`}
+                      className={`text-[16px] transition-transform ${megaOpen ? "rotate-180" : ""}`}
                       aria-hidden="true"
                     />
                   </Link>
@@ -209,33 +297,49 @@ export function SiteHeader() {
                 <Link
                   key={l.to}
                   to={l.to}
-                  className="px-4 py-2 text-[17px] font-semibold text-white hover:text-[var(--public-yellow-500)] transition-colors relative"
+                  className="px-4 py-2 text-[14px] font-semibold text-white/85 hover:text-white transition-colors relative"
                   activeOptions={{ exact: true }}
                   activeProps={{
-                    className: "px-4 py-2 text-[17px] font-semibold text-[var(--public-yellow-500)] relative",
+                    className:
+                      "px-4 py-2 text-[14px] font-semibold text-white relative after:content-[''] after:absolute after:left-4 after:right-4 after:-bottom-1 after:h-[2px] after:bg-[var(--public-yellow-500)]",
                   }}
                 >
                   {l.label}
                 </Link>
-              )
+              ),
             )}
           </nav>
 
           {/* Right actions */}
-          <div className="flex items-center gap-2 justify-end">
+          <div className="flex items-center gap-1 md:gap-2 justify-end">
+            {isAdmin && (
+              <Link
+                to="/admin"
+                search={{
+                  tab: "dashboard",
+                  seoTab: "dashboard",
+                }}
+                className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
+                aria-label="Yönetim paneli"
+                title="Yönetim"
+              >
+                <Icon name="admin_panel_settings" aria-hidden="true" />
+              </Link>
+            )}
+            <span className="hidden lg:inline-flex ml-2">
             <Link
-              to="/giris"
-              className="min-h-11 min-w-11 flex items-center justify-center rounded-sm text-white hover:bg-white/10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
-              aria-label="Yönetici Girişi"
-              title="Yönetici Girişi"
+              to="/teklif"
+              search={{ categoryId: undefined, category: "Genel" }}
+              className="pub-btn pub-btn-primary pub-btn-sm"
             >
-              <Icon name="security" className="text-[24px]" aria-hidden="true" />
+              Teklif Talep Et
+              <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
             </Link>
-            
+            </span>
             <button
               ref={menuBtnRef}
               type="button"
-              className="lg:hidden text-white min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)] transition-colors"
+              className="lg:hidden text-white min-h-11 min-w-11 inline-flex items-center justify-center rounded-sm border border-white/15 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)] transition-colors ml-1"
               aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
@@ -265,7 +369,7 @@ export function SiteHeader() {
                   Tedarik zincirinizin her katmanı için.
                 </h3>
                 <p className="text-[14px] text-white/70 leading-relaxed mb-5">
-                  Ürün gruplarını inceleyerek ihtiyacınız olan kategoriler için hızlı teklif isteyin.
+                  Yetkili distribütör kanalları ve doğrudan üretici tedariğiyle tek noktadan sipariş.
                 </p>
                 <Link
                   to="/urunler"
