@@ -8,7 +8,7 @@ import { EmptyState } from "./EmptyState";
 export type CrudField = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "url" | "date" | "checkbox" | "select" | "richtext";
+  type?: "text" | "textarea" | "number" | "url" | "date" | "checkbox" | "select" | "richtext" | "file";
   required?: boolean;
   options?: { value: string; label: string }[];
   placeholder?: string;
