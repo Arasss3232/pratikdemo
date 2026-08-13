@@ -43,6 +43,11 @@ export type SiteSettings = {
   gtm_active?: boolean;
   ga4_active?: boolean;
   schema_active?: boolean;
+  agency_attribution_visible?: boolean;
+  agency_attribution_text?: string | null;
+  agency_attribution_url?: string | null;
+};
+
 
 };
 

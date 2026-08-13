@@ -794,8 +794,23 @@ export function SiteFooter() {
           <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
           <p className="section-label text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
         </div>
+
+        {settings.agency_attribution_visible && (
+          <div className="mt-8 pt-4 border-t border-white/5 flex justify-center">
+            <a
+              href={settings.agency_attribution_url || "https://www.bilgintek.com"}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Bilgintek Yazılım ve Reklam Ajansı web sitesini yeni sekmede aç"
+              className="text-[11px] tracking-wide text-white/40 hover:text-[var(--public-yellow-500)] transition-all duration-200 py-2 px-4 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--public-yellow-500)] focus-visible:outline-offset-4 rounded"
+            >
+              {settings.agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
+            </a>
+          </div>
+        )}
       </div>
     </footer>
+
   );
 }
 
