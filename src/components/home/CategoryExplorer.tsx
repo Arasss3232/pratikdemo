@@ -12,10 +12,10 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
       if (!t?.closest?.("[data-category-tablist]")) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((i) => (i + 1) % categories.length);
+        setActive((prev: number) => (prev + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((i) => (i - 1 + categories.length) % categories.length);
+        setActive((prev: number) => (prev - 1 + categories.length) % categories.length);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -182,9 +182,8 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
                 ))}
               </div>
               <Link
-                to={cat.to}
+                to="/teklif"
                 search={{ categoryId: cat.id }}
-
                 className="pub-btn pub-btn-primary pub-btn-sm mt-6"
               >
                 Kategoriyi İncele
@@ -248,7 +247,7 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
                 {cat.title}
               </h3>
               <p className="mt-3 text-white/75 text-[14px] leading-relaxed">{cat.desc}</p>
-              <Link to={cat.to} search={{ categoryId: cat.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
+              <Link to="/teklif" search={{ categoryId: cat.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
                 Kategoriyi İncele
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>
