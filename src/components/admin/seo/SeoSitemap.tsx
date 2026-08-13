@@ -49,7 +49,7 @@ export function SeoSitemap() {
       </div>
 
       {isInvalidUrl && (
-        <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+        <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50/10 border border-amber-200/50">
           <Icon name="warning" className="text-amber-500 shrink-0" />
           <div className="text-sm text-amber-800">
             <h4 className="font-bold">Önce gerçek alan adını girin</h4>
@@ -66,17 +66,17 @@ export function SeoSitemap() {
           <div className="text-xs font-medium text-muted-foreground uppercase">Toplam URL</div>
           <div className="text-2xl font-bold mt-1">{stats.total}</div>
         </div>
-        <div className="p-4 rounded-xl border bg-green-50 border-green-100">
+        <div className="p-4 rounded-xl border border-green-200/50 bg-green-50/10">
           <div className="text-xs font-medium text-green-600 uppercase">Dahil Edilen</div>
           <div className="text-2xl font-bold mt-1 text-green-700">{stats.indexed}</div>
         </div>
-        <div className="p-4 rounded-xl border bg-amber-50 border-amber-100">
+        <div className="p-4 rounded-xl border border-amber-200/50 bg-amber-50/10">
           <div className="text-xs font-medium text-amber-600 uppercase">Hariç Tutulan</div>
           <div className="text-2xl font-bold mt-1 text-amber-700">{stats.excluded}</div>
         </div>
       </div>
 
-      <div className="admin-card overflow-hidden">
+      <div className="admin-card overflow-hidden shadow-sm" style={{ background: "var(--admin-surface)" }}>
         <div className="p-4 border-b bg-[var(--admin-surface-2)]/30 font-medium text-[var(--admin-navy)]">Sitemap Yapılandırması</div>
         <div className="p-6 space-y-6">
           <div className="flex flex-col gap-2">
@@ -118,9 +118,9 @@ export function SeoSitemap() {
         </div>
       </div>
 
-      <div className="p-4 rounded-lg bg-blue-50 border border-blue-100 flex gap-3">
+      <div className="p-4 rounded-lg bg-blue-50/10 border border-blue-200/30 flex gap-3">
         <Icon name="info" className="text-blue-500" />
-        <div className="text-xs text-blue-800 leading-relaxed">
+        <div className="text-xs text-blue-400 leading-relaxed">
           <strong>İpucu:</strong> Sitemap'e yeni sayfalar eklemek için "Sayfa SEO Yönetimi" sekmesini kullanın. 
           Arama motorları sitemap'i genellikle 24-48 saat içinde tekrar tarar.
         </div>
