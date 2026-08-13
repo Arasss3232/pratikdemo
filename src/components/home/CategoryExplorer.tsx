@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { useCategories, type Category } from "@/hooks/use-categories";
 
-function CategoryExplorerContent({ categories, active, setActive }: { categories: any[], active: number, setActive: (i: number) => void }) {
+function CategoryExplorerContent({ categories, active, setActive }: { categories: any[], active: number, setActive: (updater: (prev: number) => number) => void }) {
   useEffect(() => {
     if (categories.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
@@ -11,10 +11,10 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
       if (!t?.closest?.("[data-category-tablist]")) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((prev) => (prev + 1) % categories.length);
+        setActive((prev: number) => (prev + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((prev) => (prev - 1 + categories.length) % categories.length);
+        setActive((prev: number) => (prev - 1 + categories.length) % categories.length);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -68,7 +68,7 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
                     role="tab"
                     aria-selected={isActive}
                     tabIndex={isActive ? 0 : -1}
-                    onClick={() => setActive(i)}
+                    onClick={() => setActive(() => i)}
                     className="w-full text-left py-6 flex items-baseline gap-6 transition-colors relative group"
                     style={{
                       borderBottom: "1px solid var(--public-navy-border)",
@@ -197,7 +197,7 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
               return (
                 <button
                   key={c.id}
-                  onClick={() => setActive(i)}
+                  onClick={() => setActive(() => i)}
                   className="pub-mono shrink-0 px-4 py-2.5 transition-colors"
                   style={{
                     backgroundColor: isActive ? "var(--public-yellow-500)" : "transparent",
