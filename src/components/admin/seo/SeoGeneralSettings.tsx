@@ -51,7 +51,7 @@ export function SeoGeneralSettings() {
       if (error) throw error;
       toast.success("Genel SEO ayarları başarıyla kaydedildi.");
       // Force reload or cache clear might be needed if not using real-time
-      window.location.reload(); 
+      await settings.refresh();
     } catch (error: any) {
       toast.error("Ayarlar kaydedilemedi", { description: error.message });
     } finally {

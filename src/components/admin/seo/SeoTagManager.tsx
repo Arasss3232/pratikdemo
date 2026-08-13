@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,9 +6,16 @@ import { Icon } from "../../site-shell";
 
 export function SeoTagManager() {
   const settings = useSiteSettings();
-  const [gtmId, setGtmId] = useState(settings?.google_tag_manager_id || "");
-  const [isActive, setIsActive] = useState(settings?.gtm_active || false);
+  const [gtmId, setGtmId] = useState("");
+  const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (settings) {
+      setGtmId(settings.google_tag_manager_id || "");
+      setIsActive(settings.gtm_active || false);
+    }
+  }, [settings]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -17,7 +24,7 @@ export function SeoTagManager() {
       .update({ 
         google_tag_manager_id: gtmId,
         gtm_active: isActive 
-      })
+      } as any)
       .eq("id", true);
 
     if (error) {

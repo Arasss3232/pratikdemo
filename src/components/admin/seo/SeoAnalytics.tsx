@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,9 +6,16 @@ import { Icon } from "../../site-shell";
 
 export function SeoAnalytics() {
   const settings = useSiteSettings();
-  const [ga4Id, setGa4Id] = useState(settings?.ga4_id || "");
-  const [isActive, setIsActive] = useState(settings?.ga4_active || false);
+  const [ga4Id, setGa4Id] = useState("");
+  const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (settings) {
+      setGa4Id(settings.ga4_id || "");
+      setIsActive(settings.ga4_active || false);
+    }
+  }, [settings]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -17,7 +24,7 @@ export function SeoAnalytics() {
       .update({ 
         ga4_id: ga4Id,
         ga4_active: isActive 
-      })
+      } as any)
       .eq("id", true);
 
     if (error) {
