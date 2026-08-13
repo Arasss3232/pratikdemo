@@ -52,11 +52,11 @@ function TeklifPage() {
   const email = settings.email ?? "";
   const whatsapp = settings.whatsapp ?? phone;
 
-  const { data: categories, isLoading: catsLoading } = useCategories(true);
+  const { categories, isLoading: catsLoading } = useCategories(true);
 
   const verifiedCategory = useMemo(() => {
     if (!search.categoryId || !categories) return null;
-    const cat = categories.find(c => c.id === search.categoryId);
+    const cat = categories.find((c: any) => c.id === search.categoryId);
     if (!cat || !cat.is_active) return null;
     return cat;
   }, [search.categoryId, categories]);
@@ -277,7 +277,7 @@ function TeklifPage() {
                               className="w-full border border-outline focus:border-primary focus:outline-none px-3 py-2.5 text-body-md bg-white"
                             />
                             <datalist id={`cats-${line.id}`}>
-                              {categories?.map((c) => <option key={c.id} value={c.title} />)}
+                              {categories?.map((c: any) => <option key={c.id} value={c.title} />)}
                               {APPLICATIONS.map((a) => <option key={a} value={a} />)}
                             </datalist>
 

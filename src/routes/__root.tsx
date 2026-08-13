@@ -36,8 +36,17 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
+  useEffect(() => {
+    console.error("DEBUG_ERROR_FULL:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      cause: error.cause,
+      pathname: typeof window !== 'undefined' ? window.location.pathname : 'ssr',
+    });
+    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+  }, [error]);
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
