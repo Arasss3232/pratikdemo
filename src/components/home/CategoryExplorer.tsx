@@ -3,7 +3,25 @@ import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { useCategories, type Category } from "@/hooks/use-categories";
 
-function CategoryExplorerContent({ categories, active, setActive }: { categories: any[], active: number, setActive: (i: number) => void }) {
+export function CategoryExplorer() {
+  const { categories: dbCategories, isLoading } = useCategories();
+  const [active, setActive] = useState(0);
+
+  const categories = useMemo(() => {
+    if (!dbCategories || dbCategories.length === 0) return [];
+    return dbCategories.map((c: Category, i: number) => ({
+      index: String(i + 1).padStart(2, "0"),
+      title: c.title,
+      slug: c.slug,
+      to: "/teklif",
+      desc: c.description || "Profesyonel endüstriyel çözümler.",
+      count: "Geniş ürün yelpazesi",
+      image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
+      sub: [],
+      id: c.id
+    }));
+  }, [dbCategories]);
+
   // Keyboard: arrow keys move through list
   useEffect(() => {
     if (categories.length === 0) return;
@@ -12,15 +30,24 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
       if (!t?.closest?.("[data-category-tablist]")) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((prev: number) => (prev + 1) % categories.length);
+        setActive((prev) => (prev + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((prev: number) => (prev - 1 + categories.length) % categories.length);
+        setActive((prev) => (prev - 1 + categories.length) % categories.length);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [categories.length, setActive]);
+  }, [categories.length]);
+
+  if (isLoading || categories.length === 0) {
+    return (
+      <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
+        <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" aria-hidden />
+        {isLoading ? <div className="py-20 text-center text-white/50">Yükleniyor...</div> : null}
+      </section>
+    );
+  }
 
   const cat = categories[active];
   if (!cat) return null;
@@ -63,10 +90,9 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
             style={{ borderTop: "1px solid var(--public-navy-border)" }}
           >
             {categories.map((c: any, i: number) => {
-
               const isActive = i === active;
               return (
-                <li key={c.slug}>
+                <li key={c.id}>
                   <button
                     role="tab"
                     aria-selected={isActive}
@@ -197,11 +223,10 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
         <div className="md:hidden">
           <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
             {categories.map((c: any, i: number) => {
-
               const isActive = i === active;
               return (
                 <button
-                  key={c.slug}
+                  key={c.id}
                   onClick={() => setActive(i)}
                   className="pub-mono shrink-0 px-4 py-2.5 transition-colors"
                   style={{
@@ -257,37 +282,6 @@ function CategoryExplorerContent({ categories, active, setActive }: { categories
       </div>
     </section>
   );
-}
-
-export function CategoryExplorer() {
-  const { categories: dbCategories, isLoading } = useCategories();
-  const [active, setActive] = useState(0);
-
-  const categories = useMemo(() => {
-    if (!dbCategories || dbCategories.length === 0) return [];
-    return dbCategories.map((c: Category, i: number) => ({
-      index: String(i + 1).padStart(2, "0"),
-      title: c.title,
-      slug: c.slug,
-      to: "/teklif",
-      desc: c.description || "Profesyonel endüstriyel çözümler.",
-      count: "Geniş ürün yelpazesi",
-      image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
-      sub: [],
-      id: c.id
-    }));
-  }, [dbCategories]);
-
-  if (isLoading || categories.length === 0) {
-    return (
-      <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
-        <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" />
-        {isLoading ? <div className="py-20 text-center text-white/50">Yükleniyor...</div> : null}
-      </section>
-    );
-  }
-
-  return <CategoryExplorerContent categories={categories} active={active} setActive={setActive} />;
 }
 
 export function SectionHead({
