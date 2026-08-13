@@ -121,7 +121,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       
       { key: "categories", label: "Kategoriler", icon: "category" },
-      { key: "brands", label: "Markalar", icon: "sell" },
+      { key: "brands", label: "Bayilik Yönetimi", icon: "workspace_premium" },
       { key: "priceLists", label: "Fiyat Listeleri", icon: "price_change" },
       { key: "specialPrices", label: "Özel Fiyatlar", icon: "local_offer" },
       { key: "discounts", label: "İskontolar", icon: "discount" },
@@ -166,7 +166,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { key: "settings", label: "Site Ayarları", icon: "settings" },
       { key: "brochures", label: "Broşür ve Slider Yönetimi", icon: "view_carousel", description: "Anasayfa broşür slaytları" },
       { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları" },
-      { key: "references", label: "Bayiliklerimiz Yönetimi", icon: "workspace_premium" },
+      
       { key: "certificates", label: "Sertifikalar", icon: "verified" },
       { key: "messages", label: "Gelen Mesajlar", icon: "mail" },
       { key: "quotes", label: "Web Teklif Talepleri", icon: "mail_outline" },

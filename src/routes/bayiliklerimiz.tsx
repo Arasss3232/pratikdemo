@@ -4,7 +4,7 @@ import { SiteShell } from "../components/site-shell";
 import { useHomeBrands } from "../hooks/use-home-data";
 import { PageHero } from "../components/marketing/PageHero";
 
-export const Route = createFileRoute("/markalar")({
+export const Route = createFileRoute("/bayiliklerimiz")({
   head: () => ({
     meta: [
       { title: "Yetkili Distribütör Markalar — Pratik" },
@@ -19,16 +19,16 @@ export const Route = createFileRoute("/markalar")({
   component: MarkalarPage,
 });
 
-function MarkalarPage() {
+function BayiliklerimizPage() {
   const { data: brands = [], isLoading } = useHomeBrands();
   const [selectedBrand, setSelectedBrand] = useState<any>(null);
 
   return (
     <SiteShell>
       <PageHero
-        title="Yetkili Distribütörlüklerimiz"
-        description="Dünya çapında güvenilir markaların yetkili distribütörü ve satış noktası olarak, projeleriniz için orijinal yedek parça ve garanti güvencesi sunuyoruz."
-        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Markalar" }]}
+        title="Bayiliklerimiz"
+        description="Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin."
+        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Bayiliklerimiz" }]}
       />
 
       <section className="py-20 bg-background">
@@ -96,7 +96,7 @@ function MarkalarPage() {
               )}
               {!selectedBrand.description && (
                 <p className="text-on-surface-variant mb-8">
-                  {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış ve teknik destek noktası olarak hizmet vermekteyiz.
+                  {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış noktası olarak hizmet vermekteyiz.
                 </p>
               )}
               
