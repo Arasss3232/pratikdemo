@@ -42,9 +42,8 @@ export function CommandPalette({
     }
     const t = setTimeout(async () => {
       const pattern = `%${term}%`;
-      const [p, s, b, m] = await Promise.all([
+      const [p, b, m] = await Promise.all([
         supabase.from("products").select("id,name,sku").ilike("name", pattern).limit(4),
-        supabase.from("services").select("id,title,slug").ilike("title", pattern).limit(3),
         supabase.from("blog_posts").select("id,title,slug").ilike("title", pattern).limit(3),
         supabase.from("contact_messages").select("id,name,subject").ilike("subject", pattern).limit(3),
       ]);
@@ -58,9 +57,6 @@ export function CommandPalette({
           group: "Kayıtlar",
           run: () => onGoTab("products"),
         }),
-      );
-      (s.data ?? []).forEach((r: { id: string; title: string }) =>
-        out.push({ id: `s-${r.id}`, label: r.title, hint: "Hizmet", icon: "handyman", group: "Kayıtlar", run: () => onGoTab("services") }),
       );
       (b.data ?? []).forEach((r: { id: string; title: string }) =>
         out.push({ id: `b-${r.id}`, label: r.title, hint: "Blog yazısı", icon: "article", group: "Kayıtlar", run: () => onGoTab("blog") }),
@@ -94,10 +90,8 @@ export function CommandPalette({
     );
     const create: Cmd[] = [
       { id: "c-product", label: "Yeni Ürün Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("products") },
-      { id: "c-service", label: "Yeni Hizmet Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("services") },
-      { id: "c-blog", label: "Yeni Haber / Blog Yazısı", icon: "add", group: "Oluştur", run: () => onQuickAdd("blog") },
-      { id: "c-ref", label: "Yeni Referans Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("references") },
-      { id: "c-job", label: "Yeni İş İlanı Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("jobs") },
+      { id: "c-catalog", label: "Yeni Katalog Yükle", icon: "add", group: "Oluştur", run: () => onQuickAdd("catalogs") },
+      { id: "c-ref", label: "Yeni Bayilik Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("references") },
     ];
     const shortcuts: Cmd[] = [
       {

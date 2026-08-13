@@ -10,10 +10,9 @@ const THEME_KEY = "admin_theme";
 
 const QUICK_ADD_ITEMS: { key: AdminTab; label: string; icon: string; hint: string }[] = [
   { key: "products", label: "Yeni Ürün", icon: "inventory_2", hint: "Kataloğa ekle" },
-  { key: "services", label: "Yeni Hizmet", icon: "handyman", hint: "Hizmet sayfası oluştur" },
-  { key: "blog", label: "Yeni Haber", icon: "article", hint: "Blog / duyuru" },
-  { key: "references", label: "Yeni Referans", icon: "workspace_premium", hint: "Proje ekle" },
-  { key: "jobs", label: "Yeni İş İlanı", icon: "work", hint: "Kariyer" },
+  { key: "catalogs", label: "Yeni Katalog", icon: "menu_book", hint: "Dijital PDF yükle" },
+  { key: "references", label: "Yeni Bayilik", icon: "workspace_premium", hint: "Bayilik bilgisi ekle" },
+  { key: "messages", label: "Mesaj Yanıtla", icon: "mail", hint: "Gelen kutusu" },
 ];
 
 export function AdminShell({
