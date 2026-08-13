@@ -14,6 +14,9 @@ import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDia
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
 import { SeoDashboard } from "../components/admin/seo/SeoDashboard";
+import { SeoGeneralSettings } from "../components/admin/seo/SeoGeneralSettings";
+import { SeoPageManagement } from "../components/admin/seo/SeoPageManagement";
+import { SeoTools } from "../components/admin/seo/SeoTools";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
