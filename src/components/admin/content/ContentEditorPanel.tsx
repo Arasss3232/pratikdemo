@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe } from "lucide-react";
@@ -7,7 +9,9 @@ import { ImageUploadField } from "../ImageUploadField";
 
 export function ContentEditorPanel({ route }: { route: string }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [localSections, setLocalSections] = useState<any[]>([]);
+
   const [previewMode, setPreviewMode] = useState(false);
 
   const { data: page, isLoading: pageLoading } = useQuery({
@@ -108,12 +112,20 @@ export function ContentEditorPanel({ route }: { route: string }) {
         </div>
         <div className="flex items-center gap-3">
           <button 
+            onClick={() => navigate({ search: (prev: any) => ({ ...prev, tab: 'seo', seoTab: 'pages' }) })}
+            className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
+          >
+            <Globe size={16} />
+            SEO Ayarlarını Aç
+          </button>
+          <button 
             onClick={() => window.open(route === '/' ? '/' : route, '_blank')}
             className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
           >
             <Eye size={16} />
             Sitede Gör
           </button>
+
           <button 
             onClick={() => saveMutation.mutate(false)}
             disabled={saveMutation.isPending}

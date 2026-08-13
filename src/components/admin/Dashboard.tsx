@@ -34,6 +34,8 @@ type LoadedStats = {
   refs: number;
   categories: number;
   lastUpdated: string | null;
+  tasksPending: number;
+  notificationsUnread: number;
 };
 
 const initialStats: LoadedStats = {
@@ -43,7 +45,10 @@ const initialStats: LoadedStats = {
   refs: 0,
   categories: 0,
   lastUpdated: null,
+  tasksPending: 0,
+  notificationsUnread: 0,
 };
+
 
 export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void }) {
   const [stats, setStats] = useState<LoadedStats>(initialStats);
@@ -60,18 +65,21 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [cats, qNew, msgNew, refs, catsCount, lastUpd] = await Promise.all([
+      const [cats, qNew, msgNew, refs, catsCount, lastUpd, taskCount, notifCount] = await Promise.all([
         supabase.from("catalogs" as any).select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("brands").select("*", { count: "exact", head: true }),
         supabase.from("product_categories").select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("updated_at").order("updated_at", { ascending: false }).limit(1),
+        supabase.from("admin_tasks").select("*", { count: "exact", head: true }).neq("status", "Tamamlandı"),
+        supabase.from("notifications").select("*", { count: "exact", head: true }).eq("is_read", false),
       ]);
       const [recentMsg, recentQ] = await Promise.all([
         supabase.from("contact_messages").select("id,name,subject,status,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("quote_requests").select("id,contact_name,company,status,created_at").order("created_at", { ascending: false }).limit(5),
       ]);
+
       if (!alive) return;
       setStats({
         catalogs: cats.count ?? 0,
@@ -80,7 +88,10 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
         refs: refs.count ?? 0,
         categories: catsCount.count ?? 0,
         lastUpdated: (lastUpd.data?.[0] as { updated_at?: string } | undefined)?.updated_at ?? null,
+        tasksPending: taskCount.count ?? 0,
+        notificationsUnread: notifCount.count ?? 0,
       });
+
       setMessages((recentMsg.data as Message[]) ?? []);
       setQuotes((recentQ.data as Quote[]) ?? []);
       setLoading(false);
@@ -126,9 +137,10 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     { key: "categories", label: "Aktif Kategori Sayısı", icon: "category", value: stats.categories },
     { key: "catalogs", label: "Aktif Katalog Sayısı", icon: "menu_book", value: stats.catalogs },
     { key: "brands", label: "Aktif Bayilik Sayısı", icon: "workspace_premium", value: stats.refs },
-    { key: "notifications", label: "Okunmamış Bildirimler", icon: "notifications", value: 0 },
-    { key: "myTasks", label: "Geciken Görevler", icon: "task_alt", value: 0 },
+    { key: "notifications", label: "Okunmamış Bildirimler", icon: "notifications", value: stats.notificationsUnread },
+    { key: "myTasks", label: "Geciken Görevler", icon: "task_alt", value: stats.tasksPending },
   ];
+
 
   return (
     <div className="admin-section">
@@ -441,7 +453,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
                 <Icon name="task_alt" className="text-blue-600" />
                 <span className="text-sm font-medium">Bekleyen Görevlerim</span>
               </div>
-              <span className="text-xs font-bold text-blue-600">0</span>
+              <span className="text-xs font-bold text-blue-600">{stats.tasksPending}</span>
             </button>
             <button onClick={() => onNavigate("approvals")} className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 transition">
               <div className="flex items-center gap-3">
@@ -450,6 +462,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
               </div>
               <span className="text-xs font-bold text-orange-600">0</span>
             </button>
+
           </div>
         </section>
       </div>
