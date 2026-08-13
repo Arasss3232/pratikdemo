@@ -44,43 +44,43 @@ const CATEGORIES = [
     icon: "hardware",
     title: "Elektrikli El Aletleri",
     desc: "Matkap, taşlama, vidalama, kırıcı delici ve kesim makineleri.",
-    count: 341,
-    to: "/urunler/elektrikli-el-aletleri" as const,
+    to: "/teklif" as const,
+    category: "Elektrikli El Aletleri",
   },
   {
     icon: "settings",
     title: "Bağlantı Elemanları",
     desc: "Cıvata, somun, pul ve özel bağlantı çözümleri.",
-    count: 1240,
-    to: "/urunler/baglanti-elemanlari" as const,
+    to: "/teklif" as const,
+    category: "Bağlantı Elemanları",
   },
   {
     icon: "shield",
     title: "Kişisel Koruyucu Donanım",
     desc: "Baret, gözlük, eldiven, ayakkabı ve iş güvenliği ürünleri.",
-    count: 512,
-    to: "/urunler/kkd" as const,
+    to: "/teklif" as const,
+    category: "Kişisel Koruyucu Donanım",
   },
   {
     icon: "precision_manufacturing",
     title: "Endüstriyel Makineler",
     desc: "Kompresör, jeneratör ve atölye ekipmanları.",
-    count: 178,
-    to: "/urunler/endustriyel-makineler" as const,
+    to: "/teklif" as const,
+    category: "Endüstriyel Makineler",
   },
   {
     icon: "build",
     title: "El Aletleri",
     desc: "Anahtar takımları, tornavidalar, pense ve el aletleri.",
-    count: 623,
-    to: "/urunler/el-aletleri" as const,
+    to: "/teklif" as const,
+    category: "El Aletleri",
   },
   {
     icon: "inventory_2",
     title: "Sarf Malzemeleri",
     desc: "Kesme, taşlama diskleri, uçlar ve tüketim malzemeleri.",
-    count: 1892,
-    to: "/urunler/sarf-malzemeleri" as const,
+    to: "/teklif" as const,
+    category: "Sarf Malzemeleri",
   },
 ];
 
@@ -101,7 +101,7 @@ function UrunlerLayout() {
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {CATEGORIES.map((c) => (
-              <CategoryCard key={c.title} {...c} />
+              <CategoryCard key={c.title} {...c} search={{ category: c.category }} />
             ))}
           </div>
         </div>

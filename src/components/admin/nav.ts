@@ -113,7 +113,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { key: "quotations", label: "Teklifler", icon: "request_quote" },
       { key: "orders", label: "Siparişler", icon: "shopping_bag" },
       { key: "quickOrder", label: "Hızlı Sipariş", icon: "bolt" },
-      { key: "carts", label: "Sepetler", icon: "shopping_cart" },
+      
       { key: "opportunities", label: "Satış Fırsatları", icon: "trending_up" },
       { key: "discountApprovals", label: "İndirim Onayları", icon: "percent" },
     ],
@@ -121,7 +121,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "Ürün ve Fiyat",
     items: [
-      { key: "products", label: "Ürünler", icon: "inventory_2" },
+      
       { key: "categories", label: "Kategoriler", icon: "category" },
       { key: "brands", label: "Markalar", icon: "sell" },
       { key: "priceLists", label: "Fiyat Listeleri", icon: "price_change" },

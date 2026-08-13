@@ -47,12 +47,12 @@ export const Icon = memo(IconBase);
 
 // Product taxonomy shown in mega-menu and mobile drawer.
 const PRODUCT_GROUPS = [
-  { code: "01", to: "/urunler/elektrikli-el-aletleri", title: "Elektrikli El Aletleri", desc: "Matkap, taşlama, vidalama, kırıcı." },
-  { code: "02", to: "/urunler/el-aletleri", title: "El Aletleri", desc: "Anahtar takımları, tornavida, pense." },
-  { code: "03", to: "/urunler/baglanti-elemanlari", title: "Bağlantı Elemanları", desc: "Cıvata, somun, pul, özel bağlantı." },
-  { code: "04", to: "/urunler/kkd", title: "Kişisel Koruyucu Donanım", desc: "İş güvenliği ekipmanları." },
-  { code: "05", to: "/urunler/endustriyel-makineler", title: "Endüstriyel Makineler", desc: "Kompresör, jeneratör, atölye." },
-  { code: "06", to: "/urunler/sarf-malzemeleri", title: "Sarf Malzemeleri", desc: "Kesme, taşlama diski, sarf." },
+  { code: "01", to: "/urunler", title: "Elektrikli El Aletleri", desc: "Matkap, taşlama, vidalama, kırıcı." },
+  { code: "02", to: "/urunler", title: "El Aletleri", desc: "Anahtar takımları, tornavida, pense." },
+  { code: "03", to: "/urunler", title: "Bağlantı Elemanları", desc: "Cıvata, somun, pul, özel bağlantı." },
+  { code: "04", to: "/urunler", title: "Kişisel Koruyucu Donanım", desc: "İş güvenliği ekipmanları." },
+  { code: "05", to: "/urunler", title: "Endüstriyel Makineler", desc: "Kompresör, jeneratör, atölye." },
+  { code: "06", to: "/urunler", title: "Sarf Malzemeleri", desc: "Kesme, taşlama diski, sarf." },
 ] as const;
 
 export function SiteHeader() {
@@ -179,6 +179,7 @@ export function SiteHeader() {
             )}
             <Link
               to="/teklif"
+              search={{ category: "Genel" }}
               className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
               style={{ color: "var(--public-yellow-500)" }}
             >
@@ -227,7 +228,7 @@ export function SiteHeader() {
                 WhatsApp
               </a>
             )}
-            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+            <Link to="/teklif" search={{ category: "Genel" }} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
               Teklif Talep Et
               <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
@@ -326,16 +327,10 @@ export function SiteHeader() {
             >
               <Icon name="account_circle" aria-hidden="true" />
             </Link>
-            <Link
-              to="/teklif-sepeti"
-              className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
-              aria-label="Teklif sepeti"
-            >
-              <Icon name="shopping_cart" aria-hidden="true" />
-            </Link>
             <span className="hidden lg:inline-flex ml-2">
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 className="pub-btn pub-btn-primary pub-btn-sm"
               >
                 Teklif Talep Et
@@ -620,6 +615,7 @@ export function SiteHeader() {
             >
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 onClick={() => setMenuOpen(false)}
                 className="pub-btn pub-btn-primary w-full min-h-12"
               >
@@ -778,6 +774,7 @@ export function SiteFooter() {
               </ul>
               <Link
                 to="/teklif"
+                search={{ category: "Genel" }}
                 className={buttonStyles({
                   variant: "primary",
                   size: "sm",

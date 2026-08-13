@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
-import { PRODUCTS, FEATURED_LOGOS } from "@/data/catalog";
+import { FEATURED_LOGOS } from "@/data/catalog";
 import {
   useHomeBrands,
   useHomeReferences,
@@ -369,132 +369,7 @@ export function SectorGrid() {
  * 05 — Featured Products (graphite/navy, editorial hero + rail)
  * ===================================================================== */
 export function FeaturedProducts() {
-  const items = PRODUCTS.slice(0, 5);
-  const [hero, ...rail] = items;
-  if (!hero) return null;
-  return (
-    <section
-      className="relative overflow-hidden"
-      style={{ backgroundColor: "var(--public-graphite)", color: "#fff" }}
-    >
-      <div className="absolute inset-0 pub-blueprint opacity-30 pointer-events-none" aria-hidden />
-      <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
-        <PubHead
-          index="05"
-          eyebrow="Öne Çıkan Ürünler"
-          title={
-            <>
-              Sık talep edilen <span style={{ color: YELLOW }}>profesyonel</span> ürünler.
-            </>
-          }
-          subtitle="Sipariş yoğunluğuna göre öne çıkan modeller. Tüm ürünler için kurumsal teklif hazırlayabiliriz."
-          action={{ label: "Tüm Ürünler", to: "/urunler" }}
-        />
-
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          {/* Hero product */}
-          <article
-            className="lg:col-span-7 relative group flex flex-col pub-ticks"
-            style={{ border: `1px solid ${NAVY_BORDER}`, backgroundColor: NAVY_900 }}
-          >
-            <span className="pub-tick-bl" aria-hidden />
-            <span className="pub-tick-br" aria-hidden />
-            <Link
-              to="/urunler/elektrikli-el-aletleri/$sku"
-              params={{ sku: hero.sku }}
-              aria-label={hero.name}
-              className="absolute inset-0 z-[1] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)]"
-            />
-            <div className="relative aspect-[16/11]" style={{ backgroundColor: "#F2F5F8" }}>
-              <img
-                src={hero.productImg}
-                alt={hero.productAlt}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-contain p-10 transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-              <span
-                className="absolute top-4 left-4 pub-mono px-2.5 py-1"
-                style={{ backgroundColor: YELLOW, color: NAVY_950 }}
-              >
-                REF · {hero.sku}
-              </span>
-            </div>
-            <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-6" style={{ borderTop: `1px solid ${NAVY_BORDER}` }}>
-              <div className="md:col-span-8">
-                <span className="pub-mono" style={{ color: YELLOW }}>
-                  {hero.brandAlt.replace(" logo", "")}
-                </span>
-                <h3
-                  className="mt-2 text-[24px] md:text-[30px] leading-tight text-white"
-                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
-                >
-                  {hero.name}
-                </h3>
-                <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-                  {hero.specs.slice(0, 3).map((s) => (
-                    <li key={s.label} className="flex items-center gap-2 text-[13.5px] text-white/75">
-                      <Icon name={s.icon} className="text-[16px]" style={{ color: YELLOW }} aria-hidden />
-                      <span>{s.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="md:col-span-4 md:text-right flex flex-col md:items-end gap-3 relative z-[2]">
-                <span className="pub-btn pub-btn-primary pub-btn-sm pointer-events-none">
-                  Ürünü İncele
-                  <Icon name="arrow_forward" className="text-[16px]" />
-                </span>
-                <Link
-                  to="/teklif"
-                  className="pub-mono text-white/70 hover:text-white transition-colors"
-                >
-                  Teklif Talep Et →
-                </Link>
-              </div>
-            </div>
-          </article>
-
-          {/* Rail */}
-          <ul className="lg:col-span-5 flex flex-col gap-4">
-            {rail.map((p, i) => (
-              <li key={p.sku}>
-                <Link
-                  to="/urunler/elektrikli-el-aletleri/$sku"
-                  params={{ sku: p.sku }}
-                  className="group flex items-center gap-5 p-4"
-                  style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}
-                >
-                  <div className="w-20 h-20 shrink-0" style={{ backgroundColor: "#F2F5F8" }}>
-                    <img
-                      src={p.productImg}
-                      alt={p.productAlt}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-contain p-2"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="pub-mono" style={{ color: YELLOW }}>
-                      0{i + 2} · {p.sku}
-                    </span>
-                    <h4 className="mt-1 text-[15px] leading-snug font-semibold text-white line-clamp-2">
-                      {p.name}
-                    </h4>
-                  </div>
-                  <Icon
-                    name="arrow_forward"
-                    className="text-[20px] text-white/50 group-hover:text-white transition-colors"
-                    aria-hidden
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
+  return null;
 }
 
 /* =====================================================================
@@ -1276,6 +1151,7 @@ export function MobileContactBar() {
         <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Link
             to="/teklif"
+            search={{ category: "Genel" }}
             onClick={() => setOpen(false)}
             className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
             style={{ backgroundColor: YELLOW, color: NAVY_950 }}

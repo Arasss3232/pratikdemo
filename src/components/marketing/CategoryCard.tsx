@@ -11,16 +11,19 @@ export function CategoryCard({
   desc,
   to,
   count,
+  search,
 }: {
   icon: string;
   title: string;
   desc: string;
-  to: string;
+  to: any;
   count?: number;
+  search?: any;
 }) {
   return (
     <Link
       to={to}
+      search={search}
       className="group bg-surface-container-lowest border border-outline-variant rounded-lg p-6 hover:border-primary hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all flex flex-col gap-3"
     >
       <div className="flex items-start justify-between">
@@ -36,7 +39,7 @@ export function CategoryCard({
       </h3>
       <p className="font-body-sm text-body-sm text-on-surface-variant">{desc}</p>
       <div className="mt-auto pt-2 text-primary font-label-bold text-label-bold inline-flex items-center gap-1">
-        Kategoriyi İncele
+        Teklif Al
         <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
       </div>
     </Link>

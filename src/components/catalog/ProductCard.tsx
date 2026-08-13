@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { BRAND_LOGOS, productSrcSet, type Product } from "../../data/catalog";
 import { Icon } from "../site-shell";
 import { buttonStyles } from "../../lib/button-styles";
-import { addProductToQuoteCart } from "../../lib/quote-cart";
 
 function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "list" }) {
   const isList = view === "list";
@@ -64,17 +63,8 @@ function ProductCardBase({ p, view = "grid" }: { p: Product; view?: "grid" | "li
         </ul>
         <div className={`mt-auto pt-2 border-t border-outline-variant flex gap-2 ${isList ? "flex-col sm:flex-row" : "flex-col"}`}>
           <Link
-            to="/urun-detay/$sku"
-            params={{ sku: p.sku }}
-            className={buttonStyles({ variant: "outline-dark", size: "sm", className: "w-full px-3" })}
-            aria-label={`${p.name} detaylarını incele`}
-          >
-            <Icon name="visibility" className="text-[16px]" />
-            Detayları İncele
-          </Link>
-          <Link
-            to="/teklif-sepeti"
-            onClick={() => addProductToQuoteCart(p)}
+            to="/teklif"
+            search={{ category: p.name }}
             className={buttonStyles({ variant: "primary", size: "sm", className: "w-full px-3" })}
             aria-label={`${p.name} için teklif al`}
           >

@@ -119,8 +119,6 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
       list.push({ icon: "edit_note", label: "Yayınlanmayı bekleyen yazı", value: `${stats.blogDrafts} taslak`, tone: "info", tab: "blog" });
     if (stats.catalogs === 0)
       list.push({ icon: "menu_book", label: "Henüz katalog eklenmedi", value: "İlk kataloğu yükleyin", tone: "danger", tab: "catalogs" });
-    if (stats.products === 0)
-      list.push({ icon: "inventory_2", label: "Henüz ürün eklenmedi", value: "İlk ürünü ekleyin", tone: "danger", tab: "products" });
     return list.slice(0, 4);
   }, [stats]);
 
@@ -128,7 +126,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     () => [
       { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
       { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
-      { label: "En az bir ürün ekle", done: stats.products > 0, tab: "products" as AdminTab, icon: "inventory_2" },
+      
       { label: "İlk blog yazısını yayınla", done: stats.blogPublished > 0, tab: "blog" as AdminTab, icon: "article" },
       { label: "İlk referansı ekle", done: stats.refs > 0, tab: "references" as AdminTab, icon: "workspace_premium" },
     ],
@@ -138,7 +136,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   const setupPct = Math.round((setupDone / setup.length) * 100);
 
   const quickCreate: { key: AdminTab; label: string; icon: string; desc: string }[] = [
-    { key: "products", label: "Ürün Ekle", icon: "inventory_2", desc: "Kataloğa yeni ürün" },
+    
     { key: "catalogs", label: "Katalog Ekle", icon: "menu_book", desc: "Yeni PDF kataloğu" },
     { key: "blog", label: "Haber Ekle", icon: "article", desc: "Blog / duyuru yazısı" },
     { key: "references", label: "Referans Ekle", icon: "workspace_premium", desc: "Yeni proje" },
@@ -151,7 +149,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
     { key: "applications", label: "Yeni Başvuru", icon: "assignment_ind", value: stats.applicationsNew, hint: "Kariyer başvurusu" },
     { key: "blog", label: "Yayında İçerik", icon: "article", value: stats.blogPublished, hint: "Blog / haber" },
     { key: "blog", label: "Taslak İçerik", icon: "edit_note", value: stats.blogDrafts, hint: "Henüz yayınlanmadı" },
-    { key: "products", label: "Toplam Ürün", icon: "inventory_2", value: stats.products },
+    
     { key: "catalogs", label: "Toplam Katalog", icon: "menu_book", value: stats.catalogs },
     { key: "references", label: "Referans Projesi", icon: "workspace_premium", value: stats.refs },
   ];
