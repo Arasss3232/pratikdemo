@@ -38,7 +38,7 @@ export function CategoryCta() {
             şartname desteği sağlamak için hazırdır.
           </p>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Link to="/teklif" search={{ category: "Genel" }} className={buttonStyles({ variant: "primary" })}>
+            <Link to="/teklif" search={{ categoryId: undefined, category: "Genel" }} className={buttonStyles({ variant: "primary" })}>
               Toplu Teklif Formu
               <Icon name="arrow_forward" />
             </Link>

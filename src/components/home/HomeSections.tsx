@@ -1152,7 +1152,7 @@ export function MobileContactBar() {
         <div className="flex flex-col items-end gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Link
             to="/teklif"
-            search={{ category: "Genel" }}
+            search={{ categoryId: undefined, category: "Genel" }}
             onClick={() => setOpen(false)}
             className="inline-flex items-center gap-2 pl-4 pr-3 h-11 text-[13px] font-semibold shadow-lg"
             style={{ backgroundColor: YELLOW, color: NAVY_950 }}
