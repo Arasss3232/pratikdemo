@@ -162,7 +162,7 @@ export function SiteHeader() {
               <span className="truncate">{phone}</span>
             </a>
           ) : (
-            <span />
+            <div className="min-h-[28px]" />
           )}
           <div className="flex items-center gap-3 shrink-0">
             {waHref && (

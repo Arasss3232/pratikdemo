@@ -9,9 +9,9 @@ const STORAGE_KEY = "admin_sidebar_collapsed";
 const THEME_KEY = "admin_theme";
 
 const QUICK_ADD_ITEMS: { key: AdminTab; label: string; icon: string; hint: string }[] = [
-  { key: "products", label: "Yeni Ürün", icon: "inventory_2", hint: "Kataloğa ekle" },
+  { key: "categories", label: "Yeni Kategori", icon: "category", hint: "Ürün grubu ekle" },
   { key: "catalogs", label: "Yeni Katalog", icon: "menu_book", hint: "Dijital PDF yükle" },
-  { key: "references", label: "Yeni Bayilik", icon: "workspace_premium", hint: "Bayilik bilgisi ekle" },
+  { key: "brands", label: "Yeni Bayilik", icon: "workspace_premium", hint: "Bayilik bilgisi ekle" },
   { key: "messages", label: "Mesaj Yanıtla", icon: "mail", hint: "Gelen kutusu" },
 ];
 

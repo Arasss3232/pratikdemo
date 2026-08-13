@@ -43,23 +43,23 @@ export function CommandPalette({
     const t = setTimeout(async () => {
       const pattern = `%${term}%`;
       const [p, b, m] = await Promise.all([
-        supabase.from("products").select("id,name,sku").ilike("name", pattern).limit(4),
-        supabase.from("blog_posts").select("id,title,slug").ilike("title", pattern).limit(3),
+        supabase.from("product_categories").select("id,name").ilike("name", pattern).limit(4),
+        supabase.from("brands").select("id,name").ilike("name", pattern).limit(3),
         supabase.from("contact_messages").select("id,name,subject").ilike("subject", pattern).limit(3),
       ]);
       const out: Cmd[] = [];
-      (p.data ?? []).forEach((r: { id: string; name: string; sku: string }) =>
+      (p.data ?? []).forEach((r: any) =>
         out.push({
-          id: `p-${r.id}`,
+          id: `cat-${r.id}`,
           label: r.name,
-          hint: `Ürün · ${r.sku}`,
-          icon: "inventory_2",
+          hint: `Kategori`,
+          icon: "category",
           group: "Kayıtlar",
-          run: () => onGoTab("products"),
+          run: () => onGoTab("categories"),
         }),
       );
-      (b.data ?? []).forEach((r: { id: string; title: string }) =>
-        out.push({ id: `b-${r.id}`, label: r.title, hint: "Blog yazısı", icon: "article", group: "Kayıtlar", run: () => onGoTab("blog") }),
+      (b.data ?? []).forEach((r: any) =>
+        out.push({ id: `br-${r.id}`, label: r.name, hint: "Bayilik", icon: "workspace_premium", group: "Kayıtlar", run: () => onGoTab("brands") }),
       );
       (m.data ?? []).forEach((r: { id: string; name: string; subject: string | null }) =>
         out.push({
@@ -89,9 +89,9 @@ export function CommandPalette({
       })),
     );
     const create: Cmd[] = [
-      { id: "c-product", label: "Yeni Ürün Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("products") },
+      { id: "c-category", label: "Yeni Kategori Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("categories") },
       { id: "c-catalog", label: "Yeni Katalog Yükle", icon: "add", group: "Oluştur", run: () => onQuickAdd("catalogs") },
-      { id: "c-ref", label: "Yeni Bayilik Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("references") },
+      { id: "c-brand", label: "Yeni Bayilik Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("brands") },
     ];
     const shortcuts: Cmd[] = [
       {

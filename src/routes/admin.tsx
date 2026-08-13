@@ -13,8 +13,6 @@ import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
-import { AIAssistantWorkspace } from "../components/admin/ai/AIAssistantWorkspace";
-import { AIHistoryPanel } from "../components/admin/ai/AIHistoryPanel";
 import { ControlCenter } from "../components/admin/control-center/ControlCenter";
 
 const TAB_KEYS: AdminTab[] = [
@@ -37,8 +35,8 @@ const TAB_KEYS: AdminTab[] = [
   "faqs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
-  // Akıllı Araçlar
-  "aiAssistant","aiHistory",
+  // SEO
+  "seo",
 ];
 
 export const Route = createFileRoute("/admin")({
@@ -175,8 +173,9 @@ function AdminPage() {
         userEmail={user.email ?? ""}
         onQuickAdd={handleQuickAdd}
       >
-        {tab !== "dashboard" && <PageHeader tab={tab} />}
-        {tab === "dashboard" && <ControlCenter onNavigate={setTab} />}
+        {tab !== "dashboard" && tab !== "seo" && <PageHeader tab={tab} />}
+        {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
+        {tab === "seo" && <ControlCenter onNavigate={setTab} />}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
@@ -191,17 +190,6 @@ function AdminPage() {
         {tab === "testimonials" && <TestimonialsTab />}
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
-        {tab === "aiAssistant" && (
-          <AIAssistantWorkspace
-            initialContext={
-              search.aiAction && search.aiTarget
-                ? { actionType: search.aiAction, targetId: search.aiTarget }
-                : null
-            }
-            initialPrompt={search.aiPrompt ?? null}
-          />
-        )}
-        {tab === "aiHistory" && <AIHistoryPanel />}
         {tab === "myTasks" && (
           <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
             "Onay adımlarında size atanan iş kalemleri",
