@@ -180,7 +180,7 @@ function TeklifPage() {
                 <button type="button" onClick={() => setState("idle")} className={buttonStyles({ variant: "outline-dark" })}>
                   Yeni bir talep gönder
                 </button>
-                <Link to="/urunler" className={buttonStyles({ variant: "primary" })}>Ürünleri incele</Link>
+                <Link to="/urunler" className={buttonStyles({ variant: "primary" })}>Ürün Kategorilerini incele</Link>
               </div>
             </div>
           ) : (

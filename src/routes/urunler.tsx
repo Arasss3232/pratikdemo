@@ -6,13 +6,13 @@ import { CategoryCard } from "../components/marketing/CategoryCard";
 export const Route = createFileRoute("/urunler")({
   head: () => ({
     meta: [
-      { title: "Endüstriyel Ürün Kategorileri — Pratik" },
+      { title: "Ürün Kategorileri — Pratik" },
       {
         name: "description",
         content:
           "Elektrikli el aletleri, bağlantı elemanları, KKD, sarf malzemeleri ve daha fazlası. Tüm endüstriyel ürün kategorilerimizi keşfedin.",
       },
-      { property: "og:title", content: "Endüstriyel Ürün Kategorileri — Pratik" },
+      { property: "og:title", content: "Ürün Kategorileri — Pratik" },
       {
         property: "og:description",
         content:
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/urunler")({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "/" },
-            { "@type": "ListItem", position: 2, name: "Ürünler", item: "/urunler" },
+            { "@type": "ListItem", position: 2, name: "Ürün Kategorileri", item: "/urunler" },
           ],
         }),
       },
@@ -94,9 +94,9 @@ function UrunlerLayout() {
     <SiteShell>
       <>
         <PageHero
-          title="Tüm Ürün Kategorileri"
+          title="Ürün Kategorileri"
           description="20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar."
-          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürünler" }]}
+          breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürün Kategorileri" }]}
         />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
