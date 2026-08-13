@@ -89,9 +89,16 @@ function MarkalarPage() {
               </div>
               
               <h2 className="hp-h2 mb-4">{selectedBrand.name}</h2>
-              <p className="text-on-surface-variant mb-8">
-                {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış ve teknik destek noktası olarak hizmet vermekteyiz.
-              </p>
+              {selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.description}
+                </p>
+              )}
+              {!selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış ve teknik destek noktası olarak hizmet vermekteyiz.
+                </p>
+              )}
               
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <button 
