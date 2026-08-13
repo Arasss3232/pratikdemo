@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-shell";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/test-header")({
   component: () => (
     <div className="min-h-screen">
       <SiteHeader />

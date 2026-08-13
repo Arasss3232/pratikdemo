@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UrunlerRouteImport } from './routes/urunler'
+import { Route as TestHeaderRouteImport } from './routes/test-header'
 import { Route as TeklifRouteImport } from './routes/teklif'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SektorelRouteImport } from './routes/sektorel'
@@ -29,6 +30,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
   path: '/urunler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestHeaderRoute = TestHeaderRouteImport.update({
+  id: '/test-header',
+  path: '/test-header',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeklifRoute = TeklifRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/test-header': typeof TestHeaderRoute
   '/urunler': typeof UrunlerRoute
 }
 export interface FileRoutesByTo {
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/test-header': typeof TestHeaderRoute
   '/urunler': typeof UrunlerRoute
 }
 export interface FileRoutesById {
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/sektorel': typeof SektorelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
+  '/test-header': typeof TestHeaderRoute
   '/urunler': typeof UrunlerRoute
 }
 export interface FileRouteTypes {
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/test-header'
     | '/urunler'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/test-header'
     | '/urunler'
   id:
     | '__root__'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/sektorel'
     | '/sitemap.xml'
     | '/teklif'
+    | '/test-header'
     | '/urunler'
   fileRoutesById: FileRoutesById
 }
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   SektorelRoute: typeof SektorelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
+  TestHeaderRoute: typeof TestHeaderRoute
   UrunlerRoute: typeof UrunlerRoute
 }
 
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/urunler'
       fullPath: '/urunler'
       preLoaderRoute: typeof UrunlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-header': {
+      id: '/test-header'
+      path: '/test-header'
+      fullPath: '/test-header'
+      preLoaderRoute: typeof TestHeaderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teklif': {
@@ -371,6 +391,7 @@ const rootRouteChildren: RootRouteChildren = {
   SektorelRoute: SektorelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
+  TestHeaderRoute: TestHeaderRoute,
   UrunlerRoute: UrunlerRoute,
 }
 export const routeTree = rootRouteImport
