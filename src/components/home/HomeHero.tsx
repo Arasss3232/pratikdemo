@@ -1,24 +1,30 @@
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
-import { useHomeSettings } from "@/hooks/use-home-data";
+import { usePageContent } from "@/hooks/use-page-content";
 import { PRODUCTS } from "@/data/catalog";
+
 
 const DEFAULT_TITLE = "İşinize güç katan\nprofesyonel hırdavat çözümleri.";
 const DEFAULT_DESC =
   "Elektrikli el aletlerinden bağlantı elemanlarına, iş güvenliğinden endüstriyel makinelere; sanayi tesisleri ve şantiyeler için yetkili distribütör güvencesiyle tek noktadan tedarik.";
 
 export function HomeHero() {
-  const { data: s } = useHomeSettings();
-  const title = (s?.hero_title || DEFAULT_TITLE).trim();
-  const description = (s?.hero_description || DEFAULT_DESC).trim();
-  const primaryText = s?.hero_cta_primary_text || "Ürün Gruplarını İncele";
-  const primaryUrl = s?.hero_cta_primary_url || "/urunler";
-  const secondaryText = s?.hero_cta_secondary_text || "Teklif Talep Et";
-  const secondaryUrl = s?.hero_cta_secondary_url || "/teklif";
+  const { sections, loading } = usePageContent("/");
+  
+  const heroSection = sections["hero"];
+  const c = heroSection?.content || {};
+
+  const title = c.title?.value_text || DEFAULT_TITLE;
+  const description = c.description?.value_text || DEFAULT_DESC;
+  const primaryText = c.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
+  const primaryUrl = c.primary_cta_url?.link_url || "/urunler";
+  const secondaryText = c.secondary_cta_text?.value_text || "Teklif Talep Et";
+  const secondaryUrl = c.secondary_cta_url?.link_url || "/teklif";
 
   const heroProduct = PRODUCTS[0];
-  const heroImg = s?.hero_image_url || heroProduct.productImg;
+  const heroImg = c.hero_image?.media_url || heroProduct.productImg;
+
 
   return (
     <section

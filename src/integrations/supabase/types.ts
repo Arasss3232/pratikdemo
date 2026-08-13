@@ -1102,6 +1102,44 @@ export type Database = {
         }
         Relationships: []
       }
+      content_revisions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          full_snapshot: Json
+          id: string
+          notes: string | null
+          page_id: string
+          revision_no: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          full_snapshot: Json
+          id?: string
+          notes?: string | null
+          page_id: string
+          revision_no: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          full_snapshot?: Json
+          id?: string
+          notes?: string | null
+          page_id?: string
+          revision_no?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_revisions_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_groups: {
         Row: {
           code: string
@@ -1416,6 +1454,56 @@ export type Database = {
         }
         Relationships: []
       }
+      navigation_items: {
+        Row: {
+          created_at: string
+          desktop_visibility: boolean
+          display_order: number
+          id: string
+          is_active: boolean
+          is_external: boolean
+          label: string
+          mobile_visibility: boolean
+          parent_id: string | null
+          route: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          desktop_visibility?: boolean
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_external?: boolean
+          label: string
+          mobile_visibility?: boolean
+          parent_id?: string | null
+          route: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          desktop_visibility?: boolean
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_external?: boolean
+          label?: string
+          mobile_visibility?: boolean
+          parent_id?: string | null
+          route?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "navigation_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "navigation_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string | null
@@ -1466,6 +1554,65 @@ export type Database = {
           type?: string
         }
         Relationships: []
+      }
+      page_sections: {
+        Row: {
+          background_variant:
+            | Database["public"]["Enums"]["section_background"]
+            | null
+          created_at: string
+          desktop_visibility: boolean
+          display_order: number
+          id: string
+          internal_label: string
+          is_active: boolean
+          mobile_visibility: boolean
+          page_id: string
+          section_key: string
+          section_type: string
+          updated_at: string
+        }
+        Insert: {
+          background_variant?:
+            | Database["public"]["Enums"]["section_background"]
+            | null
+          created_at?: string
+          desktop_visibility?: boolean
+          display_order?: number
+          id?: string
+          internal_label: string
+          is_active?: boolean
+          mobile_visibility?: boolean
+          page_id: string
+          section_key: string
+          section_type: string
+          updated_at?: string
+        }
+        Update: {
+          background_variant?:
+            | Database["public"]["Enums"]["section_background"]
+            | null
+          created_at?: string
+          desktop_visibility?: boolean
+          display_order?: number
+          id?: string
+          internal_label?: string
+          is_active?: boolean
+          mobile_visibility?: boolean
+          page_id?: string
+          section_key?: string
+          section_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_sections_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       page_seo: {
         Row: {
@@ -1875,6 +2022,62 @@ export type Database = {
         }
         Relationships: []
       }
+      section_content: {
+        Row: {
+          created_at: string
+          display_order: number
+          field_key: string
+          field_type: string
+          id: string
+          is_active: boolean
+          label: string
+          link_url: string | null
+          media_url: string | null
+          section_id: string
+          updated_at: string
+          value_json: Json | null
+          value_text: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          field_key: string
+          field_type: string
+          id?: string
+          is_active?: boolean
+          label: string
+          link_url?: string | null
+          media_url?: string | null
+          section_id: string
+          updated_at?: string
+          value_json?: Json | null
+          value_text?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          field_key?: string
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          link_url?: string | null
+          media_url?: string | null
+          section_id?: string
+          updated_at?: string
+          value_json?: Json | null
+          value_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "section_content_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "page_sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seo_audit_results: {
         Row: {
           affected_route: string | null
@@ -2017,6 +2220,36 @@ export type Database = {
           seo_title?: string | null
           slug?: string
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_pages: {
+        Row: {
+          created_at: string
+          id: string
+          internal_name: string
+          is_indexable: boolean
+          route: string
+          status: Database["public"]["Enums"]["content_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          internal_name: string
+          is_indexable?: boolean
+          route: string
+          status?: Database["public"]["Enums"]["content_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          internal_name?: string
+          is_indexable?: boolean
+          route?: string
+          status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
         }
         Relationships: []
@@ -2375,7 +2608,14 @@ export type Database = {
         | "distributor"
         | "branch"
         | "end_customer"
+      content_status: "draft" | "review" | "published" | "archived"
       risk_status: "low" | "medium" | "high" | "blocked"
+      section_background:
+        | "navy-950"
+        | "navy-900"
+        | "navy-800"
+        | "light"
+        | "yellow"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2534,7 +2774,15 @@ export const Constants = {
         "branch",
         "end_customer",
       ],
+      content_status: ["draft", "review", "published", "archived"],
       risk_status: ["low", "medium", "high", "blocked"],
+      section_background: [
+        "navy-950",
+        "navy-900",
+        "navy-800",
+        "light",
+        "yellow",
+      ],
     },
   },
 } as const
