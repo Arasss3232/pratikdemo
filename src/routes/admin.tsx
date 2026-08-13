@@ -27,7 +27,9 @@ function PlaceholderModule({ title, description }: { title: string; description:
 }
 
 function AdminPage() {
-  const { tab = "dashboard", seoTab = "dashboard" } = Route.useSearch();
+  const search = Route.useSearch();
+  const tab = search.tab || "dashboard";
+  const seoTab = search.seoTab || "dashboard";
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ function AdminPage() {
   }, []);
 
   const handleTabChange = (newTab: AdminTab) => {
-    navigate({ search: (prev) => ({ ...prev, tab: newTab }) });
+    navigate({ search: (prev: any) => ({ ...prev, tab: newTab }) });
   };
 
   const handleQuickAdd = (type: AdminTab) => {
@@ -66,7 +68,7 @@ function AdminPage() {
             <PageHeader 
               tab="dashboard"
               title="Genel Bakış" 
-              description="Sistemdeki güncel durum, bekleyen talepler ve hızlı istatistikler." 
+              description="Sitenizin genel durumu, öncelikleriniz ve son hareketler." 
             />
             <PlaceholderModule title="Dashboard Paneli" description="İstatistikler ve özet veriler yakında burada olacak." />
           </>
@@ -79,7 +81,7 @@ function AdminPage() {
             <PageHeader 
               tab="categories"
               title="Kategori Yönetimi" 
-              description="Ürün gruplarını, görsellerini ve SEO ayarlarını yönetin." 
+              description="Ürün grupları ve teklif kategorileri." 
             />
             <PlaceholderModule title="Kategori Yönetimi" description="Ürün kategorilerini ve hiyerarşiyi buradan yönetebileceksiniz." />
           </>
@@ -90,7 +92,7 @@ function AdminPage() {
             <PageHeader 
               tab="catalogs"
               title="Katalog Yönetimi" 
-              description="Dijital ürün kataloglarını ve PDF dosyalarını yönetin." 
+              description="Dijital ürün kataloglarını (PDF) buradan yönetin." 
             />
             <PlaceholderModule title="Katalog Yönetimi" description="PDF katalog yükleme ve listeleme modülü." />
           </>
@@ -100,8 +102,8 @@ function AdminPage() {
           <>
             <PageHeader 
               tab="messages"
-              title="Gelen Mesajlar" 
-              description="Teklif talepleri ve iletişim formu mesajlarını yönetin." 
+              title="İletişim Mesajları" 
+              description="Web sitenizden gelen iletişim mesajları." 
             />
             <PlaceholderModule title="Gelen Mesajlar" description="Müşterilerden gelen tüm talepler burada listelenecek." />
           </>
@@ -112,9 +114,9 @@ function AdminPage() {
             <PageHeader 
               tab="seo"
               title="SEO ve Analitik" 
-              description="Site geneli SEO ayarlarını, meta verileri ve takip kodlarını yönetin." 
+              description="Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi." 
             />
-            <SeoShell activeTab={seoTab as SeoSubTab} />
+            <SeoShell />
           </>
         )}
         
@@ -122,8 +124,8 @@ function AdminPage() {
           <>
             <PageHeader 
               tab="myTasks"
-              title="Görev Takibi" 
-              description="Yönetim ekibi için dahili görevleri ve iş listelerini yönetin." 
+              title="Görevlerim" 
+              description="Size atanmış görevler, hatırlatmalar ve süresi yaklaşan işler." 
             />
             <PlaceholderModule title="Görevlerim" description="İş takip ve atama modülü." />
           </>
@@ -134,7 +136,7 @@ function AdminPage() {
             <PageHeader 
               tab="notifications"
               title="Bildirimler" 
-              description="Sistem bildirimlerini ve kullanıcı duyurularını görüntüleyin." 
+              description="Sistemden gelen tüm bildirimler ve önemli uyarılar." 
             />
             <PlaceholderModule title="Bildirim Merkezi" description="Sistem içi uyarılar ve bildirimler." />
           </>
@@ -145,7 +147,7 @@ function AdminPage() {
             <PageHeader 
               tab="roles"
               title="Roller ve Yetkiler" 
-              description="Yönetici rolleri ve erişim yetkilerini yapılandırın." 
+              description="Sistem rolleri, izin matrisi ve dahili roller." 
             />
             <PlaceholderModule title="Rol ve Yetki Yönetimi" description="Kullanıcı bazlı yetkilendirme ayarları." />
           </>

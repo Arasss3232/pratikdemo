@@ -135,14 +135,14 @@ function TeklifPage() {
                 </div>
 
                 <div className="mt-auto pt-10 border-t border-white/10 space-y-4">
-                  {settings.phone && (
+                  {(settings as any)?.phone && (
                     <div className="flex items-center gap-4 group">
                       <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         <Phone size={18} className="text-primary" />
                       </div>
                       <div>
                         <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Bizi Arayın</p>
-                        <p className="text-lg font-semibold">{settings.phone}</p>
+                        <p className="text-lg font-semibold">{(settings as any).phone}</p>
                       </div>
                     </div>
                   )}
@@ -152,7 +152,7 @@ function TeklifPage() {
                     </div>
                     <div>
                       <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Çalışma Saatleri</p>
-                      <p className="text-sm text-slate-300">{settings.working_hours || "Pzt – Cmt · 08:30 – 18:00"}</p>
+                      <p className="text-sm text-slate-300">{(settings as any).working_hours || "Pzt – Cmt · 08:30 – 18:00"}</p>
                     </div>
                   </div>
                 </div>
