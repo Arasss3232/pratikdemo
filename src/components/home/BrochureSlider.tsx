@@ -210,62 +210,81 @@ function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: bool
         aria-hidden="true"
       />
 
-      {/* 4. Content Wrapper */}
-      <div className={`relative z-10 flex h-full w-full items-center p-6 sm:p-10 md:p-14 ${alignment}`}>
-        <div className="max-w-2xl flex flex-col gap-4 md:gap-5" style={{ color: textColor }}>
-          {b.eyebrow ? (
-            <span
-              className="inline-flex items-center gap-2 self-start rounded-full px-3 py-1"
-              style={{
-                background: eyebrowBg,
-                color: b.accent_color || "var(--brand-yellow, #F5D311)",
-                border: `1px solid ${b.accent_color || "var(--brand-yellow, #F5D311)"}55`,
-                fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
-                fontWeight: 700,
-                fontSize: 13,
-                letterSpacing: "0.04em",
-                lineHeight: 1.4,
-              }}
-            >
-              <span
-                className="inline-block h-1.5 w-1.5 rounded-full"
-                style={{ background: b.accent_color || "var(--brand-yellow, #F5D311)" }}
-              />
-              {b.eyebrow}
-            </span>
-          ) : null}
-          <h2
-            className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-3"
-            style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
-          >
-            {b.title}
-          </h2>
-          {b.subtitle ? (
-            <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
-              {b.subtitle}
-            </p>
-          ) : null}
-          {b.description ? (
-            <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
-              {b.description}
-            </p>
-          ) : null}
-          <div className="flex flex-wrap gap-3 pt-2">
-            {b.primary_cta_label && b.primary_cta_href ? (
-              <CtaButton
-                label={b.primary_cta_label}
-                href={b.primary_cta_href}
-                variant="primary"
-                accent={b.accent_color}
-              />
-            ) : null}
-            {b.secondary_cta_label && b.secondary_cta_href ? (
-              <CtaButton
-                label={b.secondary_cta_label}
-                href={b.secondary_cta_href}
-                variant="secondary"
-              />
-            ) : null}
+      {/* 4. Content Wrapper with Fixed Grid Layout */}
+      <div className="relative z-10 flex h-full w-full items-center">
+        <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 md:px-14">
+          <div className="grid max-w-3xl grid-rows-[40px_160px_60px_100px_64px] items-start" style={{ color: textColor }}>
+            {/* 1. Eyebrow */}
+            <div className="flex items-center">
+              {b.eyebrow ? (
+                <span
+                  className="inline-flex items-center gap-2 rounded-full px-3 py-1"
+                  style={{
+                    background: eyebrowBg,
+                    color: b.accent_color || "var(--brand-yellow, #F5D311)",
+                    border: `1px solid ${b.accent_color || "var(--brand-yellow, #F5D311)"}55`,
+                    fontFamily: '"Manrope", "Segoe UI", Arial, sans-serif',
+                    fontWeight: 700,
+                    fontSize: 13,
+                    letterSpacing: "0.04em",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <span
+                    className="inline-block h-1.5 w-1.5 rounded-full"
+                    style={{ background: b.accent_color || "var(--brand-yellow, #F5D311)" }}
+                  />
+                  {b.eyebrow}
+                </span>
+              ) : null}
+            </div>
+
+            {/* 2. Title */}
+            <div className="flex items-center">
+              <h2
+                className="font-black leading-[0.95] tracking-tight text-[clamp(1.5rem,4.2vw,3.75rem)] line-clamp-2 md:line-clamp-3"
+                style={{ fontFamily: "'Barlow Condensed', 'Inter Tight', system-ui, sans-serif" }}
+              >
+                {b.title}
+              </h2>
+            </div>
+
+            {/* 3. Subtitle */}
+            <div className="flex items-center">
+              {b.subtitle ? (
+                <p className="text-base md:text-xl font-medium line-clamp-2" style={{ color: subColor }}>
+                  {b.subtitle}
+                </p>
+              ) : null}
+            </div>
+
+            {/* 4. Description */}
+            <div className="flex items-start">
+              {b.description ? (
+                <p className="text-sm md:text-base max-w-xl leading-relaxed line-clamp-3 md:line-clamp-4" style={{ color: subColor }}>
+                  {b.description}
+                </p>
+              ) : null}
+            </div>
+
+            {/* 5. CTA Buttons */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              {b.primary_cta_label && b.primary_cta_href ? (
+                <CtaButton
+                  label={b.primary_cta_label}
+                  href={b.primary_cta_href}
+                  variant="primary"
+                  accent={b.accent_color}
+                />
+              ) : null}
+              {b.secondary_cta_label && b.secondary_cta_href ? (
+                <CtaButton
+                  label={b.secondary_cta_label}
+                  href={b.secondary_cta_href}
+                  variant="secondary"
+                />
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
