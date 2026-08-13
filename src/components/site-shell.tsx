@@ -269,7 +269,7 @@ export function SiteHeader() {
 
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
-            {navLinks.filter((l) => l.to !== "/").map((l) =>
+            {navLinks.map((l) =>
               l.to === "/urunler" || l.label.includes("Ürün") ? (
                 <div
                   key={l.to}
