@@ -51,7 +51,7 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","brochures","catalogs",
+  "settings","brochures","catalogs","content",
   "faqs","messages","quotes",
 
   // Sistem
