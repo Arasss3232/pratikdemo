@@ -253,21 +253,9 @@ function AdminPage() {
         {tab === "testimonials" && <TestimonialsTab />}
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
-        {tab === "myTasks" && (
-          <ComingSoon tab="myTasks" phase="Faz 3 · Onay Motoru" bullets={[
-            "Onay adımlarında size atanan iş kalemleri",
-            "Süre aşımı ve hatırlatmalar",
-            "Tek tıkla onay / reddet + not bırakma",
-          ]} />
-        )}
-        {tab === "approvals" && <ComingSoon tab="approvals" phase="Sistem Onayları" />}
-        {tab === "notifications" && (
-          <ComingSoon tab="notifications" phase="Faz 5 · Bildirim Merkezi" bullets={[
-            "Sistem içi bildirim akışı ve okundu takibi",
-            "E-posta ve WhatsApp entegrasyonu",
-            "Rol bazlı bildirim tercihleri",
-          ]} />
-        )}
+        {tab === "myTasks" && <TasksTab />}
+        {tab === "approvals" && <ApprovalsTab />}
+        {tab === "notifications" && <NotificationsTab />}
         {tab === "quotations" && (
           <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[
             "Çok kalemli teklif oluşturma, iskonto ve KDV",
@@ -402,12 +390,8 @@ function AdminPage() {
         {tab === "reportCustomers" && <ComingSoon tab="reportCustomers" phase="Faz 5 · Raporlar" />}
         {tab === "reportProducts" && <ComingSoon tab="reportProducts" phase="Faz 5 · Raporlar" />}
         {tab === "reportFinance" && <ComingSoon tab="reportFinance" phase="Faz 5 · Raporlar" />}
-        {tab === "roles" && (
-          <ComingSoon tab="roles" phase="Faz 1 · Sistem" bullets={[
-            "Dahili ve firma rolleri artık veritabanında tanımlı",
-            "Kullanıcı ekranı üzerinden rol atanabilir",
-          ]} />
-        )}
+        {tab === "roles" && <RolesTab />}
+        {tab === "users" && <UserManagement currentUserId={user.id} />}
         {tab === "workflows" && (
           <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
         )}
@@ -416,12 +400,7 @@ function AdminPage() {
             "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
           ]} />
         )}
-        {tab === "activityLogs" && (
-          <ComingSoon tab="activityLogs" phase="Faz 5 · Denetim" bullets={[
-            "Tüm mutasyonların otomatik kaydı",
-            "Rol bazlı görüntüleme",
-          ]} />
-        )}
+        {tab === "activityLogs" && <AuditLogsTab />}
         {tab === "security" && (
           <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
             "Oturum ve başarısız giriş takibi",
