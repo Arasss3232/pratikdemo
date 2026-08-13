@@ -80,18 +80,13 @@ function TeklifPage() {
       company: parsed.data.company || null,
       email: parsed.data.email,
       phone: parsed.data.phone,
-      category_id: parsed.data.categoryId,
-      category_name: category?.title || "Bilinmeyen Kategori",
       message: parsed.data.message,
       status: "new",
-      // Backwards compatibility placeholders (empty)
-      city: null,
-      timeline: null,
-      budget: null,
       items: [{ category: category?.title || "Genel", quantity: 1 }]
     };
 
-    const { error } = await supabase.from("quote_requests").insert(payload);
+    const { error } = await supabase.from("quote_requests").insert(payload as any);
+
     
     if (error) {
       console.error("Submission error:", error);

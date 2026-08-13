@@ -70,10 +70,17 @@ type QuoteRequest = {
   email: string;
   phone: string | null;
   message: string | null;
+  category_id: string | null;
+  category_name: string | null;
   items: unknown;
   status: string;
   created_at: string;
+  // Backward compatibility fields
+  city?: string | null;
+  timeline?: string | null;
+  budget?: string | null;
 };
+
 
 type UserRoleRow = {
   id: string;
@@ -949,7 +956,7 @@ function QuotesTab() {
               .split(" ").map((s) => s[0]).slice(0, 2).join("").toUpperCase();
             const statusMeta = QUOTE_STATUSES.find((s) => s.value === q.status);
             return (
-              <article key={q.id} className="admin-card p-4 sm:p-5 flex flex-col gap-3">
+              <article key={q.id} className="admin-card p-4 sm:p-5 flex flex-col gap-4">
                 <header className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
                   <div
                     className="h-11 w-11 rounded-xl grid place-items-center font-semibold text-[15px] shrink-0"
@@ -1000,39 +1007,66 @@ function QuotesTab() {
                     </button>
                   </div>
                 </header>
-                {q.message && (
-                  <p
-                    className="text-[14px] p-3 rounded-lg"
-                    style={{ background: "var(--admin-surface-2)", color: "var(--admin-text)" }}
-                  >
-                    {q.message}
-                  </p>
-                )}
-                {itemsList.length > 0 && (
-                  <div>
-                    <p
-                      className="text-[11px] uppercase tracking-wider font-semibold mb-1.5"
-                      style={{ color: "var(--admin-text-mute)" }}
-                    >
-                      Talep edilen ürünler ({itemsList.length})
-                    </p>
-                    <ul className="flex flex-wrap gap-1.5">
-                      {itemsList.map((it, i) => (
-                        <li
-                          key={i}
-                          className="text-[12.5px] px-2.5 py-1 rounded-md"
-                          style={{
-                            background: "var(--admin-navy-soft)",
-                            color: "var(--admin-navy)",
-                          }}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wider font-semibold mb-1" style={{ color: "var(--admin-text-mute)" }}>
+                        Ürün Grubu / Kategori
+                      </p>
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 text-[#08182C] font-semibold text-sm">
+                        <Icon name="category" className="text-[16px] text-primary" />
+                        {q.category_name || "Belirtilmedi"}
+                      </div>
+                    </div>
+
+                    {q.message && (
+                      <div>
+                        <p className="text-[11px] uppercase tracking-wider font-semibold mb-1" style={{ color: "var(--admin-text-mute)" }}>
+                          Talep Detayı
+                        </p>
+                        <p
+                          className="text-[14px] p-3 rounded-lg leading-relaxed"
+                          style={{ background: "var(--admin-surface-2)", color: "var(--admin-text)" }}
                         >
-                          {it.name ?? it.sku ?? "Ürün"} × {it.quantity ?? 1}
-                        </li>
-                      ))}
-                    </ul>
+                          {q.message}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
+
+                  {/* Backward compatibility / Legacy data */}
+                  {(q.city || q.timeline || q.budget || itemsList.length > 0) && (
+                    <div className="space-y-3 p-4 rounded-xl border border-dashed border-admin-border" style={{ background: "var(--admin-surface)" }}>
+                      <p className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: "var(--admin-text-mute)" }}>
+                        Ek Bilgiler
+                      </p>
+                      <div className="grid grid-cols-2 gap-3 text-[13px]">
+                        {q.city && <div><span className="text-admin-text-mute block text-[11px]">Şehir</span>{q.city}</div>}
+                        {q.timeline && <div><span className="text-admin-text-mute block text-[11px]">Termin</span>{q.timeline}</div>}
+                        {q.budget && <div><span className="text-admin-text-mute block text-[11px]">Bütçe</span>{q.budget}</div>}
+                      </div>
+                      
+                      {itemsList.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-admin-border">
+                          <p className="text-[11px] font-semibold mb-1" style={{ color: "var(--admin-text-mute)" }}>Eski Kayıt Ürünleri</p>
+                          <ul className="flex flex-wrap gap-1.5">
+                            {itemsList.map((it, i) => (
+                              <li
+                                key={i}
+                                className="text-[12px] px-2 py-0.5 rounded bg-admin-surface-2 text-admin-text-2 border border-admin-border"
+                              >
+                                {it.name ?? it.sku ?? "Ürün"} × {it.quantity ?? 1}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </article>
+
             );
           })}
         </div>
