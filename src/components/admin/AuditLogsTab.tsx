@@ -2,21 +2,22 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
 type AuditLog = {
   id: string;
-  user_id: string;
-  event_type: string;
-  table_name: string;
-  record_id: string;
-  description: string;
-  old_data: any;
-  new_data: any;
+  actor_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  entity_title: string | null;
+  description?: string;
+  previous_values: any;
+  new_values: any;
   ip_address: string | null;
-  created_at: string;
-  // Join for user email if possible, or we just show user_id
+  created_at: string | null;
 };
 
 export function AuditLogsTab() {
@@ -29,7 +30,7 @@ export function AuditLogsTab() {
       let query = supabase.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(100);
       
       if (eventFilter !== "all") {
-        query = query.eq("event_type", eventFilter);
+        query = query.eq("action", eventFilter);
       }
       
       const { data, error } = await query;
@@ -49,8 +50,9 @@ export function AuditLogsTab() {
   };
 
   const filteredLogs = logs.filter(log => 
-    log.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    log.table_name.toLowerCase().includes(searchTerm.toLowerCase())
+    (log.entity_title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.entity_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.action.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -93,8 +95,8 @@ export function AuditLogsTab() {
                 <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Zaman</th>
                 <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Kullanıcı</th>
                 <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Olay</th>
-                <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Tablo</th>
-                <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Açıklama</th>
+                <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Tür</th>
+                <th className="px-6 py-4 font-semibold text-[var(--admin-navy)]">Kayıt</th>
                 <th className="px-6 py-4 font-semibold text-[var(--admin-navy)] text-right">Detay</th>
               </tr>
             </thead>
@@ -115,36 +117,36 @@ export function AuditLogsTab() {
                 filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-[var(--admin-surface-2)]/30 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-xs text-muted-foreground">
-                      {format(new Date(log.created_at), 'd MMM yyyy HH:mm:ss', { locale: tr })}
+                      {log.created_at ? format(new Date(log.created_at), 'd MMM yyyy HH:mm:ss', { locale: tr }) : '-'}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-slate-200 grid place-items-center text-[10px] font-bold">
-                          U
+                          {log.actor_id ? 'U' : 'S'}
                         </div>
-                        <span className="text-[11px] font-mono text-muted-foreground max-w-[80px] truncate" title={log.user_id}>
-                          {log.user_id.split('-')[0]}...
+                        <span className="text-[11px] font-mono text-muted-foreground max-w-[80px] truncate" title={log.actor_id || "System"}>
+                          {log.actor_id ? `${log.actor_id.split('-')[0]}...` : "System"}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${getEventBadge(log.event_type)}`}>
-                        {log.event_type}
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${getEventBadge(log.action)}`}>
+                        {log.action}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-xs font-mono text-muted-foreground">{log.table_name}</span>
+                      <span className="text-xs font-mono text-muted-foreground">{log.entity_type}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-xs max-w-xs truncate" title={log.description}>
-                        {log.description}
+                      <p className="text-xs max-w-xs truncate" title={log.entity_title || log.entity_id || ""}>
+                        {log.entity_title || log.entity_id || "-"}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button 
                         onClick={() => {
-                          console.log("Details:", { old: log.old_data, new: log.new_data });
-                          toast.info("İşlem detayları konsola yazdırıldı (Gelişmiş modal yakında).");
+                          console.log("Details:", { old: log.previous_values, new: log.new_values });
+                          toast.info("İşlem detayları konsola yazdırıldı.");
                         }}
                         className="text-xs text-[var(--admin-navy)] font-semibold hover:underline"
                       >
