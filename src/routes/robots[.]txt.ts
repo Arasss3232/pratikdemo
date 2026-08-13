@@ -30,9 +30,7 @@ export const Route = createFileRoute("/robots.txt")({
         const content = [
           "User-agent: *",
           isIndexing ? "Allow: /" : "Disallow: /",
-          "Disallow: /admin
-          Disallow: /giris
-          Disallow: /portal",
+          "Disallow: /admin",
           "Disallow: /giris",
           "Disallow: /portal",
           "",
