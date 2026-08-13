@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export type ContentField = {
+  id: string;
   field_key: string;
   field_type: string;
   value_text: string | null;
@@ -18,7 +19,7 @@ export type PageSection = {
   content: Record<string, ContentField>;
 };
 
-export function usePageContent(route: string) {
+export function usePageContent(route: string, preview = false) {
   const [sections, setSections] = useState<Record<string, PageSection>>({});
   const [loading, setLoading] = useState(true);
 
@@ -29,10 +30,9 @@ export function usePageContent(route: string) {
           .from("site_pages")
           .select("id")
           .eq("route", route)
-          .eq("status", "published")
+          .eq("status", preview ? "draft" : "published")
           .limit(1)
           .maybeSingle();
-
 
         if (!page) {
           setLoading(false);
@@ -47,6 +47,7 @@ export function usePageContent(route: string) {
             section_type,
             background_variant,
             section_content (
+              id,
               field_key,
               field_type,
               value_text,
@@ -60,7 +61,6 @@ export function usePageContent(route: string) {
           .order("display_order");
 
         if (sectionsData && sectionsData.length > 0) {
-
           const contentMap: Record<string, PageSection> = {};
           sectionsData.forEach((s: any) => {
             const fields: Record<string, ContentField> = {};
@@ -85,7 +85,7 @@ export function usePageContent(route: string) {
     }
 
     loadContent();
-  }, [route]);
+  }, [route, preview]);
 
   return { sections, loading };
 }
