@@ -89,9 +89,9 @@ export function CommandPalette({
       })),
     );
     const create: Cmd[] = [
-      { id: "c-product", label: "Yeni Ürün Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("products") },
+      { id: "c-category", label: "Yeni Kategori Oluştur", icon: "add", group: "Oluştur", run: () => onQuickAdd("categories") },
       { id: "c-catalog", label: "Yeni Katalog Yükle", icon: "add", group: "Oluştur", run: () => onQuickAdd("catalogs") },
-      { id: "c-ref", label: "Yeni Bayilik Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("references") },
+      { id: "c-brand", label: "Yeni Bayilik Ekle", icon: "add", group: "Oluştur", run: () => onQuickAdd("brands") },
     ];
     const shortcuts: Cmd[] = [
       {
