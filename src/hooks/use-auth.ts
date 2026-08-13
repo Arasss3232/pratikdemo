@@ -26,22 +26,29 @@ export function useAuth() {
       }
     });
 
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      if (data.session?.user) {
-        const { data: r } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", data.session.user.id)
-          .eq("role", "admin")
-          .limit(1)
-          .maybeSingle();
-        setIsAdmin(!!r);
-
+    async function init() {
+      try {
+        const { data } = await supabase.auth.getSession();
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+        if (data.session?.user) {
+          const { data: r } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", data.session.user.id)
+            .eq("role", "admin")
+            .limit(1)
+            .maybeSingle();
+          setIsAdmin(!!r);
+        }
+      } catch (err) {
+        console.error("Auth init error:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    }
+
+    init();
     return () => sub.subscription.unsubscribe();
   }, []);
 
