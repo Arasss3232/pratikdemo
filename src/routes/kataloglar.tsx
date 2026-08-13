@@ -3,8 +3,24 @@ import { SiteShell } from "../components/site-shell";
 import { PageHero } from "../components/marketing/PageHero";
 import { Icon } from "../components/site-shell";
 import { usePageContent } from "@/hooks/use-page-content";
+import { supabase } from "@/integrations/supabase/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/kataloglar")({
+  loader: ({ context: { queryClient } }) => {
+    return queryClient.ensureQueryData({
+      queryKey: ["catalogs", "public"],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("catalogs")
+          .select("*")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+        if (error) throw error;
+        return data;
+      },
+    });
+  },
   head: () => ({
     meta: [
       { title: "Dijital Kataloglar — Pratik Endüstriyel" },
@@ -17,80 +33,20 @@ export const Route = createFileRoute("/kataloglar")({
   component: KataloglarPage,
 });
 
-const KATALOGLAR = [
-  {
-    id: 1,
-    title: "Genel Ürün Kataloğu 2024",
-    year: "2024",
-    pages: "240 Sayfa",
-    fileSize: "42 MB",
-    coverImg: "https://images.unsplash.com/photo-1586769852836-bc069f19e1b6?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#003D6B"
-  },
-  {
-    id: 2,
-    title: "Elektrikli El Aletleri Özel Seçki",
-    year: "2024",
-    pages: "86 Sayfa",
-    fileSize: "18 MB",
-    coverImg: "https://images.unsplash.com/photo-1581147036324-c47a03a81d48?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#F5D311"
-  },
-  {
-    id: 3,
-    title: "İş Güvenliği ve KKD Ekipmanları",
-    year: "2023",
-    pages: "112 Sayfa",
-    fileSize: "24 MB",
-    coverImg: "https://images.unsplash.com/photo-1618568949779-05df34c1b02e?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#0072B8"
-  },
-  {
-    id: 4,
-    title: "Bağlantı Elemanları Teknik Tablo",
-    year: "2024",
-    pages: "48 Sayfa",
-    fileSize: "12 MB",
-    coverImg: "https://images.unsplash.com/photo-1609205807107-e8ec2120f9de?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#1D2430"
-  },
-  {
-    id: 5,
-    title: "Endüstriyel Makineler Rehberi",
-    year: "2024",
-    pages: "64 Sayfa",
-    fileSize: "15 MB",
-    coverImg: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#003D6B"
-  },
-  {
-    id: 6,
-    title: "El Aletleri Fiyat Listesi",
-    year: "2024",
-    pages: "32 Sayfa",
-    fileSize: "8 MB",
-    coverImg: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#F5D311"
-  },
-  {
-    id: 7,
-    title: "Sarf Malzemeleri Kataloğu",
-    year: "2024",
-    pages: "120 Sayfa",
-    fileSize: "28 MB",
-    coverImg: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-    color: "#0072B8"
-  }
-];
-
 function KataloglarPage() {
+  const { data: catalogs } = useSuspenseQuery({
+    queryKey: ["catalogs", "public"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("catalogs")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const { sections } = usePageContent("/kataloglar");
   const hero = sections["hero"]?.content || {};
 
@@ -98,20 +54,20 @@ function KataloglarPage() {
     <SiteShell>
       <PageHero
         title={hero.title?.value_text || "Dijital Kataloglar"}
-        description={hero.description?.value_text || "Profesyonel ürün gruplarımıza ait güncel teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
+        description={hero.description?.value_text || "Profesyonel ürün gruplarımıza ait teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kataloglar" }]}
       />
       
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {KATALOGLAR.map((k) => (
+          {catalogs?.map((k) => (
             <div key={k.id} className="group flex flex-col">
               <div className="relative aspect-a4 w-full bg-public-navy-950 overflow-hidden pub-ticks shadow-md transition-all group-hover:shadow-xl group-hover:-translate-y-1">
                 <span className="pub-tick-bl" aria-hidden />
                 <span className="pub-tick-br" aria-hidden />
                 
                 <img 
-                  src={k.coverImg} 
+                  src={k.cover_image_url || "/placeholder.svg"} 
                   alt={k.title} 
                   className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                   loading="lazy"
@@ -125,7 +81,7 @@ function KataloglarPage() {
 
                 <div className="absolute inset-0 bg-public-navy-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                   <a 
-                    href={k.pdfUrl} 
+                    href={k.pdf_url} 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-public-yellow-500 text-public-navy-950 flex items-center justify-center hover:scale-110 transition-transform"
@@ -143,11 +99,11 @@ function KataloglarPage() {
                 <div className="flex items-center gap-3 pub-mono text-[10px] text-public-steel">
                   <span>{k.pages}</span>
                   <span className="w-1 h-1 rounded-full bg-public-border" />
-                  <span>{k.fileSize} PDF</span>
+                  <span>{k.file_size} PDF</span>
                 </div>
                 
                 <a 
-                  href={k.pdfUrl}
+                  href={k.pdf_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-2 text-public-navy-700 font-bold text-[13px] flex items-center gap-2 hover:underline"

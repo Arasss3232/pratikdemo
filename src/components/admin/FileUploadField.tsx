@@ -12,7 +12,7 @@ interface FileUploadFieldProps {
   accept?: string;
 }
 
-const DEFAULT_BUCKET = "category-images Paco-images-123";
+const DEFAULT_BUCKET = "media";
 
 export function FileUploadField({ 
   label, 
