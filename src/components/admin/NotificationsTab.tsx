@@ -9,12 +9,12 @@ import { tr } from "date-fns/locale";
 type Notification = {
   id: string;
   title: string;
-  content: string;
-  severity: 'info' | 'success' | 'warning' | 'error';
-  is_read: boolean;
-  created_at: string;
-  link: string | null;
-  source: string | null;
+  message: string;
+  severity: string;
+  is_read: boolean | null;
+  created_at: string | null;
+  target_url: string | null;
+  related_module: string | null;
 };
 
 export function NotificationsTab() {
@@ -27,7 +27,7 @@ export function NotificationsTab() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      let query = supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+      let query = supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false });
       
       if (filter === "unread") {
         query = query.eq("is_read", false);
@@ -43,13 +43,12 @@ export function NotificationsTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("notifications")
-        .update({ is_read: true })
+        .update({ is_read: true, read_at: new Date().toISOString() })
         .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
-      // Also invalidate global notification count if exists
       queryClient.invalidateQueries({ queryKey: ["unread-notifications-count"] });
     }
   });
@@ -60,8 +59,8 @@ export function NotificationsTab() {
       if (!user) return;
       const { error } = await supabase
         .from("notifications")
-        .update({ is_read: true })
-        .eq("user_id", user.id)
+        .update({ is_read: true, read_at: new Date().toISOString() })
+        .eq("recipient_id", user.id)
         .eq("is_read", false);
       if (error) throw error;
     },
@@ -72,11 +71,14 @@ export function NotificationsTab() {
     }
   });
 
-  const severityIcons = {
-    info: { name: "info", color: "text-blue-500 bg-blue-50" },
-    success: { name: "check_circle", color: "text-green-500 bg-green-50" },
-    warning: { name: "warning", color: "text-amber-500 bg-amber-50" },
-    error: { name: "error", color: "text-red-500 bg-red-50" },
+  const getSeverityStyles = (severity: string) => {
+    const styles: Record<string, { name: string; color: string }> = {
+      info: { name: "info", color: "text-blue-500 bg-blue-50" },
+      success: { name: "check_circle", color: "text-green-500 bg-green-50" },
+      warning: { name: "warning", color: "text-amber-500 bg-amber-50" },
+      error: { name: "error", color: "text-red-500 bg-red-50" },
+    };
+    return styles[severity] || styles.info;
   };
 
   return (
@@ -116,44 +118,47 @@ export function NotificationsTab() {
             <p>Bildirim bulunmuyor.</p>
           </div>
         ) : (
-          notifications.map((n) => (
-            <div 
-              key={n.id}
-              onClick={() => !n.is_read && markAsReadMutation.mutate(n.id)}
-              className={`group flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer ${
-                n.is_read 
-                ? 'bg-[var(--admin-surface)] border-[var(--admin-border)] opacity-75' 
-                : 'bg-[var(--admin-surface)] border-blue-200 shadow-sm'
-              }`}
-            >
-              <div className={`p-3 rounded-xl shrink-0 ${severityIcons[n.severity].color}`}>
-                <Icon name={severityIcons[n.severity].name as any} className="text-xl" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className={`font-bold text-sm truncate ${!n.is_read ? 'text-[var(--admin-navy)]' : 'text-muted-foreground'}`}>
-                    {n.title}
-                  </h3>
-                  <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-4">
-                    {format(new Date(n.created_at), 'd MMM, HH:mm', { locale: tr })}
-                  </span>
+          notifications.map((n) => {
+            const style = getSeverityStyles(n.severity);
+            return (
+              <div 
+                key={n.id}
+                onClick={() => !n.is_read && markAsReadMutation.mutate(n.id)}
+                className={`group flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer ${
+                  n.is_read 
+                  ? 'bg-[var(--admin-surface)] border-[var(--admin-border)] opacity-75' 
+                  : 'bg-[var(--admin-surface)] border-blue-200 shadow-sm'
+                }`}
+              >
+                <div className={`p-3 rounded-xl shrink-0 ${style.color}`}>
+                  <Icon name={style.name as any} className="text-xl" />
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {n.content}
-                </p>
-                {n.source && (
-                  <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-                    Kaynak: {n.source}
-                  </span>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className={`font-bold text-sm truncate ${!n.is_read ? 'text-[var(--admin-navy)]' : 'text-muted-foreground'}`}>
+                      {n.title}
+                    </h3>
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-4">
+                      {n.created_at ? format(new Date(n.created_at), 'd MMM, HH:mm', { locale: tr }) : '-'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {n.message}
+                  </p>
+                  {n.related_module && (
+                    <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
+                      Kaynak: {n.related_module}
+                    </span>
+                  )}
+                </div>
+
+                {!n.is_read && (
+                  <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 self-center" title="Okunmadı" />
                 )}
               </div>
-
-              {!n.is_read && (
-                <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 self-center" title="Okunmadı" />
-              )}
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
