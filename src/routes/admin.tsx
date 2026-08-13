@@ -98,7 +98,16 @@ function AdminPage() {
   const { tab } = search;
 
   function setTab(t: Tab) {
-    navigate({ to: "/admin", search: { tab: t } });
+    navigate({
+      to: "/admin",
+      search: (prev) => ({
+        ...prev,
+        tab: t,
+        aiAction: undefined,
+        aiTarget: undefined,
+        aiPrompt: undefined,
+      }),
+    });
   }
 
   useEffect(() => {

@@ -306,6 +306,7 @@ export function SiteHeader() {
             {isAdmin && (
               <Link
                 to="/admin"
+                search={{ tab: "dashboard" }}
                 className="hidden md:inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--public-yellow-500)]"
                 aria-label="Yönetim paneli"
                 title="Yönetim"

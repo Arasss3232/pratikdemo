@@ -83,7 +83,7 @@ function GirisPage() {
               {isAdmin && (
                 <button
                   type="button"
-                  onClick={() => navigate({ to: "/admin" })}
+                  onClick={() => navigate({ to: "/admin", search: { tab: "dashboard" } })}
                   className={buttonStyles({ variant: "primary" })}
                 >
                   Admin Paneline Git
