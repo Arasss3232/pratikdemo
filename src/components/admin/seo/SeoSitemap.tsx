@@ -43,8 +43,9 @@ export function SeoSitemap() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="text-xl font-bold">XML Sitemap Yönetimi</h2>
+        <h2 className="text-xl font-bold text-[var(--admin-navy)]">XML Sitemap Yönetimi</h2>
         <p className="text-sm text-muted-foreground">Arama motorları için site haritası yapılandırması.</p>
+
       </div>
 
       {isInvalidUrl && (
@@ -76,15 +77,15 @@ export function SeoSitemap() {
       </div>
 
       <div className="admin-card overflow-hidden">
-        <div className="p-4 border-b bg-muted/30 font-medium">Sitemap Yapılandırması</div>
+        <div className="p-4 border-b bg-[var(--admin-surface-2)]/30 font-medium text-[var(--admin-navy)]">Sitemap Yapılandırması</div>
         <div className="p-6 space-y-6">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Sitemap URL</label>
+            <label className="text-sm font-medium text-[var(--admin-text)]">Sitemap URL</label>
             <div className="flex gap-2">
               <input 
                 readOnly 
                 value={window.location.origin + "/sitemap.xml"} 
-                className="flex-grow p-2 rounded border bg-muted/30 text-sm font-mono"
+                className="flex-grow p-2 rounded border bg-[var(--admin-surface-2)]/50 text-sm font-mono text-[var(--admin-text)] border-[var(--admin-border)]"
               />
               <button 
                 onClick={() => {
@@ -98,7 +99,7 @@ export function SeoSitemap() {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 pt-4 border-t border-[var(--admin-border)]">
             <button 
               onClick={handleGenerate}
               className="px-4 py-2 rounded bg-[var(--admin-yellow)] text-[var(--admin-navy)] font-bold text-sm flex items-center gap-2"
@@ -108,7 +109,7 @@ export function SeoSitemap() {
             </button>
             <button 
               onClick={() => window.open("/sitemap.xml", "_blank")}
-              className="px-4 py-2 rounded border hover:bg-muted transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 rounded border border-[var(--admin-border)] hover:bg-[var(--admin-surface-2)] transition-colors text-sm flex items-center gap-2 text-[var(--admin-text)]"
             >
               <Icon name="visibility" className="text-lg" />
               Görüntüle
