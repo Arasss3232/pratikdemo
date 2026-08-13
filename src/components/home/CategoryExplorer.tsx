@@ -22,7 +22,7 @@ export function CategoryExplorer() {
     }));
   }, [dbCategories]);
 
-  // Keyboard: arrow keys move through list
+  // Moved keyboard Effect before the loading return
   useEffect(() => {
     if (categories.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
@@ -80,7 +80,6 @@ export function CategoryExplorer() {
           </Link>
         </div>
 
-        {/* Desktop: split layout */}
         <div className="hidden md:grid grid-cols-12 gap-10">
           <ul
             role="tablist"
@@ -219,7 +218,6 @@ export function CategoryExplorer() {
           </div>
         </div>
 
-        {/* Mobile: horizontal chip nav + selected panel */}
         <div className="md:hidden">
           <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
             {categories.map((c: any, i: number) => {

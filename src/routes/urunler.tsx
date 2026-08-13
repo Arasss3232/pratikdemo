@@ -109,7 +109,7 @@ function UrunlerLayout() {
             ) : (
               categories?.map((c: any) => (
                 <CategoryCard 
-                  key={c.id} 
+                  key={`cat-${c.id}`} 
                   title={c.title}
                   desc={c.description || "Profesyonel endüstriyel çözümler."}
                   icon={c.icon || "hardware"}
