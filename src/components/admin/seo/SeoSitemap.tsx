@@ -22,9 +22,11 @@ export function SeoSitemap() {
     loadStats();
   }, []);
 
-  const handleGenerate = () => {
-    toast.success("Sitemap başarıyla güncellendi.");
+  const handleGenerate = async () => {
+    // Sitemap is dynamic, but we can clear cache or log the action
+    toast.success("Sitemap dinamik olarak yenilendi.");
   };
+
 
   return (
     <div className="flex flex-col gap-8">

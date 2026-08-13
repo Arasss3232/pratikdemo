@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../../site-shell";
@@ -6,6 +6,16 @@ import { Icon } from "../../site-shell";
 export function SeoSearchConsole() {
   const [loading, setLoading] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase.from("site_settings").select("google_search_console").eq("id", true).maybeSingle();
+      if (data?.google_search_console) {
+        setVerificationCode(data.google_search_console);
+      }
+    }
+    load();
+  }, []);
 
   const handleSave = async () => {
     setLoading(true);
@@ -30,13 +40,26 @@ export function SeoSearchConsole() {
     setLoading(false);
   };
 
+  const handleTestCode = () => {
+    setVerificationCode("seo-verification-test-2026");
+    toast.info("Test kodu alana yerleştirildi. Kaydederek test edebilirsiniz.");
+  };
+
   return (
     <div className="flex flex-col gap-6 max-w-4xl">
-      <div>
-        <h2 className="text-xl font-bold" style={{ color: "var(--admin-text)" }}>Google Search Console</h2>
-        <p className="text-sm" style={{ color: "var(--admin-text-2)" }}>
-          Google Search Console doğrulaması için meta etiketi yapılandırması.
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h2 className="text-xl font-bold" style={{ color: "var(--admin-text)" }}>Google Search Console</h2>
+          <p className="text-sm" style={{ color: "var(--admin-text-2)" }}>
+            Google Search Console doğrulaması için meta etiketi yapılandırması.
+          </p>
+        </div>
+        <button 
+          onClick={handleTestCode}
+          className="text-xs px-3 py-1.5 rounded bg-muted hover:bg-muted/80 transition-colors"
+        >
+          Test Kodu Kullan
+        </button>
       </div>
 
       <div className="admin-card p-6 flex flex-col gap-4">
@@ -47,7 +70,10 @@ export function SeoSearchConsole() {
           value={verificationCode}
           onChange={(e) => setVerificationCode(e.target.value)}
         />
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <p className="text-[11px] text-muted-foreground">
+            * Yalnızca tırnak içindeki kodu (örn: <code>abc...</code>) veya tam meta etiketini yapıştırabilirsiniz.
+          </p>
           <button 
             disabled={loading}
             onClick={handleSave}
@@ -55,6 +81,21 @@ export function SeoSearchConsole() {
           >
             {loading ? "Kaydediliyor..." : "Kodu Kaydet"}
           </button>
+        </div>
+      </div>
+
+      <div className="p-4 rounded-xl border bg-blue-50 border-blue-100 flex gap-4">
+        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+          <Icon name="help" className="text-blue-600" />
+        </div>
+        <div className="text-xs text-blue-800 space-y-2">
+          <p className="font-bold">Nasıl Yapılır?</p>
+          <ol className="list-decimal list-inside space-y-1 opacity-90">
+            <li>Google Search Console'a gidin ve mülkünüzü seçin.</li>
+            <li>Ayarlar &gt; Sahiplik Doğrulama &gt; HTML Etiketi adımlarını izleyin.</li>
+            <li>Verilen meta etiketini kopyalayıp yukarıdaki alana yapıştırın ve kaydedin.</li>
+            <li>Google panelinde "Doğrula" butonuna basın.</li>
+          </ol>
         </div>
       </div>
     </div>

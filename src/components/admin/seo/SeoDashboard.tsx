@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon } from "../../site-shell";
 
-export function SeoDashboard({ onNavigate }: { onNavigate: (t: any) => void }) {
+export function SeoDashboard({ onNavigate }: { onNavigate: (t: any, st?: any) => void }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center">
@@ -59,14 +59,21 @@ export function SeoDashboard({ onNavigate }: { onNavigate: (t: any) => void }) {
               <span className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform text-[var(--admin-navy)]">robot</span>
               <span className="text-sm font-medium">Robots.txt Gör</span>
             </button>
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl border hover:bg-muted/50 transition-colors group">
+            <button 
+              onClick={() => onNavigate('seo', 'pages')}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl border hover:bg-muted/50 transition-colors group"
+            >
               <span className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform text-[var(--admin-navy)]">search</span>
-              <span className="text-sm font-medium">Google Önizleme</span>
+              <span className="text-sm font-medium">Sayfa SEO</span>
             </button>
-            <button className="flex flex-col items-center gap-2 p-4 rounded-xl border hover:bg-muted/50 transition-colors group">
+            <button 
+              onClick={() => onNavigate('seo', 'redirects')}
+              className="flex flex-col items-center gap-2 p-4 rounded-xl border hover:bg-muted/50 transition-colors group"
+            >
               <span className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform text-[var(--admin-navy)]">add_link</span>
-              <span className="text-sm font-medium">301 Ekle</span>
+              <span className="text-sm font-medium">301 Yönetimi</span>
             </button>
+
           </div>
         </div>
 

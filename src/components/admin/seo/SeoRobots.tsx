@@ -8,18 +8,37 @@ export function SeoRobots() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // In a real app, we'd fetch this from settings
-    setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
+    async function load() {
+      const { data } = await supabase.from("site_settings").select("robots_txt").eq("id", true).maybeSingle();
+      const s = data as any;
+      if (s?.robots_txt) {
+        setContent(s.robots_txt);
+      } else {
+
+        setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
+      }
+    }
+    load();
   }, []);
 
-  const handleSave = () => {
+
+  const handleSave = async () => {
     setLoading(true);
-    // Simüle ediyoruz, gerçekte site_settings tablosuna kaydedilmeli
-    setTimeout(() => {
-      toast.success("Robots.txt kuralları kaydedildi.");
+    try {
+      const { error } = await supabase
+        .from("site_settings")
+        .update({ robots_txt: content } as any)
+        .eq("id", true);
+
+      if (error) throw error;
+      toast.success("Robots.txt kuralları başarıyla kaydedildi.");
+    } catch (error: any) {
+      toast.error("Hata", { description: error.message });
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
+
 
   return (
     <div className="flex flex-col gap-6">

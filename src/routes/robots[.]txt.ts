@@ -7,21 +7,31 @@ export const Route = createFileRoute("/robots.txt")({
       GET: async ({ request }) => {
         const url = new URL(request.url);
         
-        // Settings'den site_url'i al
         const { data: settings } = await supabase
           .from("site_settings")
-          .select("site_url, is_indexing_enabled")
+          .select("site_url, is_indexing_enabled, robots_txt")
           .eq("id", true)
           .single();
         
-        const baseUrl = settings?.site_url || url.origin;
-        const isIndexing = settings?.is_indexing_enabled !== false;
+        const s = settings as any;
+        
+        if (s?.robots_txt) {
+          return new Response(s.robots_txt, {
+            headers: {
+              "Content-Type": "text/plain",
+              "Cache-Control": "public, max-age=3600",
+            },
+          });
+        }
+
+        const baseUrl = s?.site_url || url.origin;
+        const isIndexing = s?.is_indexing_enabled !== false;
         
         const content = [
           "User-agent: *",
           isIndexing ? "Allow: /" : "Disallow: /",
           "Disallow: /admin",
-          "Disallow: /giris",
+          "Disallow: /auth",
           "",
           `Sitemap: ${baseUrl}/sitemap.xml`
         ].join("\n");
