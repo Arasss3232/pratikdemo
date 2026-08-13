@@ -6,6 +6,8 @@ import { buttonStyles } from "../lib/button-styles";
 import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
+import { useCategories } from "@/hooks/use-categories";
+import { useHydrated } from "@/hooks/use-hydrated";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
 
@@ -58,6 +60,7 @@ const PRODUCT_GROUPS = [
 ] as const;
 
 export function SiteHeader() {
+  const isHydrated = useHydrated();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -69,6 +72,7 @@ export function SiteHeader() {
   const { settings: rawSettings } = useSiteSettings();
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
+  const { categories } = useCategories();
   const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
 
 
@@ -382,29 +386,60 @@ export function SiteHeader() {
                 </Link>
               </div>
               <ul className="grid grid-cols-2 gap-x-6 gap-y-1" role="none">
-                {PRODUCT_GROUPS.map((g) => (
-                  <li key={g.to} role="none">
-                    <Link
-                      to={g.to}
-                      role="menuitem"
-                      onClick={() => setMegaOpen(false)}
-                      className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
-                    >
-                      <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
-                      <span className="flex-1 min-w-0">
-                        <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
-                          {g.title}
+                {categories.length > 0 ? (
+                  categories.map((cat, idx) => (
+                    <li key={cat.id} role="none">
+                      <Link
+                        to="/teklif"
+                        search={{ categoryId: cat.id, category: cat.title }}
+                        role="menuitem"
+                        onClick={() => setMegaOpen(false)}
+                        className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
+                      >
+                        <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>
+                          {(idx + 1).toString().padStart(2, '0')}
                         </span>
-                        <span className="block text-[13px] text-white/60 mt-0.5">{g.desc}</span>
-                      </span>
-                      <Icon
-                        name="north_east"
-                        className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  </li>
-                ))}
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
+                            {cat.title}
+                          </span>
+                          {cat.description && (
+                            <span className="block text-[13px] text-white/60 mt-0.5 line-clamp-1">{cat.description}</span>
+                          )}
+                        </span>
+                        <Icon
+                          name="north_east"
+                          className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  PRODUCT_GROUPS.map((g) => (
+                    <li key={g.title} role="none">
+                      <Link
+                        to={g.to}
+                        role="menuitem"
+                        onClick={() => setMegaOpen(false)}
+                        className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
+                      >
+                        <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
+                            {g.title}
+                          </span>
+                          <span className="block text-[13px] text-white/60 mt-0.5">{g.desc}</span>
+                        </span>
+                        <Icon
+                          name="north_east"
+                          className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </div>
@@ -510,23 +545,44 @@ export function SiteHeader() {
                             <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                           </Link>
                         </li>
-                        {PRODUCT_GROUPS.map((g) => (
-                          <li key={g.to}>
-                            <Link
-                              to={g.to}
-                              onClick={() => setMenuOpen(false)}
-                              className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
-                            >
-                              <span
-                                className="font-mono text-[11px] tabular-nums w-6 shrink-0"
-                                style={{ color: "var(--public-yellow-500)" }}
+                        {categories.length > 0 ? (
+                          categories.map((cat, idx) => (
+                            <li key={cat.id}>
+                              <Link
+                                to="/teklif"
+                                search={{ categoryId: cat.id, category: cat.title }}
+                                onClick={() => setMenuOpen(false)}
+                                className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
                               >
-                                {g.code}
-                              </span>
-                              <span className="min-w-0">{g.title}</span>
-                            </Link>
-                          </li>
-                        ))}
+                                <span
+                                  className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                  style={{ color: "var(--public-yellow-500)" }}
+                                >
+                                  {(idx + 1).toString().padStart(2, '0')}
+                                </span>
+                                <span className="min-w-0">{cat.title}</span>
+                              </Link>
+                            </li>
+                          ))
+                        ) : (
+                          PRODUCT_GROUPS.map((g) => (
+                            <li key={g.title}>
+                              <Link
+                                to={g.to}
+                                onClick={() => setMenuOpen(false)}
+                                className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
+                              >
+                                <span
+                                  className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                  style={{ color: "var(--public-yellow-500)" }}
+                                >
+                                  {g.code}
+                                </span>
+                                <span className="min-w-0">{g.title}</span>
+                              </Link>
+                            </li>
+                          ))
+                        )}
                       </ul>
                     )}
                     <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} />
@@ -734,17 +790,34 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <h3 className="section-label text-secondary mb-5">Ürün Grupları</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-              {productCols.map((g) => (
-                <li key={g.to}>
-                  <Link
-                    to={g.to}
-                    className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
-                  >
-                    <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">{g.code}</span>
-                    <span className="text-[14px]">{g.title}</span>
-                  </Link>
-                </li>
-              ))}
+              {categories.length > 0 ? (
+                categories.slice(0, 6).map((cat, idx) => (
+                  <li key={cat.id}>
+                    <Link
+                      to="/teklif"
+                      search={{ categoryId: cat.id, category: cat.title }}
+                      className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
+                    >
+                      <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">
+                        {(idx + 1).toString().padStart(2, '0')}
+                      </span>
+                      <span className="text-[14px]">{cat.title}</span>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                productCols.map((g) => (
+                  <li key={g.title}>
+                    <Link
+                      to={g.to}
+                      className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
+                    >
+                      <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">{g.code}</span>
+                      <span className="text-[14px]">{g.title}</span>
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 
