@@ -66,7 +66,7 @@ function KurumsalPage() {
       {hero && (
         <PageHero
           title={hero.content.title?.value_text || "Kurumsal"}
-          description={hero.content.description?.value_text}
+          description={hero.content.description?.value_text ?? undefined}
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
         />
       )}
