@@ -368,12 +368,12 @@ function AdminPage() {
           ]} />
         )}
         {tab === "deliveries" && (
-          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={undefined /*
+          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={[
             "Teslimat belgeleri ve tesellüm",
           ]} />
         )}
         {tab === "returns" && (
-          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={undefined /*
+          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={[
             "İade talepleri ve nedenleri",
             "Stok ve cari düzeltmeleri",
           ]} />
