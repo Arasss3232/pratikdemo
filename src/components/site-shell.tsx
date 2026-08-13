@@ -638,6 +638,12 @@ export function SiteHeader() {
                 {isAdmin ? (
                   <Link
                     to="/admin"
+                    search={{
+                      tab: "dashboard",
+                      aiAction: undefined,
+                      aiTarget: undefined,
+                      aiPrompt: undefined,
+                    }}
                     onClick={() => setMenuOpen(false)}
                     className="pub-btn pub-btn-outline-light pub-btn-sm w-full min-h-11"
                   >
