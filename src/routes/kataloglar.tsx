@@ -24,7 +24,7 @@ const KATALOGLAR = [
     pages: "240 Sayfa",
     fileSize: "42 MB",
     coverImg: "https://images.unsplash.com/photo-1586769852836-bc069f19e1b6?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "#",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     color: "#003D6B"
   },
   {
@@ -34,7 +34,7 @@ const KATALOGLAR = [
     pages: "86 Sayfa",
     fileSize: "18 MB",
     coverImg: "https://images.unsplash.com/photo-1581147036324-c47a03a81d48?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "#",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     color: "#F5D311"
   },
   {
@@ -44,7 +44,7 @@ const KATALOGLAR = [
     pages: "112 Sayfa",
     fileSize: "24 MB",
     coverImg: "https://images.unsplash.com/photo-1618568949779-05df34c1b02e?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "#",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     color: "#0072B8"
   },
   {
@@ -54,8 +54,38 @@ const KATALOGLAR = [
     pages: "48 Sayfa",
     fileSize: "12 MB",
     coverImg: "https://images.unsplash.com/photo-1609205807107-e8ec2120f9de?auto=format&fit=crop&w=600&q=80",
-    pdfUrl: "#",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     color: "#1D2430"
+  },
+  {
+    id: 5,
+    title: "Endüstriyel Makineler Rehberi",
+    year: "2024",
+    pages: "64 Sayfa",
+    fileSize: "15 MB",
+    coverImg: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=600&q=80",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    color: "#003D6B"
+  },
+  {
+    id: 6,
+    title: "El Aletleri Fiyat Listesi",
+    year: "2024",
+    pages: "32 Sayfa",
+    fileSize: "8 MB",
+    coverImg: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=600&q=80",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    color: "#F5D311"
+  },
+  {
+    id: 7,
+    title: "Sarf Malzemeleri Kataloğu",
+    year: "2024",
+    pages: "120 Sayfa",
+    fileSize: "28 MB",
+    coverImg: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+    pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    color: "#0072B8"
   }
 ];
 
@@ -92,16 +122,10 @@ function KataloglarPage() {
                 <div className="absolute inset-0 bg-public-navy-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                   <a 
                     href={k.pdfUrl} 
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-public-yellow-500 text-public-navy-950 flex items-center justify-center hover:scale-110 transition-transform"
-                    title="İncele"
-                  >
-                    <Icon name="visibility" />
-                  </a>
-                  <a 
-                    href={k.pdfUrl} 
-                    download
-                    className="w-12 h-12 rounded-full bg-white text-public-navy-950 flex items-center justify-center hover:scale-110 transition-transform"
-                    title="İndir (PDF)"
+                    title="İndir"
                   >
                     <Icon name="download" />
                   </a>
@@ -120,10 +144,12 @@ function KataloglarPage() {
                 
                 <a 
                   href={k.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="mt-2 text-public-navy-700 font-bold text-[13px] flex items-center gap-2 hover:underline"
                 >
-                  Kataloğu İncele
-                  <Icon name="arrow_forward" className="text-[16px]" />
+                  İndir
+                  <Icon name="download" className="text-[16px]" />
                 </a>
               </div>
             </div>
