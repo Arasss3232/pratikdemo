@@ -22,16 +22,16 @@ export function SeoTools() {
     await new Promise(r => setTimeout(r, 1200));
 
     try {
-      const [settings, pages, redirects] = await Promise.all([
+      const [settings, pages] = await Promise.all([
         supabase.from("site_settings").select("*").eq("id", true).single(),
-        supabase.from("page_seo").select("*"),
-        supabase.from("seo_redirects").select("*")
+        supabase.from("page_seo").select("*")
       ]);
 
       const auditResults: typeof results = [];
+      const s = settings.data as any;
 
       // 1. SSL & Base URL Check
-      const siteUrl = settings.data?.site_url || "";
+      const siteUrl = s?.site_url || "";
       if (!siteUrl) {
         auditResults.push({
           id: "site_url",
@@ -58,7 +58,7 @@ export function SeoTools() {
       }
 
       // 2. Indexing Check
-      if (settings.data?.is_indexing_enabled === false) {
+      if (s?.is_indexing_enabled === false) {
         auditResults.push({
           id: "indexing",
           title: "İndeksleme Devre Dışı",
@@ -76,7 +76,7 @@ export function SeoTools() {
       }
 
       // 3. Analytics & GTM
-      if (!settings.data?.ga4_active || !settings.data?.ga4_id) {
+      if (!s?.ga4_active || !s?.ga4_id) {
         auditResults.push({
           id: "analytics",
           title: "Google Analytics Eksik",
@@ -111,7 +111,7 @@ export function SeoTools() {
       }
 
       // 5. Favicon check
-      if (!settings.data?.favicon_url) {
+      if (!s?.favicon_url) {
         auditResults.push({
           id: "favicon",
           title: "Favicon Eksik",
