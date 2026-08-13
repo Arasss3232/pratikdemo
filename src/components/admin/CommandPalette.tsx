@@ -43,8 +43,8 @@ export function CommandPalette({
     const t = setTimeout(async () => {
       const pattern = `%${term}%`;
       const [p, b, m] = await Promise.all([
-        supabase.from("products").select("id,name,sku").ilike("name", pattern).limit(4),
-        supabase.from("blog_posts").select("id,title,slug").ilike("title", pattern).limit(3),
+        supabase.from("product_categories").select("id,name").ilike("name", pattern).limit(4),
+        supabase.from("brands").select("id,name").ilike("name", pattern).limit(3),
         supabase.from("contact_messages").select("id,name,subject").ilike("subject", pattern).limit(3),
       ]);
       const out: Cmd[] = [];
