@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PagePlaceholder } from "../components/site-shell";
+import { SiteShell } from "../components/site-shell";
+import { usePageContent } from "@/hooks/use-page-content";
+import { PageHero } from "../components/marketing/PageHero";
 
 export const Route = createFileRoute("/kvkk")({
   head: () => ({
@@ -17,13 +19,24 @@ export const Route = createFileRoute("/kvkk")({
 });
 
 function KvkkPage() {
+  const { sections } = usePageContent("/kvkk");
+  const hero = sections["hero"]?.content || {};
+  const content = sections["content"]?.content || {};
+
   return (
     <SiteShell>
-      <PagePlaceholder
-        title="KVKK ve Gizlilik"
-        crumb="KVKK"
-        description="Kişisel verilerinizin işlenmesine ilişkin haklarınız ve gizlilik politikamızın detayları."
+      <PageHero
+        title={hero.title?.value_text || "KVKK ve Gizlilik"}
+        description={hero.description?.value_text || "Kişisel verilerinizin işlenmesine ilişkin haklarınız ve gizlilik politikamızın detayları."}
+        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "KVKK" }]}
       />
+      {content.body?.value_text && (
+        <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
+          <div className="prose prose-slate max-w-none prose-lg">
+            <div dangerouslySetInnerHTML={{ __html: content.body.value_text }} />
+          </div>
+        </div>
+      )}
     </SiteShell>
   );
 }

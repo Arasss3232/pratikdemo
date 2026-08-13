@@ -8,23 +8,24 @@ import { Loader2, Save, RotateCcw, ChevronRight, Layout, Type, Link as LinkIcon,
 
 type ContentTab = 
   | "general" | "home" | "hakkimizda" | "teklif" | "iletisim" 
-  | "header" | "footer" | "navigation";
+  | "header" | "footer" | "navigation" | "categories" | "kataloglar" 
+  | "bayilikler" | "yasal" | "sistem" | "history";
 
 export function ContentManagement() {
   const [activeTab, setActiveTab] = useState<ContentTab>("general");
   const [hasChanges, setHasChanges] = useState(false);
 
   return (
-    <div className="flex flex-col h-full bg-[var(--admin-navy-deep)] text-white">
-      {/* Header */}
-      <div className="p-6 border-b border-white/10 flex items-center justify-between bg-[var(--admin-surface)]">
+    <div className="flex flex-col h-full text-white">
+      {/* CMS Toolbar */}
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-[var(--admin-yellow-soft)] flex items-center justify-center text-[var(--admin-navy)]">
             <Icon name="edit_note" className="text-[24px]" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">Site İçerik Yönetimi</h1>
-            <p className="text-sm text-white/60">Sitenizdeki tüm metin ve görselleri kod yazmadan yönetin</p>
+            <h2 className="text-xl font-bold">İçerik Editörü</h2>
+            <p className="text-sm text-white/40">Sayfa bazlı içerik yönetimi</p>
           </div>
         </div>
         
@@ -42,16 +43,16 @@ export function ContentManagement() {
         )}
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden bg-[var(--admin-surface)] rounded-2xl border border-white/5 min-h-[700px]">
         {/* Sidebar Nav */}
-        <div className="w-64 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-4 space-y-6 overflow-y-auto">
+        <div className="w-64 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-4 space-y-6 overflow-y-auto admin-sidebar-scroll">
           <div>
             <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">Global</h3>
             <div className="space-y-1">
-              <NavItem active={activeTab === "general"} icon="settings" label="Genel Ayarlar" onClick={() => setActiveTab("general")} />
-              <NavItem active={activeTab === "header"} icon="ad_units" label="Header & Üst Bar" onClick={() => setActiveTab("header")} />
-              <NavItem active={activeTab === "footer"} icon="view_agenda" label="Footer (Alt Bölüm)" onClick={() => setActiveTab("footer")} />
-              <NavItem active={activeTab === "navigation"} icon="menu" label="Navigasyon Linkleri" onClick={() => setActiveTab("navigation")} />
+              <NavItem active={activeTab === "general"} icon="settings" label="Genel İçerikler" onClick={() => setActiveTab("general")} />
+              <NavItem active={activeTab === "header"} icon="ad_units" label="Header & Navigasyon" onClick={() => setActiveTab("header")} />
+              <NavItem active={activeTab === "footer"} icon="view_agenda" label="Footer" onClick={() => setActiveTab("footer")} />
+              <NavItem active={activeTab === "navigation"} icon="menu" label="Üst Bilgi Çubuğu" onClick={() => setActiveTab("navigation")} />
             </div>
           </div>
 
@@ -59,29 +60,50 @@ export function ContentManagement() {
             <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">Sayfalar</h3>
             <div className="space-y-1">
               <NavItem active={activeTab === "home"} icon="home" label="Ana Sayfa" onClick={() => setActiveTab("home")} />
-              <NavItem active={activeTab === "hakkimizda"} icon="info" label="Hakkımızda" onClick={() => setActiveTab("hakkimizda")} />
-              <NavItem active={activeTab === "teklif"} icon="request_quote" label="Teklif Sayfası" onClick={() => setActiveTab("teklif")} />
+              <NavItem active={activeTab === "hakkimizda"} icon="info" label="Kurumsal" onClick={() => setActiveTab("hakkimizda")} />
+              <NavItem active={activeTab === "categories"} icon="category" label="Ürün Kategorileri" onClick={() => setActiveTab("categories")} />
+              <NavItem active={activeTab === "kataloglar"} icon="menu_book" label="Kataloglarımız" onClick={() => setActiveTab("kataloglar")} />
+              <NavItem active={activeTab === "bayilikler"} icon="workspace_premium" label="Bayiliklerimiz" onClick={() => setActiveTab("bayilikler")} />
+              <NavItem active={activeTab === "teklif"} icon="request_quote" label="Teklif Talep" onClick={() => setActiveTab("teklif")} />
               <NavItem active={activeTab === "iletisim"} icon="contact_support" label="İletişim" onClick={() => setActiveTab("iletisim")} />
+              <NavItem active={activeTab === "yasal"} icon="gavel" label="Yasal Sayfalar" onClick={() => setActiveTab("yasal")} />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">Sistem</h3>
+            <div className="space-y-1">
+              <NavItem active={activeTab === "sistem"} icon="display_settings" label="Sistem Mesajları" onClick={() => setActiveTab("sistem")} />
+              <NavItem active={activeTab === "history"} icon="history" label="İçerik Geçmişi" onClick={() => setActiveTab("history")} />
             </div>
           </div>
         </div>
 
         {/* Editor Area */}
-        <div className="flex-1 overflow-y-auto p-8 bg-[var(--admin-surface)]">
+        <div className="flex-1 overflow-y-auto p-8 bg-black/20">
           <div className="max-w-4xl mx-auto pb-20">
             {activeTab === "general" && <GeneralSettings onDirty={() => setHasChanges(true)} onSaved={() => setHasChanges(false)} />}
-            {["home", "hakkimizda", "teklif", "iletisim"].includes(activeTab) && (
+            {["home", "hakkimizda", "teklif", "iletisim", "categories", "kataloglar", "bayilikler", "yasal", "sistem"].includes(activeTab) && (
               <PageContentEditor 
-                route={activeTab === "home" ? "/" : `/${activeTab}`} 
+                route={
+                  activeTab === "home" ? "/" : 
+                  activeTab === "hakkimizda" ? "/kurumsal" : 
+                  activeTab === "categories" ? "/urunler" :
+                  activeTab === "kataloglar" ? "/kataloglar" :
+                  activeTab === "bayilikler" ? "/bayiliklerimiz" :
+                  activeTab === "yasal" ? "/yasal" :
+                  activeTab === "sistem" ? "/sistem" :
+                  `/${activeTab}`
+                } 
                 onDirty={() => setHasChanges(true)} 
                 onSaved={() => setHasChanges(false)} 
               />
             )}
-            {["header", "footer", "navigation"].includes(activeTab) && (
+            {["header", "footer", "navigation", "history"].includes(activeTab) && (
               <div className="flex flex-col items-center justify-center h-64 text-white/20 border-2 border-dashed border-white/5 rounded-2xl">
                 <Icon name="construction" className="text-[64px] mb-4" />
                 <p className="text-lg font-medium">Bu modül üzerinde çalışıyoruz.</p>
-                <p className="text-sm">Gelişmiş {activeTab} yönetimi bir sonraki güncelleme ile aktif olacak.</p>
+                <p className="text-sm">Gelişmiş {activeTab} yönetimi ve geçmiş takibi bir sonraki güncelleme ile aktif olacak.</p>
               </div>
             )}
           </div>
@@ -369,52 +391,58 @@ function PageContentEditor({ route, onDirty, onSaved }: { route: string; onDirty
             </div>
             
             <div className="p-6 space-y-8">
-              {section.section_content.map((field: any) => (
-                <div key={field.id} className="space-y-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    {field.field_type === 'textarea' || field.field_type === 'text' ? <Type size={14} className="text-white/40" /> : null}
-                    {field.field_type === 'link' ? <LinkIcon size={14} className="text-white/40" /> : null}
-                    {field.field_type === 'media' ? <ImageIcon size={14} className="text-white/40" /> : null}
-                    <span className="text-xs font-bold uppercase tracking-wider text-white/60">{field.label}</span>
-                  </div>
-
-                  {field.field_type === 'text' && (
-                    <InputGroup 
-                      label="" 
-                      value={field.value_text || ""} 
-                      onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')} 
-                    />
-                  )}
-
-                  {field.field_type === 'textarea' && (
-                    <textarea 
-                      className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg p-4 text-sm min-h-[100px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors"
-                      value={field.value_text || ""}
-                      onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
-                    />
-                  )}
-
-                  {field.field_type === 'link' && (
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <InputGroup 
-                          label="Link Adresi" 
-                          value={field.link_url || ""} 
-                          onChange={(v) => handleFieldChange(section.id, field.id, v, 'link')} 
-                        />
-                      </div>
+              {section.section_content && section.section_content.length > 0 ? (
+                section.section_content.map((field: any) => (
+                  <div key={field.id} className="space-y-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      {field.field_type === 'textarea' || field.field_type === 'text' || field.field_type === 'richtext' ? <Type size={14} className="text-white/40" /> : null}
+                      {field.field_type === 'link' ? <LinkIcon size={14} className="text-white/40" /> : null}
+                      {field.field_type === 'media' ? <ImageIcon size={14} className="text-white/40" /> : null}
+                      <span className="text-xs font-bold uppercase tracking-wider text-white/60">{field.label || field.field_key}</span>
                     </div>
-                  )}
 
-                  {field.field_type === 'media' && (
-                    <ImageUploadField 
-                      label="" 
-                      value={field.media_url || ""} 
-                      onChange={(v) => handleFieldChange(section.id, field.id, v, 'media')} 
-                    />
-                  )}
+                    {(field.field_type === 'text' || field.field_type === 'richtext') && (
+                      <InputGroup 
+                        label="" 
+                        value={field.value_text || ""} 
+                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')} 
+                      />
+                    )}
+
+                    {field.field_type === 'textarea' && (
+                      <textarea 
+                        className="w-full bg-[var(--admin-navy-deep)]/60 border border-white/10 rounded-lg p-4 text-sm min-h-[100px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors"
+                        value={field.value_text || ""}
+                        onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
+                      />
+                    )}
+
+                    {field.field_type === 'link' && (
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <InputGroup 
+                            label="Link Adresi" 
+                            value={field.link_url || ""} 
+                            onChange={(v) => handleFieldChange(section.id, field.id, v, 'link')} 
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {field.field_type === 'media' && (
+                      <ImageUploadField 
+                        label="" 
+                        value={field.media_url || ""} 
+                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'media')} 
+                      />
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 border-2 border-dashed border-white/5 rounded-xl text-white/20">
+                  <p className="text-sm">Bu bölümde henüz düzenlenebilir alan bulunmuyor.</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         ))}

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Icon } from "../components/site-shell";
@@ -33,7 +33,7 @@ import { SeoTagManager } from "../components/admin/seo/SeoTagManager";
 import { SeoSchema } from "../components/admin/seo/SeoSchema";
 import { SeoSocial } from "../components/admin/seo/SeoSocial";
 import { SeoFavicon } from "../components/admin/seo/SeoFavicon";
-import { ContentManagement } from "@/components/admin/content/ContentManagement";
+import { ContentManagement } from "../components/admin/content/ContentManagement";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
@@ -62,6 +62,22 @@ const TAB_KEYS: AdminTab[] = [
 ];
 
 export const Route = createFileRoute("/admin")({
+  beforeLoad: async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      throw redirect({ to: "/giris" });
+    }
+    
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", session.user.id);
+      
+    const isAdmin = roles?.some(r => r.role === "admin");
+    if (!isAdmin) {
+      throw redirect({ to: "/" });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Admin Paneli — Pratik Endüstriyel" },
@@ -204,7 +220,7 @@ function AdminPage() {
         userEmail={user.email ?? ""}
         onQuickAdd={handleQuickAdd}
       >
-        {tab !== "dashboard" && tab !== "seo" && tab !== "content" && <PageHeader tab={tab} />}
+        {tab !== "dashboard" && tab !== "seo" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
         {tab === "seo" && (
           <SeoShell 
