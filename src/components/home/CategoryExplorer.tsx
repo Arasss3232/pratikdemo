@@ -3,25 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { useCategories, type Category } from "@/hooks/use-categories";
 
-export function CategoryExplorer() {
-  const { categories: dbCategories, isLoading } = useCategories();
-  const [active, setActive] = useState(0);
-
-  const categories = useMemo(() => {
-    if (!dbCategories || dbCategories.length === 0) return [];
-    return dbCategories.map((c: Category, i: number) => ({
-      index: String(i + 1).padStart(2, "0"),
-      title: c.title,
-      slug: c.slug,
-      to: "/teklif",
-      desc: c.description || "Profesyonel endüstriyel çözümler.",
-      count: "Geniş ürün yelpazesi",
-      image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
-      sub: [],
-      id: c.id
-    }));
-  }, [dbCategories]);
-
+function CategoryExplorerContent({ categories, active, setActive }: { categories: any[], active: number, setActive: (i: number) => void }) {
   // Keyboard: arrow keys move through list
   useEffect(() => {
     if (categories.length === 0) return;
@@ -38,18 +20,10 @@ export function CategoryExplorer() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [categories.length]);
-
-  if (isLoading || categories.length === 0) {
-    return (
-      <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
-        <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" />
-        {isLoading ? <div className="py-20 text-center text-white/50">Yükleniyor...</div> : null}
-      </section>
-    );
-  }
+  }, [categories.length, setActive]);
 
   const cat = categories[active];
+  if (!cat) return null;
 
   return (
     <section
@@ -284,6 +258,37 @@ export function CategoryExplorer() {
       </div>
     </section>
   );
+}
+
+export function CategoryExplorer() {
+  const { categories: dbCategories, isLoading } = useCategories();
+  const [active, setActive] = useState(0);
+
+  const categories = useMemo(() => {
+    if (!dbCategories || dbCategories.length === 0) return [];
+    return dbCategories.map((c: Category, i: number) => ({
+      index: String(i + 1).padStart(2, "0"),
+      title: c.title,
+      slug: c.slug,
+      to: "/teklif",
+      desc: c.description || "Profesyonel endüstriyel çözümler.",
+      count: "Geniş ürün yelpazesi",
+      image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
+      sub: [],
+      id: c.id
+    }));
+  }, [dbCategories]);
+
+  if (isLoading || categories.length === 0) {
+    return (
+      <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
+        <div className="absolute inset-0 pub-blueprint opacity-60 pointer-events-none" />
+        {isLoading ? <div className="py-20 text-center text-white/50">Yükleniyor...</div> : null}
+      </section>
+    );
+  }
+
+  return <CategoryExplorerContent categories={categories} active={active} setActive={setActive} />;
 }
 
 export function SectionHead({
