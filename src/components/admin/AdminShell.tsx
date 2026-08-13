@@ -4,6 +4,8 @@ import { Icon } from "../site-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { ADMIN_NAV, findNavGroup, findNavItem, type AdminTab } from "./nav";
 import { CommandPalette } from "./CommandPalette";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
 
 const STORAGE_KEY = "admin_sidebar_collapsed";
 const THEME_KEY = "admin_theme";
@@ -29,6 +31,7 @@ export function AdminShell({
   children: ReactNode;
 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dark, setDark] = useState(false);
@@ -36,6 +39,20 @@ export function AdminShell({
   const [quickOpen, setQuickOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ["unread-notifications-count"],
+    queryFn: async () => {
+      if (!user?.id) return 0;
+      const { count } = await supabase
+        .from("notifications")
+        .select("*", { count: 'exact', head: true })
+        .eq("recipient_id", user.id)
+        .eq("is_read", false);
+      return count || 0;
+    },
+    enabled: !!user?.id
+  });
 
   useEffect(() => {
     setCollapsed(localStorage.getItem(STORAGE_KEY) === "1");
@@ -110,8 +127,9 @@ export function AdminShell({
           onOpenMobile={() => setMobileOpen(true)}
           onToggleCollapse={toggleSidebar}
           onOpenPalette={() => setPaletteOpen(true)}
-          onOpenNotify={() => setNotifyOpen((v) => !v)}
+          onOpenNotify={() => handleTab("notifications")}
           notifyOpen={notifyOpen}
+          unreadCount={unreadCount}
           onCloseNotify={() => setNotifyOpen(false)}
           quickOpen={quickOpen}
           onToggleQuick={() => setQuickOpen((v) => !v)}
@@ -356,6 +374,7 @@ function CommandTopbar({
   onOpenPalette,
   onOpenNotify,
   notifyOpen,
+  unreadCount,
   onCloseNotify,
   quickOpen,
   onToggleQuick,
@@ -376,6 +395,7 @@ function CommandTopbar({
   onOpenPalette: () => void;
   onOpenNotify: () => void;
   notifyOpen: boolean;
+  unreadCount: number;
   onCloseNotify: () => void;
   quickOpen: boolean;
   onToggleQuick: () => void;
@@ -541,6 +561,11 @@ function CommandTopbar({
             aria-label="Bildirimler"
           >
             <Icon name="notifications" className="text-[20px]" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 h-4 min-w-[16px] px-1 bg-red-500 text-white text-[9px] font-bold rounded-full border-2 border-[var(--admin-surface)] flex items-center justify-center">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
           {notifyOpen && (
             <>
@@ -555,7 +580,7 @@ function CommandTopbar({
               >
                 <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--admin-border)" }}>
                   <p className="text-sm font-semibold">Bildirimler</p>
-                  <span className="admin-badge admin-badge-neutral">0 yeni</span>
+                  <span className="admin-badge admin-badge-neutral">{unreadCount} yeni</span>
                 </div>
                 <div className="px-4 py-8 text-center text-sm" style={{ color: "var(--admin-text-2)" }}>
                   <span
@@ -564,7 +589,7 @@ function CommandTopbar({
                   >
                     <Icon name="notifications_off" className="text-[20px]" />
                   </span>
-                  Henüz yeni bildirim yok.
+                  {unreadCount > 0 ? `${unreadCount} okunmamış bildiriminiz var.` : "Henüz yeni bildirim yok."}
                 </div>
               </div>
             </>
