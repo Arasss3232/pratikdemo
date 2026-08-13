@@ -123,8 +123,9 @@ export function SettingsPanel() {
             <h3 className="font-bold">Marka Varlıkları</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ImageUploadField label="Ana Logo" value={localSettings.logo_url} onChange={v => handleChange("logo_url", v)} />
-            <ImageUploadField label="Mobil Logo" value={localSettings.mobile_logo_url} onChange={v => handleChange("mobile_logo_url", v)} />
+            <FileUploadField label="Ana Logo" value={localSettings.logo_url} onChange={(v: any) => handleChange("logo_url", v)} />
+            <FileUploadField label="Mobil Logo" value={localSettings.mobile_logo_url} onChange={(v: any) => handleChange("mobile_logo_url", v)} />
+
           </div>
         </div>
       </div>
