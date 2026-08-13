@@ -184,6 +184,7 @@ function AdminPage() {
         {tab === "products" && <ProductsTab />}
         {tab === "quotes" && <QuotesTab />}
         {tab === "users" && <UsersTab currentUserId={user.id} />}
+        {tab === "catalogs" && <CatalogsTab />}
         {tab === "references" && <ReferencesTab />}
         {tab === "brands" && <BrandsTab />}
         {tab === "certificates" && <CertificatesTab />}
@@ -1302,6 +1303,33 @@ const ORDER_FIELD: CrudField = { name: "display_order", label: "Sıra", type: "n
 
 function pubCol(): CrudColumn {
   return { key: "published", label: "Yayında", render: (r) => (r.published ? "✓" : "—") };
+}
+
+export function CatalogsTab() {
+  return (
+    <GenericCrud
+      table="catalogs"
+      quickAddKey="catalogs"
+      title="Katalog Yönetimi"
+      orderBy="display_order"
+      ascending
+      fields={[
+        { name: "title", label: "Katalog Başlığı", required: true },
+        { name: "year", label: "Yıl", placeholder: "2024" },
+        { name: "pages", label: "Sayfa Sayısı", placeholder: "120 Sayfa" },
+        { name: "file_size", label: "Dosya Boyutu", placeholder: "24 MB" },
+        { name: "cover_url", label: "Kapak Görseli", type: "file", help: "A4 formatında görsel yükleyin" },
+        { name: "pdf_url", label: "PDF Dosyası", type: "file", help: "PDF formatında dosya yükleyin" },
+        ORDER_FIELD,
+        PUBLISHED_FIELD,
+      ]}
+      columns={[
+        { key: "title", label: "Başlık" },
+        { key: "year", label: "Yıl" },
+        pubCol(),
+      ]}
+    />
+  );
 }
 
 export function ReferencesTab() {
