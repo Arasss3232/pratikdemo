@@ -30,6 +30,7 @@ export type SiteSettings = {
   favicon_url?: string | null;
   google_search_console?: string | null;
   google_analytics_id?: string | null;
+  ga4_id?: string | null;
   // SEO fields
   site_url?: string | null;
   title_suffix?: string | null;
@@ -37,11 +38,12 @@ export type SiteSettings = {
   twitter_image_default?: string | null;
   google_tag_manager_id?: string | null;
   search_console_method?: string | null;
+  robots_txt?: string | null;
   is_indexing_enabled?: boolean;
   gtm_active?: boolean;
   ga4_active?: boolean;
-  ga4_id?: string | null;
   schema_active?: boolean;
+
 };
 
 let cache: SiteSettings | null = null;
