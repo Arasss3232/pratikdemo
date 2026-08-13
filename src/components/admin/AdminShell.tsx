@@ -127,8 +127,9 @@ export function AdminShell({
           onOpenMobile={() => setMobileOpen(true)}
           onToggleCollapse={toggleSidebar}
           onOpenPalette={() => setPaletteOpen(true)}
-          onOpenNotify={() => setNotifyOpen((v) => !v)}
+          onOpenNotify={() => handleTab("notifications")}
           notifyOpen={notifyOpen}
+          unreadCount={unreadCount}
           onCloseNotify={() => setNotifyOpen(false)}
           quickOpen={quickOpen}
           onToggleQuick={() => setQuickOpen((v) => !v)}
@@ -578,7 +579,7 @@ function CommandTopbar({
               >
                 <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--admin-border)" }}>
                   <p className="text-sm font-semibold">Bildirimler</p>
-                  <span className="admin-badge admin-badge-neutral">0 yeni</span>
+                  <span className="admin-badge admin-badge-neutral">{unreadCount} yeni</span>
                 </div>
                 <div className="px-4 py-8 text-center text-sm" style={{ color: "var(--admin-text-2)" }}>
                   <span
@@ -587,7 +588,7 @@ function CommandTopbar({
                   >
                     <Icon name="notifications_off" className="text-[20px]" />
                   </span>
-                  Henüz yeni bildirim yok.
+                  {unreadCount > 0 ? `${unreadCount} okunmamış bildiriminiz var.` : "Henüz yeni bildirim yok."}
                 </div>
               </div>
             </>
