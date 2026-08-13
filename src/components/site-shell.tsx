@@ -270,14 +270,14 @@ export function SiteHeader() {
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
             {(() => {
-              const uniqueLinks = [];
-              const seen = new Set();
-              for (const l of navLinks) {
+              const uniqueLinks: typeof navLinks[number][] = [];
+              const seen = new Set<string>();
+              navLinks.forEach(l => {
                 if (!seen.has(l.to)) {
                   seen.add(l.to);
                   uniqueLinks.push(l);
                 }
-              }
+              });
               return uniqueLinks.map((l) =>
                 l.to === "/urunler" ? (
                   <div
