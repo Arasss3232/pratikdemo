@@ -33,11 +33,12 @@ import { SeoTagManager } from "../components/admin/seo/SeoTagManager";
 import { SeoSchema } from "../components/admin/seo/SeoSchema";
 import { SeoSocial } from "../components/admin/seo/SeoSocial";
 import { SeoFavicon } from "../components/admin/seo/SeoFavicon";
-
+import { ContentManagement } from "@/components/admin/content/ContentManagement";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
   "dashboard","myTasks","approvals","notifications",
+
   // Müşteri Yönetimi
   "companies","dealers","companyUsers","customerGroups","applications","salesReps",
   // Satış
