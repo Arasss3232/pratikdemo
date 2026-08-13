@@ -22,7 +22,7 @@ export function CategoryExplorer() {
     }));
   }, [dbCategories]);
 
-  // Moved keyboard Effect before the loading return
+  // Hook 1: useEffect (always called)
   useEffect(() => {
     if (categories.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
@@ -40,6 +40,7 @@ export function CategoryExplorer() {
     return () => window.removeEventListener("keydown", onKey);
   }, [categories.length]);
 
+  // Conditional return AFTER all hooks
   if (isLoading || categories.length === 0) {
     return (
       <section className="relative text-white overflow-hidden min-h-[400px] flex items-center justify-center" style={{ backgroundColor: "var(--public-navy-950)" }}>
