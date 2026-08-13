@@ -20,14 +20,14 @@ export const Route = createFileRoute("/hakkimizda")({
 });
 
 function HakkimizdaPage() {
-  const settings = useSiteSettings();
-
+  const { settings, loading } = useSiteSettings();
+  const safeSettings = settings || {} as any;
 
   return (
     <SiteShell>
       <PageHero
         title="Hakkımızda"
-        description={settings.description ?? "Endüstriyel donanımda güvenilir çözüm ortağınız."}
+        description={safeSettings.description ?? "Endüstriyel donanımda güvenilir çözüm ortağınız."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Hakkımızda" }]}
       />
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 flex flex-col gap-16">

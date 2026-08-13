@@ -2,54 +2,50 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export type SiteSettings = {
-  company_name?: string | null;
-  tagline?: string | null;
-  description?: string | null;
-  hero_title?: string | null;
-  hero_description?: string | null;
-  hero_image_url?: string | null;
-  hero_cta_primary_text?: string | null;
-  hero_cta_primary_url?: string | null;
-  hero_cta_secondary_text?: string | null;
-  hero_cta_secondary_url?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  whatsapp?: string | null;
-  address?: string | null;
-  map_url?: string | null;
-  map_embed?: string | null;
-  working_hours?: string | null;
-  social_linkedin?: string | null;
-  social_instagram?: string | null;
-  social_youtube?: string | null;
-  social_facebook?: string | null;
-  social_twitter?: string | null;
-  footer_text?: string | null;
-  logo_url?: string | null;
-  mobile_logo_url?: string | null;
-  favicon_url?: string | null;
-  google_search_console?: string | null;
-  google_analytics_id?: string | null;
-  ga4_id?: string | null;
-  // SEO fields
-  site_url?: string | null;
-  title_suffix?: string | null;
-  og_image_default?: string | null;
-  twitter_image_default?: string | null;
-  google_tag_manager_id?: string | null;
-  search_console_method?: string | null;
-  robots_txt?: string | null;
-  is_indexing_enabled?: boolean;
-  gtm_active?: boolean;
-  ga4_active?: boolean;
-  schema_active?: boolean;
-  agency_attribution_visible?: boolean;
-  agency_attribution_text?: string | null;
-  agency_attribution_url?: string | null;
+  id: string;
+  company_name: string | null;
+  tagline: string | null;
+  description: string | null;
+  hero_title: string | null;
+  hero_description: string | null;
+  hero_image_url: string | null;
+  hero_cta_primary_text: string | null;
+  hero_cta_primary_url: string | null;
+  hero_cta_secondary_text: string | null;
+  hero_cta_secondary_url: string | null;
+  phone: string | null;
+  email: string | null;
+  whatsapp: string | null;
+  address: string | null;
+  map_url: string | null;
+  map_embed: string | null;
+  working_hours: string | null;
+  social_linkedin: string | null;
+  social_instagram: string | null;
+  social_youtube: string | null;
+  social_facebook: string | null;
+  social_twitter: string | null;
+  footer_text: string | null;
+  logo_url: string | null;
+  mobile_logo_url: string | null;
+  favicon_url: string | null;
+  google_search_console: string | null;
+  ga4_id: string | null;
+  site_url: string | null;
+  title_suffix: string | null;
+  og_image_default: string | null;
+  twitter_image_default: string | null;
+  google_tag_manager_id: string | null;
+  search_console_method: string | null;
+  robots_txt: string | null;
+  is_indexing_enabled: boolean;
+  gtm_active: boolean;
+  ga4_active: boolean;
+  schema_active: boolean;
+  agency_attribution_visible: boolean;
+  agency_attribution_text: string | null;
+  agency_attribution_url: string | null;
 };
-
-
-
 
 let cache: SiteSettings | null = null;
 let inflight: Promise<SiteSettings> | null = null;
@@ -59,9 +55,16 @@ export async function fetchSiteSettings(): Promise<SiteSettings> {
   if (inflight) return inflight;
   
   inflight = (async () => {
-    const { data } = await supabase.from("site_settings").select("*").eq("id", true).limit(1).maybeSingle();
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("*")
+      .maybeSingle();
 
-    const result: SiteSettings = (data as unknown as SiteSettings) ?? {};
+    if (error) {
+      console.error("Error fetching site settings:", error);
+    }
+
+    const result = (data as unknown as SiteSettings) || ({} as SiteSettings);
     cache = result;
     inflight = null;
     return result;
@@ -78,6 +81,7 @@ export async function refreshSiteSettings(): Promise<SiteSettings> {
 
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(cache);
+  const [loading, setLoading] = useState(!cache);
 
   const refresh = useCallback(async () => {
     const data = await refreshSiteSettings();
@@ -87,19 +91,25 @@ export function useSiteSettings() {
 
   useEffect(() => {
     if (!cache) {
-      fetchSiteSettings().then(setSettings);
+      setLoading(true);
+      fetchSiteSettings().then((data) => {
+        setSettings(data);
+        setLoading(false);
+      });
     }
   }, []);
 
   const result = settings ? { ...settings } : ({} as SiteSettings);
   
-  // Attach refresh to the object
-  Object.defineProperty(result, 'refresh', {
-    value: refresh,
-    enumerable: false,
-    writable: true,
-    configurable: true
-  });
-
-  return result as SiteSettings & { refresh: () => Promise<SiteSettings> };
+  // Attach metadata to the result for components that expect the { settings, loading, refresh } structure
+  // but we prefer to spread fields for convenience. 
+  // However, many files expect `const { settings } = useSiteSettings()`
+  // Let's return a stable object that has both.
+  
+  return {
+    ...result,
+    settings: settings,
+    loading,
+    refresh
+  };
 }

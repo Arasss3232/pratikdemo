@@ -66,7 +66,8 @@ export function SiteHeader() {
   const menuBtnRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
-  const settings = useSiteSettings();
+  const { settings: rawSettings } = useSiteSettings();
+  const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
   const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
 
@@ -666,7 +667,8 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
-  const settings = useSiteSettings();
+  const { settings: rawSettings } = useSiteSettings();
+  const settings = rawSettings || {} as any;
   const currentYear = new Date().getFullYear();
   const address = settings.address;
   const phone = settings.phone;

@@ -3,7 +3,7 @@ import { SiteShell } from "../components/site-shell";
 import { PageHero } from "../components/marketing/PageHero";
 import { CategoryCard } from "../components/marketing/CategoryCard";
 import { useCategories } from "@/hooks/use-categories";
-
+import { usePageContent } from "@/hooks/use-page-content";
 
 export const Route = createFileRoute("/urunler")({
   head: () => ({
@@ -41,65 +41,21 @@ export const Route = createFileRoute("/urunler")({
   component: UrunlerLayout,
 });
 
-const CATEGORIES = [
-  {
-    icon: "hardware",
-    title: "Elektrikli El Aletleri",
-    desc: "Matkap, taşlama, vidalama, kırıcı delici ve kesim makineleri.",
-    to: "/teklif" as const,
-    category: "Elektrikli El Aletleri",
-  },
-  {
-    icon: "settings",
-    title: "Bağlantı Elemanları",
-    desc: "Cıvata, somun, pul ve özel bağlantı çözümleri.",
-    to: "/teklif" as const,
-    category: "Bağlantı Elemanları",
-  },
-  {
-    icon: "shield",
-    title: "Kişisel Koruyucu Donanım",
-    desc: "Baret, gözlük, eldiven, ayakkabı ve iş güvenliği ürünleri.",
-    to: "/teklif" as const,
-    category: "Kişisel Koruyucu Donanım",
-  },
-  {
-    icon: "precision_manufacturing",
-    title: "Endüstriyel Makineler",
-    desc: "Kompresör, jeneratör ve atölye ekipmanları.",
-    to: "/teklif" as const,
-    category: "Endüstriyel Makineler",
-  },
-  {
-    icon: "build",
-    title: "El Aletleri",
-    desc: "Anahtar takımları, tornavidalar, pense ve el aletleri.",
-    to: "/teklif" as const,
-    category: "El Aletleri",
-  },
-  {
-    icon: "inventory_2",
-    title: "Sarf Malzemeleri",
-    desc: "Kesme, taşlama diskleri, uçlar ve tüketim malzemeleri.",
-    to: "/teklif" as const,
-    category: "Sarf Malzemeleri",
-  },
-];
-
 function UrunlerLayout() {
   const matchRoute = useMatchRoute();
   const isIndex = matchRoute({ to: "/urunler" });
   const { categories, isLoading } = useCategories();
+  const { sections } = usePageContent("/urunler");
+  const hero = sections["hero"]?.content || {};
   
   if (!isIndex) return <Outlet />;
 
-  
   return (
     <SiteShell>
       <>
         <PageHero
-          title="Ürün Kategorileri"
-          description="20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar."
+          title={hero.title?.value_text || "Ürün Kategorileri"}
+          description={hero.description?.value_text || "20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürünü bulamıyorsanız satın alma ekibimiz size özel tedarik sağlar."}
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürün Kategorileri" }]}
         />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
@@ -109,20 +65,18 @@ function UrunlerLayout() {
             ) : (
               categories?.map((c: any) => (
                 <CategoryCard 
-                  key={c.id} 
-
-                  title={c.title}
-                  desc={c.description || "Profesyonel endüstriyel çözümler."}
-                  icon={c.icon || "hardware"}
-                  to="/teklif"
-                  search={{ 
-                    categoryId: c.id
-                  }} 
+                   key={c.id} 
+                   title={c.title}
+                   desc={c.description || "Profesyonel endüstriyel çözümler."}
+                   icon={c.icon || "hardware"}
+                   to="/teklif"
+                   search={{ 
+                     categoryId: c.id
+                   }} 
                 />
               ))
             )}
           </div>
-
         </div>
       </>
     </SiteShell>

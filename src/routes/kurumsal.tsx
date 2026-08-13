@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell, PagePlaceholder } from "../components/site-shell";
+import { SiteShell } from "../components/site-shell";
+import { PageHero } from "../components/marketing/PageHero";
+import { usePageContent } from "@/hooks/use-page-content";
 
 export const Route = createFileRoute("/kurumsal")({
   head: () => ({
@@ -28,13 +30,25 @@ export const Route = createFileRoute("/kurumsal")({
 });
 
 function KurumsalPage() {
+  const { sections } = usePageContent("/kurumsal");
+  const hero = sections["hero"]?.content || {};
+  const intro = sections["intro"]?.content || {};
+
   return (
     <SiteShell>
-      <PagePlaceholder
-        title="Kurumsal"
-        crumb="Kurumsal"
-        description="Endüstriyel donanım tedarikinde güvenilir çözüm ortağı olarak hikâyemizi ve değerlerimizi keşfedin."
+      <PageHero
+        title={hero.title?.value_text || "Kurumsal"}
+        description={hero.description?.value_text || "Endüstriyel donanım tedarikinde güvenilir çözüm ortağı olarak hikâyemizi ve değerlerimizi keşfedin."}
+        breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
       />
+      
+      {intro.content?.value_text && (
+        <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">
+          <div className="prose prose-slate max-w-none prose-lg">
+            <div dangerouslySetInnerHTML={{ __html: intro.content.value_text }} />
+          </div>
+        </div>
+      )}
     </SiteShell>
   );
 }
