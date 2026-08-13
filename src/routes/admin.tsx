@@ -257,105 +257,105 @@ function AdminPage() {
         {tab === "approvals" && <ApprovalsTab />}
         {tab === "notifications" && <NotificationsTab />}
         {tab === "quotations" && (
-          <ComingSoon tab="quotations" phase="Faz 3 · Teklif Yönetimi" bullets={[]} />
+          <ComingSoon tab="quotations" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "orders" && (
-          <ComingSoon tab="orders" phase="Faz 3 · Sipariş Yönetimi" bullets={[]} />
+          <ComingSoon tab="orders" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "quickOrder" && (
-          <ComingSoon tab="quickOrder" phase="Faz 3 · Satış" bullets={[]} />
+          <ComingSoon tab="quickOrder" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "carts" && (
-          <ComingSoon tab="carts" phase="Faz 6 · Müşteri Portali" bullets={[]} />
+          <ComingSoon tab="carts" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "opportunities" && (
-          <ComingSoon tab="opportunities" phase="Faz 5 · Satış Yönetimi" bullets={[]} />
+          <ComingSoon tab="opportunities" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "discountApprovals" && (
-          <ComingSoon tab="discountApprovals" phase="Faz 3 · Onay Motoru" bullets={[]} />
+          <ComingSoon tab="discountApprovals" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "categories" && <CategoriesTab />}
         {tab === "priceLists" && (
-          <ComingSoon tab="priceLists" phase="Faz 2 · Fiyat Yönetimi" bullets={[]} />
+          <ComingSoon tab="priceLists" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "specialPrices" && (
-          <ComingSoon tab="specialPrices" phase="Faz 2 · Fiyat Yönetimi" bullets={[]} />
+          <ComingSoon tab="specialPrices" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "discounts" && (
-          <ComingSoon tab="discounts" phase="Faz 2 · Fiyat Yönetimi" bullets={[]} />
+          <ComingSoon tab="discounts" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "stock" && (
-          <ComingSoon tab="stock" phase="Faz 2 · Stok & Depo" bullets={[]} />
+          <ComingSoon tab="stock" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "accounts" && (
-          <ComingSoon tab="accounts" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="accounts" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "creditLimits" && (
-          <ComingSoon tab="creditLimits" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="creditLimits" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "dueTracking" && (
-          <ComingSoon tab="dueTracking" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="dueTracking" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "payments" && (
-          <ComingSoon tab="payments" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="payments" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "statements" && (
-          <ComingSoon tab="statements" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="statements" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "risk" && (
-          <ComingSoon tab="risk" phase="Faz 4 · Finans" bullets={[]} />
+          <ComingSoon tab="risk" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "warehouse" && (
-          <ComingSoon tab="warehouse" phase="Faz 4 · Operasyon" bullets={[]} />
+          <ComingSoon tab="warehouse" phase="Aktif Modül" bullets={[]} />
         )}
         {tab === "shipments" && (
-          <ComingSoon tab="shipments" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="shipments" phase="Aktif Modül" bullets={[
             "Sevkiyat oluşturma ve kargo bilgisi",
             "Kısmi sevkiyat desteği",
           ]} />
         )}
         {tab === "deliveries" && (
-          <ComingSoon tab="deliveries" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="deliveries" phase="Aktif Modül" bullets={[
             "Teslimat belgeleri ve tesellüm",
           ]} />
         )}
         {tab === "returns" && (
-          <ComingSoon tab="returns" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="returns" phase="Aktif Modül" bullets={[
             "İade talepleri ve nedenleri",
             "Stok ve cari düzeltmeleri",
           ]} />
         )}
         {tab === "documents" && (
-          <ComingSoon tab="documents" phase="Faz 4 · Operasyon" bullets={[
+          <ComingSoon tab="documents" phase="Aktif Modül" bullets={[
             "Sözleşmeler, faturalar ve teknik belgeler için ortak depo",
             "Rol bazlı erişim kontrolü",
           ]} />
         )}
-        {tab === "reportSales" && <ComingSoon tab="reportSales" phase="Faz 5 · Raporlar" />}
-        {tab === "reportQuotes" && <ComingSoon tab="reportQuotes" phase="Faz 5 · Raporlar" />}
-        {tab === "reportOrders" && <ComingSoon tab="reportOrders" phase="Faz 5 · Raporlar" />}
-        {tab === "reportCustomers" && <ComingSoon tab="reportCustomers" phase="Faz 5 · Raporlar" />}
-        {tab === "reportProducts" && <ComingSoon tab="reportProducts" phase="Faz 5 · Raporlar" />}
-        {tab === "reportFinance" && <ComingSoon tab="reportFinance" phase="Faz 5 · Raporlar" />}
+        {tab === "reportSales" && <ComingSoon tab="reportSales" phase="Raporlar" bullets={[]} />}
+        {tab === "reportQuotes" && <ComingSoon tab="reportQuotes" phase="Raporlar" bullets={[]} />}
+        {tab === "reportOrders" && <ComingSoon tab="reportOrders" phase="Raporlar" bullets={[]} />}
+        {tab === "reportCustomers" && <ComingSoon tab="reportCustomers" phase="Raporlar" bullets={[]} />}
+        {tab === "reportProducts" && <ComingSoon tab="reportProducts" phase="Raporlar" bullets={[]} />}
+        {tab === "reportFinance" && <ComingSoon tab="reportFinance" phase="Raporlar" bullets={[]} />}
         {tab === "roles" && <RolesTab />}
         {tab === "users" && <UserManagement currentUserId={user.id} />}
         {tab === "workflows" && (
-          <ComingSoon tab="workflows" phase="Faz 3 · Onay Motoru" />
+          <ComingSoon tab="workflows" phase="Onay Motoru" bullets={[]} />
         )}
         {tab === "integrations" && (
-          <ComingSoon tab="integrations" phase="Faz 7 · Entegrasyonlar" bullets={[
+          <ComingSoon tab="integrations" phase="Entegrasyonlar" bullets={[
             "Muhasebe, kargo, e-posta ve SMS sağlayıcılar",
           ]} />
         )}
         {tab === "activityLogs" && <AuditLogsTab />}
         {tab === "security" && (
-          <ComingSoon tab="security" phase="Faz 7 · Güvenlik" bullets={[
+          <ComingSoon tab="security" phase="Güvenlik" bullets={[
             "Oturum ve başarısız giriş takibi",
             "Şifre politikası",
           ]} />
         )}
         {tab === "backup" && (
-          <ComingSoon tab="backup" phase="Faz 7 · Süreklilik" bullets={[
+          <ComingSoon tab="backup" phase="Süreklilik" bullets={[
             "Yedekleme durumu ve geri yükleme",
           ]} />
         )}
