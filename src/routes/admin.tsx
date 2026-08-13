@@ -6,6 +6,18 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { ContentManagement } from "@/components/admin/content/ContentManagement";
 import { SeoShell, type SeoSubTab } from "@/components/admin/seo/SeoShell";
 import { SeoGeneralSettings } from "@/components/admin/seo/SeoGeneralSettings";
+import { SeoDashboard } from "@/components/admin/seo/SeoDashboard";
+import { SeoPageManagement } from "@/components/admin/seo/SeoPageManagement";
+import { SeoSitemap } from "@/components/admin/seo/SeoSitemap";
+import { SeoRobots } from "@/components/admin/seo/SeoRobots";
+import { SeoSearchConsole } from "@/components/admin/seo/SeoSearchConsole";
+import { SeoAnalytics } from "@/components/admin/seo/SeoAnalytics";
+import { SeoTagManager } from "@/components/admin/seo/SeoTagManager";
+import { SeoRedirects } from "@/components/admin/seo/SeoRedirects";
+import { SeoSchema } from "@/components/admin/seo/SeoSchema";
+import { SeoSocial } from "@/components/admin/seo/SeoSocial";
+import { SeoFavicon } from "@/components/admin/seo/SeoFavicon";
+import { SeoTools } from "@/components/admin/seo/SeoTools";
 import { Dashboard } from "@/components/admin/Dashboard";
 import { UserManagement } from "@/components/admin/UserManagement";
 import { RolesTab } from "@/components/admin/RolesTab";
@@ -205,9 +217,19 @@ function AdminPage() {
         
         {tab === "seo" && (
           <SeoShell currentTab={seoTab} onTabChange={handleSeoTabChange}>
-            {seoTab === "dashboard" && <SeoGeneralSettings />}
+            {seoTab === "dashboard" && <SeoDashboard onNavigate={(t, st) => navigate({ search: { tab: t, seoTab: st } })} />}
             {seoTab === "general" && <SeoGeneralSettings />}
-            {/* Additional SEO sub-tabs would go here */}
+            {seoTab === "pages" && <SeoPageManagement />}
+            {seoTab === "sitemap" && <SeoSitemap />}
+            {seoTab === "robots" && <SeoRobots />}
+            {seoTab === "search-console" && <SeoSearchConsole />}
+            {seoTab === "analytics" && <SeoAnalytics />}
+            {seoTab === "tag-manager" && <SeoTagManager />}
+            {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "schema" && <SeoSchema />}
+            {seoTab === "social" && <SeoSocial />}
+            {seoTab === "favicon" && <SeoFavicon />}
+            {seoTab === "audit" && <SeoTools />}
           </SeoShell>
         )}
         

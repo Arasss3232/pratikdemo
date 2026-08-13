@@ -310,7 +310,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
             <button
               key={q.key + q.label}
               onClick={() => {
-                onNavigate(q.key);
+                onNavigate(q.key as any);
                 setTimeout(() => window.dispatchEvent(new CustomEvent("admin:quick-add", { detail: { tab: q.key } })), 60);
               }}
               className="group flex flex-col items-start gap-2 p-3.5 rounded-xl text-left transition-all hover:-translate-y-0.5"
