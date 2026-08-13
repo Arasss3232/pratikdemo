@@ -251,8 +251,6 @@ function AdminPage() {
         {tab === "catalogs" && <CatalogsTab />}
         {tab === "brands" && <BrandsTab />}
         {tab === "content" && <ContentManagement />}
-
-        
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
         {tab === "myTasks" && <TasksTab />}
