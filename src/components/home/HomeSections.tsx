@@ -250,7 +250,7 @@ export function SectorGrid() {
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80",
     },
   ];
-  const { data: categories = [] } = useCategories();
+  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const [active, setActive] = useState(0);
   const cur = sectors[active];
 
@@ -348,17 +348,25 @@ export function SectorGrid() {
             <div className="p-6 md:p-7" style={{ backgroundColor: NAVY_900, border: `1px solid ${NAVY_BORDER}` }}>
               <p className="text-white/80 text-[15px] leading-relaxed">{cur.d}</p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {cur.groups.map((g) => (
-                  <Link
-                    key={g.label}
-                    to="/teklif"
-                    search={{ categoryId: categories.find((cd: any) => cd.slug === g.slug)?.id }}
-                    className="pub-mono px-3 py-1.5 transition-colors"
-                    style={{ color: YELLOW, border: `1px solid ${NAVY_BORDER}` }}
-                  >
-                    {g.label}
-                  </Link>
-                ))}
+                {cur.groups.map((g) => {
+                  const targetCat = categories?.find((cd: any) => cd.slug === g.slug);
+                  return (
+                    <Link
+                      key={g.label}
+                      to="/teklif"
+                      search={{ categoryId: targetCat?.id }}
+                      className="pub-mono px-3 py-1.5 transition-colors"
+                      style={{ 
+                        color: YELLOW, 
+                        border: `1px solid ${NAVY_BORDER}`,
+                        opacity: targetCat ? 1 : 0.5,
+                        pointerEvents: targetCat ? 'auto' : 'none'
+                      }}
+                    >
+                      {g.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
