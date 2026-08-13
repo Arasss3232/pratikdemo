@@ -65,7 +65,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [cats, qNew, msgNew, refs, catsCount, lastUpd, taskCount, notifCount] = await Promise.all([
+      const [cats, qNew, msgNew, refs, catsCount, lastUpd, taskCount, notifCount, appCount] = await Promise.all([
         supabase.from("catalogs" as any).select("*", { count: "exact", head: true }),
         supabase.from("quote_requests").select("*", { count: "exact", head: true }).eq("status", "new"),
         supabase.from("contact_messages").select("*", { count: "exact", head: true }).eq("status", "new"),
@@ -74,7 +74,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
         supabase.from("quote_requests").select("updated_at").order("updated_at", { ascending: false }).limit(1),
         supabase.from("admin_tasks").select("*", { count: "exact", head: true }).neq("status", "Tamamlandı"),
         supabase.from("notifications").select("*", { count: "exact", head: true }).eq("is_read", false),
+        supabase.from("approval_requests").select("*", { count: "exact", head: true }).eq("status", "pending"),
       ]);
+
       const [recentMsg, recentQ] = await Promise.all([
         supabase.from("contact_messages").select("id,name,subject,status,created_at").order("created_at", { ascending: false }).limit(5),
         supabase.from("quote_requests").select("id,contact_name,company,status,created_at").order("created_at", { ascending: false }).limit(5),
@@ -90,7 +92,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
         lastUpdated: (lastUpd.data?.[0] as { updated_at?: string } | undefined)?.updated_at ?? null,
         tasksPending: taskCount.count ?? 0,
         notificationsUnread: notifCount.count ?? 0,
+        approvalsPending: appCount.count ?? 0,
       });
+
 
       setMessages((recentMsg.data as Message[]) ?? []);
       setQuotes((recentQ.data as Quote[]) ?? []);
@@ -460,8 +464,9 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
                 <Icon name="approval" className="text-orange-600" />
                 <span className="text-sm font-medium">Onay Bekleyenler</span>
               </div>
-              <span className="text-xs font-bold text-orange-600">0</span>
+              <span className="text-xs font-bold text-orange-600">{stats.approvalsPending}</span>
             </button>
+
 
           </div>
         </section>
