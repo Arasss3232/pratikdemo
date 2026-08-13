@@ -93,8 +93,9 @@ function GeneralSettings() {
   const updateSetting = async (field: string, value: string) => {
     const { error } = await supabase
       .from("site_settings")
-      .update({ [field]: value })
+      .update({ [field]: value } as any)
       .eq("id", settings?.id);
+
     
     if (error) {
       console.error("Update error:", error);
