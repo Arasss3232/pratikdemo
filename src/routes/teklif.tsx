@@ -82,10 +82,13 @@ function TeklifPage() {
       phone: parsed.data.phone,
       message: parsed.data.message,
       status: "pending",
+      submitted_by: null,
+      user_id: null,
       items: [{ category: category?.title || "Genel", quantity: 1 }]
     };
 
     const { error } = await supabase.from("quote_requests").insert(payload as any);
+
 
 
     
