@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { Icon } from "@/components/site-shell";
 import type { AdminTab } from "../nav";
 import { useUserMode } from "@/hooks/use-user-mode";
-import { useAiAssistant, type Proposal } from "@/hooks/use-ai-assistant";
-import { ActionProposalCard } from "../ai/ActionProposalCard";
+
+
 import {
   RichText,
   ResponseTypePill,
@@ -115,7 +115,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
   const [historyOpen, setHistoryOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
-  const asst = useAiAssistant();
+  
   const { data, reload } = useSnapshot();
   const runAudit = useServerFn(runSiteAudit);
   const [auditRunning, setAuditRunning] = useState(false);
