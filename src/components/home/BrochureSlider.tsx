@@ -151,23 +151,10 @@ function Slide({ b, active, eager }: { b: Brochure; active: boolean; eager: bool
   const subColor = isDark ? "rgba(6,20,38,0.75)" : "rgba(255,255,255,0.82)";
   const eyebrowBg = isDark ? "rgba(6,20,38,0.08)" : "rgba(255,255,255,0.12)";
 
-  const alignment =
-    b.overlay_style === "right-navy"
-      ? "items-end text-right"
-      : b.overlay_style === "center-navy" || b.overlay_style === "bottom-gradient"
-      ? "items-center text-center"
-      : "items-start text-left";
+  // Force uniform alignment for all slides to prevent jumping
+  const alignment = "items-start text-left";
 
-  const panelPos =
-    b.overlay_style === "right-navy"
-      ? "md:right-0 md:top-0 md:h-full md:w-[55%] md:pl-16 md:pr-14"
-      : b.overlay_style === "left-navy"
-      ? "md:left-0 md:top-0 md:h-full md:w-[55%] md:pl-14 md:pr-16"
-      : b.overlay_style === "center-navy"
-      ? "md:inset-0"
-      : b.overlay_style === "bottom-gradient"
-      ? "md:inset-x-0 md:bottom-0 md:h-full"
-      : "md:left-0 md:top-0 md:h-full md:w-[50%] md:pl-14";
+  const panelPos = "md:left-0 md:top-0 md:h-full md:w-[60%] md:pl-14 md:pr-16";
 
   const panelBg =
     b.overlay_style === "left-navy"
