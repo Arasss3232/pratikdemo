@@ -54,12 +54,12 @@ export function SeoSearchConsole() {
             Google Search Console doğrulaması için meta etiketi yapılandırması.
           </p>
         </div>
-        <button 
-          onClick={handleTestCode}
-          className="text-xs px-3 py-1.5 rounded bg-muted hover:bg-muted/80 transition-colors"
-        >
-          Test Kodu Kullan
-        </button>
+        {!verificationCode && (
+          <div className="flex items-center gap-2 text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-100">
+            <Icon name="warning" className="text-xs" />
+            Doğrulama kodu eklenmedi
+          </div>
+        )}
       </div>
 
       <div className="admin-card p-6 flex flex-col gap-4">
@@ -74,13 +74,21 @@ export function SeoSearchConsole() {
           <p className="text-[11px] text-muted-foreground">
             * Yalnızca tırnak içindeki kodu (örn: <code>abc...</code>) veya tam meta etiketini yapıştırabilirsiniz.
           </p>
-          <button 
-            disabled={loading}
-            onClick={handleSave}
-            className="admin-btn admin-btn-primary"
-          >
-            {loading ? "Kaydediliyor..." : "Kodu Kaydet"}
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleTestCode}
+              className="admin-btn admin-btn-secondary admin-btn-sm"
+            >
+              Test Kodu
+            </button>
+            <button 
+              disabled={loading}
+              onClick={handleSave}
+              className="admin-btn admin-btn-primary"
+            >
+              {loading ? "Kaydediliyor..." : "Kodu Kaydet"}
+            </button>
+          </div>
         </div>
       </div>
 

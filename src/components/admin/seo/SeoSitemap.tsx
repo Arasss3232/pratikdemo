@@ -6,27 +6,39 @@ import { Icon } from "../../site-shell";
 export function SeoSitemap() {
   const [stats, setStats] = useState({ total: 0, indexed: 0, excluded: 0 });
   const [loading, setLoading] = useState(true);
+  const [siteUrl, setSiteUrl] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadStats() {
-      const { data } = await supabase.from("page_seo").select("sitemap_include, no_index");
-      if (data) {
+      const { data: pageData } = await supabase.from("page_seo").select("sitemap_include, no_index");
+      if (pageData) {
         setStats({
-          total: data.length,
-          indexed: data.filter(d => d.sitemap_include && !d.no_index).length,
-          excluded: data.filter(d => !d.sitemap_include).length
+          total: pageData.length,
+          indexed: pageData.filter(d => d.sitemap_include && !d.no_index).length,
+          excluded: pageData.filter(d => !d.sitemap_include).length
         });
       }
+
+      const { data: settings } = await supabase
+        .from("site_settings")
+        .select("site_url")
+        .eq("id", true)
+        .single();
+      
+      if (settings?.site_url) {
+        setSiteUrl(settings.site_url);
+      }
+
       setLoading(false);
     }
     loadStats();
   }, []);
 
   const handleGenerate = async () => {
-    // Sitemap is dynamic, but we can clear cache or log the action
     toast.success("Sitemap dinamik olarak yenilendi.");
   };
 
+  const isInvalidUrl = !siteUrl || siteUrl.includes('lovable.app');
 
   return (
     <div className="flex flex-col gap-8">
@@ -34,6 +46,19 @@ export function SeoSitemap() {
         <h2 className="text-xl font-bold">XML Sitemap Yönetimi</h2>
         <p className="text-sm text-muted-foreground">Arama motorları için site haritası yapılandırması.</p>
       </div>
+
+      {isInvalidUrl && (
+        <div className="flex items-start gap-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+          <Icon name="warning" className="text-amber-500 shrink-0" />
+          <div className="text-sm text-amber-800">
+            <h4 className="font-bold">Önce gerçek alan adını girin</h4>
+            <p className="mt-1 opacity-90">
+              Sitemap üretilmesi için "Genel SEO Ayarları" bölümünden sitenizin gerçek üretim (production) URL'sini tanımlamanız gerekir. 
+              Preview veya localhost adresleri sitemap'e dahil edilmez.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl border bg-muted/20">

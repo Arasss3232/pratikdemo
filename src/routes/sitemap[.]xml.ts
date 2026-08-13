@@ -14,7 +14,15 @@ export const Route = createFileRoute("/sitemap.xml")({
           .eq("id", true)
           .single();
         
-        const baseUrl = settings?.site_url || url.origin;
+        // Eğer site_url girilmemişse, sitemap üretme (güvenlik ve SEO sağlığı için)
+        if (!settings?.site_url || settings.site_url.includes('lovable.app')) {
+          return new Response("<?xml version=\"1.0\" encoding=\"UTF-8\"?><error>Please configure a valid Production URL in SEO settings first.</error>", {
+            status: 400,
+            headers: { "Content-Type": "application/xml" },
+          });
+        }
+
+        const baseUrl = settings.site_url.replace(/\/$/, ""); // Sondaki slash'ı temizle
         
         // page_seo tablosundan sitemap'e dahil edilecek sayfaları al
         const { data: pages } = await supabase
@@ -23,17 +31,18 @@ export const Route = createFileRoute("/sitemap.xml")({
           .eq("sitemap_include", true)
           .eq("no_index", false);
 
-        const urls = (pages || []).map((page) =>
-          [
+        const urls = (pages || []).map((page) => {
+          const path = page.route_path.startsWith('/') ? page.route_path : `/${page.route_path}`;
+          return [
             `  <url>`,
-            `    <loc>${baseUrl}${page.route_path}</loc>`,
-            page.sitemap_changefreq ? `    <changefreq>${page.sitemap_changefreq}</changefreq>` : null,
-            page.sitemap_priority ? `    <priority>${page.sitemap_priority}</priority>` : null,
+            `    <loc>${baseUrl}${path}</loc>`,
+            page.sitemap_changefreq ? `    <changefreq>${page.sitemap_changefreq}</changefreq>` : `    <changefreq>monthly</changefreq>`,
+            page.sitemap_priority ? `    <priority>${page.sitemap_priority}</priority>` : `    <priority>0.5</priority>`,
             `  </url>`,
           ]
             .filter(Boolean)
-            .join("\n")
-        );
+            .join("\n");
+        });
 
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,

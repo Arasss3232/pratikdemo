@@ -24,14 +24,15 @@ export const Route = createFileRoute("/robots.txt")({
           });
         }
 
-        const baseUrl = s?.site_url || url.origin;
+        const baseUrl = s?.site_url ? s.site_url.replace(/\/$/, "") : "https://GERCEK-ALAN-ADI";
         const isIndexing = s?.is_indexing_enabled !== false;
         
         const content = [
           "User-agent: *",
           isIndexing ? "Allow: /" : "Disallow: /",
           "Disallow: /admin",
-          "Disallow: /auth",
+          "Disallow: /giris",
+          "Disallow: /portal",
           "",
           `Sitemap: ${baseUrl}/sitemap.xml`
         ].join("\n");
