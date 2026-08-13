@@ -51,7 +51,7 @@ const TAB_KEYS: AdminTab[] = [
   // Raporlar
   "reportSales","reportQuotes","reportOrders","reportCustomers","reportProducts","reportFinance",
   // Site Yönetimi
-  "settings","brochures","catalogs","certificates","team","testimonials",
+  "settings","brochures","catalogs","testimonials",
   "faqs","messages","quotes",
   // Sistem
   "users","roles","workflows","integrations","activityLogs","security","backup",
@@ -248,8 +248,6 @@ function AdminPage() {
         {tab === "users" && <UsersTab currentUserId={user.id} />}
         {tab === "catalogs" && <CatalogsTab />}
         {tab === "brands" && <BrandsTab />}
-        {tab === "certificates" && <CertificatesTab />}
-        {tab === "team" && <TeamTab />}
         {tab === "testimonials" && <TestimonialsTab />}
         {tab === "faqs" && <FaqsTab />}
         {tab === "messages" && <MessagesTab />}
@@ -1381,49 +1379,6 @@ export function BrandsTab() {
   );
 }
 
-export function CertificatesTab() {
-  return (
-    <GenericCrud
-      table="certificates"
-      quickAddKey="certificates"
-      title="Sertifikalar"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "name", label: "Ad", required: true },
-        { name: "description", label: "Açıklama", type: "textarea" },
-        { name: "image_url", label: "Görsel URL", type: "url" },
-        { name: "issued_at", label: "Veriliş Tarihi", type: "date" },
-        ORDER_FIELD,
-        PUBLISHED_FIELD,
-      ]}
-      columns={[{ key: "name", label: "Ad" }, pubCol()]}
-    />
-  );
-}
-
-export function TeamTab() {
-  return (
-    <GenericCrud
-      table="team_members"
-      quickAddKey="team"
-      title="Ekip Üyeleri"
-      orderBy="display_order"
-      ascending
-      fields={[
-        { name: "name", label: "Ad Soyad", required: true },
-        { name: "role", label: "Görev", required: true },
-        { name: "photo_url", label: "Fotoğraf URL", type: "url" },
-        { name: "bio", label: "Kısa Biyografi", type: "textarea" },
-        { name: "email", label: "E-posta" },
-        { name: "linkedin_url", label: "LinkedIn", type: "url" },
-        ORDER_FIELD,
-        PUBLISHED_FIELD,
-      ]}
-      columns={[{ key: "name", label: "Ad" }, { key: "role", label: "Görev" }, pubCol()]}
-    />
-  );
-}
 
 export function TestimonialsTab() {
   return (

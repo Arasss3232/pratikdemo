@@ -11,7 +11,7 @@ export const Route = createFileRoute("/hakkimizda")({
       { title: "Hakkımızda — Pratik Endüstriyel" },
       { name: "description", content: "Pratik Endüstriyel; endüstriyel donanım tedarikinde deneyimli ekibi ve saha desteğiyle üretim tesislerinin çözüm ortağıdır." },
       { property: "og:title", content: "Hakkımızda — Pratik Endüstriyel" },
-      { property: "og:description", content: "Kurumsal kimliğimiz, ekibimiz, sertifikalarımız ve değerlerimiz." },
+      { property: "og:description", content: "Kurumsal kimliğimiz, misyonumuz, vizyonumuz ve değerlerimiz." },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/hakkimizda" }],
@@ -19,18 +19,9 @@ export const Route = createFileRoute("/hakkimizda")({
   component: HakkimizdaPage,
 });
 
-type Team = { id: string; name: string; role: string; photo_url: string | null; bio: string | null };
-type Cert = { id: string; name: string; description: string | null; image_url: string | null };
-
 function HakkimizdaPage() {
   const settings = useSiteSettings();
-  const [team, setTeam] = useState<Team[]>([]);
-  const [certs, setCerts] = useState<Cert[]>([]);
 
-  useEffect(() => {
-    supabase.from("team_members").select("*").eq("published", true).order("display_order").then(({ data }) => setTeam((data as Team[]) ?? []));
-    supabase.from("certificates").select("*").order("display_order").then(({ data }) => setCerts((data as Cert[]) ?? []));
-  }, []);
 
   return (
     <SiteShell>
@@ -53,36 +44,6 @@ function HakkimizdaPage() {
           </div>
         </section>
 
-        {team.length > 0 && (
-          <section>
-            <h2 className="font-headline-lg text-headline-lg mb-6">Ekibimiz</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {team.map((t) => (
-                <article key={t.id} className="bg-surface-container-lowest border border-outline-variant p-6 flex flex-col items-center text-center">
-                  {t.photo_url && <img src={t.photo_url} alt={t.name} className="w-28 h-28 rounded-full object-cover mb-4" loading="lazy" />}
-                  <h3 className="font-label-bold text-headline-sm">{t.name}</h3>
-                  <p className="text-primary text-body-sm mb-2">{t.role}</p>
-                  {t.bio && <p className="text-body-sm text-on-surface-variant">{t.bio}</p>}
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {certs.length > 0 && (
-          <section>
-            <h2 className="font-headline-lg text-headline-lg mb-6">Sertifikalarımız</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {certs.map((c) => (
-                <article key={c.id} className="bg-surface-container-lowest border border-outline-variant p-6">
-                  {c.image_url && <img src={c.image_url} alt={c.name} className="w-full h-40 object-cover mb-4" loading="lazy" />}
-                  <h3 className="font-label-bold mb-1">{c.name}</h3>
-                  {c.description && <p className="text-body-sm text-on-surface-variant">{c.description}</p>}
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     </SiteShell>
   );
