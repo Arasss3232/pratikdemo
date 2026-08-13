@@ -10,8 +10,6 @@ import { AdminShell } from "../components/admin/AdminShell";
 import { Dashboard } from "../components/admin/Dashboard";
 import { PageHeader } from "../components/admin/PageHeader";
 import { EmptyState } from "../components/admin/EmptyState";
-import { PageHeader } from "../components/admin/PageHeader";
-import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
