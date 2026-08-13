@@ -206,7 +206,15 @@ function AdminPage() {
               search: (prev: any) => ({ ...prev, seoTab: st }) 
             })}
           >
-            {seoTab === "dashboard" && <SeoDashboard onNavigate={setTab} />}
+            {seoTab === "dashboard" && (
+              <SeoDashboard 
+                onNavigate={(t, st) => navigate({ 
+                  to: "/admin",
+                  search: (prev: any) => ({ ...prev, tab: t, seoTab: st || "dashboard" }) 
+                })} 
+              />
+            )}
+
             {seoTab === "general" && <SeoGeneralSettings />}
             {seoTab === "pages" && <SeoPageManagement />}
             {seoTab === "search-console" && <SeoSearchConsole />}

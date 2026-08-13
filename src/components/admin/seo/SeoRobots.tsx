@@ -12,14 +12,23 @@ export function SeoRobots() {
     setContent(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /auth\n\nSitemap: ${window.location.origin}/sitemap.xml`);
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
-    // Simüle ediyoruz, gerçekte site_settings tablosuna kaydedilmeli
-    setTimeout(() => {
-      toast.success("Robots.txt kuralları kaydedildi.");
+    try {
+      const { error } = await supabase
+        .from("site_settings")
+        .update({ robots_txt: content } as any)
+        .eq("id", true);
+
+      if (error) throw error;
+      toast.success("Robots.txt kuralları başarıyla kaydedildi.");
+    } catch (error: any) {
+      toast.error("Hata", { description: error.message });
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
+
 
   return (
     <div className="flex flex-col gap-6">
