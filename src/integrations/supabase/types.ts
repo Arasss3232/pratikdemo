@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_tasks: {
+        Row: {
+          assigned_by: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          due_at: string | null
+          id: string
+          notes: string | null
+          priority: string
+          related_id: string | null
+          related_module: string | null
+          reminder_at: string | null
+          status: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_by?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          related_id?: string | null
+          related_module?: string | null
+          reminder_at?: string | null
+          status?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_by?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          related_id?: string | null
+          related_module?: string | null
+          reminder_at?: string | null
+          status?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ai_action_proposals: {
         Row: {
           action_type: string
@@ -426,6 +480,135 @@ export type Database = {
           tokens_in?: number | null
           tokens_out?: number | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      approval_requests: {
+        Row: {
+          approval_no: number
+          assigned_approver: string | null
+          created_at: string | null
+          due_at: string | null
+          id: string
+          module: string
+          previous_values: Json | null
+          priority: string
+          proposed_values: Json | null
+          reason: string | null
+          rejection_reason: string | null
+          related_id: string
+          related_title: string | null
+          request_type: string
+          requested_action: string
+          requested_by: string
+          reviewed_at: string | null
+          reviewer_note: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          approval_no?: number
+          assigned_approver?: string | null
+          created_at?: string | null
+          due_at?: string | null
+          id?: string
+          module: string
+          previous_values?: Json | null
+          priority?: string
+          proposed_values?: Json | null
+          reason?: string | null
+          rejection_reason?: string | null
+          related_id: string
+          related_title?: string | null
+          request_type: string
+          requested_action: string
+          requested_by: string
+          reviewed_at?: string | null
+          reviewer_note?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          approval_no?: number
+          assigned_approver?: string | null
+          created_at?: string | null
+          due_at?: string | null
+          id?: string
+          module?: string
+          previous_values?: Json | null
+          priority?: string
+          proposed_values?: Json | null
+          reason?: string | null
+          rejection_reason?: string | null
+          related_id?: string
+          related_title?: string | null
+          request_type?: string
+          requested_action?: string
+          requested_by?: string
+          reviewed_at?: string | null
+          reviewer_note?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          actor_name: string | null
+          correlation_id: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_title: string | null
+          entity_type: string
+          error_summary: string | null
+          id: string
+          ip_address: string | null
+          module: string
+          new_values: Json | null
+          previous_values: Json | null
+          status: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_name?: string | null
+          correlation_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_title?: string | null
+          entity_type: string
+          error_summary?: string | null
+          id?: string
+          ip_address?: string | null
+          module: string
+          new_values?: Json | null
+          previous_values?: Json | null
+          status?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_name?: string | null
+          correlation_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_title?: string | null
+          entity_type?: string
+          error_summary?: string | null
+          id?: string
+          ip_address?: string | null
+          module?: string
+          new_values?: Json | null
+          previous_values?: Json | null
+          status?: string | null
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -1233,6 +1416,57 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          metadata: Json | null
+          read_at: string | null
+          recipient_id: string
+          related_id: string | null
+          related_module: string | null
+          severity: string
+          target_url: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          metadata?: Json | null
+          read_at?: string | null
+          recipient_id: string
+          related_id?: string | null
+          related_module?: string | null
+          severity?: string
+          target_url?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          metadata?: Json | null
+          read_at?: string | null
+          recipient_id?: string
+          related_id?: string | null
+          related_module?: string | null
+          severity?: string
+          target_url?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       page_seo: {
         Row: {
           canonical_url: string | null
@@ -1284,6 +1518,30 @@ export type Database = {
           sitemap_priority?: number | null
           title?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      permissions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          group_name: string
+          id: string
+          key: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          group_name: string
+          id?: string
+          key: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          group_name?: string
+          id?: string
+          key?: string
         }
         Relationships: []
       }
@@ -1545,6 +1803,35 @@ export type Database = {
             columns: ["reference_id"]
             isOneToOne: false
             referencedRelation: "project_references"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      role_permissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          permission_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          permission_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          permission_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
             referencedColumns: ["id"]
           },
         ]
@@ -1890,6 +2177,38 @@ export type Database = {
         }
         Relationships: []
       }
+      task_notes: {
+        Row: {
+          created_at: string | null
+          id: string
+          note: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          note: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          note?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_notes_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "admin_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_members: {
         Row: {
           bio: string | null
@@ -2009,6 +2328,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_permission: {
+        Args: { _permission_key: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2037,6 +2360,7 @@ export type Database = {
         | "operations"
         | "content_editor"
         | "report_viewer"
+        | "seo_manager"
       company_account_status: "active" | "suspended" | "closed" | "pending"
       company_approval_status: "pending" | "approved" | "rejected"
       company_role:
@@ -2192,6 +2516,7 @@ export const Constants = {
         "operations",
         "content_editor",
         "report_viewer",
+        "seo_manager",
       ],
       company_account_status: ["active", "suspended", "closed", "pending"],
       company_approval_status: ["pending", "approved", "rejected"],
