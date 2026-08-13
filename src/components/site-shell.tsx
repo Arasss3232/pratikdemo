@@ -258,49 +258,44 @@ export function SiteHeader() {
             onMouseLeave={closeMega}
             role="menu"
           >
-            <div className="max-w-max-width mx-auto px-margin-desktop py-10">
-              <div className="flex items-center justify-between mb-8 pb-4 border-bottom border-white/10">
-                <div className="flex items-center gap-3">
-                  <span className="pub-marker">Ürün Kategorileri</span>
-                  <span className="text-white/40 text-[14px]">|</span>
-                  <span className="text-white/60 text-[14px]">
-                    İhtiyacınız olan ürün grubu için hızlı teklif isteyin.
-                  </span>
-                </div>
+            <div className="max-w-max-width mx-auto px-margin-desktop py-10 grid grid-cols-[240px_1fr] gap-12">
+              <div>
+                <span className="pub-marker mb-4">02 / Ürün Grupları</span>
+                <h3 className="pub-h3 mt-4 mb-4 text-white">
+                  Tedarik zincirinizin her katmanı için.
+                </h3>
+                <p className="text-[14px] text-white/70 leading-relaxed mb-5">
+                  Ürün gruplarını inceleyerek ihtiyacınız olan kategoriler için hızlı teklif isteyin.
+                </p>
                 <Link
                   to="/urunler"
                   onClick={() => setMegaOpen(false)}
-                  className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] hover:text-[var(--public-yellow-500)] transition-colors"
+                  className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.12em] hover:opacity-80"
+                  style={{ color: "var(--public-yellow-500)" }}
                 >
-                  Tüm Kategorileri Gör
+                  Tüm ürün gruplarını gör
                   <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                 </Link>
               </div>
-              
-              <ul className="grid grid-cols-3 gap-x-8 gap-y-2" role="none">
-                {categories.map((cat) => (
-                  <li key={cat.id} role="none">
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-1" role="none">
+                {PRODUCT_GROUPS.map((g) => (
+                  <li key={g.to} role="none">
                     <Link
-                      to="/teklif"
-                      search={{ categoryId: cat.id, category: cat.title }}
+                      to={g.to}
                       role="menuitem"
                       onClick={() => setMegaOpen(false)}
-                      className="group flex items-center justify-between py-3 px-4 rounded-sm hover:bg-white/5 transition-colors border-b border-white/5"
+                      className="group flex items-start gap-4 py-3 px-3 -mx-3 rounded-sm hover:bg-white/5 transition-colors"
                     >
-                      <span className="flex items-center gap-3">
-                        {cat.icon && (
-                          <Icon 
-                            name={cat.icon} 
-                            className="text-[20px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors" 
-                          />
-                        )}
-                        <span className="text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
-                          {cat.title}
+                      <span className="pub-mono pt-2 tabular-nums" style={{ color: "var(--public-yellow-500)" }}>{g.code}</span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-[15px] font-semibold text-white group-hover:text-[var(--public-yellow-500)] transition-colors">
+                          {g.title}
                         </span>
+                        <span className="block text-[13px] text-white/60 mt-0.5">{g.desc}</span>
                       </span>
                       <Icon
-                        name="chevron_right"
-                        className="text-[16px] text-white/20 group-hover:text-[var(--public-yellow-500)] transition-colors"
+                        name="north_east"
+                        className="text-[16px] text-white/40 group-hover:text-[var(--public-yellow-500)] transition-colors mt-1.5"
                         aria-hidden="true"
                       />
                     </Link>
@@ -411,22 +406,20 @@ export function SiteHeader() {
                             <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
                           </Link>
                         </li>
-                        {categories.map((cat) => (
-                          <li key={cat.id}>
+                        {PRODUCT_GROUPS.map((g) => (
+                          <li key={g.to}>
                             <Link
-                              to="/teklif"
-                              search={{ categoryId: cat.id, category: cat.title }}
+                              to={g.to}
                               onClick={() => setMenuOpen(false)}
                               className="flex items-baseline gap-3 min-h-[44px] px-6 text-[15px] text-white/80 hover:text-[var(--public-yellow-500)] transition-colors"
                             >
-                              {cat.icon && (
-                                <Icon 
-                                  name={cat.icon} 
-                                  className="text-[18px] w-6 shrink-0" 
-                                  style={{ color: "var(--public-yellow-500)" }} 
-                                />
-                              )}
-                              <span className="min-w-0">{cat.title}</span>
+                              <span
+                                className="font-mono text-[11px] tabular-nums w-6 shrink-0"
+                                style={{ color: "var(--public-yellow-500)" }}
+                              >
+                                {g.code}
+                              </span>
+                              <span className="min-w-0">{g.title}</span>
                             </Link>
                           </li>
                         ))}
@@ -574,7 +567,7 @@ export function SiteFooter() {
   const email = settings.email;
   const hours = settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
 
-  const { categories: footerCategories } = useCategories();
+  const productCols = PRODUCT_GROUPS;
   const corporateLinks = [
     { to: "/kurumsal", label: "Hakkımızda" },
     { to: "/kataloglar", label: "Kataloglarımız" },
@@ -637,20 +630,14 @@ export function SiteFooter() {
           <div className="lg:col-span-4">
             <h3 className="section-label text-secondary mb-5">Ürün Grupları</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-              {footerCategories.slice(0, 8).map((cat: any) => (
-                <li key={cat.id}>
+              {productCols.map((g) => (
+                <li key={g.to}>
                   <Link
-                    to="/teklif"
-                    search={{ categoryId: cat.id, category: cat.title }}
+                    to={g.to}
                     className="group flex items-baseline gap-3 text-white/80 hover:text-secondary transition-colors"
                   >
-                    {cat.icon && (
-                      <Icon 
-                        name={cat.icon} 
-                        className="text-[12px] text-white/40 group-hover:text-secondary" 
-                      />
-                    )}
-                    <span className="text-[14px]">{cat.title}</span>
+                    <span className="hp-mono text-[10px] text-white/40 group-hover:text-secondary">{g.code}</span>
+                    <span className="text-[14px]">{g.title}</span>
                   </Link>
                 </li>
               ))}
