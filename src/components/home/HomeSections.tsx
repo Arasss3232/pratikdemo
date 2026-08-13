@@ -956,7 +956,7 @@ export function QuoteCTA() {
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           <div className="lg:col-span-5">
-            <span className="pub-marker">12 / Teklif ve İletişim</span>
+            <span className="pub-marker">10 / Teklif ve İletişim</span>
             <h2
               className="mt-4"
               style={{
