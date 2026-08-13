@@ -28,9 +28,9 @@ function PlaceholderModule({ title, description }: { title: string; description:
 
 function AdminPage() {
   const search = Route.useSearch();
-  const tab = search.tab || "dashboard";
-  const seoTab = search.seoTab || "dashboard";
-  const navigate = useNavigate();
+  const tab = (search.tab as AdminTab) || "dashboard";
+  const seoTab = (search.seoTab as SeoSubTab) || "dashboard";
+  const navigate = useNavigate({ from: Route.fullPath });
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -67,7 +67,7 @@ function AdminPage() {
 
   return (
     <AdminShell 
-      tab={tab as AdminTab} 
+      tab={tab} 
       onTabChange={handleTabChange} 
       userEmail={userEmail}
       onQuickAdd={handleQuickAdd}
@@ -126,7 +126,7 @@ function AdminPage() {
               title="SEO ve Analitik" 
               description="Arama motoru optimizasyonu, meta etiketleri ve site kimliği yönetimi." 
             />
-            <SeoShell currentTab={seoTab as SeoSubTab} onTabChange={handleSeoTabChange}>
+            <SeoShell currentTab={seoTab} onTabChange={handleSeoTabChange}>
               {seoTab === "dashboard" && <PlaceholderModule title="SEO Kontrol Paneli" description="SEO performans özeti." />}
               {seoTab === "general" && <SeoGeneralSettings />}
               {/* Fallback for other SEO tabs */}
@@ -198,16 +198,16 @@ export const Route = createFileRoute("/admin")({
     ],
   }),
   validateSearch: (s: Record<string, unknown>): { 
-    tab?: AdminTab; 
-    seoTab?: SeoSubTab; 
+    tab?: string; 
+    seoTab?: string; 
     aiAction?: string; 
     aiTarget?: string; 
     aiPrompt?: string;
     categoryId?: string;
     category?: string;
   } => ({
-    tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
-    seoTab: (s.seoTab as SeoSubTab) || "dashboard",
+    tab: s.tab as string,
+    seoTab: s.seoTab as string,
     aiAction: s.aiAction as string,
     aiTarget: s.aiTarget as string,
     aiPrompt: s.aiPrompt as string,
