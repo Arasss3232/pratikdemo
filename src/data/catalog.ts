@@ -101,6 +101,7 @@ export const PRODUCTS: readonly Product[] = [
   },
 ];
 
+// CategoryDefinition remains for historical type safety if needed in some components
 export type CategoryDefinition = {
   id: string;
   slug: string;
@@ -108,15 +109,6 @@ export type CategoryDefinition = {
   active: boolean;
 };
 
-export const CATEGORIES_DATA: readonly CategoryDefinition[] = [
-  { id: "e1a2b3c4-d5e6-4f7g-8h9i-0j1k2l3m4n5o", slug: "elektrikli-el-aletleri", title: "Elektrikli El Aletleri", active: true },
-  { id: "a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p", slug: "el-aletleri", title: "El Aletleri", active: true },
-  { id: "b1c2d3e4-f5g6-4h7i-8j9k-0l1m2n3o4p5q", slug: "baglanti-elemanlari", title: "Bağlantı Elemanları", active: true },
-  { id: "c1d2e3f4-g5h6-4i7j-8k9l-0m1n2o3p4q5r", slug: "kkd", title: "Kişisel Koruyucu Donanım", active: true },
-  { id: "d1e2f3g4-h5i6-4j7k-8l9m-0n1o2p3q4r5s", slug: "endustriyel-makineler", title: "Endüstriyel Makineler", active: true },
-  { id: "f1g2h3i4-j5k6-4l7m-8n9o-0p1q2r3s4t5u", slug: "sarf-malzemeleri", title: "Sarf Malzemeleri", active: true },
-  { id: "deadbeef-dead-beef-dead-beefdeadbeef", slug: "pasif-kategori", title: "Pasif Kategori", active: false },
-];
 
 export const SUBCATEGORIES: readonly string[] = [
   "Matkaplar (124)",

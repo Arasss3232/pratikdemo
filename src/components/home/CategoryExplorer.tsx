@@ -1,19 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
+import { useCategories } from "@/hooks/use-categories";
 
-type Category = {
-  index: string;
-  title: string;
-  slug: string;
-  to: string;
-  desc: string;
-  count: string;
-  image: string;
-  sub: string[];
-};
-
-import { CATEGORIES_DATA } from "@/data/catalog";
 
 const CATEGORIES: readonly Category[] = [
   {
@@ -85,8 +74,28 @@ const CATEGORIES: readonly Category[] = [
 ];
 
 export function CategoryExplorer() {
+  const { data: dbCategories, isLoading } = useCategories();
   const [active, setActive] = useState(0);
-  const cat = CATEGORIES[active];
+
+  const categories = dbCategories?.map((c, i) => ({
+    index: String(i + 1).padStart(2, "0"),
+    title: c.title,
+    slug: c.slug,
+    to: "/teklif",
+    desc: c.description || "Profesyonel endüstriyel çözümler.",
+    count: "Geniş ürün yelpazesi",
+    image: c.image_url || "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80",
+    sub: [],
+    id: c.id
+  })) || [];
+
+  const cat = categories[active];
+
+  if (isLoading || categories.length === 0) {
+    if (isLoading) return <div className="py-20 text-center text-white/50">Yükleniyor...</div>;
+    return null;
+  }
+
 
   // Keyboard: arrow keys move through list
   useEffect(() => {
@@ -95,10 +104,11 @@ export function CategoryExplorer() {
       if (!t?.closest?.("[data-category-tablist]")) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((i) => (i + 1) % CATEGORIES.length);
+        setActive((i) => (i + 1) % categories.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActive((i) => (i - 1 + CATEGORIES.length) % CATEGORIES.length);
+        setActive((i) => (i - -1 + categories.length) % categories.length);
+
       }
     };
     window.addEventListener("keydown", onKey);
@@ -142,7 +152,8 @@ export function CategoryExplorer() {
             className="col-span-5 lg:col-span-5 flex flex-col"
             style={{ borderTop: "1px solid var(--public-navy-border)" }}
           >
-            {CATEGORIES.map((c, i) => {
+            {categories.map((c, i) => {
+
               const isActive = i === active;
               return (
                 <li key={c.slug}>
@@ -262,7 +273,8 @@ export function CategoryExplorer() {
               </div>
               <Link
                 to={cat.to}
-                search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }}
+                search={{ categoryId: cat.id }}
+
                 className="pub-btn pub-btn-primary pub-btn-sm mt-6"
               >
                 Kategoriyi İncele
@@ -275,7 +287,8 @@ export function CategoryExplorer() {
         {/* Mobile: horizontal chip nav + selected panel */}
         <div className="md:hidden">
           <div className="-mx-margin-mobile px-margin-mobile flex gap-2 overflow-x-auto pb-4 no-scrollbar">
-            {CATEGORIES.map((c, i) => {
+            {categories.map((c, i) => {
+
               const isActive = i === active;
               return (
                 <button
@@ -325,7 +338,7 @@ export function CategoryExplorer() {
                 {cat.title}
               </h3>
               <p className="mt-3 text-white/75 text-[14px] leading-relaxed">{cat.desc}</p>
-              <Link to={cat.to} search={{ categoryId: CATEGORIES_DATA.find(c => c.slug === cat.slug)?.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
+              <Link to={cat.to} search={{ categoryId: cat.id }} className="pub-btn pub-btn-primary pub-btn-sm mt-5 w-full">
                 Kategoriyi İncele
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>
