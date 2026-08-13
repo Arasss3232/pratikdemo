@@ -60,6 +60,7 @@ const PRODUCT_GROUPS = [
 ] as const;
 
 export function SiteHeader() {
+  const isHydrated = useHydrated();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -71,8 +72,8 @@ export function SiteHeader() {
   const { settings: rawSettings } = useSiteSettings();
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
+  const { categories } = useCategories();
   const navLinks = dynamicNav.length > 0 ? dynamicNav.map(i => ({ label: i.label, to: i.route })) : NAV_LINKS;
-
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -80,6 +81,7 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
   useEffect(() => {
     if (!menuOpen) return;
     const prev = document.body.style.overflow;
@@ -106,7 +108,6 @@ export function SiteHeader() {
       }
     };
     window.addEventListener("keydown", onKey);
-    // move focus into the drawer
     const t = window.setTimeout(() => {
       const firstLink = drawerRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])');
       firstLink?.focus();
@@ -115,10 +116,10 @@ export function SiteHeader() {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
       window.clearTimeout(t);
-      // restore focus to trigger
       menuBtnRef.current?.focus();
     };
   }, [menuOpen]);
+
   useEffect(() => {
     if (!megaOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMegaOpen(false);
@@ -137,21 +138,21 @@ export function SiteHeader() {
 
   const phone = settings.phone;
   const whatsapp = settings.whatsapp;
-
   const waHref = whatsapp ? `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}` : undefined;
   const telHref = phone ? `tel:${phone.replace(/\s/g, "")}` : undefined;
 
   return (
     <>
+    <div 
+      className="w-full bg-[#000F1A] text-white flex items-center justify-center overflow-hidden z-[60]"
+      style={{ height: '18px' }}
+    />
     <header
       className="sticky top-0 z-50 w-full transition-all duration-300 text-white"
       style={{
-        backgroundColor: scrolled ? "var(--public-navy-950)" : "var(--public-navy-900)",
-        boxShadow: scrolled ? "0 1px 0 rgba(245,196,0,0.35), 0 12px 28px -20px rgba(0,0,0,0.6)" : "none",
-        borderBottom: scrolled ? "0" : "1px solid rgba(255,255,255,0.06)",
-        paddingTop: "env(safe-area-inset-top)",
-        paddingLeft: "env(safe-area-inset-left)",
-        paddingRight: "env(safe-area-inset-right)",
+        backgroundColor: "var(--public-navy-900)",
+        boxShadow: scrolled ? "0 4px 12px rgba(0,0,0,0.15)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.08)" : "none",
         fontFamily: 'var(--font-body, "Manrope", "Segoe UI", Arial, sans-serif)',
       }}
     >
