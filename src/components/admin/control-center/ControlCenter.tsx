@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Icon } from "../../site-shell";
+import { useEffect, useState } from "react";
+import { Icon } from "../site-shell";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "../PageHeader";
