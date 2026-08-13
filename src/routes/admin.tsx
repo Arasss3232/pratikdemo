@@ -13,7 +13,14 @@ import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
-import { ControlCenter } from "../components/admin/control-center/ControlCenter";
+import { SeoShell, type SeoSubTab } from "../components/admin/seo/SeoShell";
+import { SeoDashboard } from "../components/admin/seo/SeoDashboard";
+import { SeoGeneralSettings } from "../components/admin/seo/SeoGeneralSettings";
+import { SeoPageManagement } from "../components/admin/seo/SeoPageManagement";
+import { SeoSearchConsole } from "../components/admin/seo/SeoSearchConsole";
+import { SeoTools } from "../components/admin/seo/SeoTools";
+import { SeoRedirects } from "../components/admin/seo/SeoRedirects";
+
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
@@ -48,6 +55,7 @@ export const Route = createFileRoute("/admin")({
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     tab: (TAB_KEYS.includes(s.tab as AdminTab) ? s.tab : "dashboard") as AdminTab,
+    seoTab: (s.seoTab || "dashboard") as SeoSubTab,
     aiAction: typeof s.aiAction === "string" ? (s.aiAction as string) : undefined,
     aiTarget: typeof s.aiTarget === "string" ? (s.aiTarget as string) : undefined,
     aiPrompt: typeof s.aiPrompt === "string" ? (s.aiPrompt as string) : undefined,
@@ -91,7 +99,7 @@ function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const { tab } = search;
+  const { tab, seoTab } = search;
 
   function setTab(t: Tab) {
     navigate({
@@ -99,6 +107,7 @@ function AdminPage() {
       search: (prev) => ({
         ...prev,
         tab: t,
+        seoTab: t === "seo" ? "dashboard" : undefined,
         aiAction: undefined,
         aiTarget: undefined,
         aiPrompt: undefined,
@@ -175,7 +184,23 @@ function AdminPage() {
       >
         {tab !== "dashboard" && tab !== "seo" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
-        {tab === "seo" && <ControlCenter onNavigate={setTab} />}
+        {tab === "seo" && (
+          <SeoShell 
+            currentTab={seoTab} 
+            onTabChange={(st) => navigate({ search: (prev) => ({ ...prev, seoTab: st }) })}
+          >
+            {seoTab === "dashboard" && <SeoDashboard onNavigate={setTab} />}
+            {seoTab === "general" && <SeoGeneralSettings />}
+            {seoTab === "pages" && <SeoPageManagement />}
+            {seoTab === "search-console" && <SeoSearchConsole />}
+            {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "audit" && <SeoTools />}
+            {/* placeholders for others to be implemented */}
+            {["sitemap", "robots", "analytics", "tag-manager", "schema", "social", "favicon"].includes(seoTab) && (
+              <ComingSoon tab="seo" phase={`SEO Modülü: ${seoTab}`} />
+            )}
+          </SeoShell>
+        )}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
