@@ -145,7 +145,6 @@ function GeneralSettings({ onDirty, onSaved }: { onDirty: () => void; onSaved: (
     onDirty();
   };
 
-
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between border-b border-white/5 pb-6">
@@ -156,7 +155,6 @@ function GeneralSettings({ onDirty, onSaved }: { onDirty: () => void; onSaved: (
         <button 
           onClick={() => settings && updateMutation.mutate(localSettings)}
           disabled={updateMutation.isPending || !settings}
-
           className="h-11 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-xl font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20 disabled:opacity-50"
         >
           {updateMutation.isPending ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
