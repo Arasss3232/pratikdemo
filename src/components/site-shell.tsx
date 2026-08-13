@@ -163,8 +163,8 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-            {telHref ? (
-              <a href={telHref} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+            {phone ? (
+              <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
                 <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                 <span className="truncate">{phone}</span>
               </a>
