@@ -20,14 +20,14 @@ export const Route = createFileRoute("/sitemap.xml")({
         const { data: pages } = await supabase
           .from("page_seo")
           .select("*")
-          .eq("in_sitemap", true)
-          .eq("is_indexed", true);
+          .eq("sitemap_include", true)
+          .eq("no_index", false);
 
         const urls = (pages || []).map((page) =>
           [
             `  <url>`,
-            `    <loc>${baseUrl}${page.page_path}</loc>`,
-            page.change_frequency ? `    <changefreq>${page.change_frequency}</changefreq>` : null,
+            `    <loc>${baseUrl}${page.route_path}</loc>`,
+            page.sitemap_changefreq ? `    <changefreq>${page.sitemap_changefreq}</changefreq>` : null,
             page.sitemap_priority ? `    <priority>${page.sitemap_priority}</priority>` : null,
             `  </url>`,
           ]
