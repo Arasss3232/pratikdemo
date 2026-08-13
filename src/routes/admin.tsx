@@ -178,7 +178,16 @@ function AdminPage() {
       >
         {tab !== "dashboard" && <PageHeader tab={tab} />}
         {tab === "dashboard" && <Dashboard onNavigate={setTab} />}
-        {tab === "seo" && <SeoDashboard onNavigate={setTab} />}
+        {tab === "seo" && (
+          <div className="flex flex-col gap-8">
+            <SeoDashboard onNavigate={setTab} />
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              <SeoGeneralSettings />
+              <SeoPageManagement />
+            </div>
+            <SeoTools />
+          </div>
+        )}
         {tab === "settings" && <SiteSettingsForm />}
         {tab === "brochures" && <BrochuresTab />}
         {tab === "products" && <ProductsTab />}
