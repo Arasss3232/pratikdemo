@@ -199,7 +199,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-[15px] md:text-[16px] font-semibold truncate" style={{ color: "var(--admin-text)" }}>
-              Yapay Zekâ Kontrol Merkezi
+              Kurumsal Kontrol Merkezi
             </h1>
             <p className="text-[12px] truncate" style={{ color: "var(--admin-text-mute)" }}>
               Web sitenizde yapmak istediğinizi normal cümlelerle yazın.
@@ -224,7 +224,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
           <div className="mx-auto max-w-[1000px] w-full px-4 md:px-6 pb-3">
             <div className="rounded-xl border p-3 flex flex-wrap gap-3 text-[13px]" style={{ borderColor: "var(--admin-border)", background: "var(--admin-bg)" }}>
               <StatusItem icon="monitor_heart" label="Site Sağlığı" value={`%${score}`} onClick={handleAudit} action={auditRunning ? "Taranıyor…" : "Yeniden Tara"} />
-              <StatusItem icon="approval" label="Bekleyen Değişiklik" value={pendingCount} onClick={() => onNavigate("aiHistory")} action="Aç" />
+              <StatusItem icon="approval" label="Bekleyen Değişiklik" value={pendingCount} onClick={() => onNavigate("seo")} action="Aç" />
               <StatusItem icon="mark_email_unread" label="Yeni Mesaj" value={newMessages} onClick={() => onNavigate("messages")} action="Aç" />
               <StatusItem icon="request_quote" label="Bekleyen Teklif" value={Number(c.pendingQuotes ?? 0)} onClick={() => onNavigate("quotes")} action="Aç" />
             </div>
@@ -373,7 +373,7 @@ export function ControlCenter({ onNavigate }: { onNavigate: (t: AdminTab) => voi
             <>
               <div className="h-px my-2" style={{ background: "var(--admin-border)" }} />
               <button
-                onClick={() => { setMoreOpen(false); onNavigate("aiHistory"); }}
+                onClick={() => { setMoreOpen(false); onNavigate("seo"); }}
                 className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[color:var(--admin-bg)]"
               >
                 <Icon name="fact_check" className="text-[18px]" style={{ color: "var(--admin-navy)" }} />
