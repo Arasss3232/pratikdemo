@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Icon } from "../site-shell";
 import { toast } from "sonner";
-import { EmptyState } from "./EmptyState";
+import { type Database } from "@/integrations/supabase/types";
 
 type Permission = {
   id: string;
@@ -12,14 +12,11 @@ type Permission = {
   group_name: string;
 };
 
-type RoleData = {
-  role: string;
-  permissions: string[];
-};
+type AppRole = Database["public"]["Enums"]["app_role"];
 
 export function RolesTab() {
   const queryClient = useQueryClient();
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<AppRole | null>(null);
 
   const { data: permissions = [] } = useQuery({
     queryKey: ["admin-permissions"],
@@ -44,28 +41,37 @@ export function RolesTab() {
       });
 
       return Object.entries(grouped).map(([role, perms]) => ({
-        role,
+        role: role as AppRole,
         permissions: perms,
       }));
     },
   });
 
   const updateRoleMutation = useMutation({
-    mutationFn: async ({ role, permissionIds }: { role: string; permissionIds: string[] }) => {
+    mutationFn: async ({ role, permissionIds }: { role: AppRole; permissionIds: string[] }) => {
       // First delete all
-      await supabase.from("role_permissions").delete().eq("role", role);
+      const { error: delError } = await supabase
+        .from("role_permissions")
+        .delete()
+        .eq("role", role);
+      
+      if (delError) throw delError;
+
       // Then insert new
       if (permissionIds.length > 0) {
-        const toInsert = permissionIds.map(id => ({ role, permission_id: id }));
-        const { error } = await supabase.from("role_permissions").insert(toInsert);
-        if (error) throw error;
+        const toInsert = permissionIds.map(id => ({ 
+          role: role, 
+          permission_id: id 
+        }));
+        const { error: insError } = await supabase.from("role_permissions").insert(toInsert as any);
+        if (insError) throw insError;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-roles"] });
       toast.success("Rol yetkileri güncellendi");
     },
-    onError: (err) => {
+    onError: (err: any) => {
       toast.error("Hata: " + err.message);
     }
   });
