@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Save, Phone, Mail, Clock, MapPin, Building2, Link as LinkIcon } from "lucide-react";
+import { Loader2, Save, Phone, Mail, Clock, Building2, Link as LinkIcon, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUploadField } from "../ImageUploadField";
 
@@ -23,6 +23,7 @@ export function SettingsPanel() {
 
   const updateMutation = useMutation({
     mutationFn: async (newSettings: any) => {
+      if (!settings?.id) throw new Error("Settings record not found");
       const { error } = await supabase.from("site_settings").update(newSettings).eq("id", settings.id);
       if (error) throw error;
     },
@@ -49,7 +50,7 @@ export function SettingsPanel() {
           <p className="text-white/50">Tüm sayfalarda geçerli temel bilgiler</p>
         </div>
         <button 
-          onClick={() => updateMutation.mutate(localSettings)}
+          onClick={() => localSettings && updateMutation.mutate(localSettings)}
           disabled={updateMutation.isPending}
           className="h-11 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-xl font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20"
         >
