@@ -7,7 +7,7 @@ export const Route = createFileRoute("/kataloglar")({
   head: () => ({
     meta: [
       { title: "Dijital Kataloglar — Pratik Endüstriyel" },
-      { name: "description", content: "Endüstriyel ürün gruplarımıza ait güncel dijital kataloglarımızı inceleyin ve indirin." },
+      { name: "description", content: "Endüstriyel ürün gruplarımıza ait güncel dijital kataloglarimizi inceleyin ve indirin." },
       { property: "og:title", content: "Dijital Kataloglar — Pratik Endüstriyel" },
       { property: "og:type", content: "website" },
     ],
@@ -72,7 +72,6 @@ function KataloglarPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {KATALOGLAR.map((k) => (
             <div key={k.id} className="group flex flex-col">
-              {/* A4 Cover Container */}
               <div className="relative aspect-a4 w-full bg-public-navy-950 overflow-hidden pub-ticks shadow-md transition-all group-hover:shadow-xl group-hover:-translate-y-1">
                 <span className="pub-tick-bl" aria-hidden />
                 <span className="pub-tick-br" aria-hidden />
@@ -84,14 +83,12 @@ function KataloglarPage() {
                   loading="lazy"
                 />
                 
-                {/* Overlay with Year */}
                 <div className="absolute top-4 left-4 z-10">
                    <span className="pub-mono px-3 py-1 bg-public-yellow-500 text-public-navy-950 text-[10px]">
                      {k.year}
                    </span>
                 </div>
 
-                {/* Hover Action Overlay */}
                 <div className="absolute inset-0 bg-public-navy-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                   <a 
                     href={k.pdfUrl} 
@@ -111,7 +108,6 @@ function KataloglarPage() {
                 </div>
               </div>
 
-              {/* Info */}
               <div className="mt-5 flex flex-col gap-2">
                 <h3 className="text-[18px] font-bold text-public-navy-950 leading-tight group-hover:text-public-navy-700 transition-colors">
                   {k.title}
@@ -134,7 +130,6 @@ function KataloglarPage() {
           ))}
         </div>
 
-        {/* Info Box */}
         <div className="mt-20 p-8 md:p-10 bg-public-navy-950 text-white relative overflow-hidden pub-ticks">
           <div className="absolute inset-0 pub-blueprint opacity-20 pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
