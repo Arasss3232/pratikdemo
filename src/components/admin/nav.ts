@@ -103,8 +103,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { key: "dealers", label: "Bayiler", icon: "storefront" },
       { key: "companyUsers", label: "Firma Kullanıcıları", icon: "supervised_user_circle" },
       { key: "customerGroups", label: "Müşteri Grupları", icon: "groups" },
-      { key: "applications", label: "Başvurular", icon: "assignment_ind" },
-      { key: "salesReps", label: "Satış Temsilcileri", icon: "badge" },
     ],
   },
   {
@@ -170,9 +168,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { key: "catalogs", label: "Katalog Yönetimi", icon: "menu_book", description: "Dijital ürün katalogları" },
       { key: "references", label: "Bayiliklerimiz Yönetimi", icon: "workspace_premium" },
       { key: "certificates", label: "Sertifikalar", icon: "verified" },
-      { key: "team", label: "Ekip", icon: "group" },
-      { key: "testimonials", label: "Müşteri Yorumları", icon: "reviews" },
-      { key: "faqs", label: "SSS", icon: "quiz" },
       { key: "messages", label: "Gelen Mesajlar", icon: "mail" },
       { key: "quotes", label: "Web Teklif Talepleri", icon: "mail_outline" },
     ],
@@ -193,7 +188,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     title: "Akıllı Araçlar",
     items: [
       { key: "aiAssistant", label: "Yapay Zekâ Site Asistanı", icon: "smart_toy", description: "Sohbetle site içeriğini yönetin" },
-      { key: "aiHistory", label: "Yapay Zekâ Geçmişi", icon: "manage_history", description: "Öneri ve uygulama kayıtları" },
     ],
   },
 ];

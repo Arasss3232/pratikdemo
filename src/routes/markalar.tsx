@@ -45,12 +45,12 @@ function MarkalarPage() {
                 <button
                   key={brand.id}
                   onClick={() => setSelectedBrand(brand)}
-                  className="group relative bg-white border border-outline-variant p-8 flex items-center justify-center aspect-video hover:border-primary hover:shadow-lg transition-all"
+                  className="brand-card group relative bg-white border border-outline-variant p-8 flex items-center justify-center aspect-video hover:border-primary hover:shadow-lg transition-all"
                 >
                   <img
                     src={brand.logo_url}
                     alt={brand.name}
-                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300 pointer-events-none"
                   />
                   <div className="absolute inset-x-0 bottom-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </button>
@@ -65,6 +65,8 @@ function MarkalarPage() {
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setSelectedBrand(null)}
+          onKeyDown={(e) => e.key === "Escape" && setSelectedBrand(null)}
+          tabIndex={-1}
         >
           <div 
             className="bg-white max-w-lg w-full rounded-sm overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200"
@@ -87,9 +89,16 @@ function MarkalarPage() {
               </div>
               
               <h2 className="hp-h2 mb-4">{selectedBrand.name}</h2>
-              <p className="text-on-surface-variant mb-8">
-                {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış ve teknik destek noktası olarak hizmet vermekteyiz. Toplu alım ve proje bazlı fiyatlandırma için iletişime geçebilirsiniz.
-              </p>
+              {selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.description}
+                </p>
+              )}
+              {!selectedBrand.description && (
+                <p className="text-on-surface-variant mb-8">
+                  {selectedBrand.name} markasının tüm profesyonel ürün grupları için yetkili satış ve teknik destek noktası olarak hizmet vermekteyiz.
+                </p>
+              )}
               
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <button 
@@ -98,12 +107,16 @@ function MarkalarPage() {
                 >
                   Kapat
                 </button>
-                <a 
-                  href="/teklif?category=Marka%20Sorgusu" 
-                  className="pub-btn pub-btn-primary flex-1"
-                >
-                  Marka İçin Teklif Al
-                </a>
+                {selectedBrand.website_url && (
+                  <a 
+                    href={selectedBrand.website_url} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pub-btn pub-btn-primary flex-1"
+                  >
+                    Resmî Web Sitesi
+                  </a>
+                )}
               </div>
             </div>
           </div>
