@@ -21,12 +21,10 @@ import { Route as MarkalarRouteImport } from './routes/markalar'
 import { Route as KvkkRouteImport } from './routes/kvkk'
 import { Route as KurumsalRouteImport } from './routes/kurumsal'
 import { Route as KataloglarRouteImport } from './routes/kataloglar'
-import { Route as KariyerRouteImport } from './routes/kariyer'
 import { Route as IletisimRouteImport } from './routes/iletisim'
-import { Route as HizmetlerRouteImport } from './routes/hizmetler'
 import { Route as HakkimizdaRouteImport } from './routes/hakkimizda'
 import { Route as GirisRouteImport } from './routes/giris'
-import { Route as BlogRouteImport } from './routes/blog'
+import { Route as BayiliklerimizRouteImport } from './routes/bayiliklerimiz'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
@@ -109,19 +107,9 @@ const KataloglarRoute = KataloglarRouteImport.update({
   path: '/kataloglar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KariyerRoute = KariyerRouteImport.update({
-  id: '/kariyer',
-  path: '/kariyer',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IletisimRoute = IletisimRouteImport.update({
   id: '/iletisim',
   path: '/iletisim',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HizmetlerRoute = HizmetlerRouteImport.update({
-  id: '/hizmetler',
-  path: '/hizmetler',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HakkimizdaRoute = HakkimizdaRouteImport.update({
@@ -134,9 +122,9 @@ const GirisRoute = GirisRouteImport.update({
   path: '/giris',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
+const BayiliklerimizRoute = BayiliklerimizRouteImport.update({
+  id: '/bayiliklerimiz',
+  path: '/bayiliklerimiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -228,19 +216,19 @@ const PortalFinansRoute = PortalFinansRouteImport.update({
   getParentRoute: () => PortalRoute,
 } as any)
 const KariyerSlugRoute = KariyerSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => KariyerRoute,
+  id: '/kariyer/$slug',
+  path: '/kariyer/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HizmetlerSlugRoute = HizmetlerSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => HizmetlerRoute,
+  id: '/hizmetler/$slug',
+  path: '/hizmetler/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const UrunlerElektrikliElAletleriSkuRoute =
   UrunlerElektrikliElAletleriSkuRouteImport.update({
@@ -252,12 +240,10 @@ const UrunlerElektrikliElAletleriSkuRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
-  '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -293,12 +279,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
-  '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -334,12 +318,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
-  '/hizmetler': typeof HizmetlerRouteWithChildren
   '/iletisim': typeof IletisimRoute
-  '/kariyer': typeof KariyerRouteWithChildren
   '/kataloglar': typeof KataloglarRoute
   '/kurumsal': typeof KurumsalRoute
   '/kvkk': typeof KvkkRoute
@@ -377,12 +359,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/blog'
+    | '/bayiliklerimiz'
     | '/giris'
     | '/hakkimizda'
-    | '/hizmetler'
     | '/iletisim'
-    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -418,12 +398,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
-    | '/blog'
+    | '/bayiliklerimiz'
     | '/giris'
     | '/hakkimizda'
-    | '/hizmetler'
     | '/iletisim'
-    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -458,12 +436,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/blog'
+    | '/bayiliklerimiz'
     | '/giris'
     | '/hakkimizda'
-    | '/hizmetler'
     | '/iletisim'
-    | '/kariyer'
     | '/kataloglar'
     | '/kurumsal'
     | '/kvkk'
@@ -500,12 +476,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
-  BlogRoute: typeof BlogRouteWithChildren
+  BayiliklerimizRoute: typeof BayiliklerimizRoute
   GirisRoute: typeof GirisRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
-  HizmetlerRoute: typeof HizmetlerRouteWithChildren
   IletisimRoute: typeof IletisimRoute
-  KariyerRoute: typeof KariyerRouteWithChildren
   KataloglarRoute: typeof KataloglarRoute
   KurumsalRoute: typeof KurumsalRoute
   KvkkRoute: typeof KvkkRoute
@@ -518,6 +492,9 @@ export interface RootRouteChildren {
   TeklifSepetiRoute: typeof TeklifSepetiRoute
   TeknikDestekRoute: typeof TeknikDestekRoute
   UrunlerRoute: typeof UrunlerRouteWithChildren
+  BlogSlugRoute: typeof BlogSlugRoute
+  HizmetlerSlugRoute: typeof HizmetlerSlugRoute
+  KariyerSlugRoute: typeof KariyerSlugRoute
   UrunDetaySkuRoute: typeof UrunDetaySkuRoute
 }
 
@@ -607,25 +584,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KataloglarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kariyer': {
-      id: '/kariyer'
-      path: '/kariyer'
-      fullPath: '/kariyer'
-      preLoaderRoute: typeof KariyerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/iletisim': {
       id: '/iletisim'
       path: '/iletisim'
       fullPath: '/iletisim'
       preLoaderRoute: typeof IletisimRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hizmetler': {
-      id: '/hizmetler'
-      path: '/hizmetler'
-      fullPath: '/hizmetler'
-      preLoaderRoute: typeof HizmetlerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hakkimizda': {
@@ -642,11 +605,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GirisRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
+    '/bayiliklerimiz': {
+      id: '/bayiliklerimiz'
+      path: '/bayiliklerimiz'
+      fullPath: '/bayiliklerimiz'
+      preLoaderRoute: typeof BayiliklerimizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -770,24 +733,24 @@ declare module '@tanstack/react-router' {
     }
     '/kariyer/$slug': {
       id: '/kariyer/$slug'
-      path: '/$slug'
+      path: '/kariyer/$slug'
       fullPath: '/kariyer/$slug'
       preLoaderRoute: typeof KariyerSlugRouteImport
-      parentRoute: typeof KariyerRoute
+      parentRoute: typeof rootRouteImport
     }
     '/hizmetler/$slug': {
       id: '/hizmetler/$slug'
-      path: '/$slug'
+      path: '/hizmetler/$slug'
       fullPath: '/hizmetler/$slug'
       preLoaderRoute: typeof HizmetlerSlugRouteImport
-      parentRoute: typeof HizmetlerRoute
+      parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/urunler/elektrikli-el-aletleri/$sku': {
       id: '/urunler/elektrikli-el-aletleri/$sku'
@@ -798,39 +761,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
-interface HizmetlerRouteChildren {
-  HizmetlerSlugRoute: typeof HizmetlerSlugRoute
-}
-
-const HizmetlerRouteChildren: HizmetlerRouteChildren = {
-  HizmetlerSlugRoute: HizmetlerSlugRoute,
-}
-
-const HizmetlerRouteWithChildren = HizmetlerRoute._addFileChildren(
-  HizmetlerRouteChildren,
-)
-
-interface KariyerRouteChildren {
-  KariyerSlugRoute: typeof KariyerSlugRoute
-}
-
-const KariyerRouteChildren: KariyerRouteChildren = {
-  KariyerSlugRoute: KariyerSlugRoute,
-}
-
-const KariyerRouteWithChildren =
-  KariyerRoute._addFileChildren(KariyerRouteChildren)
 
 interface PortalRouteChildren {
   PortalFinansRoute: typeof PortalFinansRoute
@@ -896,12 +826,10 @@ const UrunlerRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
-  BlogRoute: BlogRouteWithChildren,
+  BayiliklerimizRoute: BayiliklerimizRoute,
   GirisRoute: GirisRoute,
   HakkimizdaRoute: HakkimizdaRoute,
-  HizmetlerRoute: HizmetlerRouteWithChildren,
   IletisimRoute: IletisimRoute,
-  KariyerRoute: KariyerRouteWithChildren,
   KataloglarRoute: KataloglarRoute,
   KurumsalRoute: KurumsalRoute,
   KvkkRoute: KvkkRoute,
@@ -914,6 +842,9 @@ const rootRouteChildren: RootRouteChildren = {
   TeklifSepetiRoute: TeklifSepetiRoute,
   TeknikDestekRoute: TeknikDestekRoute,
   UrunlerRoute: UrunlerRouteWithChildren,
+  BlogSlugRoute: BlogSlugRoute,
+  HizmetlerSlugRoute: HizmetlerSlugRoute,
+  KariyerSlugRoute: KariyerSlugRoute,
   UrunDetaySkuRoute: UrunDetaySkuRoute,
 }
 export const routeTree = rootRouteImport
