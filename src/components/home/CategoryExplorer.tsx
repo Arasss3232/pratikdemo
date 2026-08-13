@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
-import { useCategories } from "@/hooks/use-categories";
+import { useCategories, type Category } from "@/hooks/use-categories";
 
-
-const CATEGORIES: readonly Category[] = [
+const STATIC_CATEGORIES: any[] = [
   {
     index: "01",
     title: "Elektrikli El Aletleri",
