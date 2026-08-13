@@ -81,11 +81,12 @@ function TeklifPage() {
       email: parsed.data.email,
       phone: parsed.data.phone,
       message: parsed.data.message,
-      status: "new",
+      status: "pending",
       items: [{ category: category?.title || "Genel", quantity: 1 }]
     };
 
     const { error } = await supabase.from("quote_requests").insert(payload as any);
+
 
     
     if (error) {
