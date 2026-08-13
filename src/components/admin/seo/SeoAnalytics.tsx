@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Icon } from "../../site-shell";
 
 export function SeoAnalytics() {
-  const { settings, refresh } = useSiteSettings();
+  const settings = useSiteSettings();
   const [ga4Id, setGa4Id] = useState(settings?.ga4_id || "");
   const [isActive, setIsActive] = useState(settings?.ga4_active || false);
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export function SeoAnalytics() {
       toast.error("Kaydedilemedi: " + error.message);
     } else {
       toast.success("GA4 ayarları güncellendi.");
-      refresh();
+      settings.refresh();
     }
     setLoading(false);
   };

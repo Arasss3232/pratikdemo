@@ -47,9 +47,9 @@ export type SiteSettings = {
 let cache: SiteSettings | null = null;
 let inflight: Promise<SiteSettings> | null = null;
 
-export async function fetchSiteSettings(forceRefresh = false): Promise<SiteSettings> {
-  if (cache && !forceRefresh) return cache;
-  if (inflight && !forceRefresh) return inflight;
+export async function fetchSiteSettings(): Promise<SiteSettings> {
+  if (cache) return cache;
+  if (inflight) return inflight;
   
   inflight = (async () => {
     const { data } = await supabase.from("site_settings").select("*").eq("id", true).maybeSingle();
@@ -62,11 +62,17 @@ export async function fetchSiteSettings(forceRefresh = false): Promise<SiteSetti
   return inflight;
 }
 
+export async function refreshSiteSettings(): Promise<SiteSettings> {
+  cache = null;
+  inflight = null;
+  return fetchSiteSettings();
+}
+
 export function useSiteSettings() {
   const [settings, setSettings] = useState<SiteSettings | null>(cache);
 
   const refresh = useCallback(async () => {
-    const data = await fetchSiteSettings(true);
+    const data = await refreshSiteSettings();
     setSettings(data);
     return data;
   }, []);
@@ -77,9 +83,6 @@ export function useSiteSettings() {
     }
   }, []);
 
-  // Return the settings object with a non-enumerable refresh function
-  // to avoid breaking existing destructuring if possible, but actually
-  // most code uses it as `const settings = useSiteSettings()` then `settings.prop`.
   const result = settings ? { ...settings } : ({} as SiteSettings);
   
   // Attach refresh to the object

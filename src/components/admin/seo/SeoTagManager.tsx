@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Icon } from "../../site-shell";
 
 export function SeoTagManager() {
-  const { settings, refresh } = useSiteSettings();
+  const settings = useSiteSettings();
   const [gtmId, setGtmId] = useState(settings?.google_tag_manager_id || "");
   const [isActive, setIsActive] = useState(settings?.gtm_active || false);
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export function SeoTagManager() {
       toast.error("Kaydedilemedi: " + error.message);
     } else {
       toast.success("GTM ayarları güncellendi.");
-      refresh();
+      settings.refresh();
     }
     setLoading(false);
   };
