@@ -13,10 +13,7 @@ import { EmptyState } from "../components/admin/EmptyState";
 import { ConfirmDialogHost, confirmDialog } from "../components/admin/ConfirmDialog";
 import type { AdminTab } from "../components/admin/nav";
 import { ComingSoon } from "../components/admin/ComingSoon";
-import { SeoDashboard } from "../components/admin/seo/SeoDashboard";
-import { SeoGeneralSettings } from "../components/admin/seo/SeoGeneralSettings";
-import { SeoPageManagement } from "../components/admin/seo/SeoPageManagement";
-import { SeoTools } from "../components/admin/seo/SeoTools";
+import { ControlCenter } from "../components/admin/control-center/ControlCenter";
 
 const TAB_KEYS: AdminTab[] = [
   // Ana Yönetim
