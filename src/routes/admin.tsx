@@ -20,6 +20,8 @@ import { SeoPageManagement } from "../components/admin/seo/SeoPageManagement";
 import { SeoSearchConsole } from "../components/admin/seo/SeoSearchConsole";
 import { SeoTools } from "../components/admin/seo/SeoTools";
 import { SeoRedirects } from "../components/admin/seo/SeoRedirects";
+import { SeoSitemap } from "../components/admin/seo/SeoSitemap";
+import { SeoRobots } from "../components/admin/seo/SeoRobots";
 
 
 const TAB_KEYS: AdminTab[] = [
@@ -203,10 +205,12 @@ function AdminPage() {
             {seoTab === "general" && <SeoGeneralSettings />}
             {seoTab === "pages" && <SeoPageManagement />}
             {seoTab === "search-console" && <SeoSearchConsole />}
-            {seoTab === "redirects" && <SeoRedirects />}
+            {seoTab === "sitemap" && <SeoSitemap />}
+            {seoTab === "robots" && <SeoRobots />}
             {seoTab === "audit" && <SeoTools />}
+            {seoTab === "redirects" && <SeoRedirects />}
             {/* placeholders for others to be implemented */}
-            {["sitemap", "robots", "analytics", "tag-manager", "schema", "social", "favicon"].includes(seoTab) && (
+            {["analytics", "tag-manager", "schema", "social", "favicon"].includes(seoTab) && (
               <ComingSoon tab="seo" phase={`SEO Modülü: ${seoTab}`} />
             )}
           </SeoShell>
