@@ -184,11 +184,46 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
 
                     {field.field_type === 'text' && (
-                      <textarea 
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                        value={field.value_text || ""}
-                        onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
-                      />
+                      <div className="space-y-3">
+                        <textarea 
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                          value={field.value_text || ""}
+                          onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
+                        />
+                        
+                        {(field.link_url !== undefined || field.icon !== undefined) && (
+                          <div className="flex flex-wrap gap-4 p-3 bg-black/20 rounded-lg border border-white/5">
+                            {field.link_url !== undefined && (
+                              <div className="flex-1 min-w-[200px] space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">Yönlendirme URL</span>
+                                <div className="relative">
+                                  <LinkIcon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.link_url || ""}
+                                    placeholder="/rota veya https://..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {field.icon !== undefined && (
+                              <div className="w-32 space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">İkon (Material)</span>
+                                <div className="relative">
+                                  <Globe size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.icon || ""}
+                                    placeholder="call, mail..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'icon')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     )}
 
                     {field.field_type === 'link' && (
@@ -214,11 +249,12 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
                     {field.field_type === 'image' && (
                       <FileUploadField 
-                        value={field.media_url || ""}
-                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'media')}
+                        value={field.value_text || ""}
+                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')}
                         label="Görsel Seç"
                       />
                     )}
+
                   </div>
                 ))}
               </div>
