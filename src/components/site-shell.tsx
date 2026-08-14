@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useCategories } from "@/hooks/use-categories";
+import { usePageContent } from "@/hooks/use-page-content";
 import { useHydrated } from "@/hooks/use-hydrated";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
