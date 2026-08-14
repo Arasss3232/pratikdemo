@@ -764,9 +764,9 @@ export function SiteFooter() {
               <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
-              Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve
-              satış sonrası iletişim.
+              {settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
             </p>
+
             <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
               {address && (
                 <span className="flex items-start gap-2">
