@@ -126,7 +126,8 @@ export const syncPublicContent = createServerFn({ method: "POST" })
           { field_key: "eyebrow", field_type: "text", label: "Üst Başlık", value_text: "Bosch · Makita · DeWalt · Hilti yetkili tedariki" },
           { field_key: "title", field_type: "text", label: "Ana Başlık", value_text: "Endüstriyel Donanımda Güvenilir Tedarik" },
           { field_key: "description", field_type: "text", label: "Açıklama", value_text: "Tesis, şantiye ve üretim hatlarınız için elektrikli el aletlerinden bağlantı elemanlarına uçtan uca profesyonel donanım çözümleri." },
-          { field_key: "cta_label", field_type: "text", label: "Buton Etiketi", value_text: "Teklif Talep Et" }
+          { field_key: "primary_cta_text", field_type: "text", label: "Birincil Buton", value_text: "Ürün Gruplarını İncele" },
+          { field_key: "secondary_cta_text", field_type: "text", label: "İkincil Buton", value_text: "Teklif Talep Et" }
         ];
         
         for (const f of fields) {
@@ -143,4 +144,5 @@ export const syncPublicContent = createServerFn({ method: "POST" })
 
     return { success: true };
   });
+
 
