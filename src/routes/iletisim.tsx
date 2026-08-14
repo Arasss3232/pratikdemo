@@ -39,7 +39,14 @@ function IletisimPage() {
   const { sections } = usePageContent("/iletisim");
   const hero = sections["hero"]?.content || {};
   
-  const [form, setForm] = useState({ name: "", email: "", phone: "", department: "", subject: "", message: "", kvkk: false });
+  const { data: cmsContact } = useSiteContent("contact");
+  const { data: cmsTopBar } = useSiteContent("top_bar");
+  
+  const address = cmsTopBar?.address || safeS.address;
+  const phone = cmsTopBar?.phone || safeS.phone;
+  const email = safeS.email;
+  const workingHours = cmsTopBar?.working_hours || safeS.working_hours;
+  const mapUrl = cmsContact?.map_embed_url || safeS.map_embed;
   const [msg, setMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   
@@ -70,39 +77,39 @@ function IletisimPage() {
   return (
     <SiteShell>
       <PageHero
-        title={hero.title?.value_text || "Bize Ulaşın"}
-        description={hero.description?.value_text || "Satış, teknik destek ve kurumsal talepleriniz için ekibimize ulaşın."}
+        title={cmsContact?.page_title || hero.title?.value_text || "Bize Ulaşın"}
+        description={cmsContact?.contact_subtitle || hero.description?.value_text || "Satış, teknik destek ve kurumsal talepleriniz için ekibimize ulaşın."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "İletişim" }]}
       />
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-16 grid lg:grid-cols-3 gap-10">
         <aside className="lg:col-span-1 flex flex-col gap-6">
-          {safeS.address && (
+          {address && (
             <div className="flex gap-3">
               <Icon name="location_on" className="text-primary" />
-              <div><p className="font-label-bold">Adres</p><p className="text-body-sm text-on-surface-variant whitespace-pre-line">{safeS.address}</p></div>
+              <div><p className="font-label-bold">Adres</p><p className="text-body-sm text-on-surface-variant whitespace-pre-line">{address}</p></div>
             </div>
           )}
-          {safeS.phone && (
+          {phone && (
             <div className="flex gap-3">
               <Icon name="call" className="text-primary" />
-              <div><p className="font-label-bold">Telefon</p><a href={`tel:${safeS.phone}`} className="text-body-sm text-on-surface-variant hover:text-primary">{safeS.phone}</a></div>
+              <div><p className="font-label-bold">Telefon</p><a href={`tel:${phone.replace(/[^\d]/g, "")}`} className="text-body-sm text-on-surface-variant hover:text-primary">{phone}</a></div>
             </div>
           )}
-          {safeS.email && (
+          {email && (
             <div className="flex gap-3">
               <Icon name="mail" className="text-primary" />
-              <div><p className="font-label-bold">E-posta</p><a href={`mailto:${safeS.email}`} className="text-body-sm text-on-surface-variant hover:text-primary">{safeS.email}</a></div>
+              <div><p className="font-label-bold">E-posta</p><a href={`mailto:${email}`} className="text-body-sm text-on-surface-variant hover:text-primary">{email}</a></div>
             </div>
           )}
-          {safeS.working_hours && (
+          {workingHours && (
             <div className="flex gap-3">
               <Icon name="schedule" className="text-primary" />
-              <div><p className="font-label-bold">Çalışma Saatleri</p><p className="text-body-sm text-on-surface-variant">{safeS.working_hours}</p></div>
+              <div><p className="font-label-bold">Çalışma Saatleri</p><p className="text-body-sm text-on-surface-variant">{workingHours}</p></div>
             </div>
           )}
-          {safeS.map_embed && (
+          {mapUrl && (
             <iframe
-              src={safeS.map_embed}
+              src={mapUrl}
               className="w-full aspect-video border border-outline-variant"
               loading="lazy"
               title="Konum haritası"

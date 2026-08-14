@@ -25,9 +25,9 @@ export function HomeHero() {
   const title = cmsContent?.main_title || legacyHero.title?.value_text || DEFAULT_TITLE;
   const description = cmsContent?.about_text || legacyHero.description?.value_text || DEFAULT_DESC;
   
-  const primaryText = legacyHero.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
+  const primaryText = cmsContent?.primary_cta_text || legacyHero.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
   const primaryUrl = legacyHero.primary_cta_url?.value_text || "/urunler";
-  const secondaryText = legacyHero.secondary_cta_text?.value_text || "Teklif Talep Et";
+  const secondaryText = cmsContent?.secondary_cta_text || legacyHero.secondary_cta_text?.value_text || "Teklif Talep Et";
   const secondaryUrl = legacyHero.secondary_cta_url?.value_text || "/teklif";
 
   const heroProduct = PRODUCTS[0];
@@ -97,8 +97,8 @@ export function HomeHero() {
             style={{ borderColor: "var(--public-navy-border)" }}
           >
             {[
-              { k: "Ürün Grupları", v: "6 ana kategori" },
-              { k: "Kurumsal Tedarik", v: "Sözleşmeli müşteri" },
+              { k: cmsContent?.stat_1_label || "Ürün Grupları", v: cmsContent?.stat_1_value || "6 ana kategori" },
+              { k: cmsContent?.stat_2_label || "Kurumsal Tedarik", v: cmsContent?.stat_2_value || "Sözleşmeli müşteri" },
               { k: "Teknik Yönlendirme", v: "Uzman ekip" },
               { k: "Hızlı İletişim", v: "Aynı gün geri dönüş" },
             ].map((m) => (

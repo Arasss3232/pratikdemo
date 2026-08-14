@@ -65,6 +65,7 @@ export function CorporateIntroduction({ section }: { section: PageSection }) {
 
 export function MissionVision({ section }: { section: PageSection }) {
   const c = section.content;
+  const { data: cmsCorporate } = useSiteContent("corporate");
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
       <div className="absolute inset-0 pub-blueprint opacity-30 pointer-events-none" aria-hidden />
@@ -80,7 +81,7 @@ export function MissionVision({ section }: { section: PageSection }) {
               {c.mission_title?.value_text || "Misyonumuz"}
             </h3>
             <p className="text-white/70 text-lg leading-relaxed">
-              {c.mission_desc?.value_text}
+              {cmsCorporate?.mission || c.mission_desc?.value_text}
             </p>
           </div>
 
@@ -94,7 +95,7 @@ export function MissionVision({ section }: { section: PageSection }) {
               {c.vision_title?.value_text || "Vizyonumuz"}
             </h3>
             <p className="text-white/70 text-lg leading-relaxed">
-              {c.vision_desc?.value_text}
+              {cmsCorporate?.vision || c.vision_desc?.value_text}
             </p>
           </div>
         </div>
