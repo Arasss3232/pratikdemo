@@ -9,26 +9,32 @@ type NavItemType = {
   id: string;
   label: string;
   icon: string;
-  category: "Global" | "Sayfalar" | "Sistem";
+  category: "Üst Bilgi & Footer" | "Kurumsal & Sayfalar" | "Sistem & Mesajlar";
   component: "content" | "settings" | "nav" | "placeholder" | "history";
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content" },
-  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
-  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content" },
+  // 1. Grup: Üst Bilgi & Footer
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Üst Bilgi & Footer", component: "content" },
+  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Üst Bilgi & Footer", component: "nav" },
+  { id: "footer", label: "Footer İçerikleri", icon: "view_agenda", category: "Üst Bilgi & Footer", component: "content" },
   
-  { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },
-  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content" },
-  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content" },
-  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", component: "content" },
-  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Sayfalar", component: "content" },
-  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Sayfalar", component: "content" },
-  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", component: "content" },
-  { id: "/kvkk", label: "Yasal Sayfalar", icon: "gavel", category: "Sayfalar", component: "content" },
+  // 2. Grup: Kurumsal & Sayfalar
+  { id: "/", label: "Ana Sayfa", icon: "home", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/hakkimizda", label: "Hakkımızda", icon: "corporate_fare", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/urunler", label: "Ürün Kategorileri", icon: "category", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/sektorel", label: "Sektörel Çözümler", icon: "precision_manufacturing", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/kvkk", label: "KVKK ve Yasal Sayfalar", icon: "gavel", category: "Kurumsal & Sayfalar", component: "content" },
   
-  { id: "sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
-  { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
+  // 3. Grup: Sistem & Mesajlar
+  { id: "sistem", label: "Global Sistem Mesajları", icon: "display_settings", category: "Sistem & Mesajlar", component: "content" },
+  { id: "global_settings", label: "Site Genel Ayarları", icon: "settings", category: "Sistem & Mesajlar", component: "settings" },
+  { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem & Mesajlar", component: "history" },
 ];
 
 
@@ -48,7 +54,7 @@ export function ContentManagement() {
           <span className="font-bold text-sm tracking-wide">CMS YÖNETİMİ</span>
         </div>
 
-        {["Global", "Sayfalar", "Sistem"].map(cat => (
+        {["Üst Bilgi & Footer", "Kurumsal & Sayfalar", "Sistem & Mesajlar"].map(cat => (
           <div key={cat} className="mb-6">
             <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">{cat}</h3>
             <div className="space-y-1">

@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useCategories } from "@/hooks/use-categories";
+import { usePageContent } from "@/hooks/use-page-content";
 import { useHydrated } from "@/hooks/use-hydrated";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
@@ -73,7 +74,13 @@ export function SiteHeader() {
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
-  const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
+  
+  // Normalize and merge navigation sources
+  const navLinks = dynamicNav.length > 0 
+    ? dynamicNav.map(item => ({ label: item.label, to: item.route }))
+    : NAV_LINKS;
+
+
 
 
   useEffect(() => {
@@ -167,14 +174,15 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-            {phone ? (
+            {settings.phone ? (
               <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
                 <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                <span className="truncate">{phone}</span>
+                <span className="truncate">{settings.phone}</span>
               </a>
             ) : (
               <div className="min-h-[28px]" />
             )}
+
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
@@ -187,9 +195,10 @@ export function SiteHeader() {
                 className="inline-flex items-center gap-1 min-h-[28px] font-medium hover:text-white transition-colors"
               >
                 <Icon name="chat" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                WhatsApp
+                {settings.whatsapp_label || "WhatsApp"}
               </a>
             )}
+
             <Link
               to="/teklif"
               className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
@@ -229,21 +238,23 @@ export function SiteHeader() {
                 {phone}
               </a>
             )}
-            {whatsapp && (
+            {settings.whatsapp && (
               <a
-                href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
+                href={`https://wa.me/${settings.whatsapp.replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Icon name="chat" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                WhatsApp
+                {settings.whatsapp_label || "WhatsApp"}
               </a>
             )}
-            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
-              Teklif Talep Et
+
+            <Link to={settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              {settings.teklif_label || "Teklif Talep Et"}
               <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
+
           </div>
 
         </div>
@@ -313,6 +324,7 @@ export function SiteHeader() {
                 </Link>
               )
             )}
+
           </nav>
 
           {/* Right actions */}
@@ -612,7 +624,7 @@ export function SiteHeader() {
                       <Icon name="call" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                       <span className="flex flex-col">
                         <span className="text-[11px] uppercase tracking-wider text-white/50">Telefon</span>
-                        <span className="text-[15px] font-semibold text-white truncate">{phone}</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{settings.phone}</span>
                       </span>
                     </a>
                   )}
@@ -627,7 +639,7 @@ export function SiteHeader() {
                       <Icon name="chat" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                       <span className="flex flex-col">
                         <span className="text-[11px] uppercase tracking-wider text-white/50">WhatsApp</span>
-                        <span className="text-[15px] font-semibold text-white truncate">{whatsapp}</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{settings.whatsapp}</span>
                       </span>
                     </a>
                   )}
@@ -729,6 +741,11 @@ export function SiteFooter() {
   const { settings: rawSettings } = useSiteSettings();
   const settings = rawSettings || {} as any;
   const currentYear = new Date().getFullYear();
+  
+  const { sections: footerSections } = usePageContent("footer");
+  const footerIdentity = footerSections["footer_identity"] || { content: {} };
+  const footerBottom = footerSections["footer_bottom"] || { content: {} };
+
   const address = settings.address;
   const phone = settings.phone;
   const email = settings.email;
@@ -765,7 +782,7 @@ export function SiteFooter() {
               <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
-              {settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
+              {footerIdentity.content.summary?.value_text || settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
             </p>
 
             <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
@@ -871,20 +888,21 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
-          <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
-          <p className="section-label text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
+          <p>{footerBottom.content.copyright?.value_text || settings.copyright || `© ${currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.`}</p>
+          <p className="section-label text-white/50">{footerBottom.content.footer_bottom_text?.value_text || settings.footer_bottom_text || "Endüstriyel Donanım · Kurumsal Tedarik"}</p>
         </div>
 
-        {settings.agency_attribution_visible && (
+
+        {(footerBottom.content.agency_attribution_visible?.value_text === "true" || settings.agency_attribution_visible) && (
           <div className="mt-8 pt-4 border-t border-white/5 flex justify-center">
             <a
-              href={settings.agency_attribution_url || "https://www.bilgintek.com"}
+              href={footerBottom.content.agency_attribution_url?.value_text || settings.agency_attribution_url || "https://www.bilgintek.com"}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bilgintek Yazılım ve Reklam Ajansı web sitesini yeni sekmede aç"
               className="text-[11px] tracking-wide text-white/40 hover:text-[var(--public-yellow-500)] transition-all duration-200 py-2 px-4 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--public-yellow-500)] focus-visible:outline-offset-4 rounded"
             >
-              {settings.agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
+              {footerBottom.content.agency_attribution_text?.value_text || settings.agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
             </a>
           </div>
         )}

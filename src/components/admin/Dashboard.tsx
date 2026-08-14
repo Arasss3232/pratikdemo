@@ -122,7 +122,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
 
   const setup = useMemo(
     () => [
-      { label: "Site ayarlarını tamamla", done: false, tab: "settings" as AdminTab, icon: "settings" },
+      { label: "Site ayarlarını tamamla", done: false, tab: "content" as AdminTab, icon: "settings" },
       { label: "En az bir kategori ekle", done: stats.categories > 0, tab: "categories" as AdminTab, icon: "category" },
       { label: "En az bir katalog yükle", done: stats.catalogs > 0, tab: "catalogs" as AdminTab, icon: "menu_book" },
       
@@ -187,7 +187,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
                 Gelen Mesajlar
               </button>
               <button
-                onClick={() => onNavigate("settings")}
+                onClick={() => onNavigate("content")}
                 className="admin-btn"
                 style={{
                   height: 40,
