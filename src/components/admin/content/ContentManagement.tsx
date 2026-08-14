@@ -36,7 +36,7 @@ export function ContentManagement() {
   return (
     <div className="flex h-[800px] bg-[var(--admin-surface)] rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
       {/* 1. SIDEBAR: Section Navigation */}
-      <div className="w-72 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-6 space-y-8 overflow-y-auto">
+      <div className="w-72 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-6 space-y-8 overflow-y-auto admin-sidebar-scroll">
         <div className="flex items-center gap-3 px-3 mb-4">
           <div className="h-10 w-10 rounded-xl bg-[var(--admin-yellow)] flex items-center justify-center text-[var(--admin-navy)] shadow-lg shadow-[var(--admin-yellow)]/20">
             <Icon name="edit_note" className="text-[24px]" />
