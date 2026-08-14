@@ -5,31 +5,33 @@ import { usePageContent } from "@/hooks/use-page-content";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { PRODUCTS } from "@/data/catalog";
 
-
+// HARDCODED FALLBACKS (Zero-downtime safety)
 const DEFAULT_TITLE = "İşinize güç katan\nprofesyonel hırdavat çözümleri.";
 const DEFAULT_DESC =
   "Elektrikli el aletlerinden bağlantı elemanlarına, iş güvenliğinden endüstriyel makinelere; sanayi tesisleri ve şantiyeler için yetkili distribütör güvencesiyle tek noktadan tedarik.";
 
 export function HomeHero() {
+  // Legacy structured content (optional fallback chain)
   const { sections, loading: pageLoading } = usePageContent("/");
-  const { data: siteContent, isLoading: flexLoading } = useSiteContent("home");
   
-  const heroSection = sections["hero"];
-  const c = heroSection?.content || {};
+  // NEW Dynamic CMS Content (Priority)
+  // page_section: 'hero'
+  const { data: cmsContent, isLoading: cmsLoading } = useSiteContent("hero");
+  
+  const legacyHero = sections["hero"]?.content || {};
 
-  const flexHero = siteContent?.hero || {};
-
-  const title = flexHero.title || c.title?.value_text || DEFAULT_TITLE;
-  const description = flexHero.subtitle || c.description?.value_text || DEFAULT_DESC;
-  const primaryText = c.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
-  const primaryUrl = c.primary_cta_url?.value_text || "/urunler";
-  const secondaryText = flexHero.cta_text || c.secondary_cta_text?.value_text || "Teklif Talep Et";
-  const secondaryUrl = flexHero.cta_link || c.secondary_cta_url?.value_text || "/teklif";
-
+  // Resolve content with hierarchical fallback: 
+  // 1. CMS (Supabase) -> 2. Legacy CMS (page_sections) -> 3. Hardcoded Static Default
+  const title = cmsContent?.main_title || legacyHero.title?.value_text || DEFAULT_TITLE;
+  const description = cmsContent?.about_text || legacyHero.description?.value_text || DEFAULT_DESC;
+  
+  const primaryText = legacyHero.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
+  const primaryUrl = legacyHero.primary_cta_url?.value_text || "/urunler";
+  const secondaryText = legacyHero.secondary_cta_text?.value_text || "Teklif Talep Et";
+  const secondaryUrl = legacyHero.secondary_cta_url?.value_text || "/teklif";
 
   const heroProduct = PRODUCTS[0];
-  const heroImg = c.hero_image?.media_url || heroProduct.productImg;
-
+  const heroImg = legacyHero.hero_image?.media_url || heroProduct.productImg;
 
   return (
     <section
