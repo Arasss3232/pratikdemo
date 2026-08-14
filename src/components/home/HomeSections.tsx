@@ -397,13 +397,15 @@ export function FeaturedProducts() {
  * 06 — Why Choose Us (warm-light with strong navy framing)
  * ===================================================================== */
 export function WhyChoose() {
-  const items = [
+  const cmsItems = sections.why_choose?.content.reasons?.value_json;
+  const defaultItems = [
     { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle uygun ürünü ilk turda öneriyoruz." },
     { k: "02", t: "Kurumsal Tedarik", d: "Cari kart, fatura, teslimat ve garanti süreçleri kurumsal standartlarda yürütülür." },
     { k: "03", t: "Teklif Şeffaflığı", d: "Teklif, stok durumu ve teslim süresi konusunda net bilgi verir; süreç boyunca haber veririz." },
     { k: "04", t: "Kolay İletişim", d: "Telefon, e-posta veya WhatsApp — hangisi kolaysa. Muhatabınız değişmez." },
     { k: "05", t: "Yedek Parça Sürekliliği", d: "Satılan ürünlerin yedek parçası ve sarfları için sürekli tedarik desteği." },
   ];
+  const items = Array.isArray(cmsItems) ? cmsItems : defaultItems;
   return (
     <section className="relative" style={{ backgroundColor: NAVY_950, padding: "48px 0" }}>
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
