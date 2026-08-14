@@ -396,7 +396,7 @@ export function FeaturedProducts() {
 /* =====================================================================
  * 06 — Why Choose Us (warm-light with strong navy framing)
  * ===================================================================== */
-export function WhyChoose() {
+export function WhyChoose({ sections = {} as any }: { sections?: any }) {
   const cmsItems = sections.why_choose?.content.reasons?.value_json;
   const defaultItems = [
     { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle uygun ürünü ilk turda öneriyoruz." },
