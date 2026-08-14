@@ -10,7 +10,7 @@ const DEFAULT_DESC =
   "Elektrikli el aletlerinden bağlantı elemanlarına, iş güvenliğinden endüstriyel makinelere; sanayi tesisleri ve şantiyeler için yetkili distribütör güvencesiyle tek noktadan tedarik.";
 
 export function HomeHero() {
-  const { sections, loading } = usePageContent("/");
+  const { sections } = usePageContent("/");
   
   const heroSection = sections["hero"];
   const c = heroSection?.content || {};
@@ -24,7 +24,7 @@ export function HomeHero() {
 
 
   const heroProduct = PRODUCTS[0];
-  const heroImg = c.hero_image?.media_url || heroProduct.productImg;
+  const heroImg = c.hero_image?.value_text || heroProduct.productImg;
 
 
   return (

@@ -74,6 +74,9 @@ export function SiteHeader() {
   const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
+  const { sections: globalSections } = usePageContent("global");
+  
+  const topBar = globalSections["top_bar"]?.content || {};
   
   // Normalize and merge navigation sources
   const navLinks = dynamicNav.length > 0 
@@ -218,41 +221,41 @@ export function SiteHeader() {
       >
         <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
           <div className="flex items-center gap-6">
-            {settings.working_hours && (
+            {(topBar.working_hours?.value_text || settings.working_hours) && (
               <span className="inline-flex items-center gap-2">
-                <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.working_hours}
+                <Icon name={topBar.working_hours?.icon || "schedule"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {topBar.working_hours?.value_text || settings.working_hours}
               </span>
             )}
-            {settings.address && (
+            {(topBar.address?.value_text || settings.address) && (
               <span className="inline-flex items-center gap-2">
-                <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.address}
+                <Icon name={topBar.address?.icon || "location_on"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {topBar.address?.value_text || settings.address}
               </span>
             )}
           </div>
           <div className="flex items-center gap-5">
-            {phone && (
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
-                <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {phone}
+            {(topBar.phone?.value_text || phone) && (
+              <a href={`tel:${(topBar.phone?.value_text || phone).replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Icon name={topBar.phone?.icon || "call"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {topBar.phone?.value_text || phone}
               </a>
             )}
-            {settings.whatsapp && (
+            {(topBar.whatsapp?.value_text || settings.whatsapp) && (
               <a
-                href={`https://wa.me/${settings.whatsapp.replace(/[^\d]/g, "")}`}
+                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp).replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
-                <Icon name="chat" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.whatsapp_label || "WhatsApp"}
+                <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {topBar.whatsapp?.label || topBar.whatsapp?.value_text || settings.whatsapp_label || "WhatsApp"}
               </a>
             )}
 
-            <Link to={settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
-              {settings.teklif_label || "Teklif Talep Et"}
-              <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
+            <Link to={topBar.cta?.link_url || settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              {topBar.cta?.value_text || settings.teklif_label || "Teklif Talep Et"}
+              <Icon name={topBar.cta?.icon || "arrow_forward"} className="text-[14px]" aria-hidden="true" />
             </Link>
 
           </div>

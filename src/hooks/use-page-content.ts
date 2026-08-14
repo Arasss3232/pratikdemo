@@ -9,6 +9,8 @@ export type ContentField = {
   value_json: any | null;
   media_url: string | null;
   link_url: string | null;
+  icon: string | null;
+  label: string | null;
 };
 
 export type PageSection = {
@@ -53,7 +55,9 @@ export function usePageContent(route: string, preview = false) {
               value_text,
               value_json,
               media_url,
-              link_url
+              link_url,
+              icon,
+              label
             )
           `)
           .eq("page_id", page.id)
