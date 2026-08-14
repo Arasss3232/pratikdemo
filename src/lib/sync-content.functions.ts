@@ -50,11 +50,11 @@ export const syncPublicContent = createServerFn({ method: "POST" })
       
       if (section) {
         const fields = [
-          { field_key: "working_hours", field_type: "text", label: "Çalışma Saatleri", value_text: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00" },
-          { field_key: "address", field_type: "text", label: "Adres Özeti", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
-          { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10" },
-          { field_key: "whatsapp_label", field_type: "text", label: "WhatsApp Etiketi", value_text: "WhatsApp" },
-          { field_key: "cta_label", field_type: "text", label: "Buton Etiketi", value_text: "Teklif Talep Et" }
+          { field_key: "working_hours", field_type: "text", label: "Çalışma Saatleri", value_text: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00", icon: "schedule" },
+          { field_key: "address", field_type: "text", label: "Adres", value_text: "Dudullu OSB, Ümraniye / İstanbul", icon: "location_on" },
+          { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10", icon: "call", link_url: "tel:05533069210" },
+          { field_key: "whatsapp", field_type: "text", label: "WhatsApp", value_text: "WhatsApp", icon: "chat", link_url: "https://wa.me/905533069210" },
+          { field_key: "teklif_al", field_type: "text", label: "Teklif Talep Et", value_text: "Teklif Talep Et", icon: "arrow_forward", link_url: "/teklif" }
         ];
         
         for (const f of fields) {
@@ -63,7 +63,8 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             field_key: f.field_key,
             field_type: f.field_type,
             label: f.label,
-            value_text: f.value_text
+            value_text: f.value_text,
+            link_url: f.link_url || null
           }, { onConflict: "section_id,field_key" });
         }
       }
@@ -72,40 +73,60 @@ export const syncPublicContent = createServerFn({ method: "POST" })
     // 3. Sync Footer
     const footerId = getPageId("footer");
     if (footerId) {
-      const footerSection = {
-        page_id: footerId,
-        section_key: "footer_content",
-        internal_label: "Footer İçeriği",
-        display_order: 1,
-        is_active: true,
-        section_type: "footer"
-      };
+      const footerSections = [
+        {
+          key: "footer_identity",
+          label: "Footer Kimliği",
+          fields: [
+            { field_key: "logo_alt", field_type: "text", label: "Logo Alt Metni", value_text: "Pratik Tedarik Yapı" },
+            { field_key: "summary", field_type: "text", label: "Şirket Özeti", value_text: "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim." }
+          ]
+        },
+        {
+          key: "footer_contact",
+          label: "İletişim Bilgileri",
+          fields: [
+            { field_key: "address", field_type: "text", label: "Adres", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
+            { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10" },
+            { field_key: "email", field_type: "text", label: "E-posta", value_text: "bilgi@pratiktedarik.com" },
+            { field_key: "hours", field_type: "text", label: "Çalışma Günleri", value_text: "Pzt – Cmt · 08:30 – 18:00" }
+          ]
+        },
+        {
+          key: "footer_bottom",
+          label: "Alt Bilgi",
+          fields: [
+            { field_key: "copyright", field_type: "text", label: "Telif Hakkı", value_text: "© 2026 Pratik Endüstriyel. Tüm hakları saklıdır." },
+            { field_key: "attribution_text", field_type: "text", label: "Ajans Metni", value_text: "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır." },
+            { field_key: "attribution_url", field_type: "text", label: "Ajans Linki", value_text: "https://www.bilgintek.com" }
+          ]
+        }
+      ];
       
-      const { data: section } = await supabase.from("page_sections").upsert(footerSection, { onConflict: "page_id,section_key" }).select().single();
-      
-      if (section) {
-        const fields = [
-          { field_key: "summary", field_type: "text", label: "Şirket Özeti", value_text: "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim." },
-          { field_key: "address", field_type: "text", label: "Adres", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
-          { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10" },
-          { field_key: "email", field_type: "text", label: "E-posta", value_text: "bilgi@pratiktedarik.com" },
-          { field_key: "hours", field_type: "text", label: "Çalışma Günleri", value_text: "Pzt – Cmt · 08:30 – 18:00" },
-          { field_key: "copyright", field_type: "text", label: "Telif Hakkı", value_text: "© 2026 Pratik Endüstriyel. Tüm hakları saklıdır." },
-          { field_key: "attribution_text", field_type: "text", label: "Ajans Metni", value_text: "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır." },
-          { field_key: "attribution_url", field_type: "text", label: "Ajans Linki", value_text: "https://www.bilgintek.com" }
-        ];
+      for (const fs of footerSections) {
+        const { data: section } = await supabase.from("page_sections").upsert({
+          page_id: footerId,
+          section_key: fs.key,
+          internal_label: fs.label,
+          display_order: 1,
+          is_active: true,
+          section_type: "footer"
+        }, { onConflict: "page_id,section_key" }).select().single();
         
-        for (const f of fields) {
-          await supabase.from("section_content").upsert({
-            section_id: section.id,
-            field_key: f.field_key,
-            field_type: f.field_type,
-            label: f.label,
-            value_text: f.value_text
-          }, { onConflict: "section_id,field_key" });
+        if (section) {
+          for (const f of fs.fields) {
+            await supabase.from("section_content").upsert({
+              section_id: section.id,
+              field_key: f.field_key,
+              field_type: f.field_type,
+              label: f.label,
+              value_text: f.value_text
+            }, { onConflict: "section_id,field_key" });
+          }
         }
       }
     }
+
 
     // 4. Sync Homepage Hero
     const homeId = getPageId("/");
