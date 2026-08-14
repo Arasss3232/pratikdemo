@@ -18,7 +18,7 @@ const NAV_ITEMS: NavItemType[] = [
   // Global sections
   { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Genel", pageSection: "top_bar" },
   { id: "header", label: "Header ve Navigasyon", icon: "ad_units", category: "Genel", pageSection: "header" },
-  { id: "footer", label: "Footer Bilgileri", icon: "view_agenda", category: "Genel", pageSection: "footer" },
+  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Genel", pageSection: "footer" },
   
   // Page sections
   { id: "home", label: "Ana Sayfa", icon: "home", category: "Sayfalar", pageSection: "hero" },
