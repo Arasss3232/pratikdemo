@@ -118,13 +118,16 @@ export function HeaderNavigationEditor() {
         const { error } = await supabase
           .from("section_content")
           .update(updateData)
-          .eq("id", field.id);
+          .eq("id", field.id)
+          .select()
+          .single();
         if (error) throw error;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["navigation"] });
       queryClient.invalidateQueries({ queryKey: ["cms-sections"] });
+      queryClient.invalidateQueries({ queryKey: ["page-content"] });
       toast.success("Header navigasyonu ve ayarları kaydedildi.");
     },
     onError: (err) => {

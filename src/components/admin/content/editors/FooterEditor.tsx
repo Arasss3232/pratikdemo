@@ -68,7 +68,9 @@ export function FooterEditor() {
           const { error } = await supabase
             .from("section_content")
             .update(updateData)
-            .eq("id", field.id);
+            .eq("id", field.id)
+            .select()
+            .single();
           if (error) throw error;
         }
       }
@@ -76,6 +78,7 @@ export function FooterEditor() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cms-sections", "footer"] });
       queryClient.invalidateQueries({ queryKey: ["page-content", "footer"] });
+      queryClient.invalidateQueries({ queryKey: ["cms-sections", "footer"] });
       toast.success("Footer içerikleri güncellendi.");
     },
     onError: (err) => {
