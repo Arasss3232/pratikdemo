@@ -1,8 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 
+// This function can be called via URL if needed for initial seed
 export const syncPublicContent = createServerFn({ method: "POST" })
   .handler(async () => {
+
     console.log("Starting Content Synchronization...");
 
     // 1. Ensure Site Pages exist
