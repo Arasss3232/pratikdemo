@@ -1,17 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SiteShell } from "../components/site-shell";
-import { PageHero } from "../components/marketing/PageHero";
-import { usePageContent } from "@/hooks/use-page-content";
-import { 
-  CorporateIntroduction, 
-  MissionVision, 
-  CorporateValues, 
-  WorkingProcess, 
-  CorporateAdvantages, 
-  CorporateCTA,
-  ContactStrip
-} from "../components/corporate/CorporateSections";
+import { useSiteContent } from "@/hooks/use-site-content";
+import { usePageContent, type PageSection } from "@/hooks/use-page-content";
+import { CorporateIntroduction, MissionVision, CorporateValues, WorkingProcess, CorporateAdvantages, CorporateCTA, ContactStrip } from "@/components/corporate/CorporateSections";
+import { SiteShell } from "@/components/site-shell";
+import { PageHero } from "@/components/marketing/PageHero";
 import { Loader2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/kurumsal")({
   head: () => ({
@@ -29,6 +22,7 @@ export const Route = createFileRoute("/kurumsal")({
 
 function KurumsalPage() {
   const { sections, loading } = usePageContent("/kurumsal");
+  const { data: cmsCorporate } = useSiteContent("corporate");
 
   if (loading) {
     return (
@@ -53,8 +47,8 @@ function KurumsalPage() {
     <SiteShell>
       {hero && (
         <PageHero
-          title={hero.content.title?.value_text || "Kurumsal"}
-          description={hero.content.description?.value_text ?? undefined}
+          title={cmsCorporate?.page_title || hero.content.title?.value_text || "Kurumsal"}
+          description={cmsCorporate?.page_subtitle || (hero.content.description?.value_text ?? undefined)}
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
         />
       )}
@@ -70,4 +64,3 @@ function KurumsalPage() {
     </SiteShell>
   );
 }
-

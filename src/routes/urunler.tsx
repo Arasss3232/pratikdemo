@@ -4,6 +4,7 @@ import { PageHero } from "../components/marketing/PageHero";
 import { CategoryCard } from "../components/marketing/CategoryCard";
 import { useCategories } from "@/hooks/use-categories";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/urunler")({
   head: () => ({
@@ -46,6 +47,7 @@ function UrunlerLayout() {
   const isIndex = matchRoute({ to: "/urunler" });
   const { categories, isLoading } = useCategories();
   const { sections } = usePageContent("/urunler");
+  const { data: cmsProducts } = useSiteContent("products");
   const hero = sections["hero"]?.content || {};
   
   if (!isIndex) return <Outlet />;
@@ -54,8 +56,8 @@ function UrunlerLayout() {
     <SiteShell>
       <>
         <PageHero
-          title={hero.title?.value_text || "Ürün Kategorileri"}
-          description={hero.description?.value_text || "20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürün grubu için uzman ekibimizden kurumsal teklif alabilirsiniz."}
+          title={cmsProducts?.page_title || hero.title?.value_text || "Ürün Kategorileri"}
+          description={cmsProducts?.page_description || hero.description?.value_text || "20.000'i aşkın profesyonel endüstriyel ürünümüzü kategoriler halinde inceleyin. Aradığınız ürün grubu için uzman ekibimizden kurumsal teklif alabilirsiniz."}
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Ürün Kategorileri" }]}
         />
         <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20">

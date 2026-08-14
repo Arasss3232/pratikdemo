@@ -3,6 +3,7 @@ import { SiteShell } from "../components/site-shell";
 import { PageHero } from "../components/marketing/PageHero";
 import { Icon } from "../components/site-shell";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 import { supabase } from "@/integrations/supabase/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -48,13 +49,14 @@ function KataloglarPage() {
   });
 
   const { sections } = usePageContent("/kataloglar");
+  const { data: cmsCatalogs } = useSiteContent("catalogs");
   const hero = sections["hero"]?.content || {};
 
   return (
     <SiteShell>
       <PageHero
-        title={hero.title?.value_text || "Dijital Kataloglar"}
-        description={hero.description?.value_text || "Profesyonel ürün gruplarımıza ait teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
+        title={cmsCatalogs?.page_title || hero.title?.value_text || "Dijital Kataloglar"}
+        description={cmsCatalogs?.page_description || hero.description?.value_text || "Profesyonel ürün gruplarımıza ait teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kataloglar" }]}
       />
       

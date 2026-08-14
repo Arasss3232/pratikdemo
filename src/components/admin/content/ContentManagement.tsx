@@ -23,6 +23,9 @@ const NAV_ITEMS: NavItemType[] = [
   // Page sections
   { id: "home", label: "Ana Sayfa", icon: "home", category: "Sayfalar", pageSection: "hero" },
   { id: "corporate", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", pageSection: "corporate" },
+  { id: "products", label: "Ürünler Sayfası", icon: "category", category: "Sayfalar", pageSection: "products" },
+  { id: "catalogs", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", pageSection: "catalogs" },
+  { id: "dealerships", label: "Bayiliklerimiz Sayfası", icon: "handshake", category: "Sayfalar", pageSection: "dealerships" },
   { id: "contact", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", pageSection: "contact" },
 ];
 

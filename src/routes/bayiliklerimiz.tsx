@@ -4,6 +4,7 @@ import { SiteShell } from "../components/site-shell";
 import { useHomeBrands } from "../hooks/use-home-data";
 import { PageHero } from "../components/marketing/PageHero";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/bayiliklerimiz")({
   head: () => ({
@@ -24,13 +25,14 @@ function BayiliklerimizPage() {
   const { data: brands = [], isLoading } = useHomeBrands();
   const [selectedBrand, setSelectedBrand] = useState<any>(null);
   const { sections } = usePageContent("/bayiliklerimiz");
+  const { data: cmsDealerships } = useSiteContent("dealerships");
   const hero = sections["hero"]?.content || {};
 
   return (
     <SiteShell>
       <PageHero
-        title={hero.title?.value_text || "Bayiliklerimiz"}
-        description={hero.description?.value_text || "Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin."}
+        title={cmsDealerships?.page_title || hero.title?.value_text || "Bayiliklerimiz"}
+        description={cmsDealerships?.page_description || hero.description?.value_text || "Yetkili bayisi olduğumuz ve birlikte çalıştığımız güçlü markaları keşfedin."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Bayiliklerimiz" }]}
       />
 
