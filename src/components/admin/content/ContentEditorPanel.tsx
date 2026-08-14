@@ -57,6 +57,9 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
       footer: "Footer Bilgileri ve Sosyal Medya",
       hero: "Ana Sayfa Karşılama (Hero) Bölümü",
       corporate: "Kurumsal Sayfası İçerikleri",
+      products: "Ürünler Sayfası İçerikleri",
+      catalogs: "Kataloglar Sayfası İçerikleri",
+      dealerships: "Bayiliklerimiz Sayfası İçerikleri",
       contact: "İletişim Sayfası ve Form Bilgileri"
     };
     return titles[section] || section.toUpperCase();
@@ -64,6 +67,7 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
 
   const getFieldLabel = (key: string) => {
     const labels: Record<string, string> = {
+      // Global
       working_hours: "Çalışma Saatleri",
       address: "Adres Bilgisi",
       phone: "Telefon Numarası",
@@ -84,6 +88,8 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
       instagram_url: "Instagram Linki",
       linkedin_url: "LinkedIn Linki",
       copyright_text: "Telif Hakkı (Copyright) Metni",
+      
+      // Home
       main_title: "Hero Ana Başlık",
       about_text: "Hero Açıklama Metni",
       primary_cta_text: "Hero Birincil Buton",
@@ -93,11 +99,17 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
       stat_2_label: "İstatistik 2 Başlık",
       stat_2_value: "İstatistik 2 Değer",
       cta_banner_text: "Hero Alt Banner Metni",
-      about_title: "Kurumsal Başlık",
-      about_content: "Hakkımızda Metni",
+      
+      // Corporate
+      about_title: "Hakkımızda Başlık",
+      about_content: "Hakkımızda Kısa Metin",
       mission: "Misyonumuz",
       vision: "Vizyonumuz",
-      page_title: "İletişim Sayfa Başlığı",
+      page_title: "Sayfa Başlığı",
+      page_subtitle: "Sayfa Alt Başlığı",
+      
+      // Common
+      page_description: "Sayfa Açıklaması",
       form_title: "Form Başlığı",
       map_embed_url: "Google Harita Embed URL",
       contact_subtitle: "İletişim Alt Başlık"

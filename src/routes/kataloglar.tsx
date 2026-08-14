@@ -48,13 +48,14 @@ function KataloglarPage() {
   });
 
   const { sections } = usePageContent("/kataloglar");
+  const { data: cmsCatalogs } = useSiteContent("catalogs");
   const hero = sections["hero"]?.content || {};
 
   return (
     <SiteShell>
       <PageHero
-        title={hero.title?.value_text || "Dijital Kataloglar"}
-        description={hero.description?.value_text || "Profesyonel ürün gruplarımıza ait teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
+        title={cmsCatalogs?.page_title || hero.title?.value_text || "Dijital Kataloglar"}
+        description={cmsCatalogs?.page_description || hero.description?.value_text || "Profesyonel ürün gruplarımıza ait teknik kataloglarımızı online inceleyebilir veya PDF olarak indirebilirsiniz."}
         breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kataloglar" }]}
       />
       
