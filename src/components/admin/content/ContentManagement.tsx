@@ -14,9 +14,9 @@ type NavItemType = {
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "menu", category: "Global", component: "nav" },
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
-  { id: "footer", label: "Footer", icon: "view_agenda", category: "Global", component: "nav" },
+  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content" },
   
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },
   { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content" },
@@ -27,9 +27,10 @@ const NAV_ITEMS: NavItemType[] = [
   { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", component: "content" },
   { id: "/kvkk", label: "Yasal Sayfalar", icon: "gavel", category: "Sayfalar", component: "content" },
   
-  { id: "/sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
+  { id: "sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
   { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
 ];
+
 
 
 export function ContentManagement() {
@@ -73,7 +74,7 @@ export function ContentManagement() {
       {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
       <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
         <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id} />}
+          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} />}
           {activeItem.component === "settings" && <SettingsPanel />}
           {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
           {activeItem.component === "history" && <HistoryPanel />}

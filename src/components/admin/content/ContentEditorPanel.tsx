@@ -86,7 +86,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
   if (!page) return <div className="p-8 text-white/40">Bu rota için sayfa kaydı bulunamadı.</div>;
 
-  const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json') => {
+  const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json' | 'icon') => {
     setLocalSections(prev => prev.map(s => {
       if (s.id !== sectionId) return s;
       return {
@@ -95,13 +95,15 @@ export function ContentEditorPanel({ route }: { route: string }) {
           if (f.id !== fieldId) return f;
           if (type === 'text') return { ...f, value_text: value };
           if (type === 'link') return { ...f, link_url: value };
-          if (type === 'media') return { ...f, media_url: value };
+          if (type === 'icon') return { ...f, icon: value };
+          if (type === 'media') return { ...f, value_text: value };
           if (type === 'json') return { ...f, value_json: value };
           return f;
         })
       };
     }));
   };
+
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -148,9 +150,16 @@ export function ContentEditorPanel({ route }: { route: string }) {
         {localSections.length === 0 ? (
           <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
             <Layout size={48} className="mx-auto mb-4 opacity-50" />
-            <p>Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
+            <p className="mb-4">Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
+            <button 
+              onClick={() => window.location.href = '/admin/sync'}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+            >
+              Mevcut Site İçeriğini Senkronize Et
+            </button>
           </div>
         ) : (
+
           localSections.map((section) => (
             <div key={section.id} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
               <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
@@ -177,11 +186,46 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
 
                     {field.field_type === 'text' && (
-                      <textarea 
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                        value={field.value_text || ""}
-                        onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
-                      />
+                      <div className="space-y-3">
+                        <textarea 
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                          value={field.value_text || ""}
+                          onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
+                        />
+                        
+                        {(field.link_url !== undefined || field.icon !== undefined) && (
+                          <div className="flex flex-wrap gap-4 p-3 bg-black/20 rounded-lg border border-white/5">
+                            {field.link_url !== undefined && (
+                              <div className="flex-1 min-w-[200px] space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">Yönlendirme URL</span>
+                                <div className="relative">
+                                  <LinkIcon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.link_url || ""}
+                                    placeholder="/rota veya https://..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {field.icon !== undefined && (
+                              <div className="w-32 space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">İkon (Material)</span>
+                                <div className="relative">
+                                  <Globe size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.icon || ""}
+                                    placeholder="call, mail..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'icon')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     )}
 
                     {field.field_type === 'link' && (
@@ -207,11 +251,12 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
                     {field.field_type === 'image' && (
                       <FileUploadField 
-                        value={field.media_url || ""}
-                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'media')}
+                        value={field.value_text || ""}
+                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')}
                         label="Görsel Seç"
                       />
                     )}
+
                   </div>
                 ))}
               </div>

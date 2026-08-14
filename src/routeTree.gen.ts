@@ -26,6 +26,7 @@ import { Route as BayiliklerimizRouteImport } from './routes/bayiliklerimiz'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminSyncRouteImport } from './routes/admin.sync'
+import { Route as ApiPublicSyncTriggerRouteImport } from './routes/api/public/sync-trigger'
 
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
@@ -112,6 +113,11 @@ const AdminSyncRoute = AdminSyncRouteImport.update({
   path: '/sync',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicSyncTriggerRoute = ApiPublicSyncTriggerRouteImport.update({
+  id: '/api/public/sync-trigger',
+  path: '/api/public/sync-trigger',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
   '/admin/sync': typeof AdminSyncRoute
+  '/api/public/sync-trigger': typeof ApiPublicSyncTriggerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
   '/admin/sync': typeof AdminSyncRoute
+  '/api/public/sync-trigger': typeof ApiPublicSyncTriggerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
   '/admin/sync': typeof AdminSyncRoute
+  '/api/public/sync-trigger': typeof ApiPublicSyncTriggerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/urunler'
     | '/admin/sync'
+    | '/api/public/sync-trigger'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/urunler'
     | '/admin/sync'
+    | '/api/public/sync-trigger'
   id:
     | '__root__'
     | '/'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/teklif'
     | '/urunler'
     | '/admin/sync'
+    | '/api/public/sync-trigger'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -248,6 +260,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeklifRoute: typeof TeklifRoute
   UrunlerRoute: typeof UrunlerRoute
+  ApiPublicSyncTriggerRoute: typeof ApiPublicSyncTriggerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSyncRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/sync-trigger': {
+      id: '/api/public/sync-trigger'
+      path: '/api/public/sync-trigger'
+      fullPath: '/api/public/sync-trigger'
+      preLoaderRoute: typeof ApiPublicSyncTriggerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -401,6 +421,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeklifRoute: TeklifRoute,
   UrunlerRoute: UrunlerRoute,
+  ApiPublicSyncTriggerRoute: ApiPublicSyncTriggerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
