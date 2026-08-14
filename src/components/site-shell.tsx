@@ -62,6 +62,8 @@ const PRODUCT_GROUPS = [
 
 export function SiteHeader() {
   const isHydrated = useHydrated();
+  const { settings: rawSettings } = useSiteSettings();
+  const settings = rawSettings || ({} as any);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
