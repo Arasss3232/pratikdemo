@@ -55,7 +55,7 @@ export function HomeHero() {
           <SectionMarker number="01" label="Endüstriyel Tedarik" tone="dark" className="mb-8" />
 
           <h1 className="pub-display text-white mt-6 mb-8 whitespace-pre-line">
-            {title.split("\n").map((line, i) => (
+            {title.split("\n").map((line: string, i: number) => (
               <span key={i} className="block">
                 {i === title.split("\n").length - 1 && title.includes("\n") ? (
                   <>
