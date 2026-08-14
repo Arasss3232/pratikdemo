@@ -191,21 +191,23 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
               </CardHeader>
               <CardContent className="p-8 space-y-8">
                 {Object.entries(draftData).map(([key, value]) => {
-                  const isLongText = value.length > 100 || key.includes('content') || key.includes('description') || key.includes('mission') || key.includes('vision');
+                  const isLongText = value.length > 100 || key.includes('content') || key.includes('description') || key.includes('mission') || key.includes('vision') || key.includes('address');
+                  const isUrl = key.includes('url') || key.includes('link');
+                  const isPhone = key.includes('phone') || key.includes('whatsapp_number');
                   
                   return (
-                    <div key={key} className="space-y-3">
+                    <div key={key} className="space-y-3 group/field">
                       <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold text-white/50 uppercase tracking-[0.15em] flex items-center gap-2">
-                          {key.includes('link') || key.includes('url') ? <LinkIcon size={12} className="text-[var(--admin-yellow)]/70" /> : <Type size={12} className="text-[var(--admin-yellow)]/70" />}
+                        <label className="text-[11px] font-bold text-white/50 uppercase tracking-[0.15em] flex items-center gap-2 group-hover/field:text-[var(--admin-yellow)]/70 transition-colors">
+                          {isUrl ? <LinkIcon size={12} /> : isPhone ? <Globe size={12} /> : <Type size={12} />}
                           {getFieldLabel(key)}
                         </label>
-                        <code className="text-[9px] font-mono text-white/10">{key}</code>
+                        <code className="text-[9px] font-mono text-white/10 opacity-0 group-hover/field:opacity-100 transition-opacity">{key}</code>
                       </div>
 
                       {isLongText ? (
                         <Textarea
-                          className="bg-black/40 border-white/10 rounded-xl min-h-[140px] focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10"
+                          className="bg-black/40 border-white/10 rounded-xl min-h-[120px] focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10 resize-y"
                           value={value}
                           onChange={(e) => updateDraft(key, e.target.value)}
                           placeholder={`${getFieldLabel(key)} içeriğini girin...`}
