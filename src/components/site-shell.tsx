@@ -70,13 +70,13 @@ export function SiteHeader() {
   const menuBtnRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
-  const { settings: rawSettings } = useSiteSettings();
-  const settings = rawSettings || {} as any;
+  const { settings } = useSiteSettings();
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
   const { sections: globalSections } = usePageContent("global");
+  const { sections: topBarSections } = usePageContent("top_bar");
   
-  const topBar = globalSections["top_bar"]?.content || {};
+  const topBar = topBarSections["top_bar_content"]?.content || {};
   
   // Normalize and merge navigation sources
   const navLinks = dynamicNav.length > 0 
@@ -177,14 +177,14 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-            {settings.phone ? (
-              <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
-                <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                <span className="truncate">{settings.phone}</span>
-              </a>
-            ) : (
-              <div className="min-h-[28px]" />
-            )}
+                {settings.phone ? (
+                  <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+                    <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                    <span className="truncate">{settings.phone}</span>
+                  </a>
+                ) : (
+                  <div className="min-h-[28px]" />
+                )}
 
           </div>
 
@@ -235,27 +235,27 @@ export function SiteHeader() {
             )}
           </div>
           <div className="flex items-center gap-5">
-            {(topBar.phone?.value_text || phone) && (
-              <a href={`tel:${(topBar.phone?.value_text || phone).replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+            {(topBar.phone?.value_text || settings.phone) && (
+              <a href={`tel:${(topBar.phone?.value_text || settings.phone || "").replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
                 <Icon name={topBar.phone?.icon || "call"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.phone?.value_text || phone}
+                {topBar.phone?.value_text || settings.phone}
               </a>
             )}
             {(topBar.whatsapp?.value_text || settings.whatsapp) && (
               <a
-                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp).replace(/[^\d]/g, "")}`}
+                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp || "").replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.whatsapp?.label || topBar.whatsapp?.value_text || settings.whatsapp_label || "WhatsApp"}
+                {topBar.whatsapp?.value_text || settings.whatsapp_label || "WhatsApp"}
               </a>
             )}
 
-            <Link to={topBar.cta?.link_url || settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
-              {topBar.cta?.value_text || settings.teklif_label || "Teklif Talep Et"}
-              <Icon name={topBar.cta?.icon || "arrow_forward"} className="text-[14px]" aria-hidden="true" />
+            <Link to={topBar.teklif_url?.value_text || settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              {topBar.teklif_label?.value_text || settings.teklif_label || "Teklif Talep Et"}
+              <Icon name={topBar.teklif_url?.icon || "arrow_forward"} className="text-[14px]" aria-hidden="true" />
             </Link>
 
           </div>
