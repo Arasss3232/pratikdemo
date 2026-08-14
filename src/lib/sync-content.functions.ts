@@ -142,7 +142,28 @@ export const syncPublicContent = createServerFn({ method: "POST" })
       }
     }
 
+    // 5. Sync Navigation Items
+    const navItems = [
+      { label: "Ana Sayfa", route: "/", display_order: 1, menu_type: "header" },
+      { label: "Kurumsal", route: "/kurumsal", display_order: 2, menu_type: "header" },
+      { label: "Ürünler", route: "/urunler", display_order: 3, menu_type: "header" },
+      { label: "Kataloglarımız", route: "/kataloglar", display_order: 4, menu_type: "header" },
+      { label: "Bayiliklerimiz", route: "/bayiliklerimiz", display_order: 5, menu_type: "header" },
+      { label: "İletişim", route: "/iletisim", display_order: 6, menu_type: "header" }
+    ];
+
+    for (const item of navItems) {
+      await supabase.from("navigation_items").upsert({
+        ...item,
+        is_active: true,
+        desktop_visibility: true,
+        mobile_visibility: true,
+        is_external: false
+      }, { onConflict: "route,label" });
+    }
+
     return { success: true };
   });
+
 
 
