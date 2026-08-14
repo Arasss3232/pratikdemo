@@ -4,6 +4,7 @@ import { PageHero } from "../components/marketing/PageHero";
 import { CategoryCard } from "../components/marketing/CategoryCard";
 import { useCategories } from "@/hooks/use-categories";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/urunler")({
   head: () => ({

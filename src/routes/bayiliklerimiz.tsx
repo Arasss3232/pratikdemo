@@ -4,6 +4,7 @@ import { SiteShell } from "../components/site-shell";
 import { useHomeBrands } from "../hooks/use-home-data";
 import { PageHero } from "../components/marketing/PageHero";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/bayiliklerimiz")({
   head: () => ({
