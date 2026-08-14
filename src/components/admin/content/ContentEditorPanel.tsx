@@ -86,7 +86,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
   if (!page) return <div className="p-8 text-white/40">Bu rota için sayfa kaydı bulunamadı.</div>;
 
-  const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json') => {
+  const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json' | 'icon') => {
     setLocalSections(prev => prev.map(s => {
       if (s.id !== sectionId) return s;
       return {
@@ -95,13 +95,15 @@ export function ContentEditorPanel({ route }: { route: string }) {
           if (f.id !== fieldId) return f;
           if (type === 'text') return { ...f, value_text: value };
           if (type === 'link') return { ...f, link_url: value };
-          if (type === 'media') return { ...f, media_url: value };
+          if (type === 'icon') return { ...f, icon: value };
+          if (type === 'media') return { ...f, value_text: value };
           if (type === 'json') return { ...f, value_json: value };
           return f;
         })
       };
     }));
   };
+
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
