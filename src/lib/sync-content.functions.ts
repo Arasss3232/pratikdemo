@@ -43,7 +43,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
         display_order: order,
         is_active: true,
         section_type: type
-      }, { onConflict: "page_id,section_key" }).select().single();
+      } as any, { onConflict: "page_id,section_key" }).select().single();
       return data;
     };
 
@@ -57,7 +57,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
           value_text: f.v,
           link_url: f.link || null,
           icon: f.icon || null
-        }, { onConflict: "section_id,field_key" });
+        } as any, { onConflict: "section_id,field_key" });
       }
     };
 
