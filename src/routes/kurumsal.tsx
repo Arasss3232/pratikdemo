@@ -12,7 +12,6 @@ import {
   ContactStrip
 } from "../components/corporate/CorporateSections";
 import { Loader2 } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
 export const Route = createFileRoute("/kurumsal")({
   head: () => ({
@@ -60,53 +59,15 @@ function KurumsalPage() {
         />
       )}
 
-      {introduction && (
-        <CorporateIntroduction 
-          title={introduction.content.title?.value_text}
-          description={introduction.content.description?.value_text}
-          image={introduction.content.image?.media_url}
-        />
-      )}
-
-      {missionVision && (
-        <MissionVision 
-          missionTitle={missionVision.content.mission_title?.value_text}
-          missionText={missionVision.content.mission_text?.value_text}
-          visionTitle={missionVision.content.vision_title?.value_text}
-          visionText={missionVision.content.vision_text?.value_text}
-        />
-      )}
-
-      {values && (
-        <CorporateValues 
-          title={values.content.title?.value_text}
-          values={values.content.values_list?.value_json as any[]}
-        />
-      )}
-
-      {process && (
-        <WorkingProcess 
-          title={process.content.title?.value_text}
-          steps={process.content.steps?.value_json as any[]}
-        />
-      )}
-
-      {advantages && (
-        <CorporateAdvantages 
-          title={advantages.content.title?.value_text}
-          advantages={advantages.content.advantages_list?.value_json as any[]}
-        />
-      )}
-
-      {cta && (
-        <CorporateCTA 
-          title={cta.content.title?.value_text}
-          description={cta.content.description?.value_text}
-          buttonLabel={cta.content.button_label?.value_text}
-        />
-      )}
+      {introduction && <CorporateIntroduction section={introduction} />}
+      {missionVision && <MissionVision section={missionVision} />}
+      {values && <CorporateValues section={values} />}
+      {process && <WorkingProcess section={process} />}
+      {advantages && <CorporateAdvantages section={advantages} />}
+      {cta && <CorporateCTA section={cta} />}
       
       <ContactStrip />
     </SiteShell>
   );
 }
+
