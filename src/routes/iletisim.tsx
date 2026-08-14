@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { buttonStyles } from "../lib/button-styles";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 export const Route = createFileRoute("/iletisim")({
   head: () => ({
@@ -47,6 +48,8 @@ function IletisimPage() {
   const email = safeS.email;
   const workingHours = cmsTopBar?.working_hours || safeS.working_hours;
   const mapUrl = cmsContact?.map_embed_url || safeS.map_embed;
+
+  const [form, setForm] = useState({ name: "", email: "", phone: "", department: "", subject: "", message: "", kvkk: false });
   const [msg, setMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   
