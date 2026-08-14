@@ -220,16 +220,16 @@ export function SiteHeader() {
       >
         <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
           <div className="flex items-center gap-6">
-            {settings.working_hours && (
+            {workingHours && (
               <span className="inline-flex items-center gap-2">
                 <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.working_hours}
+                {workingHours}
               </span>
             )}
-            {settings.address && (
+            {address && (
               <span className="inline-flex items-center gap-2">
                 <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.address}
+                {address}
               </span>
             )}
           </div>
