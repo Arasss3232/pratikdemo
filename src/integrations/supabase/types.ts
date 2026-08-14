@@ -2308,6 +2308,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          content_value: Json
+          id: string
+          page_name: string
+          section_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          content_value?: Json
+          id?: string
+          page_name: string
+          section_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          content_value?: Json
+          id?: string
+          page_name?: string
+          section_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       site_pages: {
         Row: {
           created_at: string

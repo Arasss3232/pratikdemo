@@ -16,6 +16,7 @@ type NavItemType = {
 const NAV_ITEMS: NavItemType[] = [
   { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
+  { id: "flexible_cms", label: "Gelişmiş CMS (Site İçeriği)", icon: "auto_awesome", category: "Global", component: "content" },
   { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content" },
   
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },

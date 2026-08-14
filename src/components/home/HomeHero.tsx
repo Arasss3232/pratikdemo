@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
 import { usePageContent } from "@/hooks/use-page-content";
+import { useSiteContent } from "@/hooks/use-site-content";
 import { PRODUCTS } from "@/data/catalog";
 
 
@@ -10,17 +11,20 @@ const DEFAULT_DESC =
   "Elektrikli el aletlerinden bağlantı elemanlarına, iş güvenliğinden endüstriyel makinelere; sanayi tesisleri ve şantiyeler için yetkili distribütör güvencesiyle tek noktadan tedarik.";
 
 export function HomeHero() {
-  const { sections, loading } = usePageContent("/");
+  const { sections, loading: pageLoading } = usePageContent("/");
+  const { data: siteContent, isLoading: flexLoading } = useSiteContent("home");
   
   const heroSection = sections["hero"];
   const c = heroSection?.content || {};
 
-  const title = c.title?.value_text || DEFAULT_TITLE;
-  const description = c.description?.value_text || DEFAULT_DESC;
+  const flexHero = siteContent?.hero || {};
+
+  const title = flexHero.title || c.title?.value_text || DEFAULT_TITLE;
+  const description = flexHero.subtitle || c.description?.value_text || DEFAULT_DESC;
   const primaryText = c.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
   const primaryUrl = c.primary_cta_url?.value_text || "/urunler";
-  const secondaryText = c.secondary_cta_text?.value_text || "Teklif Talep Et";
-  const secondaryUrl = c.secondary_cta_url?.value_text || "/teklif";
+  const secondaryText = flexHero.cta_text || c.secondary_cta_text?.value_text || "Teklif Talep Et";
+  const secondaryUrl = flexHero.cta_link || c.secondary_cta_url?.value_text || "/teklif";
 
 
   const heroProduct = PRODUCTS[0];
@@ -51,7 +55,7 @@ export function HomeHero() {
           <SectionMarker number="01" label="Endüstriyel Tedarik" tone="dark" className="mb-8" />
 
           <h1 className="pub-display text-white mt-6 mb-8 whitespace-pre-line">
-            {title.split("\n").map((line, i) => (
+            {title.split("\n").map((line: string, i: number) => (
               <span key={i} className="block">
                 {i === title.split("\n").length - 1 && title.includes("\n") ? (
                   <>
