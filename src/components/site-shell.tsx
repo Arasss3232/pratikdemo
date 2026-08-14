@@ -70,10 +70,10 @@ export function SiteHeader() {
   const menuBtnRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
-  const { settings } = useSiteSettings();
+  const { settings: rawSettings } = useSiteSettings();
+  const settings = rawSettings || ({} as any);
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
-  const { sections: globalSections } = usePageContent("global");
   const { sections: topBarSections } = usePageContent("top_bar");
   
   const topBar = topBarSections["top_bar_content"]?.content || {};
