@@ -75,8 +75,10 @@ export function SiteHeader() {
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
   const { sections: topBarSections } = usePageContent("top_bar");
+  const { sections: headerSections } = usePageContent("header_navigation");
   
   const topBar = topBarSections["top_bar_content"]?.content || {};
+  const headerConfig = headerSections["header_config"]?.content || {};
   
   // Normalize and merge navigation sources
   const navLinks = dynamicNav.length > 0 
@@ -273,11 +275,11 @@ export function SiteHeader() {
           <Link
             to="/"
             className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
-            aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
+            aria-label={`${headerConfig.logo_alt?.value_text || settings.company_name || "Pratik"} ana sayfa`}
           >
             <BrandWordmark
               logoUrl={settings.mobile_logo_url || settings.logo_url}
-              companyName={settings.company_name}
+              companyName={headerConfig.logo_alt?.value_text || settings.company_name}
               size={scrolled ? "md" : "lg"}
             />
           </Link>
@@ -332,7 +334,7 @@ export function SiteHeader() {
 
           {/* Right actions */}
           <div className="flex items-center gap-1 md:gap-2 justify-end">
-            {isAdmin && (
+            {(isAdmin && headerConfig.admin_login_visible?.value_text !== 'false') && (
               <Link
                 to="/admin"
                 search={{
@@ -352,7 +354,7 @@ export function SiteHeader() {
               search={{ categoryId: undefined, category: "Genel" }}
               className="pub-btn pub-btn-primary pub-btn-sm"
             >
-              Teklif Talep Et
+              {headerConfig.teklif_button_label?.value_text || "Teklif Talep Et"}
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
             </Link>
             </span>
@@ -782,8 +784,8 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           {/* Brand & summary */}
           <div className="lg:col-span-4 flex flex-col gap-5">
-            <Link to="/" className="inline-flex items-center gap-2" aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
-              <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
+            <Link to="/" className="inline-flex items-center gap-2" aria-label={`${footerIdentity.logo_alt?.value_text || settings.company_name || "Pratik"} ana sayfa`}>
+              <BrandWordmark logoUrl={settings.logo_url} companyName={footerIdentity.logo_alt?.value_text || settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
               {footerIdentity.summary?.value_text || (settings as any).footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}

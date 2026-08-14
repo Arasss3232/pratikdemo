@@ -4,20 +4,23 @@ import { ContentEditorPanel } from "./ContentEditorPanel";
 import { SettingsPanel } from "./SettingsPanel";
 import { NavigationPanel } from "./NavigationPanel";
 import { HistoryPanel } from "./HistoryPanel";
+import { TopBarEditor } from "./editors/TopBarEditor";
+import { HeaderNavigationEditor } from "./editors/HeaderNavigationEditor";
+import { FooterEditor } from "./editors/FooterEditor";
 
 type NavItemType = {
   id: string;
   label: string;
   icon: string;
   category: "Üst Bilgi & Footer" | "Kurumsal & Sayfalar" | "Sistem & Mesajlar";
-  component: "content" | "settings" | "nav" | "placeholder" | "history";
+  component: "content" | "settings" | "nav" | "placeholder" | "history" | "top_bar" | "header_nav" | "footer";
 };
 
 const NAV_ITEMS: NavItemType[] = [
   // 1. Grup: Üst Bilgi & Footer (GLOBAL)
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Üst Bilgi & Footer", component: "content" },
-  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Üst Bilgi & Footer", component: "nav" },
-  { id: "footer", label: "Footer İçerikleri", icon: "footer", category: "Üst Bilgi & Footer", component: "content" },
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Üst Bilgi & Footer", component: "top_bar" },
+  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Üst Bilgi & Footer", component: "header_nav" },
+  { id: "footer", label: "Footer İçerikleri", icon: "view_agenda", category: "Üst Bilgi & Footer", component: "footer" },
   
   // 2. Grup: Kurumsal & Sayfalar (PAGE)
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Kurumsal & Sayfalar", component: "content" },
@@ -80,7 +83,10 @@ export function ContentManagement() {
       {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
       <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
         <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} />}
+          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "system_messages" : activeItem.id} />}
+          {activeItem.component === "top_bar" && <TopBarEditor />}
+          {activeItem.component === "header_nav" && <HeaderNavigationEditor />}
+          {activeItem.component === "footer" && <FooterEditor />}
           {activeItem.component === "settings" && <SettingsPanel />}
           {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
           {activeItem.component === "history" && <HistoryPanel />}

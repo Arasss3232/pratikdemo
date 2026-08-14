@@ -5,7 +5,7 @@ interface CMSField {
   k: string;
   l: string;
   v: string;
-  t?: string;
+  t?: "text" | "image" | "link" | "icon" | "json";
   link?: string;
   icon?: string;
 }
@@ -97,7 +97,7 @@ export const CMS_MANIFEST: CMSPage[] = [
       { k: "description", l: "Sayfa Açıklaması", v: "" }
     ]}
   ]},
-  { route: "/sistem", name: "Sistem Mesajları", sections: [
+  { route: "system_messages", name: "Sistem Mesajları", sections: [
     { key: "global_messages", label: "Global Sistem Mesajları", type: "system", fields: [
       { k: "404_title", l: "404 Sayfa Bulunamadı Başlığı", v: "Sayfa bulunamadı" },
       { k: "404_desc", l: "404 Sayfa Bulunamadı Açıklaması", v: "Aradığınız sayfa mevcut değil veya taşınmış olabilir." },
@@ -117,7 +117,7 @@ export const CMS_MANIFEST: CMSPage[] = [
       { k: "teklif_url", l: "Teklif Buton Linki", v: "/teklif", icon: "arrow_forward" }
     ]}
   ]},
-  { route: "header_nav", name: "Header ve Navigasyon", sections: [
+  { route: "header_navigation", name: "Header ve Navigasyon", sections: [
     { key: "header_config", label: "Header Yapılandırması", type: "header", fields: [
       { k: "logo_alt", l: "Logo Alt Metni", v: "Pratik Tedarik Yapı" },
       { k: "teklif_button_label", l: "Ana Teklif Butonu", v: "Teklif Talep Et" },
@@ -194,6 +194,37 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             }
           }
         }
+      }
+    }
+
+    // 4. Navigation Bootstrap (Header & Footer)
+    const headerNavLinks = [
+      { label: "Ana Sayfa", route: "/", display_order: 1 },
+      { label: "Kurumsal", route: "/kurumsal", display_order: 2 },
+      { label: "Ürünler", route: "/urunler", display_order: 3 },
+      { label: "Kataloglarımız", route: "/kataloglar", display_order: 4 },
+      { label: "Bayiliklerimiz", route: "/bayiliklerimiz", display_order: 5 },
+      { label: "İletişim", route: "/iletisim", display_order: 6 },
+    ];
+
+    for (const link of headerNavLinks) {
+      const { data: existing } = await supabase
+        .from("navigation_items")
+        .select("id")
+        .eq("menu_type", "header_navigation")
+        .eq("route", link.route)
+        .maybeSingle();
+
+      if (!existing) {
+        await supabase.from("navigation_items").insert({
+          menu_type: "header_navigation",
+          label: link.label,
+          route: link.route,
+          display_order: link.display_order,
+          is_active: true,
+          desktop_visibility: true,
+          mobile_visibility: true
+        });
       }
     }
 
