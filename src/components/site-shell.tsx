@@ -234,15 +234,15 @@ export function SiteHeader() {
             )}
           </div>
           <div className="flex items-center gap-5">
-            {phone && (
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+            {displayPhone && (
+              <a href={`tel:${displayPhone.replace(/[^\d]/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
                 <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {phone}
+                {displayPhone}
               </a>
             )}
-            {whatsapp && (
+            {whatsappLink && (
               <a
-                href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
