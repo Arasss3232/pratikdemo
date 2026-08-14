@@ -97,7 +97,7 @@ export const CMS_MANIFEST: CMSPage[] = [
       { k: "description", l: "Sayfa Açıklaması", v: "" }
     ]}
   ]},
-  { route: "sistem", name: "Sistem Mesajları", sections: [
+  { route: "/sistem", name: "Sistem Mesajları", sections: [
     { key: "global_messages", label: "Global Sistem Mesajları", type: "system", fields: [
       { k: "404_title", l: "404 Sayfa Bulunamadı Başlığı", v: "Sayfa bulunamadı" },
       { k: "404_desc", l: "404 Sayfa Bulunamadı Açıklaması", v: "Aradığınız sayfa mevcut değil veya taşınmış olabilir." },
@@ -108,13 +108,20 @@ export const CMS_MANIFEST: CMSPage[] = [
   ]},
   { route: "top_bar", name: "Üst Bilgi Çubuğu", sections: [
     { key: "top_bar_content", label: "Üst Bar İçeriği", type: "header", fields: [
-      { k: "working_hours", l: "Çalışma Saatleri", v: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00" },
-      { k: "address", l: "Adres", v: "Dudullu OSB, Ümraniye / İstanbul" },
-      { k: "phone", l: "Telefon", v: "0553 306 92 10", link: "tel:05533069210" },
+      { k: "working_hours", l: "Çalışma Saatleri", v: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00", icon: "schedule" },
+      { k: "address", l: "Adres", v: "Dudullu OSB, Ümraniye / İstanbul", icon: "location_on" },
+      { k: "phone", l: "Telefon", v: "0553 306 92 10", link: "tel:05533069210", icon: "call" },
       { k: "whatsapp_label", l: "WhatsApp Etiketi", v: "WhatsApp" },
-      { k: "whatsapp", l: "WhatsApp No", v: "05533069210", link: "https://wa.me/905533069210" },
+      { k: "whatsapp", l: "WhatsApp No", v: "05533069210", link: "https://wa.me/905533069210", icon: "chat" },
       { k: "teklif_label", l: "Teklif Buton Etiketi", v: "Teklif Talep Et" },
-      { k: "teklif_url", l: "Teklif Buton Linki", v: "/teklif" }
+      { k: "teklif_url", l: "Teklif Buton Linki", v: "/teklif", icon: "arrow_forward" }
+    ]}
+  ]},
+  { route: "header_nav", name: "Header ve Navigasyon", sections: [
+    { key: "header_config", label: "Header Yapılandırması", type: "header", fields: [
+      { k: "logo_alt", l: "Logo Alt Metni", v: "Pratik Tedarik Yapı" },
+      { k: "teklif_button_label", l: "Ana Teklif Butonu", v: "Teklif Talep Et" },
+      { k: "admin_login_visible", l: "Yönetici Girişi Görünür", v: "true" }
     ]}
   ]},
   { route: "footer", name: "Footer", sections: [

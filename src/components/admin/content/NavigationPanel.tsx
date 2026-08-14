@@ -80,9 +80,10 @@ export function NavigationPanel({ type }: { type: string }) {
           </button>
           <button 
             onClick={() => saveMutation.mutate()}
-            className="h-10 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2"
+            className="h-10 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20"
           >
-            Sıralamayı Kaydet
+            {saveMutation.isPending ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
+            Sıralamayı ve Değişiklikleri Kaydet
           </button>
         </div>
       </div>
