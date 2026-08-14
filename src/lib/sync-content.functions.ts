@@ -1,0 +1,139 @@
+import { createServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
+
+export const syncPublicContent = createServerFn({ method: "POST" })
+  .handler(async () => {
+    console.log("Starting Content Synchronization...");
+
+    // 1. Ensure Site Pages exist
+    const pages = [
+      { route: "/", name: "Ana Sayfa" },
+      { route: "/kurumsal", name: "Kurumsal Sayfası" },
+      { route: "/urunler", name: "Ürün Kategorileri Sayfası" },
+      { route: "/kataloglar", name: "Kataloglar Sayfası" },
+      { route: "/bayiliklerimiz", name: "Bayiliklerimiz Sayfası" },
+      { route: "/teklif", name: "Teklif Talep Sayfası" },
+      { route: "/iletisim", name: "İletişim Sayfası" },
+      { route: "/kvkk", name: "Yasal Sayfalar" },
+      { route: "/sistem", name: "Sistem Mesajları" },
+      { route: "global_settings", name: "Genel İçerikler" },
+      { route: "top_bar", name: "Üst Bilgi Çubuğu" },
+      { route: "header_nav", name: "Header ve Navigasyon" },
+      { route: "footer", name: "Footer" }
+    ];
+
+    for (const p of pages) {
+      await supabase.from("site_pages").upsert({
+        route: p.route,
+        internal_name: p.name,
+        status: "published"
+      }, { onConflict: "route" });
+    }
+
+    // Get page IDs
+    const { data: dbPages } = await supabase.from("site_pages").select("id, route");
+    const getPageId = (route: string) => dbPages?.find(p => p.route === route)?.id;
+
+    // 2. Sync Top Bar
+    const topBarId = getPageId("top_bar");
+    if (topBarId) {
+      const topBarSection = {
+        page_id: topBarId,
+        section_key: "top_bar_content",
+        internal_label: "Üst Bar İçeriği",
+        display_order: 1,
+        is_active: true
+      };
+      
+      const { data: section } = await supabase.from("page_sections").upsert(topBarSection, { onConflict: "page_id,section_key" }).select().single();
+      
+      if (section) {
+        const fields = [
+          { field_key: "working_hours", field_type: "text", value_text: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00" },
+          { field_key: "address", field_type: "text", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
+          { field_key: "phone", field_type: "text", value_text: "0553 306 92 10" },
+          { field_key: "whatsapp_label", field_type: "text", value_text: "WhatsApp" },
+          { field_key: "cta_label", field_type: "text", value_text: "Teklif Talep Et" }
+        ];
+        
+        for (const f of fields) {
+          await supabase.from("section_content").upsert({
+            section_id: section.id,
+            field_key: f.field_key,
+            field_type: f.field_type,
+            value_text: f.value_text
+          }, { onConflict: "section_id,field_key" });
+        }
+      }
+    }
+
+    // 3. Sync Footer
+    const footerId = getPageId("footer");
+    if (footerId) {
+      const footerSection = {
+        page_id: footerId,
+        section_key: "footer_content",
+        internal_label: "Footer İçeriği",
+        display_order: 1,
+        is_active: true
+      };
+      
+      const { data: section } = await supabase.from("page_sections").upsert(footerSection, { onConflict: "page_id,section_key" }).select().single();
+      
+      if (section) {
+        const fields = [
+          { field_key: "summary", field_type: "text", value_text: "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim." },
+          { field_key: "address", field_type: "text", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
+          { field_key: "phone", field_type: "text", value_text: "0553 306 92 10" },
+          { field_key: "email", field_type: "text", value_text: "bilgi@pratiktedarik.com" },
+          { field_key: "hours", field_type: "text", value_text: "Pzt – Cmt · 08:30 – 18:00" },
+          { field_key: "copyright", field_type: "text", value_text: "© 2026 Pratik Endüstriyel. Tüm hakları saklıdır." },
+          { field_key: "attribution_text", field_type: "text", value_text: "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır." },
+          { field_key: "attribution_url", field_type: "text", value_text: "https://www.bilgintek.com" }
+        ];
+        
+        for (const f of fields) {
+          await supabase.from("section_content").upsert({
+            section_id: section.id,
+            field_key: f.field_key,
+            field_type: f.field_type,
+            value_text: f.value_text
+          }, { onConflict: "section_id,field_key" });
+        }
+      }
+    }
+
+    // 4. Sync Homepage Hero
+    const homeId = getPageId("/");
+    if (homeId) {
+      const heroSection = {
+        page_id: homeId,
+        section_key: "hero",
+        internal_label: "Ana Sayfa Hero",
+        display_order: 1,
+        is_active: true
+      };
+      
+      const { data: section } = await supabase.from("page_sections").upsert(heroSection, { onConflict: "page_id,section_key" }).select().single();
+      
+      if (section) {
+        const fields = [
+          { field_key: "eyebrow", field_type: "text", value_text: "Bosch · Makita · DeWalt · Hilti yetkili tedariki" },
+          { field_key: "title", field_type: "text", value_text: "Endüstriyel Donanımda Güvenilir Tedarik" },
+          { field_key: "description", field_type: "text", value_text: "Tesis, şantiye ve üretim hatlarınız için elektrikli el aletlerinden bağlantı elemanlarına uçtan uca profesyonel donanım çözümleri." },
+          { field_key: "cta_label", field_type: "text", value_text: "Teklif Talep Et" }
+        ];
+        
+        for (const f of fields) {
+          await supabase.from("section_content").upsert({
+            section_id: section.id,
+            field_key: f.field_key,
+            field_type: f.field_type,
+            value_text: f.value_text
+          }, { onConflict: "section_id,field_key" });
+        }
+      }
+    }
+
+    return { success: true };
+  });
