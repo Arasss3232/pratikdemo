@@ -76,13 +76,14 @@ export function SiteHeader() {
   const { categories } = useCategories();
   const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
   
-  // NEW CMS Integration for Top Bar (with hierarchical fallbacks)
+  const { data: cmsHeader } = useSiteContent("header");
   const { data: cmsTopBar } = useSiteContent("top_bar");
 
   const workingHours = cmsTopBar?.working_hours || "Pzt - Cmt: 08:30 - 18:30";
   const address = cmsTopBar?.address || "İkitelli OSB, İstanbul";
   const displayPhone = cmsTopBar?.phone || "+90 (212) 123 45 67";
-  const whatsappLink = cmsTopBar?.whatsapp_link || "https://wa.me/905000000000";
+  const whatsappNumber = cmsTopBar?.whatsapp_number || "905000000000";
+  const whatsappLink = cmsTopBar?.whatsapp_link || `https://wa.me/${whatsappNumber.replace(/[^\d]/g, "")}`;
 
 
 
@@ -281,7 +282,15 @@ export function SiteHeader() {
 
           {/* Center nav — desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1" aria-label="Ana menü">
-            {navLinks.filter((l, idx) => navLinks.findIndex(nl => nl.to === l.to) === idx).map((l) =>
+            {/* NEW CMS Integration for Header */}
+            {[
+              { label: cmsHeader?.nav_home || "Ana Sayfa", to: "/" },
+              { label: cmsHeader?.nav_corporate || "Kurumsal", to: "/kurumsal" },
+              { label: cmsHeader?.nav_products || "Ürünler", to: "/urunler" },
+              { label: cmsHeader?.nav_catalogs || "Kataloglarımız", to: "/kataloglar" },
+              { label: cmsHeader?.nav_dealerships || "Bayiliklerimiz", to: "/bayiliklerimiz" },
+              { label: cmsHeader?.nav_contact || "İletişim", to: "/iletisim" },
+            ].filter((l, idx, self) => self.findIndex(nl => nl.to === l.to) === idx).map((l) =>
               l.to === "/urunler" ? (
                 <div
                   key="desktop-products"
@@ -739,11 +748,15 @@ export function SiteHeader() {
 export function SiteFooter() {
   const { settings: rawSettings } = useSiteSettings();
   const settings = rawSettings || {} as any;
+  
+  const { data: cmsFooter } = useSiteContent("footer");
+  const { data: cmsTopBar } = useSiteContent("top_bar");
+
   const currentYear = new Date().getFullYear();
-  const address = settings.address;
-  const phone = settings.phone;
-  const email = settings.email;
-  const hours = settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
+  const address = cmsTopBar?.address || settings.address;
+  const phone = cmsTopBar?.phone || settings.phone;
+  const email = cmsFooter?.email || settings.email;
+  const hours = cmsTopBar?.working_hours || settings.working_hours || "Pzt – Cmt · 08:30 – 18:00";
 
   const productCols = PRODUCT_GROUPS;
   const corporateLinks = [
@@ -776,7 +789,7 @@ export function SiteFooter() {
               <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
-              {settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
+              {cmsFooter?.company_description || settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
             </p>
 
             <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
@@ -882,7 +895,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
-          <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
+          <p>{cmsFooter?.copyright_text || `© ${currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.`}</p>
           <p className="section-label text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
         </div>
 

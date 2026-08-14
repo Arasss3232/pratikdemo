@@ -3,6 +3,7 @@ import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
 import { type PageSection } from "@/hooks/use-page-content";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 const NAVY_950 = "var(--public-navy-950)";
 const NAVY_900 = "var(--public-navy-900)";
@@ -12,6 +13,8 @@ const YELLOW = "var(--public-yellow-500)";
 
 export function CorporateIntroduction({ section }: { section: PageSection }) {
   const c = section.content;
+  const { data: cmsCorporate } = useSiteContent("corporate");
+  
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#F2F5F8" }}>
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
@@ -27,11 +30,11 @@ export function CorporateIntroduction({ section }: { section: PageSection }) {
               className="font-display font-bold text-navy-950 leading-[1.05] tracking-tight mb-8"
               style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
             >
-              {c.title?.value_text}
+              {cmsCorporate?.about_title || c.title?.value_text}
             </h2>
             <div className="space-y-6 text-[16px] md:text-[18px] leading-relaxed text-slate-600">
               <p className="font-semibold text-navy-900">
-                {c.description?.value_text}
+                {cmsCorporate?.about_content || c.description?.value_text}
               </p>
               <div 
                 className="prose prose-slate max-w-none"
@@ -65,6 +68,7 @@ export function CorporateIntroduction({ section }: { section: PageSection }) {
 
 export function MissionVision({ section }: { section: PageSection }) {
   const c = section.content;
+  const { data: cmsCorporate } = useSiteContent("corporate");
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
       <div className="absolute inset-0 pub-blueprint opacity-30 pointer-events-none" aria-hidden />
@@ -80,7 +84,7 @@ export function MissionVision({ section }: { section: PageSection }) {
               {c.mission_title?.value_text || "Misyonumuz"}
             </h3>
             <p className="text-white/70 text-lg leading-relaxed">
-              {c.mission_desc?.value_text}
+              {cmsCorporate?.mission || c.mission_desc?.value_text}
             </p>
           </div>
 
@@ -94,7 +98,7 @@ export function MissionVision({ section }: { section: PageSection }) {
               {c.vision_title?.value_text || "Vizyonumuz"}
             </h3>
             <p className="text-white/70 text-lg leading-relaxed">
-              {c.vision_desc?.value_text}
+              {cmsCorporate?.vision || c.vision_desc?.value_text}
             </p>
           </div>
         </div>
