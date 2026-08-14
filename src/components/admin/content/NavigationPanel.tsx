@@ -87,9 +87,16 @@ export function NavigationPanel({ type }: { type: string }) {
       <div className="space-y-3">
         {items.length === 0 ? (
           <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
-            <p>Henüz bir link eklenmemiş.</p>
+            <p className="mb-4 text-sm">Henüz bir link eklenmemiş veya veriler senkronize edilmemiş.</p>
+            <button 
+              onClick={() => window.location.href = '/admin/sync'}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+            >
+              Mevcut Site İçeriğini Senkronize Et
+            </button>
           </div>
         ) : (
+
           items.map((item, idx) => (
             <div key={item.id || idx} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between group text-white">
               <div className="flex items-center gap-4">
