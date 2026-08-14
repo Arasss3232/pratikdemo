@@ -249,12 +249,12 @@ export function SiteHeader() {
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.whatsapp?.value_text || settings.whatsapp_label || "WhatsApp"}
+                {topBar.whatsapp?.value_text || (settings as any).whatsapp_label || "WhatsApp"}
               </a>
             )}
 
-            <Link to={topBar.teklif_url?.value_text || settings.teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
-              {topBar.teklif_label?.value_text || settings.teklif_label || "Teklif Talep Et"}
+            <Link to={topBar.teklif_url?.value_text || (settings as any).teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              {topBar.teklif_label?.value_text || (settings as any).teklif_label || "Teklif Talep Et"}
               <Icon name={topBar.teklif_url?.icon || "arrow_forward"} className="text-[14px]" aria-hidden="true" />
             </Link>
 
