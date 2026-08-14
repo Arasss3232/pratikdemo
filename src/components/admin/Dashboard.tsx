@@ -187,7 +187,7 @@ export function Dashboard({ onNavigate }: { onNavigate: (t: AdminTab) => void })
                 Gelen Mesajlar
               </button>
               <button
-                onClick={() => onNavigate("settings")}
+                onClick={() => onNavigate("content")}
                 className="admin-btn"
                 style={{
                   height: 40,
