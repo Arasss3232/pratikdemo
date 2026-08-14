@@ -70,13 +70,16 @@ export function TopBarEditor() {
         const { error } = await supabase
           .from("section_content")
           .update(updateData)
-          .eq("id", field.id);
+          .eq("id", field.id)
+          .select()
+          .single();
         if (error) throw error;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cms-sections", "top_bar"] });
       queryClient.invalidateQueries({ queryKey: ["page-content", "top_bar"] });
+      queryClient.invalidateQueries({ queryKey: ["cms-sections", "top_bar"] });
       toast.success("Üst bar içerikleri güncellendi.");
     },
     onError: (err) => {
