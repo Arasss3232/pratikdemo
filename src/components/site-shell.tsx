@@ -189,9 +189,9 @@ export function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {waHref && (
+            {whatsappLink && (
               <a
-                href={waHref}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp ile yaz"
