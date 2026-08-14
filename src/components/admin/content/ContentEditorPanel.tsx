@@ -148,9 +148,16 @@ export function ContentEditorPanel({ route }: { route: string }) {
         {localSections.length === 0 ? (
           <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
             <Layout size={48} className="mx-auto mb-4 opacity-50" />
-            <p>Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
+            <p className="mb-4">Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
+            <button 
+              onClick={() => window.location.href = '/admin/sync'}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+            >
+              Mevcut Site İçeriğini Senkronize Et
+            </button>
           </div>
         ) : (
+
           localSections.map((section) => (
             <div key={section.id} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
               <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
