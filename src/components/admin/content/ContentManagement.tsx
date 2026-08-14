@@ -14,12 +14,12 @@ type NavItemType = {
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  // 1. Grup: Üst Bilgi & Footer
+  // 1. Grup: Üst Bilgi & Footer (GLOBAL)
   { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Üst Bilgi & Footer", component: "content" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Üst Bilgi & Footer", component: "nav" },
-  { id: "footer", label: "Footer İçerikleri", icon: "view_agenda", category: "Üst Bilgi & Footer", component: "content" },
+  { id: "footer", label: "Footer İçerikleri", icon: "footer", category: "Üst Bilgi & Footer", component: "content" },
   
-  // 2. Grup: Kurumsal & Sayfalar
+  // 2. Grup: Kurumsal & Sayfalar (PAGE)
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/hakkimizda", label: "Hakkımızda", icon: "corporate_fare", category: "Kurumsal & Sayfalar", component: "content" },
@@ -31,7 +31,7 @@ const NAV_ITEMS: NavItemType[] = [
   { id: "/sektorel", label: "Sektörel Çözümler", icon: "precision_manufacturing", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/kvkk", label: "KVKK ve Yasal Sayfalar", icon: "gavel", category: "Kurumsal & Sayfalar", component: "content" },
   
-  // 3. Grup: Sistem & Mesajlar
+  // 3. Grup: Sistem & Mesajlar (SYSTEM/GLOBAL)
   { id: "sistem", label: "Global Sistem Mesajları", icon: "display_settings", category: "Sistem & Mesajlar", component: "content" },
   { id: "global_settings", label: "Site Genel Ayarları", icon: "settings", category: "Sistem & Mesajlar", component: "settings" },
   { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem & Mesajlar", component: "history" },

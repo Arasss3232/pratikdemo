@@ -170,12 +170,15 @@ export function ContentEditorPanel({ route }: { route: string }) {
     </div>
   );
 
-  if (!page || localSections.length === 0) return (
-    <div className="p-8 text-white/40 text-center border-2 border-dashed border-white/5 rounded-2xl">
-      <Layout size={48} className="mx-auto mb-4 opacity-50" />
-      <p>Bu rota için yönetilebilir bir içerik bulunamadı.</p>
-    </div>
-  );
+  if (!page || localSections.length === 0) {
+    return (
+      <div className="p-8 text-white/40 text-center border-2 border-dashed border-white/5 rounded-2xl">
+        <Layout size={48} className="mx-auto mb-4 opacity-50" />
+        <p className="mb-2">Bu rota için yönetilebilir bir içerik bulunamadı.</p>
+        <p className="text-xs">Rota: <code className="bg-white/5 px-2 py-1 rounded">{route}</code></p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
