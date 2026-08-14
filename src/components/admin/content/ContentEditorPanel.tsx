@@ -75,34 +75,54 @@ export function ContentEditorPanel({ route }: { route: string }) {
 
   const saveMutation = useMutation({
     mutationFn: async (isPublish: boolean) => {
+      console.log("Saving CMS changes, isPublish:", isPublish);
+      const results = [];
       for (const section of localSections) {
         for (const field of section.section_content) {
-          const { error } = await supabase
+          const updateData: any = {
+            value_text: field.value_text,
+            link_url: field.link_url,
+            media_url: field.media_url,
+            icon: field.icon,
+            value_json: field.value_json as Json,
+            updated_at: new Date().toISOString()
+          };
+          
+          const { data, error } = await supabase
             .from("section_content")
-            .update({
-              value_text: field.value_text,
-              link_url: field.link_url,
-              media_url: field.media_url,
-              value_json: field.value_json as Json
-            })
-            .eq("id", field.id);
+            .update(updateData)
+            .eq("id", field.id)
+            .select();
+            
           if (error) throw error;
+          results.push(data);
         }
       }
 
       if (isPublish) {
         const { error } = await supabase
           .from("site_pages")
-          .update({ status: 'published', updated_at: new Date().toISOString() })
+          .update({ 
+            status: 'published', 
+            updated_at: new Date().toISOString() 
+          })
           .eq("id", page!.id);
         if (error) throw error;
       }
+      return results;
     },
     onSuccess: (_, isPublish) => {
-      queryClient.invalidateQueries({ queryKey: ["cms-sections", page?.id] });
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ["cms-page"] });
+      queryClient.invalidateQueries({ queryKey: ["cms-sections"] });
+      queryClient.invalidateQueries({ queryKey: ["page-content"] });
+      
       toast.success(isPublish ? "İçerik başarıyla yayınlandı!" : "Taslak kaydedildi.");
+      refetchPage();
+      refetchSections();
     },
     onError: (err) => {
+      console.error("CMS Save Error:", err);
       toast.error("Hata: " + err.message);
     }
   });
