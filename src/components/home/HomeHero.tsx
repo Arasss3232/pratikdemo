@@ -18,9 +18,10 @@ export function HomeHero() {
   const title = c.title?.value_text || DEFAULT_TITLE;
   const description = c.description?.value_text || DEFAULT_DESC;
   const primaryText = c.primary_cta_text?.value_text || "Ürün Gruplarını İncele";
-  const primaryUrl = c.primary_cta_url?.link_url || "/urunler";
+  const primaryUrl = c.primary_cta_url?.value_text || "/urunler";
   const secondaryText = c.secondary_cta_text?.value_text || "Teklif Talep Et";
-  const secondaryUrl = c.secondary_cta_url?.link_url || "/teklif";
+  const secondaryUrl = c.secondary_cta_url?.value_text || "/teklif";
+
 
   const heroProduct = PRODUCTS[0];
   const heroImg = c.hero_image?.media_url || heroProduct.productImg;

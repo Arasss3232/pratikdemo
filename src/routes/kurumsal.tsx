@@ -15,25 +15,13 @@ import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/kurumsal")({
   head: () => ({
+    title: "Kurumsal | Pratik Tedarik Yapı - Endüstriyel Donanım Çözümleri",
     meta: [
-      { title: "Kurumsal — Pratik Tedarik Yapı" },
-      { name: "description", content: "Endüstriyel tedarikte güvenilir çözüm ortağınız. Pratik Tedarik Yapı olarak kurumsal değerlerimiz, misyonumuz ve çalışma prensiplerimizle yanınızdayız." },
-      { property: "og:title", content: "Kurumsal — Pratik Tedarik Yapı" },
-      { property: "og:description", content: "Sanayinin çözüm ortağı: Misyonumuz, vizyonumuz ve kurumsal değerlerimiz." },
-      { property: "og:url", content: "/kurumsal" },
+      { name: "description", content: "Endüstriyel donanım tedariki, profesyonel çözüm ortaklığı ve kurumsal değerlerimiz hakkında bilgi edinin." },
+      { property: "og:title", content: "Kurumsal - Pratik Tedarik Yapı" },
+      { property: "og:description", content: "Endüstriyel donanım tedariki ve profesyonel çözüm ortaklığımız." },
       { property: "og:type", content: "website" },
-    ],
-    links: [{ rel: "canonical", href: "/kurumsal" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "AboutPage",
-          name: "Pratik Tedarik Yapı Kurumsal",
-          url: "/kurumsal",
-        }),
-      },
+      { name: "twitter:card", content: "summary_large_image" }
     ],
   }),
   component: KurumsalPage,
@@ -55,7 +43,7 @@ function KurumsalPage() {
 
   const hero = sections["hero"];
   const introduction = sections["introduction"];
-  const missionVision = sections["mission_vision"];
+  const missionVision = sections["mission-vision"];
   const values = sections["values"];
   const process = sections["process"];
   const advantages = sections["advantages"];
@@ -70,7 +58,7 @@ function KurumsalPage() {
           breadcrumb={[{ label: "Ana Sayfa", to: "/" }, { label: "Kurumsal" }]}
         />
       )}
-      
+
       {introduction && <CorporateIntroduction section={introduction} />}
       {missionVision && <MissionVision section={missionVision} />}
       {values && <CorporateValues section={values} />}
@@ -82,3 +70,4 @@ function KurumsalPage() {
     </SiteShell>
   );
 }
+

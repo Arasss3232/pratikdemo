@@ -170,10 +170,11 @@ export function ContentEditorPanel({ route }: { route: string }) {
                         {field.field_type === 'text' && <Type size={12} />}
                         {field.field_type === 'link' && <LinkIcon size={12} />}
                         {field.field_type === 'image' && <ImageIcon size={12} />}
-                        {field.field_key}
+                        {field.label || field.field_key}
                       </label>
-                      <span className="text-[10px] text-white/20">{field.field_type}</span>
+                      <span className="text-[10px] text-white/20 capitalize">{field.field_type}</span>
                     </div>
+
 
                     {field.field_type === 'text' && (
                       <textarea 
