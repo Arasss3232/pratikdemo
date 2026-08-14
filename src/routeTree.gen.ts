@@ -25,6 +25,7 @@ import { Route as GirisRouteImport } from './routes/giris'
 import { Route as BayiliklerimizRouteImport } from './routes/bayiliklerimiz'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminSyncRouteImport } from './routes/admin.sync'
 
 const UrunlerRoute = UrunlerRouteImport.update({
   id: '/urunler',
@@ -106,10 +107,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSyncRoute = AdminSyncRouteImport.update({
+  id: '/sync',
+  path: '/sync',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
@@ -124,10 +130,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
+  '/admin/sync': typeof AdminSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
@@ -142,11 +149,12 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
+  '/admin/sync': typeof AdminSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/bayiliklerimiz': typeof BayiliklerimizRoute
   '/giris': typeof GirisRoute
   '/hakkimizda': typeof HakkimizdaRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teklif': typeof TeklifRoute
   '/urunler': typeof UrunlerRoute
+  '/admin/sync': typeof AdminSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teklif'
     | '/urunler'
+    | '/admin/sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teklif'
     | '/urunler'
+    | '/admin/sync'
   id:
     | '__root__'
     | '/'
@@ -217,11 +228,12 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teklif'
     | '/urunler'
+    | '/admin/sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BayiliklerimizRoute: typeof BayiliklerimizRoute
   GirisRoute: typeof GirisRoute
   HakkimizdaRoute: typeof HakkimizdaRoute
@@ -352,12 +364,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/sync': {
+      id: '/admin/sync'
+      path: '/sync'
+      fullPath: '/admin/sync'
+      preLoaderRoute: typeof AdminSyncRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminSyncRoute: typeof AdminSyncRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminSyncRoute: AdminSyncRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   BayiliklerimizRoute: BayiliklerimizRoute,
   GirisRoute: GirisRoute,
   HakkimizdaRoute: HakkimizdaRoute,
