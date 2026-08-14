@@ -177,7 +177,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             // Check if field exists
             const { data: existingField } = await supabase
               .from("section_content")
-              .select("id, value_text, value_json, link_url, icon")
+              .select("id, value_text, value_json, link_url")
               .eq("section_id", section.id)
               .eq("field_key", f.k)
               .maybeSingle();
@@ -189,18 +189,16 @@ export const syncPublicContent = createServerFn({ method: "POST" })
                 field_type: f.t || "text",
                 label: f.l,
                 value_text: f.v,
-                link_url: f.link || null,
-                icon: f.icon || null
+                link_url: f.link || null
               } as any);
             } else {
               // If it exists but is empty/null, populate it with manifest value
-              const needsUpdate = !existingField.value_text && !existingField.value_json && !existingField.link_url && !existingField.icon;
+              const needsUpdate = !existingField.value_text && !existingField.value_json && !existingField.link_url;
               if (needsUpdate && f.v) {
                 await supabase.from("section_content").update({
                   value_text: f.v,
-                  link_url: f.link || null,
-                  icon: f.icon || null
-                } as any).eq("id", existingField.id);
+                  link_url: f.link || null
+                } as any).eq("id", (existingField as any).id);
               }
             }
           }
