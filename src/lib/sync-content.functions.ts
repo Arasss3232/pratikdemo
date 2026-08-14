@@ -42,18 +42,19 @@ export const syncPublicContent = createServerFn({ method: "POST" })
         section_key: "top_bar_content",
         internal_label: "Üst Bar İçeriği",
         display_order: 1,
-        is_active: true
+        is_active: true,
+        section_type: "header"
       };
       
       const { data: section } = await supabase.from("page_sections").upsert(topBarSection, { onConflict: "page_id,section_key" }).select().single();
       
       if (section) {
         const fields = [
-          { field_key: "working_hours", field_type: "text", value_text: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00" },
-          { field_key: "address", field_type: "text", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
-          { field_key: "phone", field_type: "text", value_text: "0553 306 92 10" },
-          { field_key: "whatsapp_label", field_type: "text", value_text: "WhatsApp" },
-          { field_key: "cta_label", field_type: "text", value_text: "Teklif Talep Et" }
+          { field_key: "working_hours", field_type: "text", label: "Çalışma Saatleri", value_text: "Hafta içi 08:30 - 18:00 · Cumartesi 09:00 - 14:00" },
+          { field_key: "address", field_type: "text", label: "Adres Özeti", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
+          { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10" },
+          { field_key: "whatsapp_label", field_type: "text", label: "WhatsApp Etiketi", value_text: "WhatsApp" },
+          { field_key: "cta_label", field_type: "text", label: "Buton Etiketi", value_text: "Teklif Talep Et" }
         ];
         
         for (const f of fields) {
@@ -61,6 +62,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             section_id: section.id,
             field_key: f.field_key,
             field_type: f.field_type,
+            label: f.label,
             value_text: f.value_text
           }, { onConflict: "section_id,field_key" });
         }
@@ -75,21 +77,22 @@ export const syncPublicContent = createServerFn({ method: "POST" })
         section_key: "footer_content",
         internal_label: "Footer İçeriği",
         display_order: 1,
-        is_active: true
+        is_active: true,
+        section_type: "footer"
       };
       
       const { data: section } = await supabase.from("page_sections").upsert(footerSection, { onConflict: "page_id,section_key" }).select().single();
       
       if (section) {
         const fields = [
-          { field_key: "summary", field_type: "text", value_text: "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim." },
-          { field_key: "address", field_type: "text", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
-          { field_key: "phone", field_type: "text", value_text: "0553 306 92 10" },
-          { field_key: "email", field_type: "text", value_text: "bilgi@pratiktedarik.com" },
-          { field_key: "hours", field_type: "text", value_text: "Pzt – Cmt · 08:30 – 18:00" },
-          { field_key: "copyright", field_type: "text", value_text: "© 2026 Pratik Endüstriyel. Tüm hakları saklıdır." },
-          { field_key: "attribution_text", field_type: "text", value_text: "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır." },
-          { field_key: "attribution_url", field_type: "text", value_text: "https://www.bilgintek.com" }
+          { field_key: "summary", field_type: "text", label: "Şirket Özeti", value_text: "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim." },
+          { field_key: "address", field_type: "text", label: "Adres", value_text: "Dudullu OSB, Ümraniye / İstanbul" },
+          { field_key: "phone", field_type: "text", label: "Telefon", value_text: "0553 306 92 10" },
+          { field_key: "email", field_type: "text", label: "E-posta", value_text: "bilgi@pratiktedarik.com" },
+          { field_key: "hours", field_type: "text", label: "Çalışma Günleri", value_text: "Pzt – Cmt · 08:30 – 18:00" },
+          { field_key: "copyright", field_type: "text", label: "Telif Hakkı", value_text: "© 2026 Pratik Endüstriyel. Tüm hakları saklıdır." },
+          { field_key: "attribution_text", field_type: "text", label: "Ajans Metni", value_text: "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır." },
+          { field_key: "attribution_url", field_type: "text", label: "Ajans Linki", value_text: "https://www.bilgintek.com" }
         ];
         
         for (const f of fields) {
@@ -97,6 +100,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             section_id: section.id,
             field_key: f.field_key,
             field_type: f.field_type,
+            label: f.label,
             value_text: f.value_text
           }, { onConflict: "section_id,field_key" });
         }
@@ -111,17 +115,18 @@ export const syncPublicContent = createServerFn({ method: "POST" })
         section_key: "hero",
         internal_label: "Ana Sayfa Hero",
         display_order: 1,
-        is_active: true
+        is_active: true,
+        section_type: "hero"
       };
       
       const { data: section } = await supabase.from("page_sections").upsert(heroSection, { onConflict: "page_id,section_key" }).select().single();
       
       if (section) {
         const fields = [
-          { field_key: "eyebrow", field_type: "text", value_text: "Bosch · Makita · DeWalt · Hilti yetkili tedariki" },
-          { field_key: "title", field_type: "text", value_text: "Endüstriyel Donanımda Güvenilir Tedarik" },
-          { field_key: "description", field_type: "text", value_text: "Tesis, şantiye ve üretim hatlarınız için elektrikli el aletlerinden bağlantı elemanlarına uçtan uca profesyonel donanım çözümleri." },
-          { field_key: "cta_label", field_type: "text", value_text: "Teklif Talep Et" }
+          { field_key: "eyebrow", field_type: "text", label: "Üst Başlık", value_text: "Bosch · Makita · DeWalt · Hilti yetkili tedariki" },
+          { field_key: "title", field_type: "text", label: "Ana Başlık", value_text: "Endüstriyel Donanımda Güvenilir Tedarik" },
+          { field_key: "description", field_type: "text", label: "Açıklama", value_text: "Tesis, şantiye ve üretim hatlarınız için elektrikli el aletlerinden bağlantı elemanlarına uçtan uca profesyonel donanım çözümleri." },
+          { field_key: "cta_label", field_type: "text", label: "Buton Etiketi", value_text: "Teklif Talep Et" }
         ];
         
         for (const f of fields) {
@@ -129,6 +134,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
             section_id: section.id,
             field_key: f.field_key,
             field_type: f.field_type,
+            label: f.label,
             value_text: f.value_text
           }, { onConflict: "section_id,field_key" });
         }
@@ -137,3 +143,4 @@ export const syncPublicContent = createServerFn({ method: "POST" })
 
     return { success: true };
   });
+
