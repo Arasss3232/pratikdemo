@@ -11,17 +11,18 @@ type NavItemType = {
   icon: string;
   category: "Global" | "Sayfalar" | "Sistem";
   component: "content" | "settings" | "nav" | "placeholder" | "history";
+  flexiblePageName?: string;
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content" },
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content", flexiblePageName: "top_bar" },
+  { id: "flexible_cms", label: "Gelişmiş CMS (Site İçeriği)", icon: "auto_awesome", category: "Global", component: "content", flexiblePageName: "home" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
-  { id: "flexible_cms", label: "Gelişmiş CMS (Site İçeriği)", icon: "auto_awesome", category: "Global", component: "content" },
-  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content" },
+  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content", flexiblePageName: "footer" },
   
-  { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },
-  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content" },
-  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content" },
+  { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content", flexiblePageName: "home" },
+  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content", flexiblePageName: "corporate" },
+  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content", flexiblePageName: "products" },
   { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", component: "content" },
   { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Sayfalar", component: "content" },
   { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Sayfalar", component: "content" },
@@ -75,7 +76,12 @@ export function ContentManagement() {
       {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
       <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
         <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} />}
+          {activeItem.component === "content" && (
+            <ContentEditorPanel 
+              route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} 
+              flexiblePageName={activeItem.flexiblePageName}
+            />
+          )}
           {activeItem.component === "settings" && <SettingsPanel />}
           {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
           {activeItem.component === "history" && <HistoryPanel />}

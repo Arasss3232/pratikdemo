@@ -8,6 +8,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useCategories } from "@/hooks/use-categories";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { useSiteContent } from "@/hooks/use-site-content";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
 
@@ -74,6 +75,16 @@ export function SiteHeader() {
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
   const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
+  
+  // CMS Integration for Top Bar
+  const { data: topBarData } = useSiteContent("top_bar");
+  const topBarInfo = topBarData?.info || {};
+
+  const workingHours = topBarInfo.working_hours || "Pzt - Cmt: 08:30 - 18:30";
+  const address = topBarInfo.address || "İkitelli OSB, İstanbul";
+  const displayPhone = topBarInfo.phone || "+90 (212) 123 45 67";
+  const whatsappLink = topBarInfo.whatsapp_link || "https://wa.me/905000000000";
+
 
 
   useEffect(() => {
@@ -167,10 +178,10 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-            {phone ? (
-              <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+            {displayPhone ? (
+              <a href={`tel:${displayPhone.replace(/[^\d]/g, "")}`} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
                 <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                <span className="truncate">{phone}</span>
+                <span className="truncate">{displayPhone}</span>
               </a>
             ) : (
               <div className="min-h-[28px]" />
@@ -178,9 +189,9 @@ export function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {waHref && (
+            {whatsappLink && (
               <a
-                href={waHref}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp ile yaz"
@@ -209,29 +220,29 @@ export function SiteHeader() {
       >
         <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
           <div className="flex items-center gap-6">
-            {settings.working_hours && (
+            {workingHours && (
               <span className="inline-flex items-center gap-2">
                 <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.working_hours}
+                {workingHours}
               </span>
             )}
-            {settings.address && (
+            {address && (
               <span className="inline-flex items-center gap-2">
                 <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.address}
+                {address}
               </span>
             )}
           </div>
           <div className="flex items-center gap-5">
-            {phone && (
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+            {displayPhone && (
+              <a href={`tel:${displayPhone.replace(/[^\d]/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
                 <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {phone}
+                {displayPhone}
               </a>
             )}
-            {whatsapp && (
+            {whatsappLink && (
               <a
-                href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"

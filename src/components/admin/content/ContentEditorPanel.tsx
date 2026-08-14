@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe, Sparkles } from "lucide-react";
+import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe, Sparkles, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { FileUploadField } from "../FileUploadField";
 import { useSiteContent, useUpdateSiteContent } from "@/hooks/use-site-content";
 
-export function ContentEditorPanel({ route }: { route: string }) {
+interface ContentEditorPanelProps {
+  route: string;
+  flexiblePageName?: string;
+}
+
+export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPanelProps) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [localSections, setLocalSections] = useState<any[]>([]);
@@ -40,9 +45,9 @@ export function ContentEditorPanel({ route }: { route: string }) {
   });
 
   // 2. New Flexible CMS logic (site_content based)
-  const isFlexibleCms = route === "flexible_cms";
-  const flexiblePageName = "home"; // Defaulting to home for the new table demo
-  const { data: siteContent, isLoading: flexibleLoading } = useSiteContent(flexiblePageName);
+  const isFlexibleCms = route === "flexible_cms" || !!flexiblePageName;
+  const targetPageName = flexiblePageName || "home";
+  const { data: siteContent, isLoading: flexibleLoading } = useSiteContent(targetPageName);
   const updateMutation = useUpdateSiteContent();
 
   useEffect(() => {
@@ -52,6 +57,13 @@ export function ContentEditorPanel({ route }: { route: string }) {
   useEffect(() => {
     if (siteContent) setFlexibleContent(JSON.parse(JSON.stringify(siteContent)));
   }, [siteContent]);
+
+  const handleUndo = () => {
+    if (siteContent) {
+      setFlexibleContent(JSON.parse(JSON.stringify(siteContent)));
+      toast.info("Değişiklikler geri alındı.");
+    }
+  };
 
   const saveMutation = useMutation({
     mutationFn: async (isPublish: boolean) => {
@@ -121,60 +133,80 @@ export function ContentEditorPanel({ route }: { route: string }) {
           <div>
             <h2 className="text-2xl font-bold flex items-center gap-2">
               <Sparkles className="text-[var(--admin-yellow)]" />
-              Gelişmiş CMS (Site İçeriği)
+              {flexiblePageName === "top_bar" ? "Üst Bilgi Çubuğu Yönetimi" : "Gelişmiş CMS (Site İçeriği)"}
             </h2>
             <p className="text-white/50">Esnek veri yapısı ile dinamik alanları yönetin</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={handleUndo}
+              className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
+              title="Geri Al"
+            >
+              <Undo2 size={16} />
+              Geri Al
+            </button>
+            <button 
+              onClick={() => {
+                // Bulk update for flexible content
+                Object.entries(flexibleContent).forEach(([sectionKey, contentValue]) => {
+                  updateMutation.mutate({
+                    pageName: targetPageName,
+                    sectionKey,
+                    contentValue
+                  });
+                });
+                toast.success("Tüm değişiklikler yayınlandı.");
+              }}
+              disabled={updateMutation.isPending}
+              className="h-10 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20"
+            >
+              {updateMutation.isPending ? <Loader2 className="animate-spin" size={18} /> : <Globe size={18} />}
+              Yayınla
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-8">
-          {Object.entries(flexibleContent).map(([sectionKey, value]) => (
-            <div key={sectionKey} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
-              <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-[var(--admin-yellow)]/10">
-                    <Layout size={18} className="text-[var(--admin-yellow)]" />
-                  </div>
-                  <h3 className="font-bold">{sectionKey.toUpperCase()}</h3>
-                </div>
-                <button 
-                  onClick={() => {
-                    updateMutation.mutate({
-                      pageName: flexiblePageName,
-                      sectionKey,
-                      contentValue: flexibleContent[sectionKey]
-                    }, {
-                      onSuccess: () => toast.success(`${sectionKey} başarıyla güncellendi.`)
-                    });
-                  }}
-                  disabled={updateMutation.isPending}
-                  className="px-4 py-1.5 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg text-xs font-bold hover:scale-[1.02] active:scale-95 transition-all"
-                >
-                  {updateMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : "GÜNCELLE"}
-                </button>
-              </div>
-              <div className="p-6 space-y-4">
-                {Object.entries(value).map(([fieldKey, fieldValue]: [string, any]) => (
-                  <div key={fieldKey} className="space-y-2">
-                    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fieldKey}</label>
-                    <textarea 
-                      className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[60px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                      value={fieldValue || ""}
-                      onChange={(e) => {
-                        setFlexibleContent(prev => ({
-                          ...prev,
-                          [sectionKey]: {
-                            ...prev[sectionKey],
-                            [fieldKey]: e.target.value
-                          }
-                        }));
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+          {Object.keys(flexibleContent).length === 0 ? (
+            <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
+              <Layout size={48} className="mx-auto mb-4 opacity-50" />
+              <p>Bu bölüm için henüz veri senkronize edilmemiş.</p>
             </div>
-          ))}
+          ) : (
+            Object.entries(flexibleContent).map(([sectionKey, value]) => (
+              <div key={sectionKey} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
+                <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-[var(--admin-yellow)]/10">
+                      <Layout size={18} className="text-[var(--admin-yellow)]" />
+                    </div>
+                    <h3 className="font-bold">{sectionKey.toUpperCase()}</h3>
+                  </div>
+                </div>
+                <div className="p-6 space-y-4">
+                  {Object.entries(value).map(([fieldKey, fieldValue]: [string, any]) => (
+                    <div key={fieldKey} className="space-y-2">
+                      <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fieldKey.replace('_', ' ')}</label>
+                      <textarea 
+                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[60px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                        value={fieldValue || ""}
+                        onChange={(e) => {
+                          setFlexibleContent(prev => ({
+                            ...prev,
+                            [sectionKey]: {
+                              ...prev[sectionKey],
+                              [fieldKey]: e.target.value
+                            }
+                          }));
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     );
