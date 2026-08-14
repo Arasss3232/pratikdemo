@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Plus, Save, Trash2, GripVertical, Check, X, Globe, Smartphone, Monitor } from "lucide-react";
+import { Loader2, Plus, Save, Trash2, GripVertical, Check, X, Globe, Smartphone, Monitor, RefreshCcw, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { syncPublicContent } from "@/lib/sync-content.functions";
 
 export function HeaderNavigationEditor() {
   const queryClient = useQueryClient();
   const [items, setItems] = useState<any[]>([]);
   const [headerConfig, setHeaderConfig] = useState<any[]>([]);
+  const syncBootstrap = useServerFn(syncPublicContent);
+  const [bootstrapping, setBootstrapping] = useState(false);
 
   const { data: navData, isLoading: navLoading } = useQuery({
     queryKey: ["navigation", "header_navigation"],
@@ -21,7 +25,7 @@ export function HeaderNavigationEditor() {
     }
   });
 
-  const { data: configData, isLoading: configLoading } = useQuery({
+  const { data: configData, isLoading: configLoading, refetch: refetchConfig } = useQuery({
     queryKey: ["cms-sections", "header_navigation"],
     queryFn: async () => {
       const { data: page, error: pageError } = await supabase
@@ -31,7 +35,7 @@ export function HeaderNavigationEditor() {
         .maybeSingle();
 
       if (pageError) throw pageError;
-      if (!page) return [];
+      if (!page) return null;
 
       const { data, error: sectionsError } = await supabase
         .from("page_sections")
@@ -44,6 +48,23 @@ export function HeaderNavigationEditor() {
       return data?.section_content || [];
     }
   });
+
+  useEffect(() => {
+    async function bootstrap() {
+      if (!configLoading && (!configData || (Array.isArray(configData) && configData.length === 0))) {
+        setBootstrapping(true);
+        try {
+          await syncBootstrap();
+          await refetchConfig();
+        } catch (err) {
+          console.error("Header Bootstrap Error:", err);
+        } finally {
+          setBootstrapping(false);
+        }
+      }
+    }
+    bootstrap();
+  }, [configData, configLoading, syncBootstrap, refetchConfig]);
 
   useEffect(() => {
     if (navData) setItems(JSON.parse(JSON.stringify(navData)));
@@ -135,7 +156,31 @@ export function HeaderNavigationEditor() {
     toast.success("Link kaldırıldı.");
   };
 
-  if (navLoading || configLoading) return <div className="p-8 text-white/40 text-center"><Loader2 className="animate-spin mx-auto" /></div>;
+  if (navLoading || configLoading || bootstrapping) return (
+    <div className="flex flex-col items-center justify-center h-64 text-white/40">
+      <Loader2 className="animate-spin mb-4" size={32} />
+      <p>{bootstrapping ? "İçerik otomatik olarak hazırlanıyor..." : "Yükleniyor..."}</p>
+    </div>
+  );
+
+  if (!configData || (Array.isArray(configData) && configData.length === 0)) {
+    return (
+      <div className="p-8 text-white/40 text-center border-2 border-dashed border-white/5 rounded-2xl">
+        <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
+        <p className="mb-4">Header yapılandırması için yönetilebilir bir içerik bulunamadı.</p>
+        <button 
+          onClick={() => {
+            setBootstrapping(true);
+            syncBootstrap().then(() => refetchConfig()).finally(() => setBootstrapping(false));
+          }}
+          className="px-6 py-2 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2 mx-auto"
+        >
+          <RefreshCcw size={18} />
+          İçeriği Şimdi Oluştur
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">

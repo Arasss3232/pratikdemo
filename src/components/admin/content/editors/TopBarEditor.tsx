@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Plus, Save, Phone, MapPin, Clock, MessageSquare, ExternalLink } from "lucide-react";
+import { Loader2, Plus, Save, Phone, MapPin, Clock, MessageSquare, ExternalLink, RefreshCcw, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { syncPublicContent } from "@/lib/sync-content.functions";
 
 export function TopBarEditor() {
   const queryClient = useQueryClient();
   const [localContent, setLocalContent] = useState<any[]>([]);
+  const syncBootstrap = useServerFn(syncPublicContent);
+  const [bootstrapping, setBootstrapping] = useState(false);
 
-  const { data: sectionData, isLoading } = useQuery({
+  const { data: sectionData, isLoading, refetch } = useQuery({
     queryKey: ["cms-sections", "top_bar"],
     queryFn: async () => {
       const { data: page, error: pageError } = await supabase
@@ -18,7 +22,7 @@ export function TopBarEditor() {
         .maybeSingle();
 
       if (pageError) throw pageError;
-      if (!page) return [];
+      if (!page) return null;
 
       const { data, error: sectionsError } = await supabase
         .from("page_sections")
@@ -31,6 +35,23 @@ export function TopBarEditor() {
       return data?.section_content || [];
     }
   });
+
+  useEffect(() => {
+    async function bootstrap() {
+      if (!isLoading && (!sectionData || (Array.isArray(sectionData) && sectionData.length === 0))) {
+        setBootstrapping(true);
+        try {
+          await syncBootstrap();
+          await refetch();
+        } catch (err) {
+          console.error("TopBar Bootstrap Error:", err);
+        } finally {
+          setBootstrapping(false);
+        }
+      }
+    }
+    bootstrap();
+  }, [sectionData, isLoading, syncBootstrap, refetch]);
 
   useEffect(() => {
     if (sectionData) setLocalContent(JSON.parse(JSON.stringify(sectionData)));
@@ -67,7 +88,31 @@ export function TopBarEditor() {
     setLocalContent(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
   };
 
-  if (isLoading) return <div className="p-8 text-white/40"><Loader2 className="animate-spin mx-auto" /></div>;
+  if (isLoading || bootstrapping) return (
+    <div className="flex flex-col items-center justify-center h-64 text-white/40">
+      <Loader2 className="animate-spin mb-4" size={32} />
+      <p>{bootstrapping ? "İçerik otomatik olarak hazırlanıyor..." : "Yükleniyor..."}</p>
+    </div>
+  );
+
+  if (!sectionData || (Array.isArray(sectionData) && sectionData.length === 0)) {
+    return (
+      <div className="p-8 text-white/40 text-center border-2 border-dashed border-white/5 rounded-2xl">
+        <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
+        <p className="mb-4">Üst bar için yönetilebilir bir içerik bulunamadı.</p>
+        <button 
+          onClick={() => {
+            setBootstrapping(true);
+            syncBootstrap().then(() => refetch()).finally(() => setBootstrapping(false));
+          }}
+          className="px-6 py-2 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2 mx-auto"
+        >
+          <RefreshCcw size={18} />
+          İçeriği Şimdi Oluştur
+        </button>
+      </div>
+    );
+  }
 
   const getIcon = (key: string) => {
     switch (key) {
