@@ -74,7 +74,7 @@ export function ContentManagement() {
       {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
       <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
         <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id} />}
+          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} />}
           {activeItem.component === "settings" && <SettingsPanel />}
           {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
           {activeItem.component === "history" && <HistoryPanel />}
