@@ -434,11 +434,15 @@ export function WhyChoose({ sections = {} as any }: { sections?: any }) {
                   color: NAVY_950,
                 }}
               >
-                Doğru ürün, doğru marka, <br />
-                doğru yönlendirme.
+                {sections.why_choose?.content.title?.value_text || (
+                  <>
+                    Doğru ürün, doğru marka, <br />
+                    doğru yönlendirme.
+                  </>
+                )}
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#455A73" }}>
-                Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor.
+                {sections.why_choose?.content.subtitle?.value_text || "Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor."}
               </p>
               <div
                 className="mt-8 aspect-[4/5] overflow-hidden pub-ticks relative"
