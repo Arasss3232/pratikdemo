@@ -75,6 +75,16 @@ export function SiteHeader() {
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
   const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
+  
+  // CMS Integration for Top Bar
+  const { data: topBarData } = useSiteContent("top_bar");
+  const topBarInfo = topBarData?.info || {};
+
+  const workingHours = topBarInfo.working_hours || "Pzt - Cmt: 08:30 - 18:30";
+  const address = topBarInfo.address || "İkitelli OSB, İstanbul";
+  const displayPhone = topBarInfo.phone || "+90 (212) 123 45 67";
+  const whatsappLink = topBarInfo.whatsapp_link || "https://wa.me/905000000000";
+
 
 
   useEffect(() => {
