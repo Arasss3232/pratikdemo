@@ -107,12 +107,14 @@ export function SectionHead(props: {
  * 03 — Company Capability (navy frame + warm-light content panel)
  * ===================================================================== */
 export function ValueProps({ sections = {} as any }: { sections?: any }) {
-  const capabilities = [
+  const cmsCapabilities = sections.value_props?.content.capabilities?.value_json;
+  const defaultCapabilities = [
     { k: "01", t: "Uzman Yönlendirme", d: "İhtiyacınıza en uygun ürün grubunu belirlemek için teknik destek sunuyoruz." },
     { k: "02", t: "Kurumsal Süreç", d: "Tekliften teslimata tüm aşamalar şeffaf ve kurumsal standartlarda yürütülür." },
     { k: "03", t: "Geniş Tedarik Ağı", d: "Dünya markalarının yetkili kanalları üzerinden güvenilir ürün temini sağlıyoruz." },
     { k: "04", t: "Kesintisiz Destek", d: "Satış öncesi ve sonrası süreçte uzman ekibimize her an ulaşabilirsiniz." },
   ];
+  const capabilities = Array.isArray(cmsCapabilities) ? cmsCapabilities : defaultCapabilities;
 
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
