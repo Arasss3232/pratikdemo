@@ -786,7 +786,7 @@ export function SiteFooter() {
               <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
-              {footerIdentity.content.summary?.value_text || settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
+              {footerIdentity.summary?.value_text || (settings as any).footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
             </p>
 
             <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
@@ -892,21 +892,21 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
-          <p>{footerBottom.content.copyright?.value_text || settings.copyright || `© ${currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.`}</p>
-          <p className="section-label text-white/50">{footerBottom.content.footer_bottom_text?.value_text || settings.footer_bottom_text || "Endüstriyel Donanım · Kurumsal Tedarik"}</p>
+          <p>{footerBottom.copyright?.value_text || (settings as any).copyright || `© ${currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.`}</p>
+          <p className="section-label text-white/50">{footerBottom.footer_bottom_text?.value_text || (settings as any).footer_bottom_text || "Endüstriyel Donanım · Kurumsal Tedarik"}</p>
         </div>
 
 
-        {(footerBottom.content.agency_attribution_visible?.value_text === "true" || settings.agency_attribution_visible) && (
+        {(footerBottom.agency_attribution_visible?.value_text === "true" || (settings as any).agency_attribution_visible !== false) && (
           <div className="mt-8 pt-4 border-t border-white/5 flex justify-center">
             <a
-              href={footerBottom.content.agency_attribution_url?.value_text || settings.agency_attribution_url || "https://www.bilgintek.com"}
+              href={footerBottom.agency_attribution_url?.value_text || (settings as any).agency_attribution_url || "https://www.bilgintek.com"}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bilgintek Yazılım ve Reklam Ajansı web sitesini yeni sekmede aç"
               className="text-[11px] tracking-wide text-white/40 hover:text-[var(--public-yellow-500)] transition-all duration-200 py-2 px-4 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--public-yellow-500)] focus-visible:outline-offset-4 rounded"
             >
-              {footerBottom.content.agency_attribution_text?.value_text || settings.agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
+              {footerBottom.agency_attribution_text?.value_text || (settings as any).agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
             </a>
           </div>
         )}
