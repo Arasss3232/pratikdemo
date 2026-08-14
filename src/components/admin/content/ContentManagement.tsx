@@ -22,11 +22,13 @@ const NAV_ITEMS: NavItemType[] = [
   // 2. Grup: Kurumsal & Sayfalar
   { id: "/", label: "Ana Sayfa", icon: "home", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/hakkimizda", label: "Hakkımızda", icon: "corporate_fare", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/urunler", label: "Ürün Kategorileri", icon: "category", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/sektorel", label: "Sektörel Çözümler", icon: "precision_manufacturing", category: "Kurumsal & Sayfalar", component: "content" },
   { id: "/kvkk", label: "KVKK ve Yasal Sayfalar", icon: "gavel", category: "Kurumsal & Sayfalar", component: "content" },
   
   // 3. Grup: Sistem & Mesajlar
