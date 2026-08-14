@@ -106,27 +106,33 @@ export function SectionHead(props: {
 /* =====================================================================
  * 03 — Company Capability (navy frame + warm-light content panel)
  * ===================================================================== */
-export function ValueProps() {
+export function ValueProps({ sections = {} as any }: { sections?: any }) {
   const capabilities = [
     { k: "01", t: "Uzman Yönlendirme", d: "İhtiyacınıza en uygun ürün grubunu belirlemek için teknik destek sunuyoruz." },
     { k: "02", t: "Kurumsal Süreç", d: "Tekliften teslimata tüm aşamalar şeffaf ve kurumsal standartlarda yürütülür." },
     { k: "03", t: "Geniş Tedarik Ağı", d: "Dünya markalarının yetkili kanalları üzerinden güvenilir ürün temini sağlıyoruz." },
     { k: "04", t: "Kesintisiz Destek", d: "Satış öncesi ve sonrası süreçte uzman ekibimize her an ulaşabilirsiniz." },
   ];
+
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
       <div className="absolute inset-0 pub-blueprint opacity-70 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
           index="03"
-          eyebrow="Kurumsal Yetkinlik"
+          eyebrow={sections.value_props?.content.eyebrow?.value_text || "Kurumsal Yetkinlik"}
           title={
-            <>
-              Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
-            </>
+            sections.value_props?.content.title?.value_text ? (
+              <span>{sections.value_props.content.title.value_text}</span>
+            ) : (
+              <>
+                Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
+              </>
+            )
           }
-          subtitle="Sanayi tesislerine, şantiyelere ve üretim hatlarına yönelik profesyonel donanım tedariki. İhtiyacınız olan ürün grubunu seçin, uzman ekibimiz size özel teklifi hazırlasın."
+          subtitle={sections.value_props?.content.subtitle?.value_text || "Sanayi tesislerine, şantiyelere ve üretim hatlarına yönelik profesyonel donanım tedariki. İhtiyacınız olan ürün grubunu seçin, uzman ekibimiz size özel teklifi hazırlasın."}
         />
+
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           <div
@@ -166,12 +172,12 @@ export function ValueProps() {
                   fontWeight: 700,
                 }}
               >
-                Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır.
+                {sections.value_props?.content.hakkimizda_title?.value_text || "Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır."}
               </h3>
               <p className="text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
-                Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi
-                ilişkileri kurmak için çalışıyoruz.
+                {sections.value_props?.content.hakkimizda_desc?.value_text || "Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi ilişkileri kurmak için çalışıyoruz."}
               </p>
+
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ backgroundColor: "#DBE2EB" }}>
                 {capabilities.map((c) => (
                   <li key={c.k} className="p-4" style={{ backgroundColor: "#F2F5F8" }}>
