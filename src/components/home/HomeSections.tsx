@@ -198,8 +198,8 @@ export function ValueProps({ sections = {} as any }: { sections?: any }) {
                   </li>
                 ))}
               </ul>
-              <Link to="/kurumsal" className="pub-btn pub-btn-outline-dark pub-btn-sm self-start">
-                Hakkımızda
+              <Link to={sections.value_props?.content.hakkimizda_btn_url?.link_url || "/kurumsal"} className="pub-btn pub-btn-outline-dark pub-btn-sm self-start">
+                {sections.value_props?.content.hakkimizda_btn_label?.value_text || "Hakkımızda"}
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>
             </div>
