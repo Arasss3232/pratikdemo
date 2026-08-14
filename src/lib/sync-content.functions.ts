@@ -149,8 +149,44 @@ export const syncPublicContent = createServerFn({ method: "POST" })
       { label: "Ürünler", route: "/urunler", display_order: 3, menu_type: "header" },
       { label: "Kataloglarımız", route: "/kataloglar", display_order: 4, menu_type: "header" },
       { label: "Bayiliklerimiz", route: "/bayiliklerimiz", display_order: 5, menu_type: "header" },
-      { label: "İletişim", route: "/iletisim", display_order: 6, menu_type: "header" }
+      { label: "İletişim", route: "/iletisim", display_order: 6, menu_type: "header" },
+      { label: "Teklif Talep Et", route: "/teklif", display_order: 7, menu_type: "header" }
     ];
+
+    // 6. Sync System Messages
+    const systemId = getPageId("sistem");
+    if (systemId) {
+      const messages = [
+        { field_key: "loading", field_type: "text", label: "Yükleniyor Mesajı", value_text: "Yükleniyor..." },
+        { field_key: "404_title", field_type: "text", label: "404 Başlık", value_text: "Sayfa bulunamadı" },
+        { field_key: "404_desc", field_type: "text", label: "404 Açıklama", value_text: "Aradığınız sayfa mevcut değil veya taşınmış olabilir." },
+        { field_key: "retry", field_type: "text", label: "Tekrar Dene", value_text: "Tekrar Dene" },
+        { field_key: "go_home", field_type: "text", label: "Ana Sayfaya Dön", value_text: "Ana Sayfaya Dön" },
+        { field_key: "success_title", field_type: "text", label: "Başarı Başlığı", value_text: "İşlem Başarılı" }
+      ];
+
+      const { data: section } = await supabase.from("page_sections").upsert({
+        page_id: systemId,
+        section_key: "system_messages",
+        internal_label: "Sistem Mesajları",
+        display_order: 1,
+        is_active: true,
+        section_type: "system"
+      }, { onConflict: "page_id,section_key" }).select().single();
+
+      if (section) {
+        for (const m of messages) {
+          await supabase.from("section_content").upsert({
+            section_id: section.id,
+            field_key: m.field_key,
+            field_type: m.field_type,
+            label: m.label,
+            value_text: m.value_text
+          }, { onConflict: "section_id,field_key" });
+        }
+      }
+    }
+
 
     for (const item of navItems) {
       await supabase.from("navigation_items").upsert({
