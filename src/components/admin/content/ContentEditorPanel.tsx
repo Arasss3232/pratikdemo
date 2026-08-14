@@ -182,49 +182,80 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
               <p className="text-sm font-medium italic">Bu bölüm için henüz tanımlanmış alan bulunmuyor.</p>
             </div>
           ) : (
-            <Card className="bg-white/[0.02] border-white/5 rounded-3xl overflow-hidden">
-              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
-                <CardTitle className="text-sm font-bold uppercase tracking-widest text-white/60 flex items-center gap-3">
-                  <Type className="text-[var(--admin-yellow)] w-4 h-4" />
-                  İçerik Alanları
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                {Object.entries(draftData).map(([key, value]) => {
-                  const isLongText = value.length > 100 || key.includes('content') || key.includes('description') || key.includes('mission') || key.includes('vision') || key.includes('address');
-                  const isUrl = key.includes('url') || key.includes('link');
-                  const isPhone = key.includes('phone') || key.includes('whatsapp_number');
-                  
-                  return (
-                    <div key={key} className="space-y-3 group/field">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-bold text-white/50 uppercase tracking-[0.15em] flex items-center gap-2 group-hover/field:text-[var(--admin-yellow)]/70 transition-colors">
-                          {isUrl ? <LinkIcon size={12} /> : isPhone ? <Globe size={12} /> : <Type size={12} />}
-                          {getFieldLabel(key)}
-                        </label>
-                        <code className="text-[9px] font-mono text-white/10 opacity-0 group-hover/field:opacity-100 transition-opacity">{key}</code>
-                      </div>
+            <div className="space-y-6">
+              {/* Grouping Fields into Cards for Better UX */}
+              {(() => {
+                const entries = Object.entries(draftData);
+                const groups: Record<string, typeof entries> = {
+                  "Genel Bilgiler": [],
+                  "Navigasyon ve Linkler": [],
+                  "İçerik Detayları": [],
+                  "Sosyal Medya ve İletişim": []
+                };
 
-                      {isLongText ? (
-                        <Textarea
-                          className="bg-black/40 border-white/10 rounded-xl min-h-[120px] focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10 resize-y"
-                          value={value}
-                          onChange={(e) => updateDraft(key, e.target.value)}
-                          placeholder={`${getFieldLabel(key)} içeriğini girin...`}
-                        />
-                      ) : (
-                        <Input
-                          className="bg-black/40 border-white/10 rounded-xl h-12 focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10"
-                          value={value}
-                          onChange={(e) => updateDraft(key, e.target.value)}
-                          placeholder={`${getFieldLabel(key)} değerini girin...`}
-                        />
-                      )}
-                    </div>
+                entries.forEach(([key, value]) => {
+                  if (key.includes('nav') || key.includes('link') || key.includes('url') || key.includes('cta')) {
+                    groups["Navigasyon ve Linkler"].push([key, value]);
+                  } else if (key.includes('content') || key.includes('text') || key.includes('description') || key.includes('mission') || key.includes('vision') || key.includes('subtitle') || key.includes('title')) {
+                    groups["İçerik Detayları"].push([key, value]);
+                  } else if (key.includes('phone') || key.includes('email') || key.includes('address') || key.includes('hours') || key.includes('social') || key.includes('instagram') || key.includes('facebook') || key.includes('linkedin')) {
+                    groups["Sosyal Medya ve İletişim"].push([key, value]);
+                  } else {
+                    groups["Genel Bilgiler"].push([key, value]);
+                  }
+                });
+
+                return Object.entries(groups).map(([groupName, groupFields]) => {
+                  if (groupFields.length === 0) return null;
+
+                  return (
+                    <Card key={groupName} className="bg-white/[0.02] border-white/5 rounded-3xl overflow-hidden shadow-xl">
+                      <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-5">
+                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 flex items-center gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[var(--admin-yellow)]" />
+                          {groupName}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-8 space-y-8">
+                        {groupFields.map(([key, value]) => {
+                          const isLongText = value.length > 80 || key.includes('content') || key.includes('description') || key.includes('mission') || key.includes('vision') || key.includes('address') || key.includes('text');
+                          const isUrl = key.includes('url') || key.includes('link');
+                          const isPhone = key.includes('phone') || key.includes('whatsapp_number');
+                          
+                          return (
+                            <div key={key} className="space-y-3 group/field">
+                              <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-bold text-white/50 uppercase tracking-[0.15em] flex items-center gap-2 group-hover/field:text-[var(--admin-yellow)]/70 transition-colors">
+                                  {isUrl ? <LinkIcon size={12} /> : isPhone ? <Globe size={12} /> : <Type size={12} />}
+                                  {getFieldLabel(key)}
+                                </label>
+                                <code className="text-[9px] font-mono text-white/10 opacity-0 group-hover/field:opacity-100 transition-opacity">{key}</code>
+                              </div>
+
+                              {isLongText ? (
+                                <Textarea
+                                  className="bg-black/40 border-white/10 rounded-xl min-h-[120px] focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10 resize-y text-sm leading-relaxed"
+                                  value={value}
+                                  onChange={(e) => updateDraft(key, e.target.value)}
+                                  placeholder={`${getFieldLabel(key)} içeriğini girin...`}
+                                />
+                              ) : (
+                                <Input
+                                  className="bg-black/40 border-white/10 rounded-xl h-12 focus:ring-[var(--admin-yellow)] focus:border-[var(--admin-yellow)]/50 transition-all text-white placeholder:text-white/10 text-sm"
+                                  value={value}
+                                  onChange={(e) => updateDraft(key, e.target.value)}
+                                  placeholder={`${getFieldLabel(key)} değerini girin...`}
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </CardContent>
+                    </Card>
                   );
-                })}
-              </CardContent>
-            </Card>
+                });
+              })()}
+            </div>
           )}
         </div>
 
