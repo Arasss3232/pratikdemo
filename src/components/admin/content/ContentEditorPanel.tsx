@@ -67,14 +67,14 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
 
   const getFieldLabel = (key: string) => {
     const labels: Record<string, string> = {
-      // Global
+      // Global / Top Bar
       working_hours: "Çalışma Saatleri",
       address: "Adres Bilgisi",
       phone: "Telefon Numarası",
       whatsapp_number: "WhatsApp Numarası",
       whatsapp_link: "WhatsApp Direkt Link",
-      cta_text: "Eylem Butonu Metni",
-      logo_url: "Logo Görsel URL",
+      
+      // Header
       nav_home: "Menü: Ana Sayfa",
       nav_corporate: "Menü: Kurumsal",
       nav_products: "Menü: Ürünler",
@@ -82,14 +82,17 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
       nav_dealerships: "Menü: Bayilikler",
       nav_contact: "Menü: İletişim",
       cta_button_text: "Header Buton Metni",
-      company_description: "Şirket Kısa Tanıtımı (Footer)",
+      logo_url: "Logo Görsel URL",
+      
+      // Footer
+      company_description: "Şirket Kısa Tanıtımı",
       email: "E-Posta Adresi",
       facebook_url: "Facebook Linki",
       instagram_url: "Instagram Linki",
       linkedin_url: "LinkedIn Linki",
-      copyright_text: "Telif Hakkı (Copyright) Metni",
+      copyright_text: "Telif Hakkı Metni",
       
-      // Home
+      // Home / Hero
       main_title: "Hero Ana Başlık",
       about_text: "Hero Açıklama Metni",
       primary_cta_text: "Hero Birincil Buton",
@@ -98,21 +101,20 @@ export function ContentEditorPanel({ pageSection }: ContentEditorPanelProps) {
       stat_1_value: "İstatistik 1 Değer",
       stat_2_label: "İstatistik 2 Başlık",
       stat_2_value: "İstatistik 2 Değer",
-      cta_banner_text: "Hero Alt Banner Metni",
       
       // Corporate
-      about_title: "Hakkımızda Başlık",
-      about_content: "Hakkımızda Kısa Metin",
-      mission: "Misyonumuz",
-      vision: "Vizyonumuz",
       page_title: "Sayfa Başlığı",
       page_subtitle: "Sayfa Alt Başlığı",
+      about_title: "Hakkımızda Başlık",
+      about_content: "Hakkımızda İçerik",
+      mission: "Misyonumuz",
+      vision: "Vizyonumuz",
       
-      // Common
+      // Contact
       page_description: "Sayfa Açıklaması",
+      contact_subtitle: "İletişim Alt Başlık",
       form_title: "Form Başlığı",
-      map_embed_url: "Google Harita Embed URL",
-      contact_subtitle: "İletişim Alt Başlık"
+      map_embed_url: "Google Harita URL"
     };
     return labels[key] || key.replace(/_/g, ' ');
   };
