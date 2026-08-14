@@ -179,10 +179,10 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-                {settings.phone ? (
-                  <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
-                    <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                    <span className="truncate">{settings.phone}</span>
+                {topBar.phone?.value_text || settings.phone ? (
+                  <a href={`tel:${(topBar.phone?.value_text || settings.phone || "").replace(/\s/g, "")}`} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+                    <Icon name={topBar.phone?.icon || "call"} className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                    <span className="truncate">{topBar.phone?.value_text || settings.phone}</span>
                   </a>
                 ) : (
                   <div className="min-h-[28px]" />
@@ -191,16 +191,16 @@ export function SiteHeader() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {waHref && (
+            {(topBar.whatsapp?.value_text || settings.whatsapp) && (
               <a
-                href={waHref}
+                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp || "").replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp ile yaz"
                 className="inline-flex items-center gap-1 min-h-[28px] font-medium hover:text-white transition-colors"
               >
-                <Icon name="chat" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {settings.whatsapp_label || "WhatsApp"}
+                <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {topBar.whatsapp_label?.value_text || (settings as any).whatsapp_label || "WhatsApp"}
               </a>
             )}
 
