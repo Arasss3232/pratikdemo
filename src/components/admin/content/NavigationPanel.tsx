@@ -31,9 +31,35 @@ export function NavigationPanel({ type }: { type: string }) {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      toast.info("Navigasyon düzenleme altyapısı hazırlanıyor.");
+      // Basic implementation for saving order/status
+      for (const item of items) {
+        const { error } = await supabase
+          .from("navigation_items")
+          .update({ 
+            display_order: item.display_order,
+            is_active: item.is_active,
+            desktop_visibility: item.desktop_visibility,
+            mobile_visibility: item.mobile_visibility
+          })
+          .eq("id", item.id);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["navigation", type] });
+      toast.success("Navigasyon düzeni kaydedildi.");
+    },
+    onError: (err) => {
+      toast.error("Hata: " + err.message);
     }
   });
+
+  const toggleVisibility = (id: string, field: 'desktop_visibility' | 'mobile_visibility') => {
+    setItems(prev => prev.map(item => 
+      item.id === id ? { ...item, [field]: !item[field] } : item
+    ));
+  };
+
 
   if (isLoading) return <div className="p-8 text-white/40"><Loader2 className="animate-spin" /> Yükleniyor...</div>;
 
@@ -76,7 +102,31 @@ export function NavigationPanel({ type }: { type: string }) {
                   <p className="text-xs text-white/40">{item.route}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-white/20 uppercase tracking-tighter">Masaüstü</span>
+                  <input 
+                    type="checkbox" 
+                    checked={item.desktop_visibility} 
+                    onChange={() => toggleVisibility(item.id, 'desktop_visibility')}
+                    className="accent-[var(--admin-yellow)]"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-white/20 uppercase tracking-tighter">Mobil</span>
+                  <input 
+                    type="checkbox" 
+                    checked={item.mobile_visibility} 
+                    onChange={() => toggleVisibility(item.id, 'mobile_visibility')}
+                    className="accent-[var(--admin-yellow)]"
+                  />
+                </div>
+                <div className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.is_active ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                  {item.is_active ? 'AKTİF' : 'PASİF'}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-4">
+
                 <button className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white">
                   <ChevronRight size={18} />
                 </button>
