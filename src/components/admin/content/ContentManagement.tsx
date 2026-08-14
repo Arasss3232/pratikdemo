@@ -14,7 +14,6 @@ type NavItemType = {
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  { id: "global_settings", label: "Genel İçerikler", icon: "settings", category: "Global", component: "settings" },
   { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "menu", category: "Global", component: "nav" },
   { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
   { id: "footer", label: "Footer", icon: "view_agenda", category: "Global", component: "nav" },
@@ -31,6 +30,7 @@ const NAV_ITEMS: NavItemType[] = [
   { id: "/sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
   { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
 ];
+
 
 export function ContentManagement() {
   const [activeId, setActiveId] = useState(NAV_ITEMS[0].id);
