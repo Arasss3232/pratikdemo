@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe } from "lucide-react";
+import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FileUploadField } from "../FileUploadField";
+import { useSiteContent, useUpdateSiteContent } from "@/hooks/use-site-content";
 
 export function ContentEditorPanel({ route }: { route: string }) {
   const queryClient = useQueryClient();
@@ -114,7 +114,6 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }));
   };
 
-
   if (isFlexibleCms) {
     return (
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -185,7 +184,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between border-b border-white/5 pb-6">
         <div>
-          <h2 className="text-2xl font-bold">{page.internal_name}</h2>
+          <h2 className="text-2xl font-bold">{page?.internal_name}</h2>
           <p className="text-white/50">{route} sayfasını düzenliyorsunuz</p>
         </div>
         <div className="flex items-center gap-3">
