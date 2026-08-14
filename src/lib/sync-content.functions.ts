@@ -141,9 +141,9 @@ export const CMS_MANIFEST: CMSPage[] = [
 
 export const syncPublicContent = createServerFn({ method: "POST" })
   .handler(async () => {
-    console.log("Starting Automatic Idempotent CMS Bootstrap...");
+    console.log("Starting Authoritative CMS Bootstrap...");
     
-    // 1. Sayfaları Upsert Et
+    // 1. Pages
     for (const p of CMS_MANIFEST) {
       await supabase.from("site_pages").upsert({
         route: p.route,
@@ -161,7 +161,7 @@ export const syncPublicContent = createServerFn({ method: "POST" })
       for (let i = 0; i < p.sections.length; i++) {
         const s = p.sections[i];
         
-        // 2. Section'ı Upsert Et
+        // 2. Sections
         const { data: section } = await supabase.from("page_sections").upsert({
           page_id: pageId,
           section_key: s.key,
@@ -172,11 +172,12 @@ export const syncPublicContent = createServerFn({ method: "POST" })
         } as any, { onConflict: "page_id,section_key" }).select().single();
 
         if (section) {
-          // 3. Field'ları "Yalnızca Eksikse Ekle" mantığıyla işle
+          // 3. Fields - UPSERT with authoritative values
           for (const f of s.fields) {
+            // Check if field exists
             const { data: existingField } = await supabase
               .from("section_content")
-              .select("id")
+              .select("id, value_text, value_json, link_url, icon")
               .eq("section_id", section.id)
               .eq("field_key", f.k)
               .maybeSingle();
@@ -191,13 +192,23 @@ export const syncPublicContent = createServerFn({ method: "POST" })
                 link_url: f.link || null,
                 icon: f.icon || null
               } as any);
+            } else {
+              // If it exists but is empty/null, populate it with manifest value
+              const needsUpdate = !existingField.value_text && !existingField.value_json && !existingField.link_url && !existingField.icon;
+              if (needsUpdate && f.v) {
+                await supabase.from("section_content").update({
+                  value_text: f.v,
+                  link_url: f.link || null,
+                  icon: f.icon || null
+                } as any).eq("id", existingField.id);
+              }
             }
           }
         }
       }
     }
 
-    // 4. Navigation Bootstrap (Header & Footer)
+    // 4. Navigation
     const headerNavLinks = [
       { label: "Ana Sayfa", route: "/", display_order: 1 },
       { label: "Kurumsal", route: "/kurumsal", display_order: 2 },
@@ -208,24 +219,15 @@ export const syncPublicContent = createServerFn({ method: "POST" })
     ];
 
     for (const link of headerNavLinks) {
-      const { data: existing } = await supabase
-        .from("navigation_items")
-        .select("id")
-        .eq("menu_type", "header_navigation")
-        .eq("route", link.route)
-        .maybeSingle();
-
-      if (!existing) {
-        await supabase.from("navigation_items").insert({
-          menu_type: "header_navigation",
-          label: link.label,
-          route: link.route,
-          display_order: link.display_order,
-          is_active: true,
-          desktop_visibility: true,
-          mobile_visibility: true
-        });
-      }
+      await supabase.from("navigation_items").upsert({
+        menu_type: "header_navigation",
+        label: link.label,
+        route: link.route,
+        display_order: link.display_order,
+        is_active: true,
+        desktop_visibility: true,
+        mobile_visibility: true
+      }, { onConflict: "menu_type,route" });
     }
 
     return { success: true };

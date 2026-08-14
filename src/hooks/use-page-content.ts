@@ -26,10 +26,10 @@ export function usePageContent(route: string, preview = false) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     async function loadContent() {
       setLoading(true);
       try {
-        // Find the page record first
         const { data: page } = await supabase
           .from("site_pages")
           .select("id, status")
@@ -38,15 +38,12 @@ export function usePageContent(route: string, preview = false) {
           .maybeSingle();
 
         if (!page) {
-          console.log(`CMS: No page record found for route: ${route}`);
-          setLoading(false);
+          if (!cancelled) setLoading(false);
           return;
         }
 
-        // Only show content if it's published or we are in preview mode
         if (page.status !== "published" && !preview) {
-          console.log(`CMS: Page ${route} is in ${page.status} status. Skipping content load.`);
-          setLoading(false);
+          if (!cancelled) setLoading(false);
           return;
         }
 
@@ -73,6 +70,8 @@ export function usePageContent(route: string, preview = false) {
           .eq("is_active", true)
           .order("display_order");
 
+        if (cancelled) return;
+
         if (sectionsData && sectionsData.length > 0) {
           const contentMap: Record<string, PageSection> = {};
           sectionsData.forEach((s: any) => {
@@ -93,11 +92,12 @@ export function usePageContent(route: string, preview = false) {
       } catch (error) {
         console.error("CMS Content Load Error:", error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     loadContent();
+    return () => { cancelled = true; };
   }, [route, preview]);
 
   return { sections, loading };
