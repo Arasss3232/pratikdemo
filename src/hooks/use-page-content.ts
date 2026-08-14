@@ -27,16 +27,25 @@ export function usePageContent(route: string, preview = false) {
 
   useEffect(() => {
     async function loadContent() {
+      setLoading(true);
       try {
+        // Find the page record first
         const { data: page } = await supabase
           .from("site_pages")
-          .select("id")
+          .select("id, status")
           .eq("route", route)
-          .eq("status", preview ? "draft" : "published")
           .limit(1)
           .maybeSingle();
 
         if (!page) {
+          console.log(`CMS: No page record found for route: ${route}`);
+          setLoading(false);
+          return;
+        }
+
+        // Only show content if it's published or we are in preview mode
+        if (page.status !== "published" && !preview) {
+          console.log(`CMS: Page ${route} is in ${page.status} status. Skipping content load.`);
           setLoading(false);
           return;
         }

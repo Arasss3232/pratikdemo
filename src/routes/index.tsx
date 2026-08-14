@@ -34,7 +34,7 @@ function HomePage() {
         <CategoryExplorer />
         <ValueProps sections={sections} />
         <SectorGrid />
-        <WhyChoose />
+        <WhyChoose sections={sections} />
         <ContactMap />
       </main>
     </SiteShell>

@@ -90,12 +90,12 @@ export function HomeHero() {
             className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6 border-t pt-8"
             style={{ borderColor: "var(--public-navy-border)" }}
           >
-            {[
+            {(heroSection?.content.capabilities?.value_json as any[] || [
               { k: "Ürün Grupları", v: "6 ana kategori" },
               { k: "Kurumsal Tedarik", v: "Sözleşmeli müşteri" },
               { k: "Teknik Yönlendirme", v: "Uzman ekip" },
               { k: "Hızlı İletişim", v: "Aynı gün geri dönüş" },
-            ].map((m) => (
+            ]).map((m) => (
               <li key={m.k}>
                 <span
                   className="pub-mono block mb-2"
