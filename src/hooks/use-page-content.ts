@@ -9,8 +9,6 @@ export type ContentField = {
   value_json: any | null;
   media_url: string | null;
   link_url: string | null;
-  icon: string | null;
-  label: string | null;
 };
 
 export type PageSection = {
@@ -26,24 +24,18 @@ export function usePageContent(route: string, preview = false) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
     async function loadContent() {
-      setLoading(true);
       try {
         const { data: page } = await supabase
           .from("site_pages")
-          .select("id, status")
+          .select("id")
           .eq("route", route)
+          .eq("status", preview ? "draft" : "published")
           .limit(1)
           .maybeSingle();
 
         if (!page) {
-          if (!cancelled) setLoading(false);
-          return;
-        }
-
-        if (page.status !== "published" && !preview) {
-          if (!cancelled) setLoading(false);
+          setLoading(false);
           return;
         }
 
@@ -61,16 +53,12 @@ export function usePageContent(route: string, preview = false) {
               value_text,
               value_json,
               media_url,
-              link_url,
-              icon,
-              label
+              link_url
             )
           `)
           .eq("page_id", page.id)
           .eq("is_active", true)
           .order("display_order");
-
-        if (cancelled) return;
 
         if (sectionsData && sectionsData.length > 0) {
           const contentMap: Record<string, PageSection> = {};
@@ -92,12 +80,11 @@ export function usePageContent(route: string, preview = false) {
       } catch (error) {
         console.error("CMS Content Load Error:", error);
       } finally {
-        if (!cancelled) setLoading(false);
+        setLoading(false);
       }
     }
 
     loadContent();
-    return () => { cancelled = true; };
   }, [route, preview]);
 
   return { sections, loading };

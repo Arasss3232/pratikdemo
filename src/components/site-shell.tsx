@@ -7,7 +7,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useCategories } from "@/hooks/use-categories";
-import { usePageContent } from "@/hooks/use-page-content";
 import { useHydrated } from "@/hooks/use-hydrated";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
@@ -71,21 +70,10 @@ export function SiteHeader() {
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const { isAdmin } = useAuth();
   const { settings: rawSettings } = useSiteSettings();
-  const settings = rawSettings || ({} as any);
+  const settings = rawSettings || {} as any;
   const { items: dynamicNav } = useNavigation();
   const { categories } = useCategories();
-  const { sections: topBarSections } = usePageContent("top_bar");
-  const { sections: headerSections } = usePageContent("header_navigation");
-  
-  const topBar = topBarSections["top_bar_content"]?.content || {};
-  const headerConfig = headerSections["header_config"]?.content || {};
-  
-  // Normalize and merge navigation sources
-  const navLinks = dynamicNav.length > 0 
-    ? dynamicNav.map(item => ({ label: item.label, to: item.route }))
-    : NAV_LINKS;
-
-
+  const navLinks = NAV_LINKS; // Force static source of truth as requested for surgical repair
 
 
   useEffect(() => {
@@ -179,31 +167,29 @@ export function SiteHeader() {
       >
         <div className="px-4 py-1.5 flex items-center justify-between text-[11px] text-white/70">
           <div className="flex-1 min-w-0">
-                {topBar.phone?.value_text || settings.phone ? (
-                  <a href={`tel:${(topBar.phone?.value_text || settings.phone || "").replace(/\s/g, "")}`} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
-                    <Icon name={topBar.phone?.icon || "call"} className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                    <span className="truncate">{topBar.phone?.value_text || settings.phone}</span>
-                  </a>
-                ) : (
-                  <div className="min-h-[28px]" />
-                )}
-
+            {phone ? (
+              <a href={telHref || '#'} className="inline-flex items-center gap-1.5 min-h-[28px] font-medium hover:text-white transition-colors truncate">
+                <Icon name="call" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                <span className="truncate">{phone}</span>
+              </a>
+            ) : (
+              <div className="min-h-[28px]" />
+            )}
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {(topBar.whatsapp?.value_text || settings.whatsapp) && (
+            {waHref && (
               <a
-                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp || "").replace(/[^\d]/g, "")}`}
+                href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp ile yaz"
                 className="inline-flex items-center gap-1 min-h-[28px] font-medium hover:text-white transition-colors"
               >
-                <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.whatsapp_label?.value_text || (settings as any).whatsapp_label || "WhatsApp"}
+                <Icon name="chat" className="text-[13px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                WhatsApp
               </a>
             )}
-
             <Link
               to="/teklif"
               className="inline-flex items-center gap-1 min-h-[28px] font-semibold"
@@ -223,43 +209,41 @@ export function SiteHeader() {
       >
         <div className="max-w-max-width mx-auto px-margin-desktop py-2 flex items-center justify-between text-[12.5px] font-medium tracking-normal text-white/75">
           <div className="flex items-center gap-6">
-            {(topBar.working_hours?.value_text || settings.working_hours) && (
+            {settings.working_hours && (
               <span className="inline-flex items-center gap-2">
-                <Icon name={topBar.working_hours?.icon || "schedule"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.working_hours?.value_text || settings.working_hours}
+                <Icon name="schedule" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {settings.working_hours}
               </span>
             )}
-            {(topBar.address?.value_text || settings.address) && (
+            {settings.address && (
               <span className="inline-flex items-center gap-2">
-                <Icon name={topBar.address?.icon || "location_on"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.address?.value_text || settings.address}
+                <Icon name="location_on" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {settings.address}
               </span>
             )}
           </div>
           <div className="flex items-center gap-5">
-            {(topBar.phone?.value_text || settings.phone) && (
-              <a href={`tel:${(topBar.phone?.value_text || settings.phone || "").replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
-                <Icon name={topBar.phone?.icon || "call"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.phone?.value_text || settings.phone}
+            {phone && (
+              <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
+                <Icon name="call" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                {phone}
               </a>
             )}
-            {(topBar.whatsapp?.value_text || settings.whatsapp) && (
+            {whatsapp && (
               <a
-                href={`https://wa.me/${(topBar.whatsapp?.value_text || settings.whatsapp || "").replace(/[^\d]/g, "")}`}
+                href={`https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
-                <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.whatsapp?.value_text || (settings as any).whatsapp_label || "WhatsApp"}
+                <Icon name="chat" className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
+                WhatsApp
               </a>
             )}
-
-            <Link to={topBar.teklif_url?.value_text || (settings as any).teklif_url || "/teklif"} className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
-              {topBar.teklif_label?.value_text || (settings as any).teklif_label || "Teklif Talep Et"}
-              <Icon name={topBar.teklif_url?.icon || "arrow_forward"} className="text-[14px]" aria-hidden="true" />
+            <Link to="/teklif" className="inline-flex items-center gap-1.5 font-semibold hover:opacity-90" style={{ color: "var(--public-yellow-500)" }}>
+              Teklif Talep Et
+              <Icon name="arrow_forward" className="text-[14px]" aria-hidden="true" />
             </Link>
-
           </div>
 
         </div>
@@ -275,11 +259,11 @@ export function SiteHeader() {
           <Link
             to="/"
             className="flex items-center min-w-0 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--public-yellow-500)] rounded-sm"
-            aria-label={`${headerConfig.logo_alt?.value_text || settings.company_name || "Pratik"} ana sayfa`}
+            aria-label={`${settings.company_name || "Pratik"} ana sayfa`}
           >
             <BrandWordmark
               logoUrl={settings.mobile_logo_url || settings.logo_url}
-              companyName={headerConfig.logo_alt?.value_text || settings.company_name}
+              companyName={settings.company_name}
               size={scrolled ? "md" : "lg"}
             />
           </Link>
@@ -329,12 +313,11 @@ export function SiteHeader() {
                 </Link>
               )
             )}
-
           </nav>
 
           {/* Right actions */}
           <div className="flex items-center gap-1 md:gap-2 justify-end">
-            {(isAdmin && headerConfig.admin_login_visible?.value_text !== 'false') && (
+            {isAdmin && (
               <Link
                 to="/admin"
                 search={{
@@ -354,7 +337,7 @@ export function SiteHeader() {
               search={{ categoryId: undefined, category: "Genel" }}
               className="pub-btn pub-btn-primary pub-btn-sm"
             >
-              {headerConfig.teklif_button_label?.value_text || "Teklif Talep Et"}
+              Teklif Talep Et
               <Icon name="arrow_forward" className="text-[16px]" aria-hidden="true" />
             </Link>
             </span>
@@ -629,7 +612,7 @@ export function SiteHeader() {
                       <Icon name="call" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                       <span className="flex flex-col">
                         <span className="text-[11px] uppercase tracking-wider text-white/50">Telefon</span>
-                        <span className="text-[15px] font-semibold text-white truncate">{settings.phone}</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{phone}</span>
                       </span>
                     </a>
                   )}
@@ -644,7 +627,7 @@ export function SiteHeader() {
                       <Icon name="chat" className="text-[20px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
                       <span className="flex flex-col">
                         <span className="text-[11px] uppercase tracking-wider text-white/50">WhatsApp</span>
-                        <span className="text-[15px] font-semibold text-white truncate">{settings.whatsapp}</span>
+                        <span className="text-[15px] font-semibold text-white truncate">{whatsapp}</span>
                       </span>
                     </a>
                   )}
@@ -744,14 +727,8 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   const { settings: rawSettings } = useSiteSettings();
-  const settings = rawSettings || ({} as any);
+  const settings = rawSettings || {} as any;
   const currentYear = new Date().getFullYear();
-  
-  const { sections: footerSections } = usePageContent("footer");
-  const footerIdentity = footerSections["footer_identity"]?.content || {};
-  const footerLinks = footerSections["footer_links"]?.content || {};
-  const footerBottom = footerSections["footer_bottom"]?.content || {};
-
   const address = settings.address;
   const phone = settings.phone;
   const email = settings.email;
@@ -784,11 +761,11 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           {/* Brand & summary */}
           <div className="lg:col-span-4 flex flex-col gap-5">
-            <Link to="/" className="inline-flex items-center gap-2" aria-label={`${footerIdentity.logo_alt?.value_text || settings.company_name || "Pratik"} ana sayfa`}>
-              <BrandWordmark logoUrl={settings.logo_url} companyName={footerIdentity.logo_alt?.value_text || settings.company_name} size="lg" />
+            <Link to="/" className="inline-flex items-center gap-2" aria-label={`${settings.company_name || "Pratik"} ana sayfa`}>
+              <BrandWordmark logoUrl={settings.logo_url} companyName={settings.company_name} size="lg" />
             </Link>
             <p className="text-body-sm font-body-sm text-white/70 max-w-sm">
-              {footerIdentity.summary?.value_text || (settings as any).footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
+              {settings.footer_text || "Sanayi, inşaat ve teknik servis ekiplerine profesyonel donanım tedariki. Doğru ürün, kurumsal süreç ve satış sonrası iletişim."}
             </p>
 
             <div className="mt-2 flex flex-col gap-2 text-body-sm text-white/80">
@@ -894,21 +871,20 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-body-sm text-white/60">
-          <p>{footerBottom.copyright?.value_text || (settings as any).copyright || `© ${currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.`}</p>
-          <p className="section-label text-white/50">{footerBottom.footer_bottom_text?.value_text || (settings as any).footer_bottom_text || "Endüstriyel Donanım · Kurumsal Tedarik"}</p>
+          <p>© {currentYear} Pratik Endüstriyel. Tüm hakları saklıdır.</p>
+          <p className="section-label text-white/50">Endüstriyel Donanım · Kurumsal Tedarik</p>
         </div>
 
-
-        {(footerBottom.agency_attribution_visible?.value_text === "true" || (settings as any).agency_attribution_visible !== false) && (
+        {settings.agency_attribution_visible && (
           <div className="mt-8 pt-4 border-t border-white/5 flex justify-center">
             <a
-              href={footerBottom.agency_attribution_url?.value_text || (settings as any).agency_attribution_url || "https://www.bilgintek.com"}
+              href={settings.agency_attribution_url || "https://www.bilgintek.com"}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bilgintek Yazılım ve Reklam Ajansı web sitesini yeni sekmede aç"
               className="text-[11px] tracking-wide text-white/40 hover:text-[var(--public-yellow-500)] transition-all duration-200 py-2 px-4 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--public-yellow-500)] focus-visible:outline-offset-4 rounded"
             >
-              {footerBottom.agency_attribution_text?.value_text || (settings as any).agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
+              {settings.agency_attribution_text || "Bilgintek Yazılım & Reklam Ajansı | Website Paketleri ile hazırlanmıştır."}
             </a>
           </div>
         )}

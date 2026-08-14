@@ -4,40 +4,31 @@ import { ContentEditorPanel } from "./ContentEditorPanel";
 import { SettingsPanel } from "./SettingsPanel";
 import { NavigationPanel } from "./NavigationPanel";
 import { HistoryPanel } from "./HistoryPanel";
-import { TopBarEditor } from "./editors/TopBarEditor";
-import { HeaderNavigationEditor } from "./editors/HeaderNavigationEditor";
-import { FooterEditor } from "./editors/FooterEditor";
 
 type NavItemType = {
   id: string;
   label: string;
   icon: string;
-  category: "Üst Bilgi & Footer" | "Kurumsal & Sayfalar" | "Sistem & Mesajlar";
-  component: "content" | "settings" | "nav" | "placeholder" | "history" | "top_bar" | "header_nav" | "footer";
+  category: "Global" | "Sayfalar" | "Sistem";
+  component: "content" | "settings" | "nav" | "placeholder" | "history";
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  // 1. Grup: Üst Bilgi & Footer (GLOBAL)
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Üst Bilgi & Footer", component: "top_bar" },
-  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Üst Bilgi & Footer", component: "header_nav" },
-  { id: "footer", label: "Footer İçerikleri", icon: "view_agenda", category: "Üst Bilgi & Footer", component: "footer" },
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content" },
+  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
+  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content" },
   
-  // 2. Grup: Kurumsal & Sayfalar (PAGE)
-  { id: "/", label: "Ana Sayfa", icon: "home", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/hakkimizda", label: "Hakkımızda", icon: "corporate_fare", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/urunler", label: "Ürün Kategorileri", icon: "category", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/sektorel", label: "Sektörel Çözümler", icon: "precision_manufacturing", category: "Kurumsal & Sayfalar", component: "content" },
-  { id: "/kvkk", label: "KVKK ve Yasal Sayfalar", icon: "gavel", category: "Kurumsal & Sayfalar", component: "content" },
+  { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content" },
+  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content" },
+  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content" },
+  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", component: "content" },
+  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Sayfalar", component: "content" },
+  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Sayfalar", component: "content" },
+  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", component: "content" },
+  { id: "/kvkk", label: "Yasal Sayfalar", icon: "gavel", category: "Sayfalar", component: "content" },
   
-  // 3. Grup: Sistem & Mesajlar (SYSTEM/GLOBAL)
-  { id: "sistem", label: "Global Sistem Mesajları", icon: "display_settings", category: "Sistem & Mesajlar", component: "content" },
-  { id: "global_settings", label: "Site Genel Ayarları", icon: "settings", category: "Sistem & Mesajlar", component: "settings" },
-  { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem & Mesajlar", component: "history" },
+  { id: "sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
+  { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
 ];
 
 
@@ -57,7 +48,7 @@ export function ContentManagement() {
           <span className="font-bold text-sm tracking-wide">CMS YÖNETİMİ</span>
         </div>
 
-        {["Üst Bilgi & Footer", "Kurumsal & Sayfalar", "Sistem & Mesajlar"].map(cat => (
+        {["Global", "Sayfalar", "Sistem"].map(cat => (
           <div key={cat} className="mb-6">
             <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">{cat}</h3>
             <div className="space-y-1">
@@ -83,10 +74,7 @@ export function ContentManagement() {
       {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
       <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
         <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "system_messages" : activeItem.id} />}
-          {activeItem.component === "top_bar" && <TopBarEditor />}
-          {activeItem.component === "header_nav" && <HeaderNavigationEditor />}
-          {activeItem.component === "footer" && <FooterEditor />}
+          {activeItem.component === "content" && <ContentEditorPanel route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} />}
           {activeItem.component === "settings" && <SettingsPanel />}
           {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
           {activeItem.component === "history" && <HistoryPanel />}

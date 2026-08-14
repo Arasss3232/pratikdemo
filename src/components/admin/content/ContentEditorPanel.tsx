@@ -2,26 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe, RefreshCcw, AlertCircle } from "lucide-react";
+import { Loader2, Save, Layout, Type, Link as LinkIcon, Image as ImageIcon, Eye, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { FileUploadField } from "../FileUploadField";
-import { syncPublicContent } from "@/lib/sync-content.functions";
-import type { Json } from "@/integrations/supabase/types";
-
 
 export function ContentEditorPanel({ route }: { route: string }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const syncBootstrap = useServerFn(syncPublicContent);
   const [localSections, setLocalSections] = useState<any[]>([]);
-  const [bootstrapping, setBootstrapping] = useState(false);
-  const [bootstrapError, setBootstrapError] = useState<string | null>(null);
 
-  const [previewMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
-  const { data: page, isLoading: pageLoading, refetch: refetchPage } = useQuery({
+  const { data: page, isLoading: pageLoading } = useQuery({
     queryKey: ["cms-page", route, previewMode],
     queryFn: async () => {
       const { data } = await supabase
@@ -33,7 +26,7 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }
   });
 
-  const { data: sections, isLoading: sectionsLoading, refetch: refetchSections } = useQuery({
+  const { data: sections, isLoading: sectionsLoading } = useQuery({
     queryKey: ["cms-sections", page?.id],
     enabled: !!page?.id,
     queryFn: async () => {
@@ -47,85 +40,51 @@ export function ContentEditorPanel({ route }: { route: string }) {
   });
 
   useEffect(() => {
-    async function checkAndBootstrap() {
-      if ((!pageLoading && !page) || (!sectionsLoading && sections && sections.length === 0)) {
-        setBootstrapping(true);
-        setBootstrapError(null);
-        try {
-          await syncBootstrap();
-          await refetchPage();
-          await refetchSections();
-        } catch (err: any) {
-          console.error("Bootstrap Error:", err);
-          setBootstrapError("İçerik otomatik olarak senkronize edilemedi. Lütfen tekrar deneyin.");
-        } finally {
-          setBootstrapping(false);
-        }
-      }
-    }
-
-    if (!pageLoading && !sectionsLoading) {
-      checkAndBootstrap();
-    }
-  }, [page, sections, pageLoading, sectionsLoading, route, syncBootstrap, refetchPage, refetchSections]);
-
-  useEffect(() => {
     if (sections) setLocalSections(JSON.parse(JSON.stringify(sections)));
   }, [sections]);
 
   const saveMutation = useMutation({
     mutationFn: async (isPublish: boolean) => {
-      console.log("Saving CMS changes, isPublish:", isPublish);
-      const results = [];
       for (const section of localSections) {
         for (const field of section.section_content) {
-          const updateData: any = {
-            value_text: field.value_text,
-            link_url: field.link_url,
-            media_url: field.media_url,
-            icon: field.icon,
-            value_json: field.value_json as Json,
-            updated_at: new Date().toISOString()
-          };
-          
-          const { data, error } = await supabase
+          const { error } = await supabase
             .from("section_content")
-            .update(updateData)
-            .eq("id", field.id)
-            .select();
-            
+            .update({
+              value_text: field.value_text,
+              link_url: field.link_url,
+              media_url: field.media_url,
+              value_json: field.value_json
+            })
+            .eq("id", field.id);
           if (error) throw error;
-          results.push(data);
         }
       }
 
       if (isPublish) {
         const { error } = await supabase
           .from("site_pages")
-          .update({ 
-            status: 'published', 
-            updated_at: new Date().toISOString() 
-          })
+          .update({ status: 'published', updated_at: new Date().toISOString() })
           .eq("id", page!.id);
         if (error) throw error;
       }
-      return results;
     },
     onSuccess: (_, isPublish) => {
-      // Invalidate all related queries
-      queryClient.invalidateQueries({ queryKey: ["cms-page"] });
-      queryClient.invalidateQueries({ queryKey: ["cms-sections"] });
-      queryClient.invalidateQueries({ queryKey: ["page-content"] });
-      
+      queryClient.invalidateQueries({ queryKey: ["cms-sections", page?.id] });
       toast.success(isPublish ? "İçerik başarıyla yayınlandı!" : "Taslak kaydedildi.");
-      refetchPage();
-      refetchSections();
     },
     onError: (err) => {
-      console.error("CMS Save Error:", err);
       toast.error("Hata: " + err.message);
     }
   });
+
+  if (pageLoading || sectionsLoading) return (
+    <div className="flex flex-col items-center justify-center h-64 text-white/40">
+      <Loader2 className="animate-spin mb-4" size={32} />
+      <p>İçerik yükleniyor...</p>
+    </div>
+  );
+
+  if (!page) return <div className="p-8 text-white/40">Bu rota için sayfa kaydı bulunamadı.</div>;
 
   const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json' | 'icon') => {
     setLocalSections(prev => prev.map(s => {
@@ -145,40 +104,6 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }));
   };
 
-  if (pageLoading || sectionsLoading || bootstrapping) return (
-    <div className="flex flex-col items-center justify-center h-64 text-white/40">
-      <Loader2 className="animate-spin mb-4" size={32} />
-      <p>{bootstrapping ? "İçerik otomatik olarak hazırlanıyor..." : "İçerik yükleniyor..."}</p>
-    </div>
-  );
-
-  if (bootstrapError) return (
-    <div className="flex flex-col items-center justify-center h-64 text-center p-8">
-      <AlertCircle className="text-red-500 mb-4" size={48} />
-      <h3 className="text-xl font-bold mb-2">Hata Oluştu</h3>
-      <p className="text-white/60 mb-6">{bootstrapError}</p>
-      <button 
-        onClick={() => {
-          setBootstrapError(null);
-          refetchPage();
-        }}
-        className="px-6 py-2 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2"
-      >
-        <RefreshCcw size={18} />
-        Tekrar Dene
-      </button>
-    </div>
-  );
-
-  if (!page || localSections.length === 0) {
-    return (
-      <div className="p-8 text-white/40 text-center border-2 border-dashed border-white/5 rounded-2xl">
-        <Layout size={48} className="mx-auto mb-4 opacity-50" />
-        <p className="mb-2">Bu rota için yönetilebilir bir içerik bulunamadı.</p>
-        <p className="text-xs">Rota: <code className="bg-white/5 px-2 py-1 rounded">{route}</code></p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -222,106 +147,122 @@ export function ContentEditorPanel({ route }: { route: string }) {
       </div>
 
       <div className="grid grid-cols-1 gap-8">
-        {localSections.map((section) => (
-          <div key={section.id} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
-            <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[var(--admin-yellow)]/10">
-                  <Layout size={18} className="text-[var(--admin-yellow)]" />
-                </div>
-                <h3 className="font-bold">{section.internal_label}</h3>
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/20">{section.section_key}</span>
-            </div>
-            <div className="p-6 space-y-6">
-              {section.section_content.map((field: any) => (
-                <div key={field.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-white/40 uppercase tracking-wider flex items-center gap-2">
-                      {field.field_type === 'text' && <Type size={12} />}
-                      {field.field_type === 'link' && <LinkIcon size={12} />}
-                      {field.field_type === 'image' && <ImageIcon size={12} />}
-                      {field.label || field.field_key}
-                    </label>
-                    <span className="text-[10px] text-white/20 capitalize">{field.field_type}</span>
+        {localSections.length === 0 ? (
+          <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
+            <Layout size={48} className="mx-auto mb-4 opacity-50" />
+            <p className="mb-4">Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
+            <button 
+              onClick={() => window.location.href = '/admin/sync'}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+            >
+              Mevcut Site İçeriğini Senkronize Et
+            </button>
+          </div>
+        ) : (
+
+          localSections.map((section) => (
+            <div key={section.id} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-[var(--admin-yellow)]/10">
+                    <Layout size={18} className="text-[var(--admin-yellow)]" />
                   </div>
-
-                  {field.field_type === 'text' && (
-                    <div className="space-y-3">
-                      <textarea 
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                        value={field.value_text || ""}
-                        onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
-                      />
-                      
-                      {(field.link_url !== undefined || field.icon !== undefined) && (
-                        <div className="flex flex-wrap gap-4 p-3 bg-black/20 rounded-lg border border-white/5">
-                          {field.link_url !== undefined && (
-                            <div className="flex-1 min-w-[200px] space-y-1">
-                              <span className="text-[10px] text-white/30 uppercase tracking-wider">Yönlendirme URL</span>
-                              <div className="relative">
-                                <LinkIcon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-                                <input 
-                                  className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                                  value={field.link_url || ""}
-                                  placeholder="/rota veya https://..."
-                                  onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
-                                />
-                              </div>
-                            </div>
-                          )}
-                          {field.icon !== undefined && (
-                            <div className="w-32 space-y-1">
-                              <span className="text-[10px] text-white/30 uppercase tracking-wider">İkon (Material)</span>
-                              <div className="relative">
-                                <Globe size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
-                                <input 
-                                  className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                                  value={field.icon || ""}
-                                  placeholder="call, mail..."
-                                  onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'icon')}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                  <h3 className="font-bold">{section.internal_label}</h3>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/20">{section.section_key}</span>
+              </div>
+              <div className="p-6 space-y-6">
+                {section.section_content.map((field: any) => (
+                  <div key={field.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-semibold text-white/40 uppercase tracking-wider flex items-center gap-2">
+                        {field.field_type === 'text' && <Type size={12} />}
+                        {field.field_type === 'link' && <LinkIcon size={12} />}
+                        {field.field_type === 'image' && <ImageIcon size={12} />}
+                        {field.label || field.field_key}
+                      </label>
+                      <span className="text-[10px] text-white/20 capitalize">{field.field_type}</span>
                     </div>
-                  )}
 
-                  {field.field_type === 'link' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <span className="text-[10px] text-white/30">Buton Metni</span>
-                        <input 
-                          className="w-full bg-black/40 border border-white/10 rounded-lg h-10 px-4 text-sm focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+
+                    {field.field_type === 'text' && (
+                      <div className="space-y-3">
+                        <textarea 
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-sm min-h-[80px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
                           value={field.value_text || ""}
                           onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
                         />
+                        
+                        {(field.link_url !== undefined || field.icon !== undefined) && (
+                          <div className="flex flex-wrap gap-4 p-3 bg-black/20 rounded-lg border border-white/5">
+                            {field.link_url !== undefined && (
+                              <div className="flex-1 min-w-[200px] space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">Yönlendirme URL</span>
+                                <div className="relative">
+                                  <LinkIcon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.link_url || ""}
+                                    placeholder="/rota veya https://..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                            {field.icon !== undefined && (
+                              <div className="w-32 space-y-1">
+                                <span className="text-[10px] text-white/30 uppercase tracking-wider">İkon (Material)</span>
+                                <div className="relative">
+                                  <Globe size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" />
+                                  <input 
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg h-8 pl-8 pr-4 text-[11px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                                    value={field.icon || ""}
+                                    placeholder="call, mail..."
+                                    onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'icon')}
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <div className="space-y-1">
-                        <span className="text-[10px] text-white/30">Yönlendirme URL</span>
-                        <input 
-                          className="w-full bg-black/40 border border-white/10 rounded-lg h-10 px-4 text-sm focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
-                          value={field.link_url || ""}
-                          onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    )}
 
-                  {field.field_type === 'image' && (
-                    <FileUploadField 
-                      value={field.value_text || ""}
-                      onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')}
-                      label="Görsel Seç"
-                    />
-                  )}
-                </div>
-              ))}
+                    {field.field_type === 'link' && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <span className="text-[10px] text-white/30">Buton Metni</span>
+                          <input 
+                            className="w-full bg-black/40 border border-white/10 rounded-lg h-10 px-4 text-sm focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                            value={field.value_text || ""}
+                            onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'text')}
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-[10px] text-white/30">Yönlendirme URL</span>
+                          <input 
+                            className="w-full bg-black/40 border border-white/10 rounded-lg h-10 px-4 text-sm focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                            value={field.link_url || ""}
+                            onChange={(e) => handleFieldChange(section.id, field.id, e.target.value, 'link')}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {field.field_type === 'image' && (
+                      <FileUploadField 
+                        value={field.value_text || ""}
+                        onChange={(v) => handleFieldChange(section.id, field.id, v, 'text')}
+                        label="Görsel Seç"
+                      />
+                    )}
+
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

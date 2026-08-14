@@ -68,7 +68,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { key: "content", label: "Site İçerik Yönetimi", icon: "edit_note", description: "Sayfa içerikleri ve metinler" },
       { key: "seo", label: "SEO Yönetimi", icon: "trending_up", description: "Arama motoru ayarları" },
-      { key: "settings", label: "Genel İçerikler", icon: "settings", description: "İletişim, logo ve çalışma saatleri" },
+      { key: "settings", label: "Site Ayarları", icon: "settings", description: "Genel site yapılandırması" },
     ],
   },
   {

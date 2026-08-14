@@ -106,35 +106,27 @@ export function SectionHead(props: {
 /* =====================================================================
  * 03 — Company Capability (navy frame + warm-light content panel)
  * ===================================================================== */
-export function ValueProps({ sections = {} as any }: { sections?: any }) {
-  const cmsCapabilities = sections.value_props?.content.capabilities?.value_json;
-  const defaultCapabilities = [
+export function ValueProps() {
+  const capabilities = [
     { k: "01", t: "Uzman Yönlendirme", d: "İhtiyacınıza en uygun ürün grubunu belirlemek için teknik destek sunuyoruz." },
     { k: "02", t: "Kurumsal Süreç", d: "Tekliften teslimata tüm aşamalar şeffaf ve kurumsal standartlarda yürütülür." },
     { k: "03", t: "Geniş Tedarik Ağı", d: "Dünya markalarının yetkili kanalları üzerinden güvenilir ürün temini sağlıyoruz." },
     { k: "04", t: "Kesintisiz Destek", d: "Satış öncesi ve sonrası süreçte uzman ekibimize her an ulaşabilirsiniz." },
   ];
-  const capabilities = Array.isArray(cmsCapabilities) ? cmsCapabilities : defaultCapabilities;
-
   return (
     <section className="relative pub-navy overflow-hidden" style={{ backgroundColor: NAVY_900 }}>
       <div className="absolute inset-0 pub-blueprint opacity-70 pointer-events-none" aria-hidden />
       <div className="relative max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
         <PubHead
           index="03"
-          eyebrow={sections.value_props?.content.eyebrow?.value_text || "Kurumsal Yetkinlik"}
+          eyebrow="Kurumsal Yetkinlik"
           title={
-            sections.value_props?.content.title?.value_text ? (
-              <span>{sections.value_props.content.title.value_text}</span>
-            ) : (
-              <>
-                Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
-              </>
-            )
+            <>
+              Ürün tedariki değil, <span style={{ color: YELLOW }}>üretim güvenliği</span>.
+            </>
           }
-          subtitle={sections.value_props?.content.subtitle?.value_text || "Sanayi tesislerine, şantiyelere ve üretim hatlarına yönelik profesyonel donanım tedariki. İhtiyacınız olan ürün grubunu seçin, uzman ekibimiz size özel teklifi hazırlasın."}
+          subtitle="Sanayi tesislerine, şantiyelere ve üretim hatlarına yönelik profesyonel donanım tedariki. İhtiyacınız olan ürün grubunu seçin, uzman ekibimiz size özel teklifi hazırlasın."
         />
-
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           <div
@@ -165,9 +157,7 @@ export function ValueProps({ sections = {} as any }: { sections?: any }) {
 
           <div className="lg:col-span-5 relative" style={{ backgroundColor: "#F2F5F8", color: NAVY_950 }}>
             <div className="p-8 md:p-10 flex flex-col gap-6 h-full">
-              <span className="pub-marker pub-marker-dark">
-                {sections.value_props?.content.hakkimizda_marker?.value_text || "02 / Hakkımızda"}
-              </span>
+              <span className="pub-marker pub-marker-dark">02 / Hakkımızda</span>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
@@ -176,12 +166,12 @@ export function ValueProps({ sections = {} as any }: { sections?: any }) {
                   fontWeight: 700,
                 }}
               >
-                {sections.value_props?.content.hakkimizda_title?.value_text || "Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır."}
+                Pratik Endüstriyel, sahayı bilen bir tedarik ortağıdır.
               </h3>
               <p className="text-[14.5px] leading-relaxed" style={{ color: "#455A73" }}>
-                {sections.value_props?.content.hakkimizda_desc?.value_text || "Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi ilişkileri kurmak için çalışıyoruz."}
+                Her projede aynı kişi, aynı süreç, aynı sorumluluk. Uzun soluklu tedarikçi
+                ilişkileri kurmak için çalışıyoruz.
               </p>
-
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ backgroundColor: "#DBE2EB" }}>
                 {capabilities.map((c) => (
                   <li key={c.k} className="p-4" style={{ backgroundColor: "#F2F5F8" }}>
@@ -198,8 +188,8 @@ export function ValueProps({ sections = {} as any }: { sections?: any }) {
                   </li>
                 ))}
               </ul>
-              <Link to={sections.value_props?.content.hakkimizda_btn_url?.link_url || "/kurumsal"} className="pub-btn pub-btn-outline-dark pub-btn-sm self-start">
-                {sections.value_props?.content.hakkimizda_btn_label?.value_text || "Hakkımızda"}
+              <Link to="/kurumsal" className="pub-btn pub-btn-outline-dark pub-btn-sm self-start">
+                Hakkımızda
                 <Icon name="arrow_forward" className="text-[16px]" />
               </Link>
             </div>
@@ -396,16 +386,14 @@ export function FeaturedProducts() {
 /* =====================================================================
  * 06 — Why Choose Us (warm-light with strong navy framing)
  * ===================================================================== */
-export function WhyChoose({ sections = {} as any }: { sections?: any }) {
-  const cmsItems = sections.why_choose?.content.reasons?.value_json;
-  const defaultItems = [
+export function WhyChoose() {
+  const items = [
     { k: "01", t: "Ürün Bilgisi", d: "Kategori derinliğine hakim satış ekibiyle uygun ürünü ilk turda öneriyoruz." },
     { k: "02", t: "Kurumsal Tedarik", d: "Cari kart, fatura, teslimat ve garanti süreçleri kurumsal standartlarda yürütülür." },
     { k: "03", t: "Teklif Şeffaflığı", d: "Teklif, stok durumu ve teslim süresi konusunda net bilgi verir; süreç boyunca haber veririz." },
     { k: "04", t: "Kolay İletişim", d: "Telefon, e-posta veya WhatsApp — hangisi kolaysa. Muhatabınız değişmez." },
     { k: "05", t: "Yedek Parça Sürekliliği", d: "Satılan ürünlerin yedek parçası ve sarfları için sürekli tedarik desteği." },
   ];
-  const items = Array.isArray(cmsItems) ? cmsItems : defaultItems;
   return (
     <section className="relative" style={{ backgroundColor: NAVY_950, padding: "48px 0" }}>
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
@@ -421,9 +409,7 @@ export function WhyChoose({ sections = {} as any }: { sections?: any }) {
           <span className="pub-tick-br" aria-hidden />
           <div className="p-8 md:p-14 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
             <div className="lg:col-span-5">
-              <span className="pub-marker pub-marker-dark">
-                {sections.why_choose?.content.eyebrow?.value_text || "06 / Neden Pratik"}
-              </span>
+              <span className="pub-marker pub-marker-dark">06 / Neden Pratik</span>
               <h2
                 className="mt-4"
                 style={{
@@ -434,15 +420,11 @@ export function WhyChoose({ sections = {} as any }: { sections?: any }) {
                   color: NAVY_950,
                 }}
               >
-                {sections.why_choose?.content.title?.value_text || (
-                  <>
-                    Doğru ürün, doğru marka, <br />
-                    doğru yönlendirme.
-                  </>
-                )}
+                Doğru ürün, doğru marka, <br />
+                doğru yönlendirme.
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "#455A73" }}>
-                {sections.why_choose?.content.subtitle?.value_text || "Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor."}
+                Endüstriyel donanım tedariki fiyattan önce doğru öneri gerektirir. Farkımız burada başlıyor.
               </p>
               <div
                 className="mt-8 aspect-[4/5] overflow-hidden pub-ticks relative"

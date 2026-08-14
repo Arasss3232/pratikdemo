@@ -37,8 +37,6 @@ export function NavigationPanel({ type }: { type: string }) {
           .from("navigation_items")
           .update({ 
             display_order: item.display_order,
-            label: item.label,
-            route: item.route,
             is_active: item.is_active,
             desktop_visibility: item.desktop_visibility,
             mobile_visibility: item.mobile_visibility
@@ -56,12 +54,11 @@ export function NavigationPanel({ type }: { type: string }) {
     }
   });
 
-  const updateItem = (id: string, updates: any) => {
+  const toggleVisibility = (id: string, field: 'desktop_visibility' | 'mobile_visibility') => {
     setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, ...updates } : item
+      item.id === id ? { ...item, [field]: !item[field] } : item
     ));
   };
-
 
 
   if (isLoading) return <div className="p-8 text-white/40"><Loader2 className="animate-spin" /> Yükleniyor...</div>;
@@ -80,10 +77,9 @@ export function NavigationPanel({ type }: { type: string }) {
           </button>
           <button 
             onClick={() => saveMutation.mutate()}
-            className="h-10 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[var(--admin-yellow)]/20"
+            className="h-10 px-6 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg font-bold flex items-center gap-2"
           >
-            {saveMutation.isPending ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
-            Sıralamayı ve Değişiklikleri Kaydet
+            Sıralamayı Kaydet
           </button>
         </div>
       </div>
@@ -92,37 +88,34 @@ export function NavigationPanel({ type }: { type: string }) {
         {items.length === 0 ? (
           <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
             <p className="mb-4 text-sm">Henüz bir link eklenmemiş veya veriler senkronize edilmemiş.</p>
-            <p className="text-xs mb-6 opacity-60">Site İçerik Yönetimi altındaki diğer bölümleri açtığınızda veriler otomatik olarak hazırlanır.</p>
+            <button 
+              onClick={() => window.location.href = '/admin/sync'}
+              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+            >
+              Mevcut Site İçeriğini Senkronize Et
+            </button>
           </div>
         ) : (
 
           items.map((item, idx) => (
-            <div key={item.id || idx} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between group text-white gap-4">
-              <div className="flex items-center gap-4 flex-1">
-                <GripVertical className="text-white/20 cursor-move shrink-0" size={20} />
-                <div className="flex flex-col gap-2 w-full">
-                  <input
-                    className="bg-navy-900 border border-white/10 px-3 py-1.5 rounded text-sm focus:border-[var(--admin-yellow)] outline-none transition-colors w-full"
-                    value={item.label || ""}
-                    onChange={(e) => updateItem(item.id, { label: e.target.value })}
-                    placeholder="Link Metni"
-                  />
-                  <input
-                    className="bg-navy-900/50 border border-white/5 px-3 py-1 rounded text-[10px] focus:border-[var(--admin-yellow)] outline-none transition-colors w-full"
-                    value={item.route || ""}
-                    onChange={(e) => updateItem(item.id, { route: e.target.value })}
-                    placeholder="URL (/... veya https://...)"
-                  />
+            <div key={item.id || idx} className="bg-white/5 border border-white/5 p-4 rounded-xl flex items-center justify-between group text-white">
+              <div className="flex items-center gap-4">
+                <GripVertical className="text-white/20 cursor-move" size={20} />
+                <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center text-[var(--admin-yellow)]">
+                  {idx + 1}
+                </div>
+                <div>
+                  <h4 className="font-medium">{item.label}</h4>
+                  <p className="text-xs text-white/40">{item.route}</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-white/20 uppercase tracking-tighter">Masaüstü</span>
                   <input 
                     type="checkbox" 
                     checked={item.desktop_visibility} 
-                    onChange={() => updateItem(item.id, { desktop_visibility: !item.desktop_visibility })}
+                    onChange={() => toggleVisibility(item.id, 'desktop_visibility')}
                     className="accent-[var(--admin-yellow)]"
                   />
                 </div>
@@ -131,17 +124,13 @@ export function NavigationPanel({ type }: { type: string }) {
                   <input 
                     type="checkbox" 
                     checked={item.mobile_visibility} 
-                    onChange={() => updateItem(item.id, { mobile_visibility: !item.mobile_visibility })}
+                    onChange={() => toggleVisibility(item.id, 'mobile_visibility')}
                     className="accent-[var(--admin-yellow)]"
                   />
                 </div>
-                <button 
-                  onClick={() => updateItem(item.id, { is_active: !item.is_active })}
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded transition-colors ${item.is_active ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}
-                >
+                <div className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.is_active ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
                   {item.is_active ? 'AKTİF' : 'PASİF'}
-                </button>
-
+                </div>
               </div>
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-4">
 

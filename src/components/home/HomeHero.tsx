@@ -10,7 +10,7 @@ const DEFAULT_DESC =
   "Elektrikli el aletlerinden bağlantı elemanlarına, iş güvenliğinden endüstriyel makinelere; sanayi tesisleri ve şantiyeler için yetkili distribütör güvencesiyle tek noktadan tedarik.";
 
 export function HomeHero() {
-  const { sections } = usePageContent("/");
+  const { sections, loading } = usePageContent("/");
   
   const heroSection = sections["hero"];
   const c = heroSection?.content || {};
@@ -24,7 +24,7 @@ export function HomeHero() {
 
 
   const heroProduct = PRODUCTS[0];
-  const heroImg = c.hero_image?.value_text || heroProduct.productImg;
+  const heroImg = c.hero_image?.media_url || heroProduct.productImg;
 
 
   return (
@@ -90,12 +90,12 @@ export function HomeHero() {
             className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6 border-t pt-8"
             style={{ borderColor: "var(--public-navy-border)" }}
           >
-            {(heroSection?.content.capabilities?.value_json as any[] || [
+            {[
               { k: "Ürün Grupları", v: "6 ana kategori" },
               { k: "Kurumsal Tedarik", v: "Sözleşmeli müşteri" },
               { k: "Teknik Yönlendirme", v: "Uzman ekip" },
               { k: "Hızlı İletişim", v: "Aynı gün geri dönüş" },
-            ]).map((m) => (
+            ].map((m) => (
               <li key={m.k}>
                 <span
                   className="pub-mono block mb-2"

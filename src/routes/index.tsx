@@ -5,7 +5,6 @@ import { HomeHero } from "@/components/home/HomeHero";
 import { BrandStrip } from "@/components/home/HomeSections";
 import { BrochureSlider } from "@/components/home/BrochureSlider";
 import { createFileRoute } from "@tanstack/react-router";
-import { usePageContent } from "@/hooks/use-page-content";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,8 +22,6 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { sections } = usePageContent("/");
-  
   return (
     <SiteShell>
       <main>
@@ -32,9 +29,9 @@ function HomePage() {
         <HomeHero />
         <BrandStrip />
         <CategoryExplorer />
-        <ValueProps sections={sections} />
+        <ValueProps />
         <SectorGrid />
-        <WhyChoose sections={sections} />
+        <WhyChoose />
         <ContactMap />
       </main>
     </SiteShell>
