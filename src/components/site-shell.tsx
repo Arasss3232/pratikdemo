@@ -742,12 +742,13 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   const { settings: rawSettings } = useSiteSettings();
-  const settings = rawSettings || {} as any;
+  const settings = rawSettings || ({} as any);
   const currentYear = new Date().getFullYear();
   
   const { sections: footerSections } = usePageContent("footer");
-  const footerIdentity = footerSections["footer_identity"] || { content: {} };
-  const footerBottom = footerSections["footer_bottom"] || { content: {} };
+  const footerIdentity = footerSections["footer_identity"]?.content || {};
+  const footerLinks = footerSections["footer_links"]?.content || {};
+  const footerBottom = footerSections["footer_bottom"]?.content || {};
 
   const address = settings.address;
   const phone = settings.phone;
