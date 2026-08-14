@@ -3,6 +3,7 @@ import { Icon } from "../site-shell";
 import { SectionMarker } from "../marketing/SectionMarker";
 import { type PageSection } from "@/hooks/use-page-content";
 import { useSiteSettings } from "@/hooks/use-site-settings";
+import { useSiteContent } from "@/hooks/use-site-content";
 
 const NAVY_950 = "var(--public-navy-950)";
 const NAVY_900 = "var(--public-navy-900)";
@@ -12,6 +13,8 @@ const YELLOW = "var(--public-yellow-500)";
 
 export function CorporateIntroduction({ section }: { section: PageSection }) {
   const c = section.content;
+  const { data: cmsCorporate } = useSiteContent("corporate");
+  
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: "#F2F5F8" }}>
       <div className="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-20 md:py-28">
@@ -27,11 +30,11 @@ export function CorporateIntroduction({ section }: { section: PageSection }) {
               className="font-display font-bold text-navy-950 leading-[1.05] tracking-tight mb-8"
               style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
             >
-              {c.title?.value_text}
+              {cmsCorporate?.about_title || c.title?.value_text}
             </h2>
             <div className="space-y-6 text-[16px] md:text-[18px] leading-relaxed text-slate-600">
               <p className="font-semibold text-navy-900">
-                {c.description?.value_text}
+                {cmsCorporate?.about_content || c.description?.value_text}
               </p>
               <div 
                 className="prose prose-slate max-w-none"
