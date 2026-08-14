@@ -249,7 +249,7 @@ export function SiteHeader() {
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Icon name={topBar.whatsapp?.icon || "chat"} className="text-[14px]" style={{ color: "var(--public-yellow-500)" }} aria-hidden="true" />
-                {topBar.whatsapp?.label || settings.whatsapp_label || "WhatsApp"}
+                {topBar.whatsapp?.label || topBar.whatsapp?.value_text || settings.whatsapp_label || "WhatsApp"}
               </a>
             )}
 
