@@ -59,9 +59,16 @@ export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPan
   }, [siteContent]);
 
   const handleUndo = () => {
-    if (siteContent) {
-      setFlexibleContent(JSON.parse(JSON.stringify(siteContent)));
-      toast.info("Değişiklikler geri alındı.");
+    if (isFlexibleCms) {
+      if (siteContent) {
+        setFlexibleContent(JSON.parse(JSON.stringify(siteContent)));
+        toast.info("Değişiklikler geri alındı.");
+      }
+    } else {
+      if (sections) {
+        setLocalSections(JSON.parse(JSON.stringify(sections)));
+        toast.info("Değişiklikler geri alındı.");
+      }
     }
   };
 
@@ -171,7 +178,27 @@ export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPan
           {Object.keys(flexibleContent).length === 0 ? (
             <div className="text-center p-20 border-2 border-dashed border-white/5 rounded-2xl text-white/20">
               <Layout size={48} className="mx-auto mb-4 opacity-50" />
-              <p>Bu bölüm için henüz veri senkronize edilmemiş.</p>
+              <p className="mb-4">Bu bölüm için henüz veri senkronize edilmemiş.</p>
+              <button 
+                onClick={async () => {
+                  const toastId = toast.loading("Veriler senkronize ediliyor...");
+                  try {
+                    const resp = await fetch('/api/public/sync-trigger', { method: 'POST' });
+                    const result = await resp.json();
+                    if (result.success) {
+                      queryClient.invalidateQueries({ queryKey: ["site-content"] });
+                      toast.success("Veriler başarıyla senkronize edildi.", { id: toastId });
+                    } else {
+                      throw new Error(result.error);
+                    }
+                  } catch (err: any) {
+                    toast.error("Hata: " + err.message, { id: toastId });
+                  }
+                }}
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
+              >
+                Mevcut Site İçeriğini Senkronize Et
+              </button>
             </div>
           ) : (
             Object.entries(flexibleContent).map(([sectionKey, value]) => (
@@ -187,7 +214,7 @@ export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPan
                 <div className="p-6 space-y-4">
                   {Object.entries(value).map(([fieldKey, fieldValue]: [string, any]) => (
                     <div key={fieldKey} className="space-y-2">
-                      <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fieldKey.replace('_', ' ')}</label>
+                      <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fieldKey.replace(/_/g, ' ')}</label>
                       <textarea 
                         className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[60px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
                         value={fieldValue || ""}
@@ -220,6 +247,14 @@ export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPan
           <p className="text-white/50">{route} sayfasını düzenliyorsunuz</p>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={handleUndo}
+            className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
+            title="Geri Al"
+          >
+            <Undo2 size={16} />
+            Geri Al
+          </button>
           <button 
             onClick={() => navigate({ search: (prev: any) => ({ ...prev, tab: 'seo', seoTab: 'pages' }) } as any)}
             className="h-10 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center gap-2 transition-all"
@@ -259,7 +294,22 @@ export function ContentEditorPanel({ route, flexiblePageName }: ContentEditorPan
             <Layout size={48} className="mx-auto mb-4 opacity-50" />
             <p className="mb-4">Bu sayfa için henüz bir içerik bölümü tanımlanmamış.</p>
             <button 
-              onClick={() => window.location.href = '/admin/sync'}
+              onClick={async () => {
+                const toastId = toast.loading("Veriler senkronize ediliyor...");
+                try {
+                  const resp = await fetch('/api/public/sync-trigger', { method: 'POST' });
+                  const result = await resp.json();
+                  if (result.success) {
+                    queryClient.invalidateQueries({ queryKey: ["cms-sections"] });
+                    queryClient.invalidateQueries({ queryKey: ["cms-page"] });
+                    toast.success("Veriler başarıyla senkronize edildi.", { id: toastId });
+                  } else {
+                    throw new Error(result.error);
+                  }
+                } catch (err: any) {
+                  toast.error("Hata: " + err.message, { id: toastId });
+                }
+              }}
               className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs transition-all"
             >
               Mevcut Site İçeriğini Senkronize Et
