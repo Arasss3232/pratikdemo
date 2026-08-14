@@ -1,67 +1,62 @@
 import { useState } from "react";
 import { Icon } from "../../site-shell";
 import { ContentEditorPanel } from "./ContentEditorPanel";
-import { SettingsPanel } from "./SettingsPanel";
-import { NavigationPanel } from "./NavigationPanel";
-import { HistoryPanel } from "./HistoryPanel";
 
+/**
+ * Main Shell for Site Content Management.
+ * Manages the sidebar navigation and passes the active section to the editor.
+ */
 type NavItemType = {
   id: string;
   label: string;
   icon: string;
-  category: "Global" | "Sayfalar" | "Sistem";
-  component: "content" | "settings" | "nav" | "placeholder" | "history";
-  flexiblePageName?: string;
+  category: "Genel" | "Sayfalar";
+  pageSection: string; // The Supabase page_section identifier
 };
 
 const NAV_ITEMS: NavItemType[] = [
-  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Global", component: "content", flexiblePageName: "top_bar" },
-  { id: "flexible_cms", label: "Gelişmiş CMS (Site İçeriği)", icon: "auto_awesome", category: "Global", component: "content", flexiblePageName: "home" },
-  { id: "header_nav", label: "Header ve Navigasyon", icon: "ad_units", category: "Global", component: "nav" },
-  { id: "footer", label: "Footer Kimliği", icon: "view_agenda", category: "Global", component: "content", flexiblePageName: "footer" },
+  // Global sections
+  { id: "top_bar", label: "Üst Bilgi Çubuğu", icon: "vertical_align_top", category: "Genel", pageSection: "top_bar" },
+  { id: "header", label: "Header ve Navigasyon", icon: "ad_units", category: "Genel", pageSection: "header" },
+  { id: "footer", label: "Footer Bilgileri", icon: "view_agenda", category: "Genel", pageSection: "footer" },
   
-  { id: "/", label: "Ana Sayfa", icon: "home", category: "Sayfalar", component: "content", flexiblePageName: "home" },
-  { id: "/kurumsal", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", component: "content", flexiblePageName: "corporate" },
-  { id: "/urunler", label: "Ürün Kategorileri Sayfası", icon: "category", category: "Sayfalar", component: "content", flexiblePageName: "products" },
-  { id: "/kataloglar", label: "Kataloglar Sayfası", icon: "menu_book", category: "Sayfalar", component: "content" },
-  { id: "/bayiliklerimiz", label: "Bayiliklerimiz Sayfası", icon: "workspace_premium", category: "Sayfalar", component: "content" },
-  { id: "/teklif", label: "Teklif Talep Sayfası", icon: "request_quote", category: "Sayfalar", component: "content" },
-  { id: "/iletisim", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", component: "content" },
-  { id: "/kvkk", label: "Yasal Sayfalar", icon: "gavel", category: "Sayfalar", component: "content" },
-  
-  { id: "sistem", label: "Sistem Mesajları", icon: "display_settings", category: "Sistem", component: "content" },
-  { id: "history", label: "İçerik Geçmişi", icon: "history", category: "Sistem", component: "history" },
+  // Page sections
+  { id: "home", label: "Ana Sayfa", icon: "home", category: "Sayfalar", pageSection: "hero" },
+  { id: "corporate", label: "Kurumsal Sayfası", icon: "info", category: "Sayfalar", pageSection: "corporate" },
+  { id: "products", label: "Ürünler Sayfası", icon: "category", category: "Sayfalar", pageSection: "products" },
+  { id: "contact", label: "İletişim Sayfası", icon: "contact_support", category: "Sayfalar", pageSection: "contact" },
 ];
-
-
 
 export function ContentManagement() {
   const [activeId, setActiveId] = useState(NAV_ITEMS[0].id);
   const activeItem = NAV_ITEMS.find(i => i.id === activeId)!;
 
   return (
-    <div className="flex h-[800px] bg-[var(--admin-surface)] rounded-2xl border border-white/5 overflow-hidden">
-      {/* 1. Sidebar (Left) */}
-      <div className="w-72 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-4 space-y-6 overflow-y-auto admin-sidebar-scroll">
-        <div className="flex items-center gap-3 px-3 mb-6">
-          <div className="h-8 w-8 rounded-lg bg-[var(--admin-yellow)] flex items-center justify-center text-[var(--admin-navy)]">
-            <Icon name="edit_note" className="text-[20px]" />
+    <div className="flex h-[800px] bg-[var(--admin-surface)] rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
+      {/* 1. SIDEBAR: Section Navigation */}
+      <div className="w-72 border-r border-white/5 bg-[var(--admin-navy-deep)]/50 p-6 space-y-8 overflow-y-auto">
+        <div className="flex items-center gap-3 px-3 mb-4">
+          <div className="h-10 w-10 rounded-xl bg-[var(--admin-yellow)] flex items-center justify-center text-[var(--admin-navy)] shadow-lg shadow-[var(--admin-yellow)]/20">
+            <Icon name="edit_note" className="text-[24px]" />
           </div>
-          <span className="font-bold text-sm tracking-wide">CMS YÖNETİMİ</span>
+          <div>
+            <span className="block font-bold text-sm tracking-wide">İÇERİK YÖNETİMİ</span>
+            <span className="block text-[10px] text-white/30 uppercase tracking-widest font-bold">CMS Dashboard</span>
+          </div>
         </div>
 
-        {["Global", "Sayfalar", "Sistem"].map(cat => (
-          <div key={cat} className="mb-6">
-            <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">{cat}</h3>
+        {["Genel", "Sayfalar"].map(cat => (
+          <div key={cat} className="space-y-3">
+            <h3 className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">{cat}</h3>
             <div className="space-y-1">
               {NAV_ITEMS.filter(i => i.category === cat).map(item => (
                 <button
                   key={item.id}
                   onClick={() => setActiveId(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group ${
                     activeId === item.id 
                       ? "bg-[var(--admin-yellow)] text-[var(--admin-navy)] shadow-lg shadow-[var(--admin-yellow)]/10" 
-                      : "text-white/60 hover:text-white hover:bg-white/5"
+                      : "text-white/50 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <Icon name={item.icon} className={`text-[20px] ${activeId === item.id ? "" : "group-hover:scale-110"}`} />
@@ -73,27 +68,12 @@ export function ContentManagement() {
         ))}
       </div>
 
-      {/* 2 & 3. Main Area (Editor & Actions are merged into the panel but structured) */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-black/20">
-        <div className="flex-1 overflow-y-auto p-8 admin-sidebar-scroll">
-          {activeItem.component === "content" && (
-            <ContentEditorPanel 
-              route={activeItem.id === "sistem" ? "/sistem" : activeItem.id} 
-              flexiblePageName={activeItem.flexiblePageName}
-            />
-          )}
-          {activeItem.component === "settings" && <SettingsPanel />}
-          {activeItem.component === "nav" && <NavigationPanel type={activeItem.id} />}
-          {activeItem.component === "history" && <HistoryPanel />}
-          {activeItem.component === "placeholder" && (
-            <div className="h-full flex items-center justify-center text-white/20">
-              <div className="text-center">
-                <Icon name="construction" className="text-[64px] mb-4" />
-                <p>Yakında aktif olacak</p>
-              </div>
-            </div>
-          )}
-        </div>
+      {/* 2. MAIN CONTENT: The Dynamic Editor Panel */}
+      <div className="flex-1 flex flex-col overflow-hidden bg-black/10">
+        <ContentEditorPanel 
+          key={activeItem.pageSection} // Reset state when switching sections
+          pageSection={activeItem.pageSection} 
+        />
       </div>
     </div>
   );
