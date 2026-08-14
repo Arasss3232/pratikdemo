@@ -8,6 +8,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useCategories } from "@/hooks/use-categories";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { useSiteContent } from "@/hooks/use-site-content";
 import pratikLogo from "@/assets/pratik-logo.asset.json";
 
 
