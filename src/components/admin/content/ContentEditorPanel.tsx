@@ -11,11 +11,11 @@ export function ContentEditorPanel({ route }: { route: string }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [localSections, setLocalSections] = useState<any[]>([]);
+  const [flexibleContent, setFlexibleContent] = useState<Record<string, any>>({});
 
-  const [previewMode, setPreviewMode] = useState(false);
-
+  // 1. Existing Legacy CMS logic (site_pages based)
   const { data: page, isLoading: pageLoading } = useQuery({
-    queryKey: ["cms-page", route, previewMode],
+    queryKey: ["cms-page", route],
     queryFn: async () => {
       const { data } = await supabase
         .from("site_pages")
@@ -39,9 +39,19 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }
   });
 
+  // 2. New Flexible CMS logic (site_content based)
+  const isFlexibleCms = route === "flexible_cms";
+  const flexiblePageName = "home"; // Defaulting to home for the new table demo
+  const { data: siteContent, isLoading: flexibleLoading } = useSiteContent(flexiblePageName);
+  const updateMutation = useUpdateSiteContent();
+
   useEffect(() => {
     if (sections) setLocalSections(JSON.parse(JSON.stringify(sections)));
   }, [sections]);
+
+  useEffect(() => {
+    if (siteContent) setFlexibleContent(JSON.parse(JSON.stringify(siteContent)));
+  }, [siteContent]);
 
   const saveMutation = useMutation({
     mutationFn: async (isPublish: boolean) => {
@@ -77,14 +87,14 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }
   });
 
-  if (pageLoading || sectionsLoading) return (
+  if (pageLoading || sectionsLoading || (isFlexibleCms && flexibleLoading)) return (
     <div className="flex flex-col items-center justify-center h-64 text-white/40">
       <Loader2 className="animate-spin mb-4" size={32} />
       <p>İçerik yükleniyor...</p>
     </div>
   );
 
-  if (!page) return <div className="p-8 text-white/40">Bu rota için sayfa kaydı bulunamadı.</div>;
+  if (!page && !isFlexibleCms) return <div className="p-8 text-white/40">Bu rota için sayfa kaydı bulunamadı.</div>;
 
   const handleFieldChange = (sectionId: string, fieldId: string, value: any, type: 'text' | 'link' | 'media' | 'json' | 'icon') => {
     setLocalSections(prev => prev.map(s => {
@@ -104,6 +114,72 @@ export function ContentEditorPanel({ route }: { route: string }) {
     }));
   };
 
+
+  if (isFlexibleCms) {
+    return (
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex items-center justify-between border-b border-white/5 pb-6">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Sparkles className="text-[var(--admin-yellow)]" />
+              Gelişmiş CMS (Site İçeriği)
+            </h2>
+            <p className="text-white/50">Esnek veri yapısı ile dinamik alanları yönetin</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8">
+          {Object.entries(flexibleContent).map(([sectionKey, value]) => (
+            <div key={sectionKey} className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-6 py-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-[var(--admin-yellow)]/10">
+                    <Layout size={18} className="text-[var(--admin-yellow)]" />
+                  </div>
+                  <h3 className="font-bold">{sectionKey.toUpperCase()}</h3>
+                </div>
+                <button 
+                  onClick={() => {
+                    updateMutation.mutate({
+                      pageName: flexiblePageName,
+                      sectionKey,
+                      contentValue: flexibleContent[sectionKey]
+                    }, {
+                      onSuccess: () => toast.success(`${sectionKey} başarıyla güncellendi.`)
+                    });
+                  }}
+                  disabled={updateMutation.isPending}
+                  className="px-4 py-1.5 bg-[var(--admin-yellow)] text-[var(--admin-navy)] rounded-lg text-xs font-bold hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  {updateMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : "GÜNCELLE"}
+                </button>
+              </div>
+              <div className="p-6 space-y-4">
+                {Object.entries(value).map(([fieldKey, fieldValue]: [string, any]) => (
+                  <div key={fieldKey} className="space-y-2">
+                    <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fieldKey}</label>
+                    <textarea 
+                      className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-sm min-h-[60px] focus:border-[var(--admin-yellow)]/50 outline-none transition-colors text-white"
+                      value={fieldValue || ""}
+                      onChange={(e) => {
+                        setFlexibleContent(prev => ({
+                          ...prev,
+                          [sectionKey]: {
+                            ...prev[sectionKey],
+                            [fieldKey]: e.target.value
+                          }
+                        }));
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
